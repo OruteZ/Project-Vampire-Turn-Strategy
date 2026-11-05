@@ -28,6 +28,8 @@ Preconditions:
 
 ## Gotchas
 
+- With the Editor unfocused, the Input System default (`ResetAndDisableNonBackgroundDevices`) disables the mouse and keyboard, and every simulated event is dropped while the CLI still prints `true`. `$V play` switches play mode to `IgnoreFocus` and re-enables devices. Play mode resets that setting, so a play started outside `$V play` needs `$V play` again.
+
 - `$V eval 'UnityEngine.InputSystem.Mouse.current.position.ReadValue()'` prints `(0.00, 0.00)` even when the game received the move, because eval reads the Editor's input state. Only `input-read` or game state shows what the game saw.
 - The probe lives only for one play session. Run `input-probe` again after `$V stop` and `$V play`.
 - Not yet proven for uGUI buttons. The CLI routes clicks through the Input System UI module, so the first UI PR (P9) adds that recipe here.

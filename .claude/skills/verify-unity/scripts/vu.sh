@@ -66,7 +66,13 @@ cmd_play() {
   [ "$(uj editor status | field playMode)" = playing ] || die "play mode did not start"
   local a b; a="$(frames)"; sleep 1; b="$(frames)"
   [ $((b - a)) -ge 20 ] || die "play mode throttled ($((b - a)) frames in 1s). Background mode not effective"
+  input_ignore_focus
   echo "PLAYING frames/s=$((b - a))"
+}
+
+# Unfocused, the Input System disables devices and drops simulated events; play mode resets the settings, so apply per session.
+input_ignore_focus() {
+  uj script eval --code 'var s=UnityEngine.ScriptableObject.Instantiate(UnityEngine.InputSystem.InputSystem.settings); s.backgroundBehavior=UnityEngine.InputSystem.InputSettings.BackgroundBehavior.IgnoreFocus; s.editorInputBehaviorInPlayMode=UnityEngine.InputSystem.InputSettings.EditorInputBehaviorInPlayMode.AllDeviceInputAlwaysGoesToGameView; UnityEngine.InputSystem.InputSystem.settings=s; foreach (var d in UnityEngine.InputSystem.InputSystem.devices) UnityEngine.InputSystem.InputSystem.EnableDevice(d); 1' >/dev/null
 }
 
 cmd_stop() { uj editor.playmode stop >/dev/null; echo STOPPED; }
