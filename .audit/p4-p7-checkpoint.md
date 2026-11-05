@@ -2,7 +2,8 @@
 
 사용자 지시: "이후로 p7까지 쭉 진행. pr은 작성없이 P7까지 완료하고 작성. 각 페이즈마다 DEV브랜치에 푸쉬 처리만". 페이즈마다 작업 브랜치를 `git push origin HEAD:dev` (fast-forward) 로 올리고, P7 이 끝나면 dev→main PR 하나를 쓴다. 보고는 한국어.
 
-## 지금 상태 (갱신 2)
+## 지금 상태 (갱신 3)
+- P6 dev push (6f1e7be, #10), P7 dev push (7119010, #11). 남은 것: dev→main PR, 한국어 보고.
 - P4 dev push (c6413fb, 이슈 #8 닫음). P5 dev push (67ddba4, 이슈 #9 닫음).
 - 다음은 P6. dev 에서 `p6-board` 브랜치.
 
