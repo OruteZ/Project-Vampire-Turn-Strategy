@@ -6,9 +6,9 @@ namespace VampireSpawn.Core
 {
     public sealed partial class Battle
     {
-        static readonly string[] ActingOrder = { "skeleton", "spawn", "vampire" };
+        static readonly Role[] ActingOrder = { Role.Skeleton, Role.Spawn, Role.Vampire };
 
-        bool MoonNext()
+        public bool MoonNext()
         {
             var v = Vampire;
             return v != null && !v.Asleep && Moon + 1 >= Rules.MoonMax;
@@ -19,7 +19,7 @@ namespace VampireSpawn.Core
             Phase = Phase.Enemy;
             Say("— " + Turn + "턴 적 페이즈 —", "t");
             Emit(BattleEvent.Banner(Turn + "턴 · 적 페이즈", "enemy"));
-            foreach (var c in Corpses.ToList()) Rise(c);
+            foreach (var c in corpses.ToList()) Rise(c);
 
             var v = Vampire;
             var wasAwake = v != null && !v.Asleep;
@@ -30,6 +30,7 @@ namespace VampireSpawn.Core
             {
                 v.Asleep = false;
                 v.JustWoke = true;
+                Emit(BattleEvent.Woke(v.Id));
                 Say("달빛에 관이 열렸다. " + Korean.Josa(v.Name, "이", "가") + " 깨어났다!", "k");
                 Emit(BattleEvent.Banner("관이 열렸다", "enemy"));
             }
@@ -41,16 +42,16 @@ namespace VampireSpawn.Core
 
             foreach (var kind in ActingOrder)
             {
-                foreach (var e in Units.Where(x => x.Side == Side.Enemy && x.Kind == kind).ToList())
+                foreach (var e in units.Where(x => x.Role == kind).ToList())
                 {
-                    if (!Units.Contains(e) || e.JustRisen || e.Asleep || e.JustWoke) continue;
-                    if (kind == "vampire" && full) continue;
+                    if (!units.Contains(e) || e.JustRisen || e.Asleep || e.JustWoke) continue;
+                    if (kind == Role.Vampire && full) continue;
                     MeleeAct(e);
                     if (CheckEnd()) return;
                 }
             }
 
-            foreach (var u in Units)
+            foreach (var u in units)
             {
                 if (u.Side == Side.Enemy) { u.JustRisen = false; u.JustWoke = false; }
                 else { u.Moved = false; u.Acted = false; u.MovedDist = 0; u.Cleaved = false; }
@@ -64,13 +65,15 @@ namespace VampireSpawn.Core
 
         void Rise(Corpse c)
         {
-            Corpses.Remove(c);
-            Units.Add(new Unit
+            corpses.Remove(c);
+            var spawn = new Unit
             {
-                Id = nextId++, Side = Side.Enemy, Kind = "spawn", Type = c.Type, Name = "스폰(" + c.Name + ")", Glyph = c.Glyph,
+                Id = nextId++, Role = Role.Spawn, Type = c.Type, Name = "스폰(" + c.Name + ")", Glyph = c.Glyph,
                 Pos = c.Pos, Hp = c.MaxHp, MaxHp = c.MaxHp, Atk = c.Atk, Def = c.Def, Mov = c.Mov, Rng = 1,
                 JustRisen = true, Origin = c.Name,
-            });
+            };
+            units.Add(spawn);
+            Emit(BattleEvent.Rose(spawn.Id, c.Id, spawn.Pos));
             Stats.Risen++;
             Say(Korean.Josa(c.Name, "이", "가") + " 뱀파이어 스폰으로 일어났다.", "s");
         }
@@ -117,6 +120,7 @@ namespace VampireSpawn.Core
                 Stats.Drained++;
                 Kill(t, v, DeathCause.Drain);
                 v.Hp = Math.Min(v.MaxHp, v.Hp + v.Heal);
+                Emit(BattleEvent.HpChanged(v.Id, v.Hp));
                 Emit(BattleEvent.Popup(v.Id, "+" + v.Heal, "heal"));
                 Moon = 0;
                 EatTarget = null;
@@ -182,20 +186,21 @@ namespace VampireSpawn.Core
                     }
                 }
                 if (best.HasValue && best.Value != e.Pos) MoveEnemy(e, best.Value);
+                // No liveness check: an enemy the pike wall just killed still strikes, as in the prototype. docs/systems/unity-port.md
                 adj = AdjacentAllies(e.Pos);
             }
             if (adj.Count > 0) ApplyHit(e, PickTarget(e, adj));
         }
 
-        // The prototype lets an enemy that just died to a pike wall still strike (meleeAct does not re-check it). Kept on purpose: docs/systems/unity-port.md.
         void MoveEnemy(Unit e, Hex to)
         {
             Walk(e, to);
             foreach (var a in Allies.ToList())
             {
-                if (!Units.Contains(e)) break;
+                if (!units.Contains(e)) break;
                 if (!a.Has(Ability.Pike) || Hex.Distance(a.Pos, e.Pos) != 1) continue;
                 e.Hp -= 1;
+                Emit(BattleEvent.HpChanged(e.Id, e.Hp));
                 Emit(BattleEvent.Popup(e.Id, "-1", "dmg"));
                 Say(a.Name + "의 창벽 → " + e.Name + " 1 피해", "h");
                 if (e.Hp <= 0) { Kill(e, a, DeathCause.Blow); break; }

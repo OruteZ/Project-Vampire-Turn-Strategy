@@ -46,6 +46,8 @@ namespace VampireSpawn.Tests
             "place" => b.Place(KindOf(c.kind), ParseHex(c.to)),
             "recall" => b.Recall(c.id),
             "relocate" => b.Relocate(c.id, ParseHex(c.to)),
+            "clear" => b.ClearAllies(),
+            "sample" => b.UseSample(),
             _ => throw new ArgumentException("unknown op " + c.op),
         };
 
@@ -69,9 +71,10 @@ namespace VampireSpawn.Tests
                 var at = name + " step " + i + " " + step.cmd + " ";
                 var result = Run(battle, JsonUtility.FromJson<Cmd>(step.cmd));
                 Assert.IsTrue(result.Ok, at + "rejected: " + result.Reason);
-                Assert.AreEqual(step.events, result.Events.Select(e => e.ToString()).ToArray(), at + "events");
+                Assert.AreEqual(step.events, result.Events.Where(e => e.InPrototype).Select(e => e.ToString()).ToArray(), at + "events");
                 Assert.AreEqual(step.snap, battle.Snapshot(), at + "state");
             }
+            Assert.AreEqual(battle.Vampire == null, battle.Won, name + " won flag");
             Assert.AreEqual(trace.finalLog, battle.Log.Select(l => l.Text + "|" + l.Style).ToArray(), name + " final 80-line log");
         }
     }
