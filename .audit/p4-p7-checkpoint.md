@@ -4,7 +4,7 @@
 
 ## 지금 상태 (갱신)
 - P4 끝: dev 에 push (c6413fb), 이슈 #8 닫음. 리뷰 반영까지 완료.
-- 브랜치 `p5-campaign` (dev 에서). P5 파일이 아직 커밋 안 됨: tools/golden/campaign.mjs, out/campaign.json, prototype-golden.mjs 의 campaign 명령, Core/Campaign.cs, Game/CampaignStore.cs, Tests/CampaignParityTests.cs. CampaignParity 4/4 통과, 빨강 확인 끝.
+- 브랜치 `p5-campaign` (dev 에서, 커밋·push 됨, dev 에는 아직 안 올림). P5 파일: tools/golden/campaign.mjs, out/campaign.json, prototype-golden.mjs 의 campaign 명령, Core/Campaign.cs, Game/CampaignStore.cs, Tests/CampaignParityTests.cs. CampaignParity 4/4 통과, 빨강 확인 끝.
 
 ## 다음 순서
 2. P5: dev 에서 `p5-campaign` 브랜치, 위 P5 파일 커밋, 계획 P5 lane 10개·perf, dev 로 push, 이슈 열고 닫기.
