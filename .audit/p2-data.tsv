@@ -6,3 +6,5 @@ ts	phase	decision	why	evidence	result
 2026-11-05T02:51:41Z	build	골든 도구 data/csharp 두 명령, 손으로 쓴 타입 파일, 생성된 GameData.cs, 비교 테스트 5개	생성기와 별개로 JSON 을 다시 읽어 비교하므로 생성기 실수도 잡힘	tools/golden/prototype-golden.mjs, GameDataParityTests	5/5 통과
 2026-11-05T02:51:41Z	build	지도를 Terrain enum 으로 읽는 것은 P3 로 미룸	P2 에서 지형을 쓰는 코드가 없음. 지도 문자열은 그대로 비교함	docs/systems/unity-port.md	deferred
 2026-11-05T02:51:42Z	live	lane 을 검증 worktree 대신 깨끗한 메인 트리 head 에서 메인 에디터로 돌림	여유 메모리가 부족해 에디터 둘을 띄우지 않음. 메인 트리가 커밋과 같으면 검증 대상이 같음	git status 깨끗함 확인 후 실행	decided
+2026-11-05T02:53:30Z	live	lane 10개를 메인 에디터 head 3fd4027 에서 돌림	계획 P2 lane	verify-artifacts/p2-lanes/lanes.txt	VERIFIED 10/10
+2026-11-05T02:53:30Z	perf	테스트 실행의 Duration 은 러너 준비 시간을 포함한 전체 값이라, Smoke 만 돌린 실행과 번갈아 비교함	2.87초는 비교 테스트 시간이 아니라 러너 시간이었음	smoke 2.86/2.87/2.87 vs parity 2.87/2.88/2.89, 테스트별 합 0.0145s	VERIFIED 추가 약 0.01~0.02s, 기준 2s
