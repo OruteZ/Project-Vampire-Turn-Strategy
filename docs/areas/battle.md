@@ -5,6 +5,7 @@
 - 계획: `docs/systems/unity-port-plan.md`
 - 코드: `Assets/_Project/Scripts/Core/` (규칙, Unity 참조 없음), `Assets/_Project/Scripts/Game/` (화면·입력)
 - 테스트: `Assets/_Project/Tests/EditMode/`
+- HTML 정답 도구: `tools/golden/prototype-golden.mjs` (설명은 `docs/systems/unity-port.md`)
 - 씬: `Assets/_Project/Scenes/Main.unity` (Build Settings 0번)
 - 검증: `.claude/skills/verify-unity/`
 
@@ -15,8 +16,9 @@
 | 에디터 작업은 전부 Unity CLI 로 한다 | 시험 중 | 2026-11-05 | CLAUDE.md |
 
 ## 열린 작업
-- #2 P1 프로젝트 골격과 에셋 임포트
+- #4 P2 골든 기록 도구와 게임 데이터
 
 ## 맡길 때
 - 모델: 규칙 이식(P4)은 opus xhigh, 나머지 구현은 opus low (`~/.claude/rules/pstack-models.md`)
+- 함정: `GameData.cs` 는 생성 파일이다. 값은 HTML 을 고친 뒤 `node tools/golden/prototype-golden.mjs data` 와 `csharp` 로 바꾼다.
 - 함정: `VampireSpawn.Core` 는 `noEngineReferences` 다. 규칙 코드에 `UnityEngine` 을 쓰면 컴파일이 깨진다. 화면에 필요한 것은 `Game` 쪽에 둔다.
