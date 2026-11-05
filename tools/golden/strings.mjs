@@ -1,6 +1,7 @@
 import fs from 'node:fs';
 import { commands } from './battle.mjs';
 import { recorder } from './overlay.mjs';
+import { applyDesignPatches } from './design-patches.mjs';
 
 const VOID = new Set(['br', 'input', 'img', 'meta', 'link']);
 const INLINE = new Set(['b', 'em', 'i', 'small', 'br', 'svg', 'strong']);
@@ -42,7 +43,7 @@ export function blocks(n, out = []) {
 const html = (s) => blocks(parse(s || ''));
 
 function menuBlocks(p, els, file) {
-  const src = fs.readFileSync(file, 'utf8');
+  const src = applyDesignPatches(fs.readFileSync(file, 'utf8'));
   const menu = src.slice(src.indexOf('<section id="menu"'), src.indexOf('<section id="camp"'));
   p.renderMenu();
   return html(menu.replace('<span class="meta" id="campMeta"></span>', `<span class="meta">${p.$('campMeta').textContent}</span>`));
@@ -69,7 +70,7 @@ export async function extractStrings(load, file) {
   for (const [name, C, arm] of [['camp-fresh', fresh(), false], ['camp-progress', progress(), false], ['camp-armed', progress(), true]]) {
     const { p, els } = setup(C);
     p.M = 'camp';
-    p.resetArm = arm; p.respecArm = arm;
+    p.resetArm = arm;
     p.renderCamp();
     out.push({ name, screen: 'camp', camp: campOf(C), arm, blocks: html(p.$('camp').innerHTML) });
   }

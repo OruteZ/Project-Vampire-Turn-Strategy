@@ -10,7 +10,7 @@ namespace VampireSpawn.Game.Screens
     {
         public Action<int> Play;
         public Action<string> Buy;
-        public Action Respec, Reset, Menu;
+        public Action Reset, Menu;
     }
 
     public static class CampaignScreen
@@ -20,7 +20,7 @@ namespace VampireSpawn.Game.Screens
 
         public static string Resources(Stage s) => "인구 " + s.Pop + (s.Silver > 0 ? " · 은 " + s.Silver : "");
 
-        public static void Build(RectTransform root, Campaign c, bool resetArm, bool respecArm, CampaignActions a)
+        public static void Build(RectTransform root, Campaign c, bool resetArm, string buyArm, CampaignActions a)
         {
             var page = Ui.Col(root, "Campaign", 14, 16);
             Ui.Stretch(page);
@@ -50,17 +50,14 @@ namespace VampireSpawn.Game.Screens
             Ui.Size(rs, -1, -1, 1.25f, 1);
             var arm = Ui.Card(right, "Barracks");
             Ui.Text(arm, "병영 · 유닛 강화", 1.05f, Ui.Bone, true, true);
-            var spent = c.SpentGold;
-            if (spent > 0)
-                Ui.Button(arm, respecArm ? "정말 초기화할까요? " + spent + " 금화 환불" : "강화 초기화 · " + spent + " 금화 전액 환불", a.Respec, respecArm ? Look.DangerOn : Look.Ghost, true);
-            Ui.Text(arm, "강화는 같은 병종 전체에 적용됩니다. 유닛이 해금된 장을 클리어한 뒤부터 그 유닛을 강화할 수 있습니다. 능력치 강화는 스폰이 되었을 때 그대로 물려받고, 기술 강화는 물려받지 않습니다.", 0.9f, Ui.Muted);
+            Ui.Text(arm, "강화는 같은 병종 전체에 적용되고, 한 번 사면 되돌릴 수 없습니다. 유닛이 해금된 장을 클리어한 뒤부터 그 유닛을 강화할 수 있습니다. 스폰이 되면 체력·공격·이동 강화만 물려받습니다.", 0.9f, Ui.Muted);
             var open = GameData.Types.Where(t => c.UpgradesOpen(t.Kind)).ToList();
             if (open.Count == 0)
             {
                 var none = Ui.Card(right, "Locked");
                 Ui.Text(none, "아직 강화할 수 있는 병종이 없습니다. 1장을 클리어하면 농민군 강화가 열립니다.", 0.9f, Ui.Muted);
             }
-            foreach (var t in open) ArmCard(right, c, t, a);
+            foreach (var t in open) ArmCard(right, c, t, buyArm, a);
         }
 
         static void StageCard(Transform parent, Campaign c, int i, CampaignActions a)
@@ -99,7 +96,7 @@ namespace VampireSpawn.Game.Screens
             }
         }
 
-        static void ArmCard(Transform parent, Campaign c, UnitType t, CampaignActions a)
+        static void ArmCard(Transform parent, Campaign c, UnitType t, string buyArm, CampaignActions a)
         {
             var card = Ui.Card(parent, "Arm " + t.Key);
             var head = Ui.Row(card, "Head", 10);
@@ -123,7 +120,8 @@ namespace VampireSpawn.Game.Screens
                 {
                     var id = u.Id;
                     var acts = Ui.Row(box, "Acts", 0);
-                    Ui.Button(acts, "강화", () => a.Buy?.Invoke(id), Look.Normal, true, c.Gold >= u.Cost);
+                    var armed = buyArm == u.Id;
+                    Ui.Button(acts, armed ? "정말 살까요? " + u.Cost + " 금화" : "강화", () => a.Buy?.Invoke(id), armed ? Look.DangerOn : Look.Normal, true, c.Gold >= u.Cost);
                 }
             }
         }

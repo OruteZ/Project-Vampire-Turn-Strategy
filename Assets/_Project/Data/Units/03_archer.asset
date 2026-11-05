@@ -33,7 +33,6 @@ MonoBehaviour:
     displayName: "\uC7A5\uAD81"
     desc: "\uC0AC\uAC70\uB9AC +1"
     cost: 60
-    inherit: 0
     hp: 0
     atk: 0
     def: 0
@@ -45,7 +44,6 @@ MonoBehaviour:
     displayName: "\uB2E8\uB828\uB41C \uD654\uC0B4\uCD09"
     desc: "\uACF5\uACA9 +1"
     cost: 60
-    inherit: 1
     hp: 0
     atk: 1
     def: 0

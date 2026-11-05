@@ -63,12 +63,6 @@ namespace VampireSpawn.Core
             return true;
         }
 
-        public void Respec()
-        {
-            Gold += SpentGold;
-            upgrades.Clear();
-        }
-
         public StageResult Finish(Stage stage, bool won, bool bonusMet)
         {
             if (!won) return default;

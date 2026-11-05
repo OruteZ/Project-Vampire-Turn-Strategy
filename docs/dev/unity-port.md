@@ -6,6 +6,8 @@
 
 ## HTML 과 같은지 확인하는 방법
 
+- 기준값은 HTML 데모 그대로가 아니라 **HTML + 기획서 차이 목록**(`tools/golden/design-patches.mjs`)으로 뽑는다. 목록의 줄마다 근거 기획서(예: docs/systems/spawn.md 9)를 적는다. 고칠 곳을 HTML 에서 못 찾으면 도구가 멈춘다. 기획서가 HTML 과 다른 규칙을 정하면 여기에 한 줄 더하고 `prototype-golden.mjs` 의 data·csharp·battle·overlay·strings·campaign 을 다시 뽑는다.
+
 `tools/golden/prototype-golden.mjs` 가 `docs/Prototype.html` 의 `<script>` 를 node `vm` 에서 화면 없이 그대로 돌린다. 여기서 뽑은 값이 정답(골든)이다. C# 테스트는 이 정답과 한 칸씩 비교한다.
 
 | 명령 | 만드는 것 |

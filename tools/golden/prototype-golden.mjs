@@ -6,6 +6,7 @@ import { extractBattles } from './battle.mjs';
 import { extractCampaign } from './campaign.mjs';
 import { extractOverlays } from './overlay.mjs';
 import { extractStrings } from './strings.mjs';
+import { applyDesignPatches } from './design-patches.mjs';
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..', '..');
 const HTML = path.join(ROOT, 'docs', 'Prototype.html');
@@ -13,7 +14,7 @@ const OUT = path.join(ROOT, 'tools', 'golden', 'out');
 const GAMEDATA_CS = path.join(ROOT, 'Assets', '_Project', 'Scripts', 'Core', 'PrototypeData.cs');
 
 export function loadPrototype() {
-  const html = fs.readFileSync(HTML, 'utf8');
+  const html = applyDesignPatches(fs.readFileSync(HTML, 'utf8'));
   const src = html.slice(html.indexOf('<script>') + 8, html.lastIndexOf('</script>'));
   const stub = () => new Proxy(function () {}, {
     get: (_, k) => (k === Symbol.toPrimitive ? () => '' : k === 'checked' ? false : k === 'hidden' ? true : stub()),
@@ -130,7 +131,7 @@ export function emitCSharp(d) {
   L.push('        static Upgrade[] Upgrades() => new[]', '        {');
   for (const u of d.upgrades) {
     const abil = u.abil ? `Ability.${enumName(u.abil)}` : 'Ability.None';
-    L.push(`            new Upgrade(UnitKind.${pascal(u.unit)}, ${str(u.id)}, ${str(u.name)}, ${str(u.desc)}, ${u.cost}, ${u.inherit}, new StatMod(${u.hp}, ${u.atk}, ${u.def}, ${u.mov}, ${u.rng}, ${u.bane}), ${abil}),`);
+    L.push(`            new Upgrade(UnitKind.${pascal(u.unit)}, ${str(u.id)}, ${str(u.name)}, ${str(u.desc)}, ${u.cost}, new StatMod(${u.hp}, ${u.atk}, ${u.def}, ${u.mov}, ${u.rng}, ${u.bane}), ${abil}),`);
   }
   L.push('        };', '');
   const k = d.skeleton;

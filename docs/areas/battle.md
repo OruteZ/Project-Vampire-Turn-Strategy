@@ -19,7 +19,8 @@
 | UI 는 프리팹 대신 코드로 만든 uGUI, 한글 글꼴은 HTML 목록대로 OS 글꼴을 쓴다(글꼴 파일 내려받기는 사용자 허락 뒤) | 시험 중 | 2026-11-05 | 이슈 #14 |
 
 ## 열린 작업
-- #14 P9 메뉴, 캠페인, 전투 UI
+- 위협 범위 토글이 docs/design/ui.md "위협 범위는 직접 제공하지 않는다" 와 다르다. 전투 화면 기획서(docs/ui/battle-hud.md)가 아직 없다
+- 메뉴 정식 제목 (docs/ui/main-menu.md 열린 질문)
 
 ## 맡길 때
 - 모델: 규칙 이식(P4)은 opus xhigh, 나머지 구현은 opus low (`~/.claude/rules/pstack-models.md`)

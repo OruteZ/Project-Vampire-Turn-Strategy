@@ -13,7 +13,6 @@ namespace VampireSpawn.Game.Data
         public string displayName;
         [TextArea(1, 3)] public string desc;
         public int cost;
-        [Tooltip("스폰이 되었을 때 물려받는지 (카드 표시)")] public bool inherit;
         public int hp, atk, def, mov, rng, bane;
         public Ability ability;
     }
@@ -35,7 +34,7 @@ namespace VampireSpawn.Game.Data
         public UnitType ToCore() => new UnitType(kind, key, displayName, glyph, tier, pop, silver, hp, atk, def, mov, rng, bane, unlockAt, desc);
 
         public IEnumerable<Upgrade> UpgradesToCore() =>
-            upgrades.Select(u => new Upgrade(kind, u.id, u.displayName, u.desc, u.cost, u.inherit, new StatMod(u.hp, u.atk, u.def, u.mov, u.rng, u.bane), u.ability));
+            upgrades.Select(u => new Upgrade(kind, u.id, u.displayName, u.desc, u.cost, new StatMod(u.hp, u.atk, u.def, u.mov, u.rng, u.bane), u.ability));
 
         public void Fill(UnitType t, IEnumerable<Upgrade> ups)
         {
@@ -43,7 +42,7 @@ namespace VampireSpawn.Game.Data
             hp = t.Hp; atk = t.Atk; def = t.Def; mov = t.Mov; rng = t.Rng; bane = t.Bane; unlockAt = t.UnlockAt; desc = t.Desc;
             upgrades = ups.Where(u => u.Unit == t.Kind).Select(u => new UpgradeEntry
             {
-                id = u.Id, displayName = u.Name, desc = u.Desc, cost = u.Cost, inherit = u.Inherit,
+                id = u.Id, displayName = u.Name, desc = u.Desc, cost = u.Cost,
                 hp = u.Mod.Hp, atk = u.Mod.Atk, def = u.Mod.Def, mov = u.Mod.Mov, rng = u.Mod.Rng, bane = u.Mod.Bane, ability = u.Ability,
             }).ToList();
         }

@@ -17,7 +17,6 @@ function buy(p, id) {
   const uk = Object.keys(p.UPGRADES).find((k) => p.UPGRADES[k].includes(up));
   if (up && p.upgradesOpen(uk) && p.C.gold >= up.cost && !p.C.ups[up.id]) { p.C.gold -= up.cost; p.C.ups[up.id] = true; p.saveCamp(); }
 }
-function respec(p) { p.C.gold += p.spentGold(); p.C.ups = {}; p.saveCamp(); }
 function reset(p) { p.C = { gold: 0, cleared: {}, bonus: {}, ups: {} }; p.saveCamp(); }
 
 function finish(p, stageId, { win, turn, drained, skeletonsLeft }) {
@@ -52,14 +51,12 @@ export function extractCampaign(load) {
   }
   play('s2', { win: true, turn: 5, drained: 1, skeletonsLeft: true });
   play('s2', { win: true, turn: 5, drained: 0, skeletonsLeft: true });
-  respec(p); record({ op: 'respec' });
   for (let i = 2; i < ids.length; i++) {
     const s = p.STAGES.find((x) => x.id === ids[i]);
     play(ids[i], { win: true, turn: i, drained: i % 2, skeletonsLeft: i % 3 === 0 });
     for (const up of Object.values(p.UPGRADES).flat()) { buy(p, up.id); record({ op: 'buy', id: up.id }); }
     if (s.bonus.type === 'turns') { play(ids[i], { win: true, turn: s.bonus.val + 1, drained: 0, skeletonsLeft: true }); }
   }
-  respec(p); record({ op: 'respec' });
   reset(p); record({ op: 'reset' });
 
   const loads = ['', 'not json', '{"gold":"12"}', '{"gold":35,"cleared":{"s1":true},"bonus":{},"ups":{"pspear_hp":true}}', 'null'].map((raw) => {

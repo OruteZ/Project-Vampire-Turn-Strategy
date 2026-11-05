@@ -19,18 +19,18 @@ namespace VampireSpawn.Core
 
         static Upgrade[] Upgrades() => new[]
         {
-            new Upgrade(UnitKind.PSpear, "pspear_hp", "누빈 갑옷", "체력 +2", 30, true, new StatMod(2, 0, 0, 0, 0, 0), Ability.None),
-            new Upgrade(UnitKind.PSpear, "pspear_pike", "창벽", "적이 바로 옆 칸으로 들어오면 1 피해", 40, false, new StatMod(0, 0, 0, 0, 0, 0), Ability.Pike),
-            new Upgrade(UnitKind.PArcher, "parcher_mov", "가벼운 차림", "이동 +1", 30, true, new StatMod(0, 0, 0, 1, 0, 0), Ability.None),
-            new Upgrade(UnitKind.PArcher, "parcher_ambush", "매복 사격", "이동하지 않고 공격하면 피해 +1", 40, false, new StatMod(0, 0, 0, 0, 0, 0), Ability.Ambush),
-            new Upgrade(UnitKind.Sword, "sword_def", "사슬 갑옷", "방어 +1", 60, true, new StatMod(0, 0, 1, 0, 0, 0), Ability.None),
-            new Upgrade(UnitKind.Sword, "sword_cleave", "베어 넘기기", "적을 쓰러뜨리면 한 번 더 공격 (턴당 1회)", 70, false, new StatMod(0, 0, 0, 0, 0, 0), Ability.Cleave),
-            new Upgrade(UnitKind.Archer, "archer_rng", "장궁", "사거리 +1", 60, false, new StatMod(0, 0, 0, 0, 1, 0), Ability.None),
-            new Upgrade(UnitKind.Archer, "archer_atk", "단련된 화살촉", "공격 +1", 60, true, new StatMod(0, 1, 0, 0, 0, 0), Ability.None),
-            new Upgrade(UnitKind.Knight, "knight_def", "판금 갑옷", "방어 +1", 80, true, new StatMod(0, 0, 1, 0, 0, 0), Ability.None),
-            new Upgrade(UnitKind.Knight, "knight_charge", "돌격", "2칸 이상 이동한 뒤 공격하면 피해 +2", 80, false, new StatMod(0, 0, 0, 0, 0, 0), Ability.Charge),
-            new Upgrade(UnitKind.Hunter, "hunter_bane", "정련한 은탄", "뱀파이어·스폰에게 추가 피해 +2", 70, false, new StatMod(0, 0, 0, 0, 0, 2), Ability.None),
-            new Upgrade(UnitKind.Hunter, "hunter_mov", "가벼운 장화", "이동 +1", 70, true, new StatMod(0, 0, 0, 1, 0, 0), Ability.None),
+            new Upgrade(UnitKind.PSpear, "pspear_hp", "누빈 갑옷", "체력 +2", 30, new StatMod(2, 0, 0, 0, 0, 0), Ability.None),
+            new Upgrade(UnitKind.PSpear, "pspear_pike", "창벽", "적이 바로 옆 칸으로 들어오면 1 피해", 40, new StatMod(0, 0, 0, 0, 0, 0), Ability.Pike),
+            new Upgrade(UnitKind.PArcher, "parcher_mov", "가벼운 차림", "이동 +1", 30, new StatMod(0, 0, 0, 1, 0, 0), Ability.None),
+            new Upgrade(UnitKind.PArcher, "parcher_ambush", "매복 사격", "이동하지 않고 공격하면 피해 +1", 40, new StatMod(0, 0, 0, 0, 0, 0), Ability.Ambush),
+            new Upgrade(UnitKind.Sword, "sword_def", "사슬 갑옷", "방어 +1", 60, new StatMod(0, 0, 1, 0, 0, 0), Ability.None),
+            new Upgrade(UnitKind.Sword, "sword_cleave", "베어 넘기기", "적을 쓰러뜨리면 한 번 더 공격 (턴당 1회)", 70, new StatMod(0, 0, 0, 0, 0, 0), Ability.Cleave),
+            new Upgrade(UnitKind.Archer, "archer_rng", "장궁", "사거리 +1", 60, new StatMod(0, 0, 0, 0, 1, 0), Ability.None),
+            new Upgrade(UnitKind.Archer, "archer_atk", "단련된 화살촉", "공격 +1", 60, new StatMod(0, 1, 0, 0, 0, 0), Ability.None),
+            new Upgrade(UnitKind.Knight, "knight_def", "판금 갑옷", "방어 +1", 80, new StatMod(0, 0, 1, 0, 0, 0), Ability.None),
+            new Upgrade(UnitKind.Knight, "knight_charge", "돌격", "2칸 이상 이동한 뒤 공격하면 피해 +2", 80, new StatMod(0, 0, 0, 0, 0, 0), Ability.Charge),
+            new Upgrade(UnitKind.Hunter, "hunter_bane", "정련한 은탄", "뱀파이어·스폰에게 추가 피해 +2", 70, new StatMod(0, 0, 0, 0, 0, 2), Ability.None),
+            new Upgrade(UnitKind.Hunter, "hunter_mov", "가벼운 장화", "이동 +1", 70, new StatMod(0, 0, 0, 1, 0, 0), Ability.None),
         };
 
         static EnemyStats Skeleton() => new EnemyStats("스켈레톤", "골", 4, 2, 0, 3, 1);
