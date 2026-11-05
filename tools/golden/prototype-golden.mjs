@@ -63,6 +63,49 @@ export function extractData(p) {
   };
 }
 
+export function extractHex(p) {
+  const cell = ([c, r]) => `${c},${r}`;
+  const step = ([k, d]) => `${k}:${d}`;
+  const pos = (u) => cell([u.x, u.y]);
+  const scenario = (st, withCorpse) => {
+    p.S = { stage: st, units: [], corpses: [] };
+    for (const [k, c, r] of st.enemies) p.S.units.push(p.mkEnemy(k, c, r, st.boss));
+    for (const [t, c, r] of st.sample) p.S.units.push(p.mkAlly(t, c, r));
+    if (withCorpse) {
+      const gone = p.S.units.find((u) => u.side === 'ally');
+      p.S.units = p.S.units.filter((u) => u !== gone);
+      p.S.corpses.push({ id: 0, x: gone.x, y: gone.y });
+    }
+    const cells = [];
+    for (let r = 0; r < p.ROWS; r++) for (let c = 0; c < p.COLS; c++) cells.push([c, r]);
+    const targets = cells.filter(([c, r]) => (c + r) % 3 === 0);
+    const field = (side, other) => {
+      const goals = [];
+      for (const a of p.S.units.filter((u) => u.side === other)) for (const [c, r] of p.nbrs(a.x, a.y)) if (!p.blocked(c, r, side) && !p.unitAt(c, r)) goals.push([c, r]);
+      return [...p.distField(goals, side)].sort(([a], [b]) => (a < b ? -1 : 1)).map(step);
+    };
+    return {
+      units: p.S.units.map((u) => ({
+        side: u.side, kind: u.kind, x: u.x, y: u.y, mov: u.mov,
+        reach: [...p.reachable(u)].map(step),
+        paths: targets.map(([c, r]) => ({ to: cell([c, r]), path: p.pathTo(u, c, r).map(cell) })),
+      })),
+      corpses: p.S.corpses.map(pos),
+      fieldEnemy: field('enemy', 'ally'),
+      fieldAlly: field('ally', 'enemy'),
+    };
+  };
+  return p.STAGES.map((st) => {
+    p.setDims(st);
+    p.S = { stage: st, units: [], corpses: [] };
+    const cells = [];
+    for (let r = 0; r < p.ROWS; r++) for (let c = 0; c < p.COLS; c++) {
+      cells.push({ c, r, walkable: p.walkable(c, r), lit: p.lit(c, r), nbrs: p.nbrs(c, r).map(cell), dist00: p.hd({ x: c, y: r }, { x: 0, y: 0 }) });
+    }
+    return { id: st.id, cols: p.COLS, rows: p.ROWS, cells, base: scenario(st, false), corpse: scenario(st, true) };
+  });
+}
+
 const pascal = (k) => ({ pspear: 'PSpear', parcher: 'PArcher' })[k] ?? k[0].toUpperCase() + k.slice(1);
 const enumName = (v) => v.replace(/(^|[^a-zA-Z])([a-z])/g, (_, a, b) => b.toUpperCase()).replace(/^./, (c) => c.toUpperCase());
 const str = (v) => JSON.stringify(v);
@@ -113,7 +156,9 @@ if (cmd === 'data') {
   write(path.join(OUT, 'data.json'), JSON.stringify(extractData(loadPrototype()), null, 1) + '\n');
 } else if (cmd === 'csharp') {
   write(GAMEDATA_CS, emitCSharp(JSON.parse(fs.readFileSync(path.join(OUT, 'data.json'), 'utf8'))));
+} else if (cmd === 'hex') {
+  write(path.join(OUT, 'hex.json'), JSON.stringify(extractHex(loadPrototype())) + '\n');
 } else if (cmd) {
-  console.error('usage: node tools/golden/prototype-golden.mjs data|csharp');
+  console.error('usage: node tools/golden/prototype-golden.mjs data|csharp|hex');
   process.exit(2);
 }
