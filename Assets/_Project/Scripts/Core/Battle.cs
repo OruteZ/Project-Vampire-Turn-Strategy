@@ -363,7 +363,7 @@ namespace VampireSpawn.Core
         {
             var (d, tags) = DamageParts(att, def);
             def.Hp -= d;
-            Emit(BattleEvent.Hit(def.Id));
+            Emit(BattleEvent.Hit(def.Id, att.Id));
             Emit(BattleEvent.HpChanged(def.Id, def.Hp));
             Emit(BattleEvent.Popup(def.Id, "-" + d, "dmg"));
             Say(att.Name + " → " + def.Name + " " + d + " 피해" + (tags.Count > 0 ? " (" + string.Join(", ", tags) + ")" : ""),

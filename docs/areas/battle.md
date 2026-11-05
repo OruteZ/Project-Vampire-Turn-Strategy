@@ -16,7 +16,7 @@
 | 에디터 작업은 전부 Unity CLI 로 한다 | 시험 중 | 2026-11-05 | CLAUDE.md |
 
 ## 열린 작업
-- #10 P6 육각 보드와 지형 화면
+- #11 P7 유닛 모델과 전투 연출
 
 ## 맡길 때
 - 모델: 규칙 이식(P4)은 opus xhigh, 나머지 구현은 opus low (`~/.claude/rules/pstack-models.md`)

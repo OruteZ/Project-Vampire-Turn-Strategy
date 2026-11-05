@@ -113,10 +113,10 @@ namespace VampireSpawn.Game
             if (viewCamera == null) return;
             var a = HexToWorld(new Hex(0, 0));
             var b = HexToWorld(new Hex(Board.Cols - 1, Board.Rows - 1));
-            var center = (a + b) * 0.5f;
+            var center = (a + b) * 0.5f + Vector3.back * art.hexSize * 0.6f;
             var span = Mathf.Max(Mathf.Abs(b.x - a.x), Mathf.Abs(b.z - a.z) * 1.6f) + art.hexSize * 2f;
             var pitch = 55f;
-            var distance = span * 0.5f / Mathf.Tan(viewCamera.fieldOfView * 0.5f * Mathf.Deg2Rad) * 0.72f;
+            var distance = span * 0.5f / Mathf.Tan(viewCamera.fieldOfView * 0.5f * Mathf.Deg2Rad) * 0.8f;
             var rot = Quaternion.Euler(pitch, 0f, 0f);
             viewCamera.transform.rotation = rot;
             viewCamera.transform.position = center - rot * Vector3.forward * distance;

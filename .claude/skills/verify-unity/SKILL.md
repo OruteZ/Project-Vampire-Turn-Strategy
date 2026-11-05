@@ -64,6 +64,7 @@ Build Settings scene 0 is what play mode starts in only when it is the open scen
 
 - `script eval` runs in the Editor update, which has its own Input System state. It reads `(0.00, 0.00)` for a pointer the game did receive. Use `input-probe` and `input-read`, or read the game's own model.
 - Human-format CLI output prints `Error:` with nothing after it on success. Use `--json` (as `vu.sh` does) and check `Success`.
+- PlayMode tests cannot run synchronously over the CLI (entering play mode reloads the domain and drops the request). `$V test playmode <filter>` starts them with `--async-tests` and polls `test status`; its JSON uses lower-case `summary.passed`/`failed`.
 - `unity test` and `unity build` in batchmode fail while an Editor has the project open. Send tests to the open Editor with `$V test`.
 - An `eval` whose code throws or fails to compile makes `vu.sh` exit 1 and print nothing. Rerun it as `unity --no-banner command --project-path "<path>" script eval --code '<code>' --json` to see the error.
 - Feature recipes live in `features/`. Read `features/README.md` before driving.

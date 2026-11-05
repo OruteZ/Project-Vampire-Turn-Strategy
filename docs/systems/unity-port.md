@@ -60,3 +60,11 @@ HTML 이 바뀌면 두 명령을 차례로 돌리고, `data.json` 과 `GameData.
 - 무엇을 그릴지는 `ArtCatalog` 하나가 정한다. 경로 표는 `docs/areas/art-assets.md`.
 - `Game/GameBootstrap` 은 메뉴가 생길 때까지 쓰는 시험용 진입점이다. `stageId` 의 보드를 띄운다. P9 에서 지운다.
 - 스크린샷은 `docs/review/p6-<장>.png`.
+
+## 유닛 모델과 전투 연출 (P7)
+
+- `Game/BattleView` 가 `Battle` 하나를 화면에 붙인다. `Begin(battle)` 이 보드와 유닛을 그리고, `Run(b => b.명령())` 이 명령을 실행한 뒤 결과 이벤트를 차례로 재생한다. 기다리는 시간은 HTML `wait` 값 그대로이고 `speed` 로 빠르게 돌릴 수 있다. `Mismatches()` 는 재생이 끝난 뒤 화면(위치, 체력 막대, 눕기, 시신)과 규칙 상태의 차이를 돌려준다.
+- `Game/UnitView` 는 모델 하나와 발밑 고리(아군은 병종 등급 색, 스켈레톤 뼈색, 뱀파이어 붉은색, 스폰 보라), 체력 막대, 애니메이터(`Art/Unit.controller`)를 가진다. 잠든 뱀파이어와 시신은 눕힌다.
+- `Game/Popup` 은 피해·흡혈 숫자를 띄운다. 기본 레거시 폰트라 한글은 OS 폰트로 대신 그려진다. 한글 폰트는 P9 에서 들인다.
+- 모델 표는 `docs/areas/art-assets.md`. 스크린샷은 `docs/review/p7-*.png`.
+- `Tests/PlayMode/BattlePlaybackTests` 가 골든 기록 넷을 화면으로 재생하며 명령마다 `Mismatches()` 가 비었는지 본다.

@@ -116,7 +116,7 @@ namespace VampireSpawn.Core
             {
                 Say("보름달 아래 " + Korean.Josa(v.Name, "이", "가") + " " + Korean.Josa(t.Name, "을", "를") + " 먹어치웠다!", "k");
                 Emit(BattleEvent.Popup(t.Id, "흡혈", "blood"));
-                Emit(BattleEvent.Hit(t.Id));
+                Emit(BattleEvent.Hit(t.Id, v.Id));
                 Stats.Drained++;
                 Kill(t, v, DeathCause.Drain);
                 v.Hp = Math.Min(v.MaxHp, v.Hp + v.Heal);

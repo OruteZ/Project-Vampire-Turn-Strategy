@@ -20,7 +20,7 @@ RenderSettings:
   m_FogDensity: 0.01
   m_LinearFogStart: 0
   m_LinearFogEnd: 300
-  m_AmbientSkyColor: {r: 0.16470589, g: 0.14901961, b: 0.2, a: 1}
+  m_AmbientSkyColor: {r: 0.2901961, g: 0.26666668, b: 0.34509805, a: 1}
   m_AmbientEquatorColor: {r: 0.114, g: 0.125, b: 0.133, a: 1}
   m_AmbientGroundColor: {r: 0.047, g: 0.043, b: 0.035, a: 1}
   m_AmbientIntensity: 1
@@ -175,6 +175,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1136401608}
   - component: {fileID: 1136401607}
+  - component: {fileID: 1136401609}
   m_Layer: 0
   m_Name: Game
   m_TagString: Untagged
@@ -194,7 +195,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3a6fdb5d472181844a5699be28aecc32, type: 3}
   m_Name: 
   m_EditorClassIdentifier: VampireSpawn.Game::VampireSpawn.Game.GameBootstrap
-  board: {fileID: 105267849}
+  battle: {fileID: 1136401609}
   stageId: demo
 --- !u!4 &1136401608
 Transform:
@@ -211,6 +212,20 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1136401609
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1136401606}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0e8e4bde70358634aa48aab97c48fcd9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: VampireSpawn.Game::VampireSpawn.Game.BattleView
+  board: {fileID: 105267849}
+  speed: 1
 --- !u!1 &1321022417
 GameObject:
   m_ObjectHideFlags: 0
@@ -361,7 +376,7 @@ Light:
   serializedVersion: 12
   m_Type: 1
   m_Color: {r: 0.56078434, g: 0.6431373, b: 0.8, a: 1}
-  m_Intensity: 0.55
+  m_Intensity: 0.8
   m_Range: 10
   m_SpotAngle: 30
   m_InnerSpotAngle: 21.80208

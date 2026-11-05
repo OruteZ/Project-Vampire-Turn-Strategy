@@ -24,7 +24,7 @@
 | UI 는 uGUI 로 만든다 (INTERFACE 패키지가 RectTransform 프리팹, UXML 없음) | 시험 중 | 2026-11-05 | #2 |
 
 ## 열린 작업
-- 관(coffin) 프리팹을 아직 못 찾았다 (계획 위험 4, P7)
+- 관(coffin) 프리팹이 없어 P7 은 상자로 대신했다. 맞는 소품을 찾으면 바꾼다
 
 ## 맡길 때
 - 함정: 애니메이션 패키지 임포트 때 `Rig Error: Copied Avatar Rig Configuration mis-match` 경고가 수백 개 나온다. Synty 쪽 설정이라 오류가 아니다. 이 클립을 PolygonDarkFantasy 캐릭터에 쓸 때 자세가 맞는지는 P7 에서 본다.
@@ -40,3 +40,18 @@
 | 화톳불 `T` | `SM_Prop_Brazier_01` + `FX_Fire_01` + 점광원 |
 | 햇빛 `S` | `Hex_Sun.mat` + 위에서 비추는 스폿라이트 |
 | 물 `~` | `Hex_Water.mat`, 한 단 낮게 |
+
+## 유닛에 쓰는 것 (P7)
+
+| 유닛 | 모델 |
+|---|---|
+| 농민 창병 | `SidekickCharacters/.../FantasyVillagers_01` |
+| 농민 궁수 | `FantasyVillagers_03` |
+| 검사 | `FantasyKnights_02` |
+| 궁수 | `FantasyKnights_05` |
+| 기사 | `FantasyKnights_01` |
+| 사냥꾼 | `PolygonDarkFantasy/.../SM_Chr_Hunter_Male_01` |
+| 스켈레톤 | `SM_Chr_Skeleton_01` |
+| 뱀파이어 | `SM_Chr_DarkLord_Male_01` (잠들면 짙은 붉은 상자 위에 눕힘) |
+| 스폰 | 원래 병종 모델 + 보라 고리 |
+| 애니메이션 | `Art/Unit.controller` (기본 이동·검 전투 클립) |

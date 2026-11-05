@@ -104,7 +104,14 @@ cmd_console() { uj console get --level "${1:-warn}" --tail "${2:-50}" | tee "$AR
 
 cmd_test() {
   local mode="${1:-editor}" filter="${2:-}"
-  uj test run --mode "$mode" --filter "$filter" | tee "$ART/test-$mode.json"
+  if [ "$mode" != playmode ]; then uj test run --mode "$mode" --filter "$filter" | tee "$ART/test-$mode.json"; return; fi
+  uj test run --mode playmode --filter "$filter" --async-tests true >/dev/null
+  for _ in $(seq 1 360); do
+    local st; st="$(uj test status 2>/dev/null || true)"
+    if echo "$st" | grep -q '"status":"completed"'; then echo "$st" | tee "$ART/test-playmode.json"; return; fi
+    sleep 5
+  done
+  die "playmode tests did not finish in 30 min"
 }
 
 cmd_cleanup() {
