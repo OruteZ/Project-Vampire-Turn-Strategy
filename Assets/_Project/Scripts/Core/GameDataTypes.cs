@@ -77,6 +77,13 @@ namespace VampireSpawn.Core
             Type = type; Value = value; Gold = gold;
         }
 
+        public bool IsMet(int turn, int drained, bool skeletonsLeft) => Type switch
+        {
+            BonusType.Turns => turn <= Value,
+            BonusType.NoEat => drained == 0,
+            _ => !skeletonsLeft,
+        };
+
         public string Text => Type switch
         {
             BonusType.Turns => $"{Value}턴 이내 승리",
