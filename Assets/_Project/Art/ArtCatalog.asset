@@ -1,0 +1,50 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1897c4f1960a35e4187e8bad16a0d925, type: 3}
+  m_Name: ArtCatalog
+  m_EditorClassIdentifier: VampireSpawn.Game::VampireSpawn.Game.ArtCatalog
+  hexSize: 1
+  tileHeight: 0.2
+  plain: {fileID: 2100000, guid: 38f245d05f3140b42b2b8562968dda54, type: 2}
+  lit: {fileID: 2100000, guid: 5f3516fcd86fdb74bab2d1cf84342b91, type: 2}
+  sunlit: {fileID: 2100000, guid: 3c5f99006aacb2a4c907fa9908c8199c, type: 2}
+  rock: {fileID: 2100000, guid: 5d2e247adf49a984998ec2bd0b5c23f3, type: 2}
+  water: {fileID: 2100000, guid: f53a37b5431a5434492b5f7a3bee1b8a, type: 2}
+  rockProps:
+  - {fileID: 5361431197472674691, guid: 632eee49de0562648bc267266b3016cb, type: 3}
+  - {fileID: 4047619411423330996, guid: 9629320e0d4448e43aafe804522b3c22, type: 3}
+  - {fileID: 4733503901829419923, guid: 3941e6e2f78e6eb43a03216c2c433d13, type: 3}
+  brazier: {fileID: 8371062267507710030, guid: 887ca6f05d8eb0940be8f3d4916be6b1, type: 3}
+  fire: {fileID: 5879195395630746260, guid: 66935891f0cc76c46869337a4d1b7fd5, type: 3}
+  torchLight: {r: 0.89, g: 0.66, b: 0.29, a: 1}
+  sunLight: {r: 0.92, g: 0.86, b: 0.68, a: 1}
+  allyModels:
+  - {fileID: 2323011827037694792, guid: 679546d0032e80247a16b67a54cfe2eb, type: 3}
+  - {fileID: 4583569348428284085, guid: d4657b5116e54954e8187f8d35c7f30b, type: 3}
+  - {fileID: 161600633347405171, guid: 97c7d0232c6ce564199adc2aa05e169c, type: 3}
+  - {fileID: 5533246882707064096, guid: a28e6ae6d2fd4ef4cabedbe5dc94cde6, type: 3}
+  - {fileID: 7289070577727616673, guid: 974afb265987efa4182fcd6250d0f2f5, type: 3}
+  - {fileID: 3186528172670679936, guid: 48e71803e3dc7e248a1a532cdef1be17, type: 3}
+  skeleton: {fileID: 8146240625886029692, guid: 15f1b724e0139c5428bff76a4ad9bffe, type: 3}
+  vampire: {fileID: 5669538231628601157, guid: c40f7c9d822c08b43a34200e6ec68ec3, type: 3}
+  unitAnimator: {fileID: 9100000, guid: 2b7b31fac4d09d24bab28abb943acab0, type: 2}
+  flat: {fileID: 2100000, guid: 2024b0488a33d814a987b2e5a4be5fbd, type: 2}
+  unitHeight: 1.5
+  peasantRing: {r: 0.72, g: 0.61, b: 0.45, a: 1}
+  regularRing: {r: 0.56, g: 0.69, b: 0.8, a: 1}
+  knightRing: {r: 0.85, g: 0.87, b: 0.89, a: 1}
+  hunterRing: {r: 0.53, g: 0.72, b: 0.65, a: 1}
+  skeletonRing: {r: 0.71, g: 0.66, b: 0.56, a: 1}
+  vampireRing: {r: 0.78, g: 0.19, b: 0.29, a: 1}
+  spawnRing: {r: 0.65, g: 0.31, b: 0.77, a: 1}
+  coffin: {r: 0.25, g: 0.06, b: 0.11, a: 1}
+  hpBack: {r: 0.06, g: 0.05, b: 0.07, a: 1}
