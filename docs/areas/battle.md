@@ -16,9 +16,10 @@
 | 에디터 작업은 전부 Unity CLI 로 한다 | 시험 중 | 2026-11-05 | CLAUDE.md |
 
 ## 열린 작업
-- #11 P7 유닛 모델과 전투 연출
+- #13 P8 칸 선택, 배치, 범위 표시
 
 ## 맡길 때
 - 모델: 규칙 이식(P4)은 opus xhigh, 나머지 구현은 opus low (`~/.claude/rules/pstack-models.md`)
 - 함정: `GameData.cs` 는 생성 파일이다. 값은 HTML 을 고친 뒤 `node tools/golden/prototype-golden.mjs data` 와 `csharp` 로 바꾼다.
+- 함정: 에디터가 뒤에 있을 때 `wasPressedThisFrame` 은 에디터 입력 갱신에 속할 수 있어 놓친다. `BoardInput` 은 `isPressed` 의 바뀜으로 누름·뗌을 잡는다.
 - 함정: `VampireSpawn.Core` 는 `noEngineReferences` 다. 규칙 코드에 `UnityEngine` 을 쓰면 컴파일이 깨진다. 화면에 필요한 것은 `Game` 쪽에 둔다.

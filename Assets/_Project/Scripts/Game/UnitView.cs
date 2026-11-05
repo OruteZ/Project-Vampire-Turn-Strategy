@@ -13,6 +13,9 @@ namespace VampireSpawn.Game
 
         Animator animator;
         Transform model, barFill, bar;
+        MeshRenderer ring;
+        Color ringColor;
+        public bool Done { get; private set; }
         GameObject coffin;
         ArtCatalog art;
 
@@ -39,6 +42,8 @@ namespace VampireSpawn.Game
 
             var r = Quad(art, root.transform, "Ring", ring * 0.55f, new Vector3(art.hexSize * 1.05f, 0.015f, art.hexSize * 1.05f), PrimitiveType.Cylinder);
             r.localPosition = Vector3.up * 0.01f;
+            view.ring = r.GetComponent<MeshRenderer>();
+            view.ringColor = ring * 0.55f;
             if (showBar)
             {
                 view.bar = new GameObject("HpBar").transform;
@@ -74,6 +79,16 @@ namespace VampireSpawn.Game
             var b = rs[0].bounds;
             foreach (var r in rs) b.Encapsulate(r.bounds);
             if (b.size.y > 0.01f) t.localScale *= height / b.size.y;
+        }
+
+        // Prototype .tk.done dims an ally that has acted this turn.
+        public void SetDone(bool done)
+        {
+            if (Done == done || ring == null) return;
+            Done = done;
+            var block = new MaterialPropertyBlock();
+            block.SetColor(BaseColor, done ? ringColor * 0.3f : ringColor);
+            ring.SetPropertyBlock(block);
         }
 
         public void SetHp(int hp, int max)

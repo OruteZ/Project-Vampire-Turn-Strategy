@@ -32,4 +32,6 @@ Preconditions:
 
 - `$V eval 'UnityEngine.InputSystem.Mouse.current.position.ReadValue()'` prints `(0.00, 0.00)` even when the game received the move, because eval reads the Editor's input state. Only `input-read` or game state shows what the game saw.
 - The probe lives only for one play session. Run `input-probe` again after `$V stop` and `$V play`.
+- `runtime simulate_key --action press` sends down and up in one frame, so game code that watches `isPressed` never sees it. Send `down`, wait about 0.3 s, then `up`.
+- `runtime simulate_pointer --action move` sends a mouse state with no buttons held, so a move while the button is down releases it and a drag cannot be simulated with the CLI. Queue the states instead: `$V eval 'UnityEngine.InputSystem.InputSystem.QueueStateEvent(UnityEngine.InputSystem.Mouse.current, new UnityEngine.InputSystem.LowLevel.MouseState { position = new UnityEngine.Vector2(x, y), buttons = 1 }); 1'` for each point (buttons 1 while held, 0 to release), about 0.25 s apart.
 - Not yet proven for uGUI buttons. The CLI routes clicks through the Input System UI module, so the first UI PR (P9) adds that recipe here.

@@ -52,7 +52,18 @@ namespace VampireSpawn.Game
             return result;
         }
 
-        void SyncDeploy()
+        public UnitView ViewOf(int id) => units.TryGetValue(id, out var v) ? v : null;
+
+        public void ShowDone()
+        {
+            foreach (var kv in units)
+            {
+                var u = Battle.Find(kv.Key);
+                kv.Value.SetDone(u != null && u.Side == Side.Ally && Battle.Phase == Phase.Player && u.Acted);
+            }
+        }
+
+        public void SyncDeploy()
         {
             foreach (var id in new List<int>(units.Keys))
                 if (Battle.Find(id) == null) Remove(units, id, 0f);

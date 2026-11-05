@@ -4,6 +4,7 @@ import vm from 'node:vm';
 import { fileURLToPath } from 'node:url';
 import { extractBattles } from './battle.mjs';
 import { extractCampaign } from './campaign.mjs';
+import { extractOverlays } from './overlay.mjs';
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..', '..');
 const HTML = path.join(ROOT, 'docs', 'Prototype.html');
@@ -164,7 +165,9 @@ if (cmd === 'data') {
   write(path.join(OUT, 'battles.json'), JSON.stringify(await extractBattles(loadPrototype)) + '\n');
 } else if (cmd === 'campaign') {
   write(path.join(OUT, 'campaign.json'), JSON.stringify(extractCampaign(loadPrototype), null, 1) + String.fromCharCode(10));
+} else if (cmd === 'overlay') {
+  write(path.join(OUT, 'overlay.json'), JSON.stringify(await extractOverlays(loadPrototype)) + String.fromCharCode(10));
 } else if (cmd) {
-  console.error('usage: node tools/golden/prototype-golden.mjs data|csharp|hex|battle|campaign');
+  console.error('usage: node tools/golden/prototype-golden.mjs data|csharp|hex|battle|campaign|overlay');
   process.exit(2);
 }

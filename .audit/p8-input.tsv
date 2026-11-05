@@ -1,0 +1,12 @@
+ts	phase	decision	why	evidence	result
+2026-11-05T08:45:58Z	frame	완료 조건: OverlayTests 가 HTML onHex·renderOverlay·hintText 의 모든 단계와 같고, lane 1~10 이 실제 재생 화면에서 통과하고, 다시 그리기 중앙값 5ms·프레임 16.7ms 안	계획 P8	docs/systems/unity-port-plan.md	decided
+2026-11-05T08:45:58Z	build	선택·표시 규칙을 Core BattleSession 에 두고 화면(OverlayView)·입력(BoardInput)은 그리기·전달만	계획 "그릴 칸 목록은 Core 에서 계산". node 골든과 바로 비교할 수 있음	Assets/_Project/Scripts/Core/BattleSession.cs	decided
+2026-11-05T08:45:58Z	harness	overlay 골든: 13판에서 실제 onHex 로 누르고 #lOv innerHTML 을 칸으로 되돌려 적음. 기존 battles.json 은 다시 뽑아도 바이트 같음	DOM 스텁이 innerHTML 을 버려서 #hint·#lOv 만 기록하는 요소로 바꿈	tools/golden/overlay.mjs, out/overlay.json	VERIFIED
+2026-11-05T08:45:58Z	unit	OverlayTests 14/14. 빨강: 위협 범위의 이웃 칸 더하기를 끄면 13/14 실패, 되돌리면 14/14	처음부터 통과해 관찰 방법을 의심함	vu.sh test editor Overlay	VERIFIED
+2026-11-05T08:45:58Z	skill	verify-unity 가 고장: 에디터가 뒤에 있으면 Input System 이 장치를 꺼 simulate_* 가 버려짐(CLI 는 true). play 에서 IgnoreFocus·장치 다시 켜기로 고침, 따로 커밋 be3c48f	입력 프로브가 실제 마우스 좌표만 보임, onEvent 0건	be3c48f	VERIFIED
+2026-11-05T08:45:58Z	build	BoardInput 은 isPressed 의 바뀜으로 누름·뗌을 잡음	프로브는 Dynamic 갱신에서 wasPressedThisFrame 을 봤는데 Update 는 못 봄. 바꾼 뒤 클릭으로 기사 선택됨	verify-artifacts/p8	VERIFIED
+2026-11-05T08:45:58Z	live	lane 5 인구 부족 안내, 6 끌어서 기사↔사냥꾼 바꿈, 7 구역 밖으로 빼서 회수 안내, 4 빈 칸 배치(인구 9→10), 1 기사 선택 이동 칸 15·선택 고리, 2 이동 뒤 이동 칸 사라짐, 3 공격 체력 4→1·행동 끝 고리·팝업 -2, 10 Escape 선택 풀림, 8 위협 범위 44칸, 9 보름달 표적 선·범위	CLI move 가 버튼을 떼서 끌기는 QueueStateEvent 로, Escape 는 down/up 따로	docs/review/p8-*.png	VERIFIED
+2026-11-05T08:45:58Z	live	lane 1 의 trunk 쪽은 실행하지 않고 코드로 확인: P7 에는 입력 코드가 없음	trunk 에 BoardInput 없음	git show origin/dev --stat	INCONCLUSIVE
+2026-11-05T08:45:58Z	perf	다시 그리기 100회 중앙값 0.71ms p95 0.89ms (78칸). 프레임 cpu 9.3ms(대기) 8.9~10.9ms(적 턴 재생), 데모. P7 값(14.4~16.5ms)은 10장이라 같은 장면이 아님	규칙 5ms·16.7ms	diagnostics get_performance	VERIFIED
+2026-11-05T08:45:58Z	regress	EditMode 119/119, PlayMode 4/4		vu.sh test	VERIFIED
+2026-11-05T08:45:58Z	review	영상 없음(Unity Recorder 없음), 스크린샷으로 대신	P7 과 같음		NOT VERIFIED
