@@ -54,7 +54,7 @@
 
 ## 에셋 없이 되는 것
 
-- 규칙·데이터·UI 문장 테스트는 에셋을 쓰지 않게 짰다. `GameData`, `Hex`, `Battle`, `Campaign`, `Overlay`, `UiTextParity` 가 그렇다. 규칙은 `VampireSpawn.Core` 에 있고 Unity 그림에 기대지 않는다. 에셋이 하나도 없는 클론에서 에디터를 열어 돌려 보지는 않았다(2026-11-05).
+- 규칙·데이터·UI 문장 테스트는 에셋을 쓰지 않게 짰다. `GameData`, `Hex`, `Battle`, `Campaign`, `Overlay`, `UiTextParity` 가 그렇다. 규칙은 `VampireSpawn.Core` 에 있고 Unity 그림에 기대지 않는다. 2026-11-05 GitHub 에서 새로 클론해(에셋 없음) 확인했다. setup.sh 가 패키지 다섯 개만 임포트했고(각 49~124초, 오류 0), EditMode 154/154, PlayMode 4/4 가 통과했다.
 - 보드·유닛을 그리는 테스트(`BoardViewTests`, PlayMode `BattlePlaybackTests`)와 `RequiredAssetsTests.EveryRequiredAssetResolves` 는 에셋이 있어야 통과한다. 에셋 없이 실패하면 메시지가 이 문서를 가리킨다.
 
 ## 임포트 뒤에 바뀌는 파일
