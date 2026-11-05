@@ -19,7 +19,7 @@ namespace VampireSpawn.Core
     {
         public const string SaveKey = "pvs-campaign-v2";
 
-        public static readonly Stage[] Stages = GameData.Stages.Where(s => s.Id != "demo").ToArray();
+        public static Stage[] Stages => GameData.Stages.Where(s => s.Id != "demo").ToArray();
 
         public int Gold { get; private set; }
         readonly List<string> cleared = new List<string>();

@@ -2,7 +2,7 @@
 
 출처 docs/Prototype.html (커밋 8205db3)
 
-계획은 `docs/systems/unity-port-plan.md`, 분야 안내서는 `docs/areas/battle.md` 다.
+계획은 `docs/dev/unity-port-plan.md`, 분야 안내서는 `docs/areas/battle.md` 다.
 
 ## HTML 과 같은지 확인하는 방법
 
@@ -87,3 +87,10 @@ HTML 이 바뀌면 두 명령을 차례로 돌리고, `data.json` 과 `GameData.
 - 한글 글꼴은 HTML 의 글꼴 목록 그대로 OS 글꼴에서 고른다(본문 IBM Plex Sans KR → Apple SD Gothic Neo → 맑은 고딕, 제목 Nanum Myeongjo → Noto Serif KR → 바탕). 파일을 저장소에 넣지 않았다. Windows 에서는 글꼴을 따로 깔지 않으면 맑은 고딕·바탕으로 그려진다.
 - `node tools/golden/prototype-golden.mjs strings` 가 `tools/golden/out/strings.json` 을 만든다 (`tools/golden/strings.mjs`). 메뉴 둘, 캠페인 셋, 데모 전투 19개 상태(배치, 선택, 처치 모드, 적·뱀파이어·시신·스폰·보름달 표적 보기, 턴마다), 결과 창 여섯(데모 승·패, 1장 첫 클리어·재도전·패배, 2장 첫 클리어)과 그 뒤 캠페인 화면을 HTML 로 그려 글 덩어리를 뽑는다. `UiTextParityTests` 가 같은 상태의 Unity 화면 글(`Text`)과 덩어리 단위로 비교하고, 결과 뒤 캠페인 저장 문자열도 비교한다.
 - HTML 과 다른 점: 적 턴 동안 전투 기록과 수치는 재생이 끝난 뒤 한 번에 바뀐다(HTML 은 적 하나가 움직일 때마다 바뀐다). 달 수치 옆 달 그림, 스크롤 막대 모양, 마우스를 올렸을 때의 테두리 색은 옮기지 않았다.
+
+## 게임 데이터 에셋 (요청 001)
+
+- 규칙이 읽는 수치·문장은 `Core/DataSet` 하나에 모인다. `GameData.Current` 가 지금 쓰는 것이고, `GameData.Use(set)` 으로 바꾸며, `Use(null)` 이면 HTML 값(`PrototypeData.Create()`)으로 돌아간다. `Rules.MoonMax` 등도 이 데이터를 읽는다.
+- 게임은 `Game/Data` 의 ScriptableObject(`GameDataAsset`, `RulesData`, `UnitTypeData`, `EnemyData`, `StageData`)를 `GameFlow.Awake` 에서 `DataSet` 으로 바꿔 쓴다. `DataSet.Validate()` 가 문제를 찾으면 오류를 남기고 HTML 값으로 돈다.
+- HTML 비교 시험은 모두 HTML 값으로 돈다(PlayMode 는 씬을 연 뒤 `Use(null)`). 데이터 에셋은 `GameDataAssetTests` 가 본다: 에셋이 다 있고 문제 없음, 에셋으로 옮겨도 값이 그대로, 바꾼 값이 전투에 쓰임, 검사가 깨진 장을 잡음.
+- 편집기는 `Scripts/Editor/GameDataWindow` (사용법 docs/guides/data-editor.md). 에셋은 `DataAssetsBuilder.ResetAll()` 이 HTML 값으로 만든다.

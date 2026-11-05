@@ -307,7 +307,7 @@ namespace VampireSpawn.Game.Screens
             return o.Origin + "의 체력·공격·방어·이동을 물려받았다. 근접 공격만 한다. 죽인 아군을 스폰으로 만든다.";
         }
 
-        static readonly string[] RuleLines =
+        static string[] RuleLines => new[]
         {
             "뱀파이어나 스폰에게 죽은 아군은 시신으로 남고, <b>다음 적 페이즈 시작</b>에 스폰으로 일어납니다. 일어난 턴에는 행동하지 않습니다. 스켈레톤에게 죽으면 변이하지 않습니다.",
             "<b>관</b>: 뱀파이어는 관 속에서 시작해 달이 " + Rules.MoonWake + "이 되면 깨어납니다. 잠든 동안은 공격할 수 없습니다.",

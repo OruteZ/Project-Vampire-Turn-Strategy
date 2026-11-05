@@ -121,9 +121,4 @@ namespace VampireSpawn.Core
             Bonus = bonus; Boss = boss; Map = map; Enemies = enemies; Sample = sample;
         }
     }
-
-    public static partial class GameData
-    {
-        public static UnitType Type(UnitKind kind) => Types[(int)kind];
-    }
 }

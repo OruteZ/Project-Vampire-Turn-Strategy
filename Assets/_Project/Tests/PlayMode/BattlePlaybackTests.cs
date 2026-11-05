@@ -41,6 +41,8 @@ namespace VampireSpawn.Tests
         {
             yield return SceneManager.LoadSceneAsync("Main");
             yield return null;
+            // The golden traces are HTML values; the scene loads the designer's data assets, which may differ.
+            GameData.Use(null);
             var view = UnityEngine.Object.FindFirstObjectByType<BattleView>();
             Assert.IsNotNull(view, "BattleView in Main");
             view.speed = 60f;

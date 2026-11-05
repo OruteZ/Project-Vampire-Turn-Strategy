@@ -1,0 +1,57 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 17bd5ddb0e5d89541abe42a0b4789540, type: 3}
+  m_Name: 01_parcher
+  m_EditorClassIdentifier: VampireSpawn.Game::VampireSpawn.Game.Data.UnitTypeData
+  kind: 1
+  key: parcher
+  displayName: "\uB18D\uBBFC \uAD81\uC218"
+  glyph: "\uD65C"
+  tier: 0
+  pop: 1
+  silver: 0
+  hp: 4
+  atk: 2
+  def: 0
+  mov: 3
+  rng: 2
+  bane: 0
+  unlockAt: 1
+  desc: "\uC0AC\uB0E5 \uD65C\uC744 \uB4E0 \uB9C8\uC744 \uC0AC\uB78C. \uC2F8\uC9C0\uB9CC
+    \uC0AC\uAC70\uB9AC\uAC00 2\uB85C \uC9E7\uB2E4. \uC2A4\uD3F0\uC774 \uB418\uBA74
+    \uADFC\uC811 \uACF5\uACA9\uB9CC \uD55C\uB2E4."
+  upgrades:
+  - id: parcher_mov
+    displayName: "\uAC00\uBCBC\uC6B4 \uCC28\uB9BC"
+    desc: "\uC774\uB3D9 +1"
+    cost: 30
+    inherit: 1
+    hp: 0
+    atk: 0
+    def: 0
+    mov: 1
+    rng: 0
+    bane: 0
+    ability: 0
+  - id: parcher_ambush
+    displayName: "\uB9E4\uBCF5 \uC0AC\uACA9"
+    desc: "\uC774\uB3D9\uD558\uC9C0 \uC54A\uACE0 \uACF5\uACA9\uD558\uBA74 \uD53C\uD574
+      +1"
+    cost: 40
+    inherit: 0
+    hp: 0
+    atk: 0
+    def: 0
+    mov: 0
+    rng: 0
+    bane: 0
+    ability: 2

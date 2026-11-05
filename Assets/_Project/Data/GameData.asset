@@ -1,0 +1,35 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 622c65d43f9474448b2a3f6a510768ca, type: 3}
+  m_Name: GameData
+  m_EditorClassIdentifier: VampireSpawn.Game::VampireSpawn.Game.Data.GameDataAsset
+  rules: {fileID: 11400000, guid: 7d194edef725aac468bedf2a96d3cdbc, type: 2}
+  units:
+  - {fileID: 11400000, guid: 2ed8db1bafb50fa4896c6c2563bab35b, type: 2}
+  - {fileID: 11400000, guid: 0224ddec65f928f4eb6e90e134098e39, type: 2}
+  - {fileID: 11400000, guid: 1dce8841667576742b278444605b18d2, type: 2}
+  - {fileID: 11400000, guid: d1cb0ceca1bfb8742a9bfdf85bf63ff9, type: 2}
+  - {fileID: 11400000, guid: 18830f3f5be950b4e9a15f60ba4ef7fd, type: 2}
+  - {fileID: 11400000, guid: 3baff5c3a6fa99a41b41c2759bf954db, type: 2}
+  skeleton: {fileID: 11400000, guid: 32410ba81f461ea4c9ab6747830b4be3, type: 2}
+  stages:
+  - {fileID: 11400000, guid: ea1955a406ea8ae46b118ae57ef88a03, type: 2}
+  - {fileID: 11400000, guid: eeb14963362b39e42a225613dcd0e76a, type: 2}
+  - {fileID: 11400000, guid: 490c399a38283404f957896d58db1734, type: 2}
+  - {fileID: 11400000, guid: 5b09ae31e6c1cea408f7bdea6295fe5e, type: 2}
+  - {fileID: 11400000, guid: 5bb1f75ef86a3d340a3279478eaa0e84, type: 2}
+  - {fileID: 11400000, guid: 7d83e7afe1d1dd645b477cbf9693c7b7, type: 2}
+  - {fileID: 11400000, guid: ef7e8e8f88cd6564da3588928903be90, type: 2}
+  - {fileID: 11400000, guid: a4c466062168fde44b217078545186b6, type: 2}
+  - {fileID: 11400000, guid: 705e1c94ef002dc458535bd783532129, type: 2}
+  - {fileID: 11400000, guid: 561ad7889ddae5d4cb6d81b5e4e415d2, type: 2}
+  - {fileID: 11400000, guid: d90df41282f81b1468f2cc5d3f3e051d, type: 2}

@@ -1,9 +1,9 @@
 ---
 id: 001
 created: 20261105
-status: working
+status: done
 issue: #19
-done:
+done: 20261106
 ---
 
 # 001. GameData ScriptableObject issue

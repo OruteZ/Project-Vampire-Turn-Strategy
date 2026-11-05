@@ -5,6 +5,7 @@ using UnityEngine.EventSystems;
 using UnityEngine.InputSystem.UI;
 using UnityEngine.UI;
 using VampireSpawn.Core;
+using VampireSpawn.Game.Data;
 
 namespace VampireSpawn.Game.Screens
 {
@@ -12,6 +13,7 @@ namespace VampireSpawn.Game.Screens
     public sealed class GameFlow : MonoBehaviour
     {
         public BoardInput input;
+        [Tooltip("게임이 쓰는 데이터. 비었거나 문제가 있으면 HTML 기본값으로 돈다")] public GameDataAsset data;
         public Camera viewCamera;
 
         // Prototype timers: leave confirmation 2500 ms, phase banner 1300 ms.
@@ -37,6 +39,7 @@ namespace VampireSpawn.Game.Screens
 
         void Awake()
         {
+            UseData();
             BuildCanvas();
             Campaign = CampaignStore.Load();
             input.Changed += OnBattleChanged;
@@ -69,6 +72,19 @@ namespace VampireSpawn.Game.Screens
         }
 
         void Start() => ShowMenu();
+
+        void UseData()
+        {
+            if (data == null) { GameData.Use(null); return; }
+            var problems = data.Problems();
+            if (problems.Count > 0)
+            {
+                Debug.LogError("게임 데이터에 문제가 있어 HTML 기본값으로 돈다:\n" + string.Join("\n", problems));
+                GameData.Use(null);
+                return;
+            }
+            GameData.Use(data.ToDataSet());
+        }
 
         void BuildCanvas()
         {
