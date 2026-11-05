@@ -1,0 +1,5 @@
+ts	phase	decision	why	evidence	result
+2026-11-05T03:16:27Z	frame	P4~P7 을 이어서 진행. 페이즈마다 작업 브랜치를 dev 에 fast-forward 로 push 하고 PR 은 만들지 않음. P7 이 끝나면 dev→main PR 하나를 씀	사용자 원문: 이후로 p7까지 쭉 진행. pr은 작성없이 P7까지 완료하고 작성. 각 페이즈마다 DEV브랜치에 푸쉬 처리만	issue #8	decided
+2026-11-05T03:16:28Z	frame	끝 조건. P4·P5 는 HTML 골든과 상태·이벤트·저장값이 같고 lane·perf 통과. P6·P7 은 11개 장 보드와 유닛 화면을 Unity CLI 스크린샷으로 남기고 이벤트 재생 뒤 화면 상태가 Battle 과 같음	계획 P4~P7 상자	docs/systems/unity-port-plan.md	open
+2026-11-05T03:16:28Z	frame	P6·P7 리뷰 관문(머지 전 스크린샷·영상 확인)은 마지막 PR 하나로 옮김. 스크린샷은 docs/review 에 커밋	사용자가 페이즈마다 PR 없이 dev 로 push 하라고 함		decided
+2026-11-05T03:16:29Z	frame	엄격도 높음. P4·P5 는 되돌리기 쉬우나 이후 모든 화면이 이 규칙 위에 서므로 골든 비교를 끝까지 유지. P6·P7 은 화면이라 숫자 대신 스크린샷 판정이 섞임			decided
