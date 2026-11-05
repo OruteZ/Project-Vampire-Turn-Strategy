@@ -1,6 +1,6 @@
 # Project Vampire Spawn verification map
 
-This directory is the maintained source for verifying what a player can do in the game. Read this index before driving, then use the matching feature file as the recipe. The game is being ported from `docs/Prototype.html` (plan in `docs/systems/unity-port-plan.md`). Add a feature file when a port PR adds something a player can see or do.
+This directory is the maintained source for verifying what a player can do in the game. Read this index before driving, then use the matching feature file as the recipe. The game is being ported from `docs/Prototype.html` (plan in `docs/dev/unity-port-plan.md`). Add a feature file when a port PR adds something a player can see or do.
 
 ## Baseline preconditions
 

@@ -7,7 +7,9 @@
 ## 본문 형식
 
 ```markdown
-> 사용자 원문 인용
+요청: docs/request/<파일> (요청 파일에서 왔을 때. docs/guides/request.md)
+
+> 사용자 원문 인용(채팅) 또는 요청 개요
 
 ## 할 일
 - [ ] 항목

@@ -1,0 +1,77 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 15fef31503538d54ab5290184fb375be, type: 3}
+  m_Name: 02_s2
+  m_EditorClassIdentifier: VampireSpawn.Game::VampireSpawn.Game.Data.StageData
+  id: s2
+  label: "2\uC7A5"
+  title: "\uBB3C\uB808\uBC29\uC544 \uB2E4\uB9AC"
+  brief: "\uBC29\uC557\uAC04 \uBC40\uD30C\uC774\uC5B4\uC758 \uC8FC\uC778\uC774 \uAC1C\uC6B8
+    \uAC74\uB108\uC5D0 \uC788\uB2E4. \uB2E4\uB9AC\uB294 \uB458. \uC624\uB978\uCABD
+    \uB2E4\uB9AC\uB294 \uD654\uD1B3\uBD88\uC774 \uBE44\uCD94\uACE0, \uC67C\uCABD
+    \uB2E4\uB9AC\uB294 \uC5B4\uB461\uB2E4."
+  units: 0000000001000000
+  pop: 6
+  silver: 0
+  reward: 20
+  bonusType: 1
+  bonusValue: 0
+  bonusGold: 10
+  bossName: "\uAC1C\uC6B8\uAC00\uC758 \uBC40\uD30C\uC774\uC5B4"
+  bossHp: 16
+  bossAtk: 4
+  bossDef: 0
+  bossMov: 4
+  bossHeal: 3
+  map:
+  - .........
+  - .#.....#.
+  - .........
+  - ~~d~~~d~~
+  - ddddddTdd
+  - ddddddddd
+  - ddddddddd
+  enemies:
+  - kind: 1
+    col: 4
+    row: 0
+  - kind: 0
+    col: 0
+    row: 0
+  - kind: 0
+    col: 8
+    row: 0
+  - kind: 0
+    col: 4
+    row: 2
+  - kind: 0
+    col: 2
+    row: 0
+  sample:
+  - kind: 0
+    col: 3
+    row: 5
+  - kind: 0
+    col: 4
+    row: 5
+  - kind: 0
+    col: 5
+    row: 5
+  - kind: 0
+    col: 6
+    row: 5
+  - kind: 1
+    col: 4
+    row: 6
+  - kind: 1
+    col: 5
+    row: 6

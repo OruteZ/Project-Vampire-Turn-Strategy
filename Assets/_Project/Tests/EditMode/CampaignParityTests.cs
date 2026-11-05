@@ -41,7 +41,6 @@ namespace VampireSpawn.Tests
                 {
                     case "load": c = Campaign.Parse(null); break;
                     case "buy": c.Buy(op.id); break;
-                    case "respec": c.Respec(); break;
                     case "reset": c = Campaign.Parse(null); break;
                     case "finish":
                         var stage = StageById(op.stage);

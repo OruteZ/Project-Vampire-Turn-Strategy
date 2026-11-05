@@ -60,7 +60,7 @@ namespace VampireSpawn.Tests
                     MenuScreen.Build(root, Campaign.Parse(shot.camp), null, null);
                     break;
                 case "camp":
-                    CampaignScreen.Build(root, Campaign.Parse(shot.camp), shot.arm, shot.arm, new CampaignActions());
+                    CampaignScreen.Build(root, Campaign.Parse(shot.camp), shot.arm, null, new CampaignActions());
                     break;
                 case "battle":
                 {

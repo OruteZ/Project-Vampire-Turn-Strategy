@@ -2,9 +2,9 @@ namespace VampireSpawn.Core
 {
     public static class Rules
     {
-        public const int DrainHeal = 8;
-        public const int MoonMax = 6;
-        public const int EatRange = 2;
-        public const int MoonWake = 3;
+        public static int DrainHeal => GameData.Current.Rules.DrainHeal;
+        public static int MoonMax => GameData.Current.Rules.MoonMax;
+        public static int EatRange => GameData.Current.Rules.EatRange;
+        public static int MoonWake => GameData.Current.Rules.MoonWake;
     }
 }

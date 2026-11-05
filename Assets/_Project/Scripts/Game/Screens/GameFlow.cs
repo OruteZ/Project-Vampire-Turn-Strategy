@@ -5,6 +5,7 @@ using UnityEngine.EventSystems;
 using UnityEngine.InputSystem.UI;
 using UnityEngine.UI;
 using VampireSpawn.Core;
+using VampireSpawn.Game.Data;
 
 namespace VampireSpawn.Game.Screens
 {
@@ -12,6 +13,7 @@ namespace VampireSpawn.Game.Screens
     public sealed class GameFlow : MonoBehaviour
     {
         public BoardInput input;
+        [Tooltip("게임이 쓰는 데이터. 비었거나 문제가 있으면 HTML 기본값으로 돈다")] public GameDataAsset data;
         public Camera viewCamera;
 
         // Prototype timers: leave confirmation 2500 ms, phase banner 1300 ms.
@@ -22,8 +24,9 @@ namespace VampireSpawn.Game.Screens
         public Campaign Campaign { get; private set; }
         public bool OverShown => overRoot != null && overRoot.gameObject.activeSelf;
 
-        bool demo, resetArm, respecArm, leaveArm, rulesOpen, finished, enemyPlaying;
-        float leaveUntil, bannerUntil;
+        bool demo, resetArm, leaveArm, rulesOpen, finished, enemyPlaying;
+        float leaveUntil, bannerUntil, buyUntil;
+        string buyArm;
         Stage stage;
         OverInfo over;
         RectTransform screen, bar, side, boardArea, overRoot;
@@ -37,6 +40,7 @@ namespace VampireSpawn.Game.Screens
 
         void Awake()
         {
+            UseData();
             BuildCanvas();
             Campaign = CampaignStore.Load();
             input.Changed += OnBattleChanged;
@@ -44,11 +48,15 @@ namespace VampireSpawn.Game.Screens
             input.PointerBlocked = () => EventSystem.current != null && EventSystem.current.IsPointerOverGameObject();
             campActions = new CampaignActions
             {
-                Play = i => { demo = false; StartBattle(Campaign.Stages[i], null, false); },
-                Buy = id => { if (Campaign.Buy(id)) { respecArm = false; CampaignStore.Save(Campaign); } ShowCamp(); },
-                Respec = () => { if (respecArm) { Campaign.Respec(); CampaignStore.Save(Campaign); respecArm = false; } else respecArm = true; ShowCamp(); },
-                Reset = () => { if (resetArm) { Campaign = new Campaign(); CampaignStore.Save(Campaign); resetArm = false; } else resetArm = true; ShowCamp(); },
-                Menu = () => { resetArm = false; ShowMenu(); },
+                Play = i => { buyArm = null; demo = false; StartBattle(Campaign.Stages[i], null, false); },
+                Buy = id =>
+                {
+                    if (buyArm == id) { buyArm = null; if (Campaign.Buy(id)) CampaignStore.Save(Campaign); }
+                    else { buyArm = id; buyUntil = Time.unscaledTime + LeaveSeconds; }
+                    ShowCamp();
+                },
+                Reset = () => { buyArm = null; if (resetArm) { Campaign = new Campaign(); CampaignStore.Save(Campaign); resetArm = false; } else resetArm = true; ShowCamp(); },
+                Menu = () => { resetArm = false; buyArm = null; ShowMenu(); },
             };
             battleActions = new BattleActions
             {
@@ -69,6 +77,19 @@ namespace VampireSpawn.Game.Screens
         }
 
         void Start() => ShowMenu();
+
+        void UseData()
+        {
+            if (data == null) { GameData.Use(null); return; }
+            var problems = data.Problems();
+            if (problems.Count > 0)
+            {
+                Debug.LogError("게임 데이터에 문제가 있어 HTML 기본값으로 돈다:\n" + string.Join("\n", problems));
+                GameData.Use(null);
+                return;
+            }
+            GameData.Use(data.ToDataSet());
+        }
 
         void BuildCanvas()
         {
@@ -115,7 +136,7 @@ namespace VampireSpawn.Game.Screens
         {
             Current = "camp";
             ClearScreen(true);
-            CampaignScreen.Build(screen, Campaign, resetArm, respecArm, campActions);
+            CampaignScreen.Build(screen, Campaign, resetArm, buyArm, campActions);
         }
 
         public void StartBattle(Stage s, IEnumerable<Placement<UnitKind>> formation, bool startNow)
@@ -218,6 +239,7 @@ namespace VampireSpawn.Game.Screens
         void Update()
         {
             if (leaveArm && Time.unscaledTime > leaveUntil) { leaveArm = false; RenderBattle(); }
+            if (buyArm != null && Time.unscaledTime > buyUntil) { buyArm = null; if (Current == "camp") ShowCamp(); }
             if (banner != null && banner.gameObject.activeSelf && Time.unscaledTime > bannerUntil) banner.gameObject.SetActive(false);
         }
 

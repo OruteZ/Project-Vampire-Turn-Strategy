@@ -19,7 +19,7 @@ namespace VampireSpawn.Core
     {
         public const string SaveKey = "pvs-campaign-v2";
 
-        public static readonly Stage[] Stages = GameData.Stages.Where(s => s.Id != "demo").ToArray();
+        public static Stage[] Stages => GameData.Stages.Where(s => s.Id != "demo").ToArray();
 
         public int Gold { get; private set; }
         readonly List<string> cleared = new List<string>();
@@ -61,12 +61,6 @@ namespace VampireSpawn.Core
             Gold -= up.Cost;
             upgrades.Add(up.Id);
             return true;
-        }
-
-        public void Respec()
-        {
-            Gold += SpentGold;
-            upgrades.Clear();
         }
 
         public StageResult Finish(Stage stage, bool won, bool bonusMet)

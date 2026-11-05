@@ -35,13 +35,14 @@ namespace VampireSpawn.Core
         public readonly UnitKind Unit;
         public readonly string Id, Name, Desc;
         public readonly int Cost;
-        public readonly bool Inherit;
+        // docs/systems/progression.md 15: only hp, atk and mov carry over to a spawn.
+        public bool Inherit => Ability == Ability.None && Mod.Def == 0 && Mod.Rng == 0 && Mod.Bane == 0;
         public readonly StatMod Mod;
         public readonly Ability Ability;
 
-        public Upgrade(UnitKind unit, string id, string name, string desc, int cost, bool inherit, StatMod mod, Ability ability)
+        public Upgrade(UnitKind unit, string id, string name, string desc, int cost, StatMod mod, Ability ability)
         {
-            Unit = unit; Id = id; Name = name; Desc = desc; Cost = cost; Inherit = inherit; Mod = mod; Ability = ability;
+            Unit = unit; Id = id; Name = name; Desc = desc; Cost = cost; Mod = mod; Ability = ability;
         }
     }
 
@@ -120,10 +121,5 @@ namespace VampireSpawn.Core
             Id = id; Label = label; Title = title; Brief = brief; Units = units; Pop = pop; Silver = silver; Reward = reward;
             Bonus = bonus; Boss = boss; Map = map; Enemies = enemies; Sample = sample;
         }
-    }
-
-    public static partial class GameData
-    {
-        public static UnitType Type(UnitKind kind) => Types[(int)kind];
     }
 }

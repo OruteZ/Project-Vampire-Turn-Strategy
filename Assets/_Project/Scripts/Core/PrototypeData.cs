@@ -3,9 +3,11 @@ namespace VampireSpawn.Core
 {
     public enum UnitKind { PSpear, PArcher, Sword, Archer, Knight, Hunter }
 
-    public static partial class GameData
+    public static class PrototypeData
     {
-        public static readonly UnitType[] Types =
+        public static DataSet Create() => new DataSet(new RuleSet(8, 6, 2, 3), Types(), Upgrades(), Skeleton(), Stages());
+
+        static UnitType[] Types() => new[]
         {
             new UnitType(UnitKind.PSpear, "pspear", "농민 창병", "창", Tier.Peasant, 1, 0, 6, 2, 0, 3, 1, 0, 1, "쇠스랑과 창을 든 마을 사람. 싸고 많다."),
             new UnitType(UnitKind.PArcher, "parcher", "농민 궁수", "활", Tier.Peasant, 1, 0, 4, 2, 0, 3, 2, 0, 1, "사냥 활을 든 마을 사람. 싸지만 사거리가 2로 짧다. 스폰이 되면 근접 공격만 한다."),
@@ -15,25 +17,25 @@ namespace VampireSpawn.Core
             new UnitType(UnitKind.Hunter, "hunter", "사냥꾼", "사", Tier.Hunter, 3, 1, 9, 3, 1, 4, 2, 3, 9, "뱀파이어 사냥꾼(가칭). 뱀파이어·스폰에게 추가 피해. 은 1 소모."),
         };
 
-        public static readonly Upgrade[] Upgrades =
+        static Upgrade[] Upgrades() => new[]
         {
-            new Upgrade(UnitKind.PSpear, "pspear_hp", "누빈 갑옷", "체력 +2", 30, true, new StatMod(2, 0, 0, 0, 0, 0), Ability.None),
-            new Upgrade(UnitKind.PSpear, "pspear_pike", "창벽", "적이 바로 옆 칸으로 들어오면 1 피해", 40, false, new StatMod(0, 0, 0, 0, 0, 0), Ability.Pike),
-            new Upgrade(UnitKind.PArcher, "parcher_mov", "가벼운 차림", "이동 +1", 30, true, new StatMod(0, 0, 0, 1, 0, 0), Ability.None),
-            new Upgrade(UnitKind.PArcher, "parcher_ambush", "매복 사격", "이동하지 않고 공격하면 피해 +1", 40, false, new StatMod(0, 0, 0, 0, 0, 0), Ability.Ambush),
-            new Upgrade(UnitKind.Sword, "sword_def", "사슬 갑옷", "방어 +1", 60, true, new StatMod(0, 0, 1, 0, 0, 0), Ability.None),
-            new Upgrade(UnitKind.Sword, "sword_cleave", "베어 넘기기", "적을 쓰러뜨리면 한 번 더 공격 (턴당 1회)", 70, false, new StatMod(0, 0, 0, 0, 0, 0), Ability.Cleave),
-            new Upgrade(UnitKind.Archer, "archer_rng", "장궁", "사거리 +1", 60, false, new StatMod(0, 0, 0, 0, 1, 0), Ability.None),
-            new Upgrade(UnitKind.Archer, "archer_atk", "단련된 화살촉", "공격 +1", 60, true, new StatMod(0, 1, 0, 0, 0, 0), Ability.None),
-            new Upgrade(UnitKind.Knight, "knight_def", "판금 갑옷", "방어 +1", 80, true, new StatMod(0, 0, 1, 0, 0, 0), Ability.None),
-            new Upgrade(UnitKind.Knight, "knight_charge", "돌격", "2칸 이상 이동한 뒤 공격하면 피해 +2", 80, false, new StatMod(0, 0, 0, 0, 0, 0), Ability.Charge),
-            new Upgrade(UnitKind.Hunter, "hunter_bane", "정련한 은탄", "뱀파이어·스폰에게 추가 피해 +2", 70, false, new StatMod(0, 0, 0, 0, 0, 2), Ability.None),
-            new Upgrade(UnitKind.Hunter, "hunter_mov", "가벼운 장화", "이동 +1", 70, true, new StatMod(0, 0, 0, 1, 0, 0), Ability.None),
+            new Upgrade(UnitKind.PSpear, "pspear_hp", "누빈 갑옷", "체력 +2", 30, new StatMod(2, 0, 0, 0, 0, 0), Ability.None),
+            new Upgrade(UnitKind.PSpear, "pspear_pike", "창벽", "적이 바로 옆 칸으로 들어오면 1 피해", 40, new StatMod(0, 0, 0, 0, 0, 0), Ability.Pike),
+            new Upgrade(UnitKind.PArcher, "parcher_mov", "가벼운 차림", "이동 +1", 30, new StatMod(0, 0, 0, 1, 0, 0), Ability.None),
+            new Upgrade(UnitKind.PArcher, "parcher_ambush", "매복 사격", "이동하지 않고 공격하면 피해 +1", 40, new StatMod(0, 0, 0, 0, 0, 0), Ability.Ambush),
+            new Upgrade(UnitKind.Sword, "sword_def", "사슬 갑옷", "방어 +1", 60, new StatMod(0, 0, 1, 0, 0, 0), Ability.None),
+            new Upgrade(UnitKind.Sword, "sword_cleave", "베어 넘기기", "적을 쓰러뜨리면 한 번 더 공격 (턴당 1회)", 70, new StatMod(0, 0, 0, 0, 0, 0), Ability.Cleave),
+            new Upgrade(UnitKind.Archer, "archer_rng", "장궁", "사거리 +1", 60, new StatMod(0, 0, 0, 0, 1, 0), Ability.None),
+            new Upgrade(UnitKind.Archer, "archer_atk", "단련된 화살촉", "공격 +1", 60, new StatMod(0, 1, 0, 0, 0, 0), Ability.None),
+            new Upgrade(UnitKind.Knight, "knight_def", "판금 갑옷", "방어 +1", 80, new StatMod(0, 0, 1, 0, 0, 0), Ability.None),
+            new Upgrade(UnitKind.Knight, "knight_charge", "돌격", "2칸 이상 이동한 뒤 공격하면 피해 +2", 80, new StatMod(0, 0, 0, 0, 0, 0), Ability.Charge),
+            new Upgrade(UnitKind.Hunter, "hunter_bane", "정련한 은탄", "뱀파이어·스폰에게 추가 피해 +2", 70, new StatMod(0, 0, 0, 0, 0, 2), Ability.None),
+            new Upgrade(UnitKind.Hunter, "hunter_mov", "가벼운 장화", "이동 +1", 70, new StatMod(0, 0, 0, 1, 0, 0), Ability.None),
         };
 
-        public static readonly EnemyStats Skeleton = new EnemyStats("스켈레톤", "골", 4, 2, 0, 3, 1);
+        static EnemyStats Skeleton() => new EnemyStats("스켈레톤", "골", 4, 2, 0, 3, 1);
 
-        public static readonly Stage[] Stages =
+        static Stage[] Stages() => new[]
         {
             new Stage(
                 "demo", "데모", "시험 전장", "모든 유닛을 시험하는 전투. 성벽에 난 세 개의 틈 중 하나는 어둡고, 하나는 화톳불이, 하나는 햇빛이 비춘다.",

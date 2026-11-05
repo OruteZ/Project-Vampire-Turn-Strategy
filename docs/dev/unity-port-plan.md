@@ -135,7 +135,7 @@ Tests alone are not sufficient verification. A PR is verified only when its unit
 - [ ] Create `tools/golden/out/data.json`. HTML 의 `TYPES`, `UNLOCK_AT`, `UPGRADES`, `SKEL`, `STAGES`, 상수(`DRAIN_HEAL`, `MOON_MAX`, `EAT_RANGE`, `MOON_WAKE`)를 그대로 뽑는다.
 - [ ] Create `Assets/_Project/Scripts/Core/GameData.cs`.
 - [ ] Create `Assets/_Project/Tests/EditMode/GameDataParityTests.cs`.
-- [ ] Create `docs/systems/unity-port.md`. 맨 위에 `출처 docs/Prototype.html (커밋 <해시>)` 를 적는다.
+- [ ] Create `docs/dev/unity-port.md`. 맨 위에 `출처 docs/Prototype.html (커밋 <해시>)` 를 적는다.
 
 **Build.**
 
@@ -532,7 +532,7 @@ Tests alone are not sufficient verification. A PR is verified only when its unit
 - [ ] Create `Assets/_Project/Scripts/Game/Screens/*.cs`.
 - [ ] Create `Assets/_Project/UI/Fonts/` 의 한글 TMP 폰트 에셋.
 - [ ] Delete P6 의 `GameBootstrap` 시험용 진입점.
-- [ ] Edit `docs/areas/battle.md`, `docs/systems/unity-port.md`.
+- [ ] Edit `docs/areas/battle.md`, `docs/dev/unity-port.md`.
 
 **Build.**
 
@@ -620,5 +620,5 @@ Tests alone are not sufficient verification. A PR is verified only when its unit
 - 원본 게임 `docs/Prototype.html`, 작업 규칙 `CLAUDE.md`, 기획 목차 `design.md`, 분야 안내서 `docs/areas/README.md`, `docs/areas/art-assets.md`.
 - P4 는 시작 전에 `<pstack>/skills/how/SKILL.md` 로 HTML 의 `enemyPhase`, `meleeAct`, `fullMoonAct` 흐름을 정리하고, 리뷰 전에 `<pstack>/skills/interrogate/SKILL.md` 를 돌린다. 전투 규칙이 가장 틀리기 쉬운 곳이기 때문이다.
 - P6 은 리뷰 전에 `<pstack>/skills/interrogate/SKILL.md` 로 `ArtCatalog` 구조를 검토받는다. 이후 PR 이 모두 그 표를 쓰기 때문이다.
-- 결정 기록은 `<pstack>/skills/show-me-your-work/SKILL.md` 대로 이슈 #1 댓글과 `docs/systems/unity-port.md` 에 남긴다.
+- 결정 기록은 `<pstack>/skills/show-me-your-work/SKILL.md` 대로 이슈 #1 댓글과 `docs/dev/unity-port.md` 에 남긴다.
 - Unity CLI 명령 목록은 `unity command <그룹>` 으로 본다. 이 계획이 쓰는 그룹은 `capture`, `editor.playmode`, `runtime`, `console`, `script`, `test`, `asset`, `scene`, `diagnostics` 다.

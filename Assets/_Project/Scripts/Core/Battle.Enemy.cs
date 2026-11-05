@@ -69,7 +69,7 @@ namespace VampireSpawn.Core
             var spawn = new Unit
             {
                 Id = nextId++, Role = Role.Spawn, Type = c.Type, Name = "스폰(" + c.Name + ")", Glyph = c.Glyph,
-                Pos = c.Pos, Hp = c.MaxHp, MaxHp = c.MaxHp, Atk = c.Atk, Def = c.Def, Mov = c.Mov, Rng = 1,
+                Pos = c.Pos, Hp = c.MaxHp, MaxHp = c.MaxHp, Atk = c.Atk, Def = 0, Mov = c.Mov, Rng = 1,
                 JustRisen = true, Origin = c.Name,
             };
             units.Add(spawn);
@@ -186,7 +186,7 @@ namespace VampireSpawn.Core
                     }
                 }
                 if (best.HasValue && best.Value != e.Pos) MoveEnemy(e, best.Value);
-                // No liveness check: an enemy the pike wall just killed still strikes, as in the prototype. docs/systems/unity-port.md
+                // No liveness check: an enemy the pike wall just killed still strikes, as in the prototype. docs/dev/unity-port.md
                 adj = AdjacentAllies(e.Pos);
             }
             if (adj.Count > 0) ApplyHit(e, PickTarget(e, adj));

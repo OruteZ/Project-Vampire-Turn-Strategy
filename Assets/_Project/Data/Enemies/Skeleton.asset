@@ -1,0 +1,21 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6091e72bcc7d94e48ba2b1704db68b59, type: 3}
+  m_Name: Skeleton
+  m_EditorClassIdentifier: VampireSpawn.Game::VampireSpawn.Game.Data.EnemyData
+  displayName: "\uC2A4\uCF08\uB808\uD1A4"
+  glyph: "\uACE8"
+  hp: 4
+  atk: 2
+  def: 0
+  mov: 3
+  rng: 1

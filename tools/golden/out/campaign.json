@@ -103,21 +103,13 @@
    "spent": 30
   },
   {
-   "op": "{\"op\":\"respec\"}",
-   "save": "{\"gold\":60,\"cleared\":{\"s1\":true,\"s2\":true},\"bonus\":{\"s1\":true,\"s2\":true},\"ups\":{}}",
-   "open": "1110000000",
-   "upgradesOpen": "pspear,parcher",
-   "tier": 3,
-   "spent": 0
-  },
-  {
    "op": "{\"op\":\"finish\",\"stage\":\"s3\",\"win\":true,\"turn\":2,\"drained\":0,\"skeletonsLeft\":false}",
    "bonusMet": true,
-   "save": "{\"gold\":95,\"cleared\":{\"s1\":true,\"s2\":true,\"s3\":true},\"bonus\":{\"s1\":true,\"s2\":true,\"s3\":true},\"ups\":{}}",
+   "save": "{\"gold\":65,\"cleared\":{\"s1\":true,\"s2\":true,\"s3\":true},\"bonus\":{\"s1\":true,\"s2\":true,\"s3\":true},\"ups\":{\"pspear_hp\":true}}",
    "open": "1111000000",
    "upgradesOpen": "pspear,parcher,sword",
    "tier": 4,
-   "spent": 0
+   "spent": 30
   },
   {
    "op": "{\"op\":\"buy\",\"id\":\"pspear_hp\"}",
@@ -967,14 +959,6 @@
    "upgradesOpen": "pspear,parcher,sword,archer,knight,hunter",
    "tier": 10,
    "spent": 390
-  },
-  {
-   "op": "{\"op\":\"respec\"}",
-   "save": "{\"gold\":395,\"cleared\":{\"s1\":true,\"s2\":true,\"s3\":true,\"s4\":true,\"s5\":true,\"s6\":true,\"s7\":true,\"s8\":true,\"s9\":true,\"s10\":true},\"bonus\":{\"s1\":true,\"s2\":true,\"s3\":true,\"s5\":true,\"s6\":true,\"s7\":true,\"s8\":true,\"s9\":true},\"ups\":{}}",
-   "open": "1111111111",
-   "upgradesOpen": "pspear,parcher,sword,archer,knight,hunter",
-   "tier": 10,
-   "spent": 0
   },
   {
    "op": "{\"op\":\"reset\"}",

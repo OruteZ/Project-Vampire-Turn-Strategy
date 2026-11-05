@@ -1,6 +1,6 @@
 ---
 name: verify-unity
-description: Drive the Project Vampire Spawn Unity game the way a player does, through the Unity CLI, while the Unity Editor window stays in the background. Use to prove a change works in the real game (play mode, input, screenshots, console, tests) before reporting done, and for every live lane in docs/systems/unity-port-plan.md.
+description: Drive the Project Vampire Spawn Unity game the way a player does, through the Unity CLI, while the Unity Editor window stays in the background. Use to prove a change works in the real game (play mode, input, screenshots, console, tests) before reporting done, and for every live lane in docs/dev/unity-port-plan.md.
 ---
 
 # verify-unity
