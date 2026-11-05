@@ -24,7 +24,7 @@ Tests alone are not sufficient verification. A PR is verified only when its unit
 - [ ] 시작할 때와 매 점검 때 아래를 다시 읽는다. pstack 파일은 설치된 플러그인 폴더(`<pstack>` = `C:/Users/User/.claude/plugins/cache/cursor-plugins/pstack/<버전>`)에서 읽는다.
   - [ ] `<pstack>/skills/poteto-mode/playbooks/autopilot-stack.md` 와 `<pstack>/skills/poteto-mode/playbooks/autopilot-full.md`
   - [ ] `<pstack>/skills/swarm/SKILL.md`
-  - [ ] 이 저장소의 Unity CLI 검증 스킬. 아직 없으면 P1 전에 `/pstack:create-verification-skill` 로 만든다 (Appendix C 의 위험 1).
+  - [ ] 이 저장소의 Unity CLI 검증 스킬 `.claude/skills/verify-unity/SKILL.md` 와 `features/README.md`. 모든 live lane 은 이 스킬의 `vu.sh` 로 돈다.
   - [ ] `<pstack>/skills/poteto-mode/playbooks/opening-a-pr.md`
   - [ ] `<pstack>/skills/how/SKILL.md`, `<pstack>/skills/interrogate/SKILL.md`, `<pstack>/skills/show-me-your-work/SKILL.md`
   - [ ] `git show origin/main:CLAUDE.md` 와 `git show origin/dev:CLAUDE.md`. 둘이 다르면 dev 를 따른다.
@@ -606,7 +606,7 @@ Tests alone are not sufficient verification. A PR is verified only when its unit
 
 ## Appendix C. Risks
 
-1. 이 저장소에는 Unity CLI 검증 스킬이 없다. 담당과 검증자가 같은 순서로 에디터를 조종하도록 P1 전에 `/pstack:create-verification-skill` 로 만든다. 만들지 않으면 lane 마다 부트 순서가 달라진다.
+1. 검증 스킬 `verify-unity` 는 에디터가 이미 열린 상태에서만 끝까지 돌려 봤다. `vu.sh launch` 가 에디터를 새로 여는 경로와 `cleanup` 이 그 에디터를 닫는 경로는 아직 돌리지 않았다. 검증 트리를 처음 만드는 P1 에서 증명한다.
 2. Unity 에디터는 한 프로젝트를 한 번만 연다. 담당 worktree 와 검증 트리마다 에디터가 하나씩 뜨고, 첫 임포트에 Synty 391MB 를 다시 읽는다. 동시에 여는 에디터는 둘(담당 하나, 검증 하나)로 제한한다. 모든 PR 에서 담당이 지켜본다.
 3. 에디터가 같은 프로젝트를 열고 있으면 batchmode `unity test` 와 `unity build` 가 잠금으로 실패한다 (CLAUDE.md). 테스트는 실행 중인 에디터에 `unity command test run` 으로 보낸다. 모든 PR 에서 지켜본다.
 4. Synty 에 관(coffin) 프리팹이 없다. PolygonDarkFantasy 에서 `coffin`, `sarcoph`, `tomb` 으로 찾았지만 나오지 않았다. P7 에서 SIDEKICK 과 다른 패키지를 다시 찾고, 없으면 상자·석관 비슷한 소품으로 대신한 뒤 사용자에게 알린다.

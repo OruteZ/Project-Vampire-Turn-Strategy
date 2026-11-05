@@ -1,0 +1,33 @@
+# Background input
+
+A player's keyboard presses and mouse moves and clicks reach the game. Under verification they are simulated through the Input System while the Editor stays unfocused.
+
+## Sub-features
+
+- `input-key` holds and releases a key.
+- `input-pointer-move` moves the pointer to a game-view position.
+- `input-pointer-click` presses and releases the left button.
+
+## How to get to it (user POV)
+
+- Press a key or move and click the mouse over the game view.
+
+## Driving it with vu.sh
+
+Preconditions:
+
+- Play mode is running through `$V play`.
+- `$V input-probe` has run once in this play session. It prints `probe installed`.
+
+- **Key down.** Run `$V key Space down`, then `$V input-read`. Prints `space=True`.
+- **Key up.** Run `$V key Space up`, then `$V input-read`. Prints `space=False`.
+- **Pointer move.** Run `$V click 321 181 move`, then `$V input-read`. Prints `pos=(321.00, 181.00)`.
+- **Pointer press.** Run `$V click 50 60 down`, then `$V input-read`. Prints `pos=(50.00, 60.00) left=True`.
+- **Pointer release.** Run `$V click 50 60 up`, then `$V input-read`. Prints `left=False`.
+- **Proof.** Run `$V shot input-after` and `$V console warn 20`. The console has no new errors.
+
+## Gotchas
+
+- `$V eval 'UnityEngine.InputSystem.Mouse.current.position.ReadValue()'` prints `(0.00, 0.00)` even when the game received the move, because eval reads the Editor's input state. Only `input-read` or game state shows what the game saw.
+- The probe lives only for one play session. Run `input-probe` again after `$V stop` and `$V play`.
+- Not yet proven for uGUI buttons. The CLI routes clicks through the Input System UI module, so the first UI PR (P9) adds that recipe here.
