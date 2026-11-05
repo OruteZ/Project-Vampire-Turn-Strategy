@@ -7,6 +7,7 @@
 | 분야 | 안내서 |
 |---|---|
 | 아트 에셋 | [art-assets.md](art-assets.md) |
+| 전투 | [battle.md](battle.md) |
 
 ## 형식
 
