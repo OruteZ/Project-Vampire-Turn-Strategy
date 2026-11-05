@@ -2,6 +2,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import vm from 'node:vm';
 import { fileURLToPath } from 'node:url';
+import { extractBattles } from './battle.mjs';
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..', '..');
 const HTML = path.join(ROOT, 'docs', 'Prototype.html');
@@ -158,7 +159,9 @@ if (cmd === 'data') {
   write(GAMEDATA_CS, emitCSharp(JSON.parse(fs.readFileSync(path.join(OUT, 'data.json'), 'utf8'))));
 } else if (cmd === 'hex') {
   write(path.join(OUT, 'hex.json'), JSON.stringify(extractHex(loadPrototype())) + '\n');
+} else if (cmd === 'battle') {
+  write(path.join(OUT, 'battles.json'), JSON.stringify(await extractBattles(loadPrototype)) + '\n');
 } else if (cmd) {
-  console.error('usage: node tools/golden/prototype-golden.mjs data|csharp|hex');
+  console.error('usage: node tools/golden/prototype-golden.mjs data|csharp|hex|battle');
   process.exit(2);
 }

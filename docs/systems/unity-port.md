@@ -33,3 +33,14 @@ HTML 이 바뀌면 두 명령을 차례로 돌리고, `data.json` 과 `GameData.
 - `PathTo` 는 갈 수 없는 목표면 목표 한 칸만 돌려준다. HTML 이 그렇게 한다.
 - `node tools/golden/prototype-golden.mjs hex` 가 `tools/golden/out/hex.json` 을 만든다. 11개 스테이지마다 칸별 이웃·빛·걷기·거리, 그리고 시작 배치와 첫 아군을 시신으로 바꾼 배치에서 유닛별 도달 칸·경로(칸 셋 중 하나를 목표로)·양쪽 거리장을 적는다. 칸은 `"열,행"`, 걸음이 붙으면 `"열,행:걸음"` 문자열이다 (`JsonUtility` 가 중첩 배열을 못 읽어서).
 - `HexParityTests` 34개가 이것을 비교한다.
+
+## 전투 규칙과 적 AI (P4)
+
+- `Battle` 은 단계 상태 기계다 (`Phase` 배치·아군·적·종료). 명령은 배치 단계의 `Place`, `Recall`, `Relocate`, `ClearAllies`, `UseSample`, `Start` 와 아군 단계의 `Move`, `Attack`, `Execute`, `Wait`, `EndTurn` 이다. 단계에 맞지 않거나 HTML 화면이 허락하지 않는 명령은 `CommandResult.Ok == false` 와 이유를 돌려주고 상태를 바꾸지 않는다. 인구·은 부족 이유는 HTML 안내 문장 그대로다.
+- 규칙은 화면을 모른다. 명령마다 `BattleEvent` 목록(기록, 배너, 걸음 경로, 팝업, 피격)을 돌려준다. HTML 의 `log`, `showBanner`, `walk`, `popup`, `hitFx` 호출과 같은 순서다. 화면(P7)은 이 목록을 차례로 재생하고, 기다리는 시간은 화면이 정한다.
+- `EndTurn` 은 적 페이즈 전체를 한 번에 계산한다. HTML 은 중간에 기다리지만 그동안 입력을 받지 않으므로 결과가 같다.
+- 적 AI(`Battle.Enemy.cs`)는 HTML `meleeAct`, `targetScore`, `pickTarget`, `fullMoonAct`, `pickEat`, `fixEatTarget` 을 그대로 옮겼다. 표적 점수는 체력에 0.5 를 곱해서 실수다. 같은 점수면 목록에서 먼저 나온 쪽, 도달 칸은 BFS 순서를 따른다.
+- 아이디는 유닛과 시신이 한 카운터를 함께 쓴다 (HTML `uid`). 전투마다 1부터 시작한다.
+- HTML 동작을 하나 그대로 둔다. 적이 이동한 뒤 창벽에 맞아 죽어도, 그 자리에 인접한 아군을 한 번 공격한다 (HTML `meleeAct` 가 `moveTo` 뒤 생사를 보지 않음). 고칠지는 기획 결정이다.
+- `node tools/golden/prototype-golden.mjs battle` 이 `tools/golden/out/battles.json` 을 만든다 (`tools/golden/battle.mjs`). 정책 넷(턴 종료만, 공격적, 보름달 대응, 강화 전부를 산 캠페인)으로 11개 장(강화판은 10개 장)을 끝까지 돌려 43개 기록, 1550개 명령을 남긴다. 명령마다 상태 문자열(`Battle.Snapshot()` 과 같은 형식)과 이벤트 열을 적는다.
+- `BattleParityTests` 가 43개 기록을 재생하고 명령마다 상태와 이벤트를, 끝에 80줄 전투 기록을 비교한다. `BattleRulesTests` 는 기록에 없는 거절·피해 최소 1·조사를 본다.

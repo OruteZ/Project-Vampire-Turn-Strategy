@@ -1,0 +1,8 @@
+ts	phase	decision	why	evidence	result
+2026-11-05T03:06:59Z	frame	P4 끝 조건은 정책 플레이어 4종이 11개 장(캠페인 강화판은 10개 장)에서 낸 모든 명령마다 C# 상태 문자열과 이벤트 열(기록·배너·걸음·팝업·피격)이 HTML 과 같고 lane 10개와 perf 가 통과하는 것	계획 P4 상자. 기록 문장까지 같아야 화면이 HTML 과 같음	issue #8	open
+2026-11-05T03:06:59Z	frame	HTML 을 다시 읽고 순서·동점 규칙을 적어 둠. 적 행동은 스켈레톤→스폰→뱀파이어, 같은 점수면 먼저 나온 쪽, 도달 칸은 BFS 순서, 표적 점수는 체력*0.5 라 실수	이 중 하나만 달라도 전투가 갈라짐	docs/Prototype.html:585-660	noted
+2026-11-05T03:06:59Z	frame	HTML 동작 하나를 그대로 옮기기로 함. 창벽에 맞아 죽은 적이 그 자리에서 공격을 한 번 더 함(meleeAct 가 moveTo 뒤 생사를 보지 않음)	사용자 원문이 HTML 과 똑같이. 고치는 것은 기획 결정이라 사용자에게 알림	docs/Prototype.html:590-608	open, 보고에 적음
+2026-11-05T03:07:00Z	design	골든은 명령마다 상태 문자열과 이벤트 열을 적고, 이벤트는 HTML 의 log, showBanner, walk, popup, hitFx 를 감싸서 받음	P7 화면 연출이 같은 이벤트를 재생하므로 지금 같이 맞춰 둠	tools/golden/prototype-golden.mjs	decided
+2026-11-05T03:13:16Z	golden	정책 4종으로 43개 기록, 명령 1550개, 이벤트 7590개를 만듦. 처음엔 아군 처치가 0번이라 강화판 정책이 보름달 표적을 먼저 처치하게 바꿈	규칙마다 한 번 이상 지나가야 비교가 의미 있음	tools/golden/battle.mjs, 규칙별 횟수 확인	처치 10, 베어넘기기 15, 창벽 20, 돌격 6, 매복 8, 흡혈 성공 21 실패 34
+2026-11-05T03:13:16Z	build	Battle(상태·명령), Battle.Enemy(적 페이즈), BattleEvent, Korean.Josa	HTML 함수를 같은 순서로 옮김	Assets/_Project/Scripts/Core	BattleParity 44/44, BattleRules 5/5
+2026-11-05T03:13:17Z	unit	규칙 세 곳을 일부러 깸. 적 행동 순서, 표적 점수 0.5→0.4, 조사 반대	첫 실행에 44개가 다 통과해서 테스트가 정말 보는지 의심함	verify-artifacts/p4-red	VERIFIED 9, 12, 43 개 실패 후 되돌려 44 통과
