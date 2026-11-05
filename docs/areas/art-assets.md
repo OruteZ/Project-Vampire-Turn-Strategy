@@ -1,6 +1,6 @@
 # 아트 에셋
 
-유료 에셋이라 git 에 없다. 새 클론은 `UPackage/` 의 .unitypackage 를 `tools/import-unitypackage.sh UPackage/<파일>` 로 하나씩 임포트한다. worktree 는 메인 트리의 `Assets/Synty` 를 junction 으로 잇는다 (`.claude/skills/verify-unity/SKILL.md` Launch).
+유료 에셋이라 git 에 없다. 새 클론은 `docs/guides/asset-setup.md` 대로 `bash tools/assets/setup.sh` 를 돌린다(필요한 패키지만 임포트하고 확인). 게임이 참조하는 에셋 목록은 `tools/assets/required.tsv`. worktree 는 메인 트리의 `Assets/Synty` 를 junction 으로 잇는다 (`.claude/skills/verify-unity/SKILL.md` Launch).
 
 ## 분류·경로
 

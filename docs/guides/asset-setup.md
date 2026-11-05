@@ -1,0 +1,77 @@
+# 유료 에셋 받아서 돌리기
+
+이 저장소는 공개 저장소라 Synty 유료 에셋(`Assets/Synty/`, 원본 `UPackage/*.unitypackage`)을 올리지 않는다. 새로 클론한 사람은 에셋을 따로 받아 넣어야 게임과 테스트가 돈다. 이 문서는 그 순서와, 에셋 참조를 바꾸는 사람이 지킬 규칙이다.
+
+## 무엇이 필요한가
+
+지금 게임이 쓰는 에셋은 18개이고 패키지 5개에 들어 있다. 목록은 `tools/assets/required.tsv`(GUID, 경로, 패키지, 쓰는 파일), 패키지 표는 `tools/assets/packages.tsv`(파일 이름, 바이트, 필요한 에셋 수)다.
+
+| 패키지 파일 | 필요 | 쓰는 곳 |
+|---|---|---|
+| `POLYGON_Dark_Fantasy_Unity_2022_3_v1_4_1.unitypackage` | 필수 | 스켈레톤·뱀파이어·사냥꾼 모델, 바위, 화로, 불 |
+| `SIDEKICK_Fantasy_Knights_Unity_2021_3_v1_0_7.unitypackage` | 필수 | 검사·궁수·기사 모델 |
+| `SIDEKICK_Fantasy_Villagers_Unity_2021_3_v1_0_1.unitypackage` | 필수 | 농민 창병·농민 궁수 모델 |
+| `ANIMATION_Base_Locomotion_Unity_2021_1_v1_1_3.unitypackage` | 필수 | 서기·걷기 애니메이션 |
+| `ANIMATION_Sword_Combat_Unity_2021_1_v1_2_0.unitypackage` | 필수 | 공격·맞기·죽기 애니메이션 |
+| `ANIMATION_Bow_Combat_…`, `INTERFACE_Dark_Fantasy_HUD_…`, `INTERFACE_Dark_Fantasy_Menus_…` | 선택 | 지금은 쓰지 않음 |
+
+패키지는 Synty 를 산 계정(Synty Store 또는 Unity Asset Store)에서 받는다. 파일 이름의 판(`v1_4_1` 등)이 같아야 한다. 다른 판은 GUID 가 다를 수 있고, 그러면 아래 확인이 어느 에셋이 어긋났는지 알려 준다.
+
+## 새 클론에서 하는 순서
+
+1. Unity 6000.3.27f2 와 Unity CLI(`unity`)를 깐다. Git Bash 와 node 가 있어야 한다.
+2. 위 패키지 다섯 개를 `UPackage/` 에 둔다. 다른 곳에 두었으면 `SYNTY_PACKAGES=<폴더>` 를 주거나 스크립트에 폴더를 넘긴다.
+3. 무엇이 빠졌는지 에디터 없이 본다:
+
+   ```bash
+   node tools/assets/check.mjs
+   ```
+
+   패키지마다 `준비됨`, `필요`(빠진 에셋 목록과 패키지 파일이 있는지), `선택` 중 하나가 나온다. 모두 준비됐으면 0 으로 끝난다.
+4. 설치한다:
+
+   ```bash
+   bash tools/assets/setup.sh
+   ```
+
+   스크립트는 다음을 차례로 한다.
+   1. 빠진 에셋이 든 패키지만 고른다.
+   2. 에디터를 연다. 이미 열려 있으면 그것을 쓴다.
+   3. 패키지를 하나씩 `AssetDatabase.ImportPackage` 로 임포트하고, 패키지마다 콘솔 오류를 보여 준다.
+   4. `check.mjs` 를 다시 돌린다.
+   5. 에디터 안에서 `RequiredAssetsTests` 를 돌린다.
+
+   패키지 파일이 없으면 무엇을 어디에 둘지 알려 주고 멈춘다. 처음 클론은 패키지 다섯 개 임포트에 수 분 걸린다.
+5. 전체를 확인한다:
+
+   ```bash
+   bash .claude/skills/verify-unity/scripts/vu.sh test editor
+   ```
+
+   ```bash
+   bash .claude/skills/verify-unity/scripts/vu.sh test playmode
+   ```
+
+## 에셋 없이 되는 것
+
+- 규칙·데이터·UI 문장 테스트는 에셋을 쓰지 않게 짰다. `GameData`, `Hex`, `Battle`, `Campaign`, `Overlay`, `UiTextParity` 가 그렇다. 규칙은 `VampireSpawn.Core` 에 있고 Unity 그림에 기대지 않는다. 에셋이 하나도 없는 클론에서 에디터를 열어 돌려 보지는 않았다(2026-11-05).
+- 보드·유닛을 그리는 테스트(`BoardViewTests`, PlayMode `BattlePlaybackTests`)와 `RequiredAssetsTests.EveryRequiredAssetResolves` 는 에셋이 있어야 통과한다. 에셋 없이 실패하면 메시지가 이 문서를 가리킨다.
+
+## 임포트 뒤에 바뀌는 파일
+
+- SIDEKICK 에디터 스크립트는 `Packages/manifest.json` 에 `com.unity.formats.fbx` 를 넣는다. 이미 커밋돼 있어 보통 diff 가 없다.
+- SIDEKICK 은 `Assets/DownloadCache/` 에 도구를 스스로 내려받는다. gitignore 돼 있다.
+- 에디터를 열 때 `Sidekick Tool Downloader` 창 오류가 콘솔에 남는다. 게임과 테스트에는 영향이 없다.
+- `setup.sh` 가 `Packages/` 나 `ProjectSettings/` 에 diff 가 생기면 알려 준다. 그대로 커밋하지 말고 무엇이 바뀌었는지 먼저 본다.
+
+## 에셋 참조를 바꾸는 사람이 할 일
+
+- `ArtCatalog`, 재질, 애니메이터, 씬에서 `Assets/Synty/` 의 새 에셋을 쓰거나 빼면 목록을 다시 뽑아 같이 커밋한다. 에셋과 `UPackage/` 가 다 있어야 한다.
+
+  ```bash
+  node tools/assets/scan.mjs
+  ```
+
+- 다시 뽑지 않으면 `RequiredAssetsTests.ListCoversEverySyntyReference` 가 실패하며 빠진 경로를 알려 준다.
+- 새 패키지를 들이면 `UPackage/` 에 두고 `scan.mjs` 를 돌린다. `packages.tsv` 에 줄이 생긴다. 이 문서의 표와 `docs/areas/art-assets.md` 에도 한 줄 더한다.
+- 패키지끼리 같은 경로의 파일이 있으면 나중에 임포트한 쪽 GUID 가 이긴다(애니메이션 패키지에 3건). `required.tsv` 의 패키지 칸에 `+` 로 둘 이상이 적히면 임포트 순서를 이 문서에 적는다. 지금은 그런 에셋이 없다.

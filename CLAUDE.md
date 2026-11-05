@@ -6,7 +6,7 @@
 - 에디터가 같은 프로젝트를 열고 있으면 batchmode 컴파일이 잠금으로 실패한다. 이때 에디터를 끄지 말고 "빌드 미검증(에디터 실행 중)" 으로 보고한다
 - 에디터 작업(씬·프리팹·에셋 편집, 계층 확인, 컴파일·콘솔 확인, 테스트·빌드)은 모두 Unity CLI(`unity`)로 한다. Unity MCP(`mcp__unityMCP__*`)와 씬·에셋 YAML 직접 편집은 쓰지 않는다
 - 시작 씬은 처음 씬이 생길 때 Build Settings 0번에 등록한다
-- 유료 에셋(`Assets/Synty/`, `UPackage/`)은 git 에 올리지 않는다(공개 저장소, 라이선스). 새 클론은 `UPackage/` 의 .unitypackage 를 직접 임포트한다
+- 유료 에셋(`Assets/Synty/`, `UPackage/`)은 git 에 올리지 않는다(공개 저장소, 라이선스). 새 클론은 docs/guides/asset-setup.md 대로 `bash tools/assets/setup.sh` 를 돌린다. Synty 에셋 참조를 더하거나 빼면 `node tools/assets/scan.mjs` 로 목록을 다시 뽑아 같이 커밋한다
 
 ## 작업 트리·브랜치
 - 메인 작업 트리(저장소 폴더)는 한 번에 한 에이전트만 쓴다. 다른 에이전트는 `git worktree add` 로 저장소 옆 폴더(예: <저장소>-<기능명>)에서 작업한다

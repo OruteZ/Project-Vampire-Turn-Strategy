@@ -7,20 +7,24 @@ cd "$ROOT"
 PKG_DIR="${1:-${SYNTY_PACKAGES:-$ROOT/UPackage}}"
 V=.claude/skills/verify-unity/scripts/vu.sh
 
-if node tools/assets/check.mjs "$PKG_DIR"; then echo "임포트할 것 없음"; else
-  need=$(node tools/assets/check.mjs "$PKG_DIR" | awk '$1=="필요"{print $2}' || true)
+report=$(node tools/assets/check.mjs "$PKG_DIR" || true)
+echo "$report"
+need=$(echo "$report" | awk '$1=="필요"{print $2}')
+if [ -n "$need" ]; then
   for f in $need; do [ -f "$PKG_DIR/$f" ] || { echo "없음: $PKG_DIR/$f  (Synty 구매 계정에서 같은 판을 내려받아 이 폴더에 둔다)"; missing=1; }; done
   [ -z "${missing:-}" ] || exit 1
   bash "$V" launch
   for f in $need; do echo "== 임포트 $f"; bash tools/import-unitypackage.sh "$PKG_DIR/$f"; done
-  node tools/assets/check.mjs "$PKG_DIR"
+  node tools/assets/check.mjs "$PKG_DIR" || { echo "임포트 뒤에도 빠진 에셋이 있다. 패키지 판을 확인한다."; exit 1; }
 fi
 
 bash "$V" doctor
 echo "== 에디터 안에서 확인 (RequiredAssetsTests)"
-bash "$V" test editor RequiredAssets | grep -oE '"Summary":\{[^}]*\}|"Message":"[^"]{1,400}'
+result=$(bash "$V" test editor RequiredAssets)
+echo "$result" | grep -oE '"Summary":\{[^}]*\}|"Message":"[^"]{1,400}'
+echo "$result" | grep -q '"Failed":0' || exit 1
 if ! git diff --quiet -- Packages ProjectSettings; then
   echo "주의: 임포트가 Packages/ 또는 ProjectSettings/ 를 바꿨다. 커밋하기 전에 확인한다:"
   git diff --stat -- Packages ProjectSettings
 fi
-echo "다음: bash $V test editor  /  bash $V test playmode"
+echo "준비 끝. 다음: bash $V test editor  /  bash $V test playmode"
