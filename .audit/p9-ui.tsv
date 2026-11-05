@@ -1,0 +1,12 @@
+ts	phase	decision	why	evidence	result
+2026-11-05T09:36:31Z	frame	완료 조건: UiTextParityTests 가 HTML 화면 33개 상태의 글 덩어리와 같고, lane 1~10 이 실제 재생 화면에서 통과하고, 화면 전환 1초·프레임 16.7ms 안	계획 P9	docs/systems/unity-port-plan.md	decided
+2026-11-05T09:36:31Z	build	UI 를 프리팹 대신 코드로 만든 uGUI 로. 상태가 바뀌면 그 부분을 다시 만든다(HTML innerHTML 과 같은 방식)	에디터 작업은 CLI 만 쓰고 YAML 을 손으로 쓰지 않는 규칙. 다시 만들기라 HTML 템플릿과 1:1 로 옮기고 EditMode 에서 바로 시험할 수 있음	Assets/_Project/Scripts/Game/Screens/	decided
+2026-11-05T09:36:31Z	build	한글 글꼴은 내려받지 않고 HTML 글꼴 목록 그대로 OS 글꼴(CreateDynamicFontFromOSFont)	계획은 Nanum Myeongjo·IBM Plex Sans KR 내려받기인데 내려받기는 사용자 허락이 필요하고 사용자는 "바로 진행" 을 원함. 저장소에 파일이 없음	Game/Screens/Ui.cs	decided
+2026-11-05T09:36:31Z	harness	strings 골든: HTML 메뉴·캠페인·전투 패널·결과 창 33개 상태의 innerHTML 을 작은 파서로 글 덩어리로 나눔. 캠페인 화면은 M=camp 를 넣어야 HTML 과 같음(처음 빠뜨려 기준값이 틀렸고 고침)	계획의 "고정 문장 목록" 보다 강함: 템플릿으로 만든 문장까지 비교	tools/golden/strings.mjs	VERIFIED
+2026-11-05T09:36:31Z	unit	UiTextParityTests 34/34. 빨강: "전투 기록" 을 바꾸면 16/34 실패, 되돌리면 34/34		vu.sh test editor UiTextParity	VERIFIED
+2026-11-05T09:36:31Z	build	보드 카메라를 보드 영역에만 그리게 하고 화면 전체는 배경 카메라가 지움	카메라 영역 밖이 지워지지 않아 막대·안내 글이 청록 상자로 깨짐(p9-deploy 첫 스크린샷)	GameFlow.BuildCanvas	VERIFIED
+2026-11-05T09:36:31Z	live	lane 1 메뉴 제목·두 선택지, 2 배치 화면 작전 개요·편성·인구 10/10(HTML 도 예시 편성이 놓인 채 시작해 계획의 0/10 이 아님), 3 달 0/6·턴 1·아군 5·적 5·턴 종료, 4 기사 카드 14/14·5·2·3·1, 5 맨 위 기록 = Battle.Log[0], 6 7턴 패배 전사 5·처치 0·스폰 2·흡혈 1, 7 1장 첫 클리어 +20·+10·금화 30(골든 campAfter 와 같음), 8 강화 사고 두 번 눌러 초기화하면 금화 30 으로, 9 규칙 요약·결과 창 빠진 글자 0(908자 HasCharacter), 10 나가기 → 전투를 포기할까요? → 2.5초 뒤 나가기	uGUI 버튼은 simulate_pointer down/up 으로 눌림	docs/review/p9-*.png	VERIFIED
+2026-11-05T09:36:31Z	live	나가기 두 번째 누름(2.5초 안)은 CLI 호출이 0.7초씩 걸려 포인터로 못 맞춤. eval 한 번에서 onClick 두 번으로 확인(무장 뒤 캠페인으로 이동)	입력 경로는 다른 lane 에서 증명됨		VERIFIED
+2026-11-05T09:36:31Z	perf	화면 전환: 메뉴 5.4ms, 캠페인 33.9ms, 10장 전투 72.9ms. 프레임 cpu 8.8~9.9ms(10장 배치), 9.0~9.5ms(10장 적 턴 재생). P7 의 10장 14.4~16.5ms 보다 낮은 것은 보드 카메라 영역이 작아진 탓으로 추정(재지 않음)	규칙 1초·16.7ms	diagnostics get_performance	VERIFIED
+2026-11-05T09:36:31Z	regress	EditMode 153/153, PlayMode 4/4		vu.sh test	VERIFIED
+2026-11-05T09:36:31Z	review	영상 없음(Unity Recorder 없음). 적 턴 중 기록·수치는 재생이 끝난 뒤 한 번에 바뀜(HTML 은 적마다)			NOT VERIFIED

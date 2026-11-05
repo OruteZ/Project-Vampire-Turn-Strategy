@@ -1,7 +1,11 @@
 {
     "name": "VampireSpawn.Game",
     "rootNamespace": "VampireSpawn.Game",
-    "references": ["VampireSpawn.Core", "Unity.InputSystem"],
+    "references": [
+        "VampireSpawn.Core",
+        "Unity.InputSystem",
+        "UnityEngine.UI"
+    ],
     "includePlatforms": [],
     "excludePlatforms": [],
     "allowUnsafeCode": false,

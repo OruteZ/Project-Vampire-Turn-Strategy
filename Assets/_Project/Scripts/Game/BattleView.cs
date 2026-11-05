@@ -16,6 +16,7 @@ namespace VampireSpawn.Game
         const float StepSeconds = 0.12f, StrikeSeconds = 0.38f, RiseSeconds = 0.6f, WakeSeconds = 0.7f, BannerSeconds = 0.5f;
 
         public Battle Battle { get; private set; }
+        public event Action<BattleEvent> Played;
         public bool IsBusy => playing || pending.Count > 0;
 
         readonly Dictionary<int, UnitView> units = new Dictionary<int, UnitView>();
@@ -42,6 +43,19 @@ namespace VampireSpawn.Game
             foreach (var c in battle.Corpses) AddCorpse(c.Id, c.Type, c.Pos);
         }
 
+        public void Clear()
+        {
+            StopAllCoroutines();
+            pending.Clear();
+            playing = false;
+            Battle = null;
+            if (layer != null) Destroy(layer.gameObject);
+            layer = null;
+            units.Clear();
+            corpses.Clear();
+            board.Clear();
+        }
+
         public CommandResult Run(Func<Battle, CommandResult> command)
         {
             var result = command(Battle);
@@ -52,7 +66,18 @@ namespace VampireSpawn.Game
             return result;
         }
 
-        void SyncDeploy()
+        public UnitView ViewOf(int id) => units.TryGetValue(id, out var v) ? v : null;
+
+        public void ShowDone()
+        {
+            foreach (var kv in units)
+            {
+                var u = Battle.Find(kv.Key);
+                kv.Value.SetDone(u != null && u.Side == Side.Ally && Battle.Phase == Phase.Player && u.Acted);
+            }
+        }
+
+        public void SyncDeploy()
         {
             foreach (var id in new List<int>(units.Keys))
                 if (Battle.Find(id) == null) Remove(units, id, 0f);
@@ -76,6 +101,7 @@ namespace VampireSpawn.Game
 
         IEnumerator Play(BattleEvent e)
         {
+            Played?.Invoke(e);
             switch (e.Kind)
             {
                 case BattleEventKind.Walk:
