@@ -1,0 +1,7 @@
+ts	phase	decision	why	evidence	result
+2026-11-05T01:52:11Z	frame	P1 의 끝 조건을 계획의 P1 상자(파일, 빌드, 화면, unit, live 10, perf)로 정함	계획이 이미 증거를 정해 둠	docs/systems/unity-port-plan.md P1	open
+2026-11-05T01:52:11Z	frame	메인 트리에서 브랜치 p1-scaffold 로 직접 작업, 담당 worktree 생략	에이전트가 나 하나이고, 임포트는 어차피 junction 너머 메인 Assets/Synty 에 쓰임	issue #2	decided
+2026-11-05T01:52:11Z	frame	패키지 7개가 모두 Assets/Synty 아래로 들어감을 임포트 전에 확인	gitignore 범위 밖으로 새는 파일이 없는지 먼저 봄	tar pathname 목록	SIDEKICK 프리팹 기사 10 마을 9
+2026-11-05T01:54:09Z	harness	unity recompile 가 up_to_date 라 실제 컴파일을 안 해서, CleanBuildCache 로 강제 재컴파일하는 측정 스크립트를 만듦	처음 잰 0.8초는 아무것도 안 잰 숫자였음	tools/perf/recompile-ms.sh	trunk 28445 24069 23771 ms, 중앙값 24069
+2026-11-05T02:05:37Z	import	패키지 7개를 AssetDatabase.ImportPackage 로 하나씩 임포트하고 패키지마다 콘솔을 봄	한 번에 넣으면 어느 패키지가 깨뜨렸는지 모름	tools/import-unitypackage.sh, Temp/import-log.txt	오류 0, 경고는 Synty 애니메이션 Rig 불일치와 GUID 덮어쓰기 3건
+2026-11-05T02:05:38Z	import	SIDEKICK 이 스스로 내려받은 Assets/DownloadCache 를 gitignore 에 넣고, 추가된 com.unity.formats.fbx 는 커밋함	공개 저장소에 벤더 패키지를 올리면 안 되고, fbx 는 새 클론이 SIDEKICK 을 열 때 필요함	.gitignore, Packages/manifest.json	decided
