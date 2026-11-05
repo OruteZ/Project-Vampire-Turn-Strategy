@@ -4,6 +4,7 @@
 - Project Settings > Editor: Asset Serialization = Force Text, Version Control = Visible Meta Files 를 확인하고, 아니면 바꾸기 전에 사용자에게 알린다
 - .gitattributes 에 Unity YAML(.unity, .prefab, .asset, .mat, .anim, .controller) 을 UnityYAMLMerge 로 merge 하도록 등록한다 (등록돼 있음. 새 클론은 `git config merge.unityyamlmerge.driver '"<Unity>/Editor/Data/Tools/UnityYAMLMerge.exe" merge -p %O %B %A %A'` 를 한 번 한다)
 - 에디터가 같은 프로젝트를 열고 있으면 batchmode 컴파일이 잠금으로 실패한다. 이때 에디터를 끄지 말고 "빌드 미검증(에디터 실행 중)" 으로 보고한다
+- 에디터 작업(씬·프리팹·에셋 편집, 계층 확인, 컴파일·콘솔 확인, 테스트·빌드)은 모두 Unity CLI(`unity`)로 한다. Unity MCP(`mcp__unityMCP__*`)와 씬·에셋 YAML 직접 편집은 쓰지 않는다
 - 시작 씬은 처음 씬이 생길 때 Build Settings 0번에 등록한다
 - 유료 에셋(`Assets/Synty/`, `UPackage/`)은 git 에 올리지 않는다(공개 저장소, 라이선스). 새 클론은 `UPackage/` 의 .unitypackage 를 직접 임포트한다
 
@@ -15,7 +16,7 @@
 - 작업이 끝나면 작업 브랜치에 dev 를 먼저 merge 하고 테스트가 통과한 뒤 dev 에도 바로 push 한다 (`git push origin HEAD:dev`, fast-forward)
 
 ## 작업 현황 (GitHub 이슈)
-- 작업 하나 = 이 저장소의 GitHub 이슈 하나. 제목 `작업: <기능명>`, 라벨 `작업` + 상태 하나(`진행 중` / `막힘`). Unity 에디터(MCP)가 있어야 하는 일은 라벨 `에디터 필요`. 형식은 docs/guides/work-status.md
+- 작업 하나 = 이 저장소의 GitHub 이슈 하나. 제목 `작업: <기능명>`, 라벨 `작업` + 상태 하나(`진행 중` / `막힘`). Unity 에디터(CLI 연결)가 있어야 하는 일은 라벨 `에디터 필요`. 형식은 docs/guides/work-status.md
 - 작업을 시작하면 이슈부터 연다. 할 일·상태만 바꾸는 커밋은 만들지 않는다. 코드 커밋 메시지에는 `#번호` 를 적는다
 - 막히면 라벨을 `막힘` 으로 바꾸고 이유를 댓글로 단다
 - 끝나면 결과(관련 문서·커밋)를 댓글로 달고 이슈를 닫는다. 닫힌 이슈가 완료 기록이다 (주간 보고서는 지난주에 닫힌 `작업` 이슈로 쓴다)
