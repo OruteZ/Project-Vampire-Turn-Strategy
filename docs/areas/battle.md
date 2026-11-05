@@ -16,7 +16,7 @@
 | 에디터 작업은 전부 Unity CLI 로 한다 | 시험 중 | 2026-11-05 | CLAUDE.md |
 
 ## 열린 작업
-- #8 P4 전투 규칙과 적 AI
+- #9 P5 캠페인 진행과 저장
 
 ## 맡길 때
 - 모델: 규칙 이식(P4)은 opus xhigh, 나머지 구현은 opus low (`~/.claude/rules/pstack-models.md`)

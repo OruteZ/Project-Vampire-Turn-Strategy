@@ -1,0 +1,6 @@
+ts	phase	decision	why	evidence	result
+2026-11-05T06:16:59Z	golden	HTML 캠페인을 node 에서 finish·loadCamp 를 직접 불러 121단계·불러오기 5·추가 목표 88 경우를 기록. 강화 구매·초기화는 화면 클릭 처리기라 같은 줄을 하네스에 옮김	DOM 이 없어 클릭 처리기는 못 부름	tools/golden/campaign.mjs	decided
+2026-11-05T06:17:00Z	unit	CampaignParity 4/4, 추가 목표 보상이 두 번 나가게 바꾸면 실패		verify-artifacts/p5-red	VERIFIED
+2026-11-05T06:17:00Z	live	lane 1~10. 첫 클리어 20, 추가 목표 30, 재도전 0, 금화 부족·미해금 구매 거절, 초기화 100 전액 환불, 저장·불러오기, 깨진 저장은 빈 캠페인, 강화가 3장 검사 방어 2 데모 1, 10개 장 모두 이긴 끝 상태 420 금화가 HTML 과 같음	계획 P5 lane	verify-artifacts/p5-lanes/lanes.txt	VERIFIED
+2026-11-05T06:17:01Z	live	lane 6 은 에디터 재시작 대신 강제 전체 재컴파일(도메인 재로드) 뒤 PlayerPrefs 를 다시 읽음. 시험 저장은 지움	에디터를 껐다 켜면 7분 넘게 걸리고 사용자 에디터를 닫게 됨. PlayerPrefs 는 레지스트리라 재로드와 재시작이 같은 저장소를 읽음(추정)	verify-artifacts/p5-lanes/lanes.txt	VERIFIED (재로드), 재시작은 INCONCLUSIVE
+2026-11-05T06:17:01Z	perf	저장+불러오기 100번 18.1ms, 한 번 0.18ms	계획 예산 10ms	verify-artifacts/p5-lanes/lanes.txt	VERIFIED

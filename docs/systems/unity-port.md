@@ -45,3 +45,11 @@ HTML 이 바뀌면 두 명령을 차례로 돌리고, `data.json` 과 `GameData.
 - HTML 동작을 하나 그대로 둔다. 적이 이동한 뒤 창벽에 맞아 죽어도, 그 자리에 인접한 아군을 한 번 공격한다 (HTML `meleeAct` 가 `moveTo` 뒤 생사를 보지 않음). 고칠지는 기획 결정이다.
 - `node tools/golden/prototype-golden.mjs battle` 이 `tools/golden/out/battles.json` 을 만든다 (`tools/golden/battle.mjs`). 정책 넷(턴 종료만, 공격적, 보름달 대응, 강화 전부를 산 캠페인)으로 11개 장(강화판은 10개 장)을 끝까지 돌려 43개 기록, 1447개 명령을 남긴다. 이동·공격·처치는 HTML `onHex` 를, 끌어 옮기기는 `endDrag` 를 그대로 부른다. 대기·회수·모두 회수·예시 편성은 HTML 옆 패널 처리기가 한 줄이라 하네스가 같은 줄을 쓴다. 배치 단계에서 바꾸기, 빈 칸으로 옮기기, 구역 밖으로 빼기, 모두 회수, 예시 편성을 모두 지난다. 명령마다 상태 문자열(`Battle.Snapshot()` 과 같은 형식, 승패·글자·원래 이름 포함)과 이벤트 열을 적는다.
 - `BattleParityTests` 가 43개 기록을 재생하고 명령마다 상태와 이벤트를, 끝에 80줄 전투 기록을 비교한다. `BattleRulesTests` 는 기록에 없는 거절·피해 최소 1·조사를 본다.
+
+## 캠페인 진행과 저장 (P5)
+
+- `Campaign` 은 금화, 클리어한 장, 추가 목표를 받은 장, 산 강화를 순서대로 가진다. `StageOpen`, `UpgradesOpen`, `UnlockedTier`, `SpentGold`, `Buy`, `Respec`, `Finish` 가 HTML `stageOpen`, `upgradesOpen`, `unlockedTier`, `spentGold`, 병영 클릭 처리기, `finish` 와 같다. 추가 목표 보상은 처음 달성할 때 한 번만 준다.
+- `Campaign.NewBattle(stage)` 가 전투를 만든다. 데모에는 강화를 넣지 않는다 (HTML `M==='camp'`).
+- 저장 문자열은 HTML `JSON.stringify(C)` 와 글자까지 같다 (`ToJson`). 불러오기는 HTML `loadCamp` 처럼 숫자 `gold` 가 없으면 빈 캠페인으로 시작한다. `Game/CampaignStore` 가 `PlayerPrefs` 키 `pvs-campaign-v2` 에 쓴다. 브라우저 `localStorage` 저장은 옮겨 오지 않는다.
+- 추가 목표 판정은 `Bonus.IsMet(턴, 흡혈 횟수, 스켈레톤 남음)` 이고 `Battle.BonusMet` 이 부른다.
+- `node tools/golden/prototype-golden.mjs campaign` 이 `tools/golden/out/campaign.json` 을 만들고 `CampaignParityTests` 가 비교한다.
