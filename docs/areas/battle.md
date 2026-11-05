@@ -16,7 +16,7 @@
 | 에디터 작업은 전부 Unity CLI 로 한다 | 시험 중 | 2026-11-05 | CLAUDE.md |
 
 ## 열린 작업
-- #4 P2 골든 기록 도구와 게임 데이터
+- #6 P3 육각 좌표와 이동
 
 ## 맡길 때
 - 모델: 규칙 이식(P4)은 opus xhigh, 나머지 구현은 opus low (`~/.claude/rules/pstack-models.md`)

@@ -1,0 +1,5 @@
+ts	phase	decision	why	evidence	result
+2026-11-05T03:01:34Z	frame	P3 끝 조건은 11개 스테이지에서 이웃·빛·걷기·거리·도달(순서 포함)·경로·거리장이 HTML 과 같고 lane 10개와 perf 가 통과하는 것	계획 P3 상자	issue #6	open
+2026-11-05T03:01:35Z	design	Board 는 유닛 목록을 들지 않고 칸별 Occupant 함수를 받음	P4 전투 상태가 유닛을 소유하므로 Board 는 지형만 알면 됨. 테스트도 JSON 배치로 바로 씀	Assets/_Project/Scripts/Core/Board.cs	decided
+2026-11-05T03:01:35Z	design	hex.json 을 칸 문자열로 씀	JsonUtility 가 [[c,r]] 같은 중첩 배열을 못 읽음. 새 JSON 패키지를 들이지 않음	tools/golden/out/hex.json	decided
+2026-11-05T03:01:36Z	unit	Hex 이웃 순서 두 개를 바꿔 빨강 확인	34개가 바로 통과해서 테스트가 순서를 보는지 의심함	verify-artifacts/p3-lanes, 33 실패 후 되돌려 34 통과	VERIFIED
