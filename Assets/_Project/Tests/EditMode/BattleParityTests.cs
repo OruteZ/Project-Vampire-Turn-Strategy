@@ -13,7 +13,7 @@ namespace VampireSpawn.Tests
         [Serializable] class Step { public string cmd, snap; public string[] events; }
         [Serializable] class Trace { public string stage, policy, initial; public string[] upgrades, finalLog; public Step[] steps; }
         [Serializable] class Golden { public Trace[] traces; }
-        [Serializable] class Cmd { public string op, to, kind; public int id, target; }
+        [Serializable] internal class Cmd { public string op, to, kind; public int id, target; }
 
         static Golden golden;
 
@@ -35,7 +35,7 @@ namespace VampireSpawn.Tests
 
         static UnitKind KindOf(string key) => GameData.Types.First(t => t.Key == key).Kind;
 
-        static CommandResult Run(Battle b, Cmd c) => c.op switch
+        internal static CommandResult Run(Battle b, Cmd c) => c.op switch
         {
             "start" => b.Start(),
             "endTurn" => b.EndTurn(),

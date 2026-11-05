@@ -1,7 +1,7 @@
 const cell = (c, r) => `${c},${r}`;
 const MAX_TURNS = 12;
 
-function recorder(p) {
+export function recorder(p) {
   const els = {};
   const stub = p.document.getElementById('x');
   p.$ = (id) => (els[id] ||= new Proxy({}, {

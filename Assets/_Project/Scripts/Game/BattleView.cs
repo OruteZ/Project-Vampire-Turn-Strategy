@@ -16,6 +16,7 @@ namespace VampireSpawn.Game
         const float StepSeconds = 0.12f, StrikeSeconds = 0.38f, RiseSeconds = 0.6f, WakeSeconds = 0.7f, BannerSeconds = 0.5f;
 
         public Battle Battle { get; private set; }
+        public event Action<BattleEvent> Played;
         public bool IsBusy => playing || pending.Count > 0;
 
         readonly Dictionary<int, UnitView> units = new Dictionary<int, UnitView>();
@@ -40,6 +41,19 @@ namespace VampireSpawn.Game
             corpses.Clear();
             foreach (var u in battle.Units) AddUnit(u);
             foreach (var c in battle.Corpses) AddCorpse(c.Id, c.Type, c.Pos);
+        }
+
+        public void Clear()
+        {
+            StopAllCoroutines();
+            pending.Clear();
+            playing = false;
+            Battle = null;
+            if (layer != null) Destroy(layer.gameObject);
+            layer = null;
+            units.Clear();
+            corpses.Clear();
+            board.Clear();
         }
 
         public CommandResult Run(Func<Battle, CommandResult> command)
@@ -87,6 +101,7 @@ namespace VampireSpawn.Game
 
         IEnumerator Play(BattleEvent e)
         {
+            Played?.Invoke(e);
             switch (e.Kind)
             {
                 case BattleEventKind.Walk:

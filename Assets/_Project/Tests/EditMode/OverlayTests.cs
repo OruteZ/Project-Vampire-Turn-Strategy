@@ -55,7 +55,7 @@ namespace VampireSpawn.Tests
             return o;
         }
 
-        static void Apply(BattleSession s, string op)
+        internal static void Apply(BattleSession s, string op)
         {
             var parts = op.Split(' ');
             switch (parts[0])

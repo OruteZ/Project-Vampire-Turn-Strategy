@@ -35,7 +35,7 @@ function instrument(p, sink) {
   };
 }
 
-function commands(p) {
+export function commands(p) {
   const find = (id) => p.S.units.find((u) => u.id === id);
   const need = (ok, why) => { if (!ok) throw new Error('policy issued an illegal command: ' + why); };
   const click = (id, c, r) => { p.S.selected = id; p.S.mode = 'act'; p.onHex(c, r); };

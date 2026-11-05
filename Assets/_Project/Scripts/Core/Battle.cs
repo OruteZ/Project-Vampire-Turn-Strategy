@@ -165,6 +165,10 @@ namespace VampireSpawn.Core
             };
         }
 
+        // Prototype unitStats: base type plus every owned upgrade, used by the roster and armory lines.
+        public static Unit Preview(UnitKind kind, IEnumerable<string> ownedUpgrades) =>
+            new Battle(GameData.Stages[0], ownedUpgrades).MakeAlly(kind, default);
+
         void TrimToCaps()
         {
             while (Used(t => t.Pop) > Stage.Pop || Used(t => t.Silver) > Stage.Silver)

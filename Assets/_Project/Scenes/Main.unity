@@ -174,9 +174,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1136401608}
-  - component: {fileID: 1136401607}
   - component: {fileID: 1136401609}
   - component: {fileID: 1136401610}
+  - component: {fileID: 1136401611}
   m_Layer: 0
   m_Name: Game
   m_TagString: Untagged
@@ -184,20 +184,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &1136401607
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1136401606}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3a6fdb5d472181844a5699be28aecc32, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: VampireSpawn.Game::VampireSpawn.Game.GameBootstrap
-  input: {fileID: 1136401610}
-  stageId: demo
 --- !u!4 &1136401608
 Transform:
   m_ObjectHideFlags: 0
@@ -241,6 +227,20 @@ MonoBehaviour:
   m_EditorClassIdentifier: VampireSpawn.Game::VampireSpawn.Game.BoardInput
   battle: {fileID: 1136401609}
   overlay: {fileID: 1441936664}
+  viewCamera: {fileID: 1321022419}
+--- !u!114 &1136401611
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1136401606}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b731c6a251c42294d8a38d16a5cade3a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: VampireSpawn.Game::VampireSpawn.Game.Screens.GameFlow
+  input: {fileID: 1136401610}
   viewCamera: {fileID: 1321022419}
 --- !u!1 &1321022417
 GameObject:

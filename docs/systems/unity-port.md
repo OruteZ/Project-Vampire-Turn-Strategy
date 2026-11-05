@@ -77,3 +77,13 @@ HTML 이 바뀌면 두 명령을 차례로 돌리고, `data.json` 과 `GameData.
 - 행동을 마친 아군은 발밑 고리가 어두워진다(HTML `.tk.done`).
 - `node tools/golden/prototype-golden.mjs overlay` 가 `tools/golden/out/overlay.json` 을 만든다 (`tools/golden/overlay.mjs`). 13개 판(11개 장, 강화판 4·9장)에서 실제 `onHex` 로 배치·선택·이동·공격·처치 모드·위협 범위·Escape·턴 종료를 누르고, 누를 때마다 `#lOv` 의 칸과 글, 안내 문장, 선택 상태를 적는다. `OverlayTests` 가 같은 순서로 `BattleSession` 을 눌러 매번 비교한다.
 - 아직 없는 것: 토큰의 `일어나는 중`·`관 속` 글, 끌기 중 유닛을 들어 올리는 그림자. 버튼(전투 개시, 턴 종료, 처치, 대기, 위협 범위)은 P9 UI 가 `BoardInput.Run`·`Act` 로 부른다.
+
+## 메뉴, 캠페인, 전투 UI (P9)
+
+- `Game/Screens/GameFlow` 가 HTML 의 화면 전환(`show`, `renderMenu`, `renderCamp`), 전투 버튼 처리기, `finish` 를 옮긴 것이다. 씬 `Main` 의 `Game` 오브젝트에 붙고, 재생하면 메뉴부터 뜬다. 시험용 진입점 `GameBootstrap` 은 지웠다.
+- 화면은 프리팹 없이 코드로 만든 uGUI 다. HTML 이 `innerHTML` 을 다시 쓰듯 상태가 바뀔 때마다 `MenuScreen`, `CampaignScreen`, `BattleScreen` 이 그 부분을 다시 만든다. 색은 HTML CSS 변수 그대로(`Ui`). 문장은 HTML 템플릿과 같은 글자다.
+- 진행 초기화·강화 초기화는 두 번 눌러야 하고, 전투 중 나가기는 2.5초 안에 한 번 더 눌러야 한다. 결과 창의 같은 편성으로 다시·편성부터 다시는 `Battle.StartFormation` 을 쓴다. 캠페인 승리 보상은 `OverInfo.From` 이 `Campaign.Finish` 로 계산하고 `CampaignStore` 에 저장한다.
+- 3D 카메라는 보드 칸 영역(`BoardArea`)에만 그리고, 화면 전체는 배경 카메라가 지운다. 배경 카메라가 없으면 보드 밖 글자가 지워지지 않은 화면 위에 섞여 깨진다.
+- 한글 글꼴은 HTML 의 글꼴 목록 그대로 OS 글꼴에서 고른다(본문 IBM Plex Sans KR → Apple SD Gothic Neo → 맑은 고딕, 제목 Nanum Myeongjo → Noto Serif KR → 바탕). 파일을 저장소에 넣지 않았다. Windows 에서는 글꼴을 따로 깔지 않으면 맑은 고딕·바탕으로 그려진다.
+- `node tools/golden/prototype-golden.mjs strings` 가 `tools/golden/out/strings.json` 을 만든다 (`tools/golden/strings.mjs`). 메뉴 둘, 캠페인 셋, 데모 전투 19개 상태(배치, 선택, 처치 모드, 적·뱀파이어·시신·스폰·보름달 표적 보기, 턴마다), 결과 창 여섯(데모 승·패, 1장 첫 클리어·재도전·패배, 2장 첫 클리어)과 그 뒤 캠페인 화면을 HTML 로 그려 글 덩어리를 뽑는다. `UiTextParityTests` 가 같은 상태의 Unity 화면 글(`Text`)과 덩어리 단위로 비교하고, 결과 뒤 캠페인 저장 문자열도 비교한다.
+- HTML 과 다른 점: 적 턴 동안 전투 기록과 수치는 재생이 끝난 뒤 한 번에 바뀐다(HTML 은 적 하나가 움직일 때마다 바뀐다). 달 수치 옆 달 그림, 스크롤 막대 모양, 마우스를 올렸을 때의 테두리 색은 옮기지 않았다.
