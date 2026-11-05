@@ -1,0 +1,18 @@
+using UnityEngine;
+using VampireSpawn.Core;
+
+namespace VampireSpawn.Game
+{
+    // Development entry point until the menu exists (P9 replaces and deletes it).
+    public sealed class GameBootstrap : MonoBehaviour
+    {
+        public BoardView board;
+        public string stageId = "demo";
+
+        void Start()
+        {
+            foreach (var s in GameData.Stages)
+                if (s.Id == stageId) { board.Show(s); return; }
+        }
+    }
+}

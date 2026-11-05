@@ -1,0 +1,8 @@
+ts	phase	decision	why	evidence	result
+2026-11-05T06:24:52Z	build	육각 타일은 코드로 만든 메시, 지형 재질은 HTML 색 그대로 URP Lit 5개, 바위·화로·불은 Synty 프리팹을 칸에 맞게 크기 조정, 화톳불은 점광원, 햇빛은 스폿라이트	Synty 에 육각 타일이 없음. 소품은 경계 상자로 맞춰 프리팹마다 크기를 손으로 정하지 않음	Assets/_Project/Scripts/Game/BoardView.cs, Art/ArtCatalog.asset	decided
+2026-11-05T06:24:52Z	build	재질·ArtCatalog·씬 연결을 모두 Unity CLI script eval 로 만듦 (YAML 손편집 없음)	CLAUDE.md 에디터 작업 규칙	verify-artifacts/p6/setup.cs, scene.cs	decided
+2026-11-05T06:24:52Z	unit	BoardViewTests 11개(칸 수, 지형, 재질, 바위·화로·빛 위치). 처음엔 화로도 렌더러라 테스트 가정이 틀려 고침. 바위에 물 재질을 넣으면 11개 실패		verify-artifacts/p6-red	VERIFIED
+2026-11-05T06:24:53Z	live	lane 8 이 진짜 버그를 잡음. 재생 중 Destroy 는 프레임 끝에 지워져 같은 프레임에 Show 를 두 번 하면 옛 타일이 잠깐 남음(176=88+88). 지우기 전에 부모에서 떼서 고침		verify-artifacts/p6-lanes/lanes.txt	VERIFIED 수정 후 칸 수와 같음
+2026-11-05T06:24:53Z	live	11개 장 스크린샷을 docs/review/p6-*.png 로 남기고 데모·2장·3장·9장을 HTML 지도와 눈으로 대조. 물이 어두워 밝히고 카메라를 당김	계획 P6 lane 1~7. 리뷰 관문은 마지막 PR 로	docs/review	VERIFIED
+2026-11-05T06:24:54Z	perf	보드 생성 1.6~3.9ms, 재생 중 CPU 프레임 4.7~5.1ms (1280x720 아님, 960x540 캡처, 게임 뷰 기본 크기)	계획 예산 200ms, 16.7ms	verify-artifacts/p6-lanes/lanes.txt	VERIFIED
+2026-11-05T06:24:54Z	live	리뷰 관문의 30~60초 영상은 만들지 않음. Unity Recorder 패키지를 들여야 하고 스크린샷 11장으로 지도 대조가 됨	토큰·의존성 절약. 사용자가 원하면 P7 뒤 추가		skipped

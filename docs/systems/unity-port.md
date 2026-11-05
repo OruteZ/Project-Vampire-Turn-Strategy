@@ -53,3 +53,10 @@ HTML 이 바뀌면 두 명령을 차례로 돌리고, `data.json` 과 `GameData.
 - 저장 문자열은 HTML `JSON.stringify(C)` 와 글자까지 같다 (`ToJson`). 불러오기는 HTML `loadCamp` 처럼 숫자 `gold` 가 없으면 빈 캠페인으로 시작한다. `Game/CampaignStore` 가 `PlayerPrefs` 키 `pvs-campaign-v2` 에 쓴다. 브라우저 `localStorage` 저장은 옮겨 오지 않는다.
 - 추가 목표 판정은 `Bonus.IsMet(턴, 흡혈 횟수, 스켈레톤 남음)` 이고 `Battle.BonusMet` 이 부른다.
 - `node tools/golden/prototype-golden.mjs campaign` 이 `tools/golden/out/campaign.json` 을 만들고 `CampaignParityTests` 가 비교한다.
+
+## 육각 보드와 지형 화면 (P6)
+
+- `Game/BoardView` 가 `Board` 에서 칸마다 육각 기둥 메시를 만들고 지형 재질과 소품을 붙인다. 칸 위치는 HTML `px` 와 같은 배치(flat-top, 홀수 열이 반 칸 아래)이고, 0행이 카메라에서 멀다. `HexToWorld` 와 `TileTop` 을 유닛 화면이 쓴다.
+- 무엇을 그릴지는 `ArtCatalog` 하나가 정한다. 경로 표는 `docs/areas/art-assets.md`.
+- `Game/GameBootstrap` 은 메뉴가 생길 때까지 쓰는 시험용 진입점이다. `stageId` 의 보드를 띄운다. P9 에서 지운다.
+- 스크린샷은 `docs/review/p6-<장>.png`.
