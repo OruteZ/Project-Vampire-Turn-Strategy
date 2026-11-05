@@ -1,0 +1,8 @@
+ts	phase	decision	why	evidence	result
+2026-11-05T02:49:15Z	frame	P2 끝 조건은 GameData 의 모든 필드가 HTML 에서 뽑은 data.json 과 같고 계획의 P2 lane 10개와 perf 가 통과하는 것	계획 P2 상자 그대로	docs/systems/unity-port-plan.md P2, issue #4	open
+2026-11-05T02:49:16Z	design	GameData.cs 를 손으로 옮기지 않고 같은 node 도구가 data.json 에서 생성함. 테스트는 생성된 C# 값을 JSON 과 따로 비교	손으로 150줄을 옮기면 오타가 남고, 생성기는 다시 돌릴 수 있음. 생성기 버그는 테스트가 잡음	tools/golden/prototype-golden.mjs	decided
+2026-11-05T02:49:16Z	design	개발 중에는 검증 에디터를 닫고 메인 에디터 하나만 씀	여유 메모리 2.9GB, 에디터 둘이 약 6GB. P1 때 메인 에디터가 두 번 꺼짐	vu.sh cleanup: closed editor opened by vu	decided
+2026-11-05T02:49:16Z	design	JSON 은 JsonUtility 로 읽을 수 있게 사전 없이 객체 배열로만 씀	테스트 어셈블리에 새 JSON 패키지를 넣지 않으려고	tools/golden/out/data.json	decided
+2026-11-05T02:51:41Z	build	골든 도구 data/csharp 두 명령, 손으로 쓴 타입 파일, 생성된 GameData.cs, 비교 테스트 5개	생성기와 별개로 JSON 을 다시 읽어 비교하므로 생성기 실수도 잡힘	tools/golden/prototype-golden.mjs, GameDataParityTests	5/5 통과
+2026-11-05T02:51:41Z	build	지도를 Terrain enum 으로 읽는 것은 P3 로 미룸	P2 에서 지형을 쓰는 코드가 없음. 지도 문자열은 그대로 비교함	docs/systems/unity-port.md	deferred
+2026-11-05T02:51:42Z	live	lane 을 검증 worktree 대신 깨끗한 메인 트리 head 에서 메인 에디터로 돌림	여유 메모리가 부족해 에디터 둘을 띄우지 않음. 메인 트리가 커밋과 같으면 검증 대상이 같음	git status 깨끗함 확인 후 실행	decided
