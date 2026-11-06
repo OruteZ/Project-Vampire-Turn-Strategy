@@ -2,7 +2,7 @@
 
 ## 경로
 - 기획: docs/design/ui.md, docs/design/art.md
-- 기획서: docs/ui/ (화면별), docs/art/ui-style.md (UI 스타일, 4단계에서 생김), docs/art/ui-references.md (요소별 레퍼런스)
+- 기획서: docs/ui/ (화면별), docs/art/ui-style.md (UI 스타일: 색·글꼴·틀·버튼·배치 토큰), docs/art/ui-references.md (요소별 레퍼런스)
 - 코드: Assets/_Project/Scripts/Game/Screens/ (`Ui.cs` 가 글꼴·공용 요소)
 - 아트: Assets/Synty/InterfaceDarkFantasyMenus, Assets/Synty/InterfaceDarkFantasyHUD, Assets/Synty/InterfaceCore (분류는 art-assets.md)
 - 검토 스크린샷: docs/review/
@@ -27,7 +27,7 @@
 | UI 테마는 "달과 피": 아군은 달빛·쇠, 적은 피·악마 장식, 보름달 게이지가 화면 상징. 후보 A·B 는 커밋 851bfe8 docs/art/ui-theme-candidates.md | 시험 중 | 2026-11-06 | #24 "C 달과 피" |
 
 ## 열린 작업
-- #24 UI 아트 테마·파이프라인 (3단계 레퍼런스 끝, 4단계 UI 스타일 기획서 차례)
+- #24 UI 아트 테마·파이프라인 (4단계 UI 스타일 기획서 끝, 5단계 스타일 타일 목업 차례: ui-style.md 13절, 에디터 필요)
 - #16 한글 글꼴 파일 들이기 (막힘: 내려받기 허락)
 - docs/ui/battle-hud.md, docs/ui/stage-select.md 는 제목만 있다. 7단계에서 채운다
 
@@ -35,3 +35,5 @@
 - 모델: 테마·스타일·화면 기획서와 방향 검토는 opus, 목업·화면 구현은 sonnet
 - 함정: Synty 키트 글꼴(LT Museum, Markazi, Pirata One)은 라틴 문자만 있다. 한글 글자는 #16 글꼴로
 - 함정: 키트 장식은 대부분 악마 상징(해골, 오망성, 촉수)이다. 플레이어는 토벌대라서 어디에 쓸지는 테마가 정한다
+- 함정: Synty 틀 스프라이트의 9-slice 테두리가 180~380px 라 그대로 쓰면 두껍다. `Image.pixelsPerUnitMultiplier` 로 줄인다 (ui-style.md 5절)
+- 함정: Synty 틀 스프라이트에는 붉은·녹색 기가 구워져 있다. Image 색으로 물들이면 곱해져 남는다
