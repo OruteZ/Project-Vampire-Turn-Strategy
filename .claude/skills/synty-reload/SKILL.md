@@ -6,7 +6,7 @@ disable-model-invocation: true
 
 # /synty-reload
 
-Synty assets are paid and never go into git (CLAUDE.md). Characters made with the Sidekick tool are paid-asset derivatives too, so the repo keeps only their **recipes** (`Assets/_Project/Art/Characters/<Name>.sk`, part names, colours and body sliders, no meshes) and every clone bakes them again. This skill runs that whole pipeline. Design: `docs/art/unit-visuals.md` 3. Guide for people: `docs/guides/asset-setup.md`.
+Synty assets are paid and never go into git (CLAUDE.md). Characters made with the Sidekick tool are paid-asset derivatives too, so the repo keeps only their **recipes** (`Assets/_Project/Art/Characters/<Name>.sk`, part names, colours and body sliders, no meshes) and every clone bakes them again. This skill runs that whole pipeline. Teammates without the Unity CLI run the same pipeline from the Editor: VampireSpawn > 도구 모음 (Tools) > 유료 에셋 > "Synty 다시 불러오기" (`Assets/_Project/Scripts/Editor/SyntyReload.cs`). Design: `docs/art/unit-visuals.md` 3. Guide for people: `docs/guides/asset-setup.md`.
 
 ## What it touches
 
@@ -42,8 +42,9 @@ Run from the repo root (or the worktree) in Git Bash. Follow CLAUDE.md for the E
 
 ## Gotchas
 
-- The bake code is `tools/assets/sidekick-bake.cs`, run through `unity command script eval`, not a project script: it references Synty assemblies, and a clone without Synty must still compile.
-- `script eval` runs inside the Editor process, so shell environment variables do not reach it. `sidekick-bake.sh` substitutes `@ONLY@` and `@FORCE@` into the code text instead.
+- The bake code is `tools/assets/SidekickBaker.cs`. It references Synty assemblies, so it is not a project script: `SyntyReload.InstallBaker` copies it to `Assets/Synty/_VampireSpawn/Editor/` (gitignored, exists only with Synty), Unity compiles it there, and `SyntyReload.Bake` calls it by name. Edit the file in `tools/assets/`, never the copy. Both the Tools button and `sidekick-bake.sh` go through `SyntyReload`.
+- `script eval` runs inside the Editor process, so shell environment variables do not reach it. `sidekick-bake.sh` passes the name and force flag as call arguments.
+- The Tools button reports in the Tools window and the Console, never in a modal dialog, so it also works in a background Editor driven by the CLI.
 - The Sidekick part database (`Side_Kick_Data.db`) ships in the SIDEKICK packages. If the bake reports "tool data" errors, the SIDEKICK import is incomplete: re-import it.
 - Only the colour map is written per character. Metallic and the other maps stay the base material's unless a recipe row sets them.
 - `Assets/_Project/Art/Characters/SampleKnight.sk` is a pipeline sample (generated from Sidekick parts, not used by any unit). It keeps `SidekickRecipeTests` exercising a real bake. Delete it once a real recipe exists.

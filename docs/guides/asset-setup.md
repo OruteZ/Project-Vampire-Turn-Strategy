@@ -42,7 +42,7 @@
    5. Sidekick 레시피(`Assets/_Project/Art/Characters/*.sk`)를 굽는다 (`tools/assets/sidekick-bake.sh`, 결과는 gitignore 된 `Assets/_Generated/Resources/Characters/`).
    6. 에디터 안에서 `RequiredAssetsTests` 를 돌린다.
 
-   Claude Code 에서는 `/synty-reload` 스킬이 이 전체(임포트, 굽기, 확인)를 한다 (`.claude/skills/synty-reload/SKILL.md`). 굽지 않은 클론은 레시피를 쓰는 유닛을 `UnitLook.model` 의 대체 프리셋으로 그린다.
+   Unity CLI 가 없으면 에디터에서 VampireSpawn > 도구 모음 (Tools) > 유료 에셋 > **Synty 다시 불러오기** 를 누른다. 빠진 패키지를 `UPackage/` 에서 임포트하고 레시피를 구운 뒤 결과를 그 창에 보인다 (처음 한 번은 굽기 도구 설치 → 컴파일 → 굽기 순서로 저절로 이어진다). 확인은 Window > General > Test Runner 에서 `SidekickRecipeTests`, `RequiredAssetsTests`. Claude Code 에서는 `/synty-reload` 스킬이 이 전체(임포트, 굽기, 확인)를 한다 (`.claude/skills/synty-reload/SKILL.md`). 굽지 않은 클론은 레시피를 쓰는 유닛을 `UnitLook.model` 의 대체 프리셋으로 그린다.
 
    패키지 파일이 없으면 무엇을 어디에 둘지 알려 주고 멈춘다. 처음 클론은 패키지 다섯 개 임포트에 수 분 걸린다.
 5. 전체를 확인한다:

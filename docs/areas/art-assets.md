@@ -64,6 +64,6 @@
 ### 모델 바꾸기 (Sidekick 으로 새로 만든 캐릭터, #30)
 1. Sidekick 도구에서 Save Character 로 `Assets/_Project/Art/Characters/<이름>.sk` 에 레시피를 저장한다 (영문 이름).
 2. 그 병종 `Units/<병종>.asset` 의 `recipe` 에 `<이름>` 을 쓴다. `model` 은 지금 프리셋 그대로 둔다 (굽기 전 클론의 대체 모델).
-3. `/synty-reload` 스킬 (또는 `bash tools/assets/sidekick-bake.sh`). 무기 뼈 `prop_r`/`prop_l` 이 같아 무기 위치는 그대로 쓴다.
+3. 도구 모음 (Tools) > **Synty 다시 불러오기**, 또는 `/synty-reload` 스킬, 또는 `bash tools/assets/sidekick-bake.sh`. 무기 뼈 `prop_r`/`prop_l` 이 같아 무기 위치는 그대로 쓴다.
 4. `.sk` 와 `UnitLook` 을 커밋한다. `Assets/_Generated/` 는 올리지 않는다.
 - 파이프라인 견본: `Characters/SampleKnight.sk` (어느 유닛도 쓰지 않음, 시험이 실제로 굽게 하려고 둔다. 진짜 레시피가 생기면 지운다). 구운 모습 docs/review/sidekick-bake-sample.png
