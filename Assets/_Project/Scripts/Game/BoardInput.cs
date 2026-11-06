@@ -58,7 +58,7 @@ namespace VampireSpawn.Game
             if (Session == null) return;
             overlay.Show(Session, drag != null && drag.Moved ? drag.Target : null);
             if (!battle.IsBusy) battle.ShowDone();
-            flashUntil = Session.Flash != null ? Time.unscaledTime + FlashSeconds : 0f;
+            flashUntil = !Session.Flash.IsEmpty ? Time.unscaledTime + FlashSeconds : 0f;
             Changed?.Invoke();
         }
 

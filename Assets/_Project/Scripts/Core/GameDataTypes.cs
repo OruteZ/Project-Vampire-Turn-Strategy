@@ -85,11 +85,11 @@ namespace VampireSpawn.Core
             _ => !skeletonsLeft,
         };
 
-        public string Text => Type switch
+        public Message Text => Type switch
         {
-            BonusType.Turns => $"{Value}턴 이내 승리",
-            BonusType.NoEat => "보름달 흡혈을 한 번도 허용하지 않기",
-            _ => "스켈레톤을 모두 쓰러뜨리고 승리",
+            BonusType.Turns => new Message("bonus.turns", Value),
+            BonusType.NoEat => new Message("bonus.noEat"),
+            _ => new Message("bonus.allMinions"),
         };
     }
 

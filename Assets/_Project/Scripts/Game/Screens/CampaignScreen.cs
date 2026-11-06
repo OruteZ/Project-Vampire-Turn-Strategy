@@ -86,7 +86,7 @@ namespace VampireSpawn.Game.Screens
             var bon = Ui.Row(card, "Bonus", 14);
             var got = c.BonusDone.Contains(s.Id);
             Ui.Text(bon, "클리어 +" + s.Reward, 0.78f, Ui.Muted).horizontalOverflow = HorizontalWrapMode.Overflow;
-            Ui.Text(bon, (got ? "✓" : "○") + " " + s.Bonus.Text + " +" + s.Bonus.Gold, 0.78f, got ? Ui.Candle : Ui.Muted).horizontalOverflow = HorizontalWrapMode.Overflow;
+            Ui.Text(bon, (got ? "✓" : "○") + " " + Loc.Text(s.Bonus.Text) + " +" + s.Bonus.Gold, 0.78f, got ? Ui.Candle : Ui.Muted).horizontalOverflow = HorizontalWrapMode.Overflow;
             Ui.Text(bon, Resources(s), 0.78f, Ui.Muted).horizontalOverflow = HorizontalWrapMode.Overflow;
             if (open)
             {

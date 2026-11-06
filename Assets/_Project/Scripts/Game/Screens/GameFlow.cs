@@ -230,7 +230,7 @@ namespace VampireSpawn.Game.Screens
         void OnPlayed(BattleEvent e)
         {
             if (e.Kind != BattleEventKind.Banner || banner == null) return;
-            banner.text = e.Text;
+            banner.text = Loc.Text(e.Text);
             banner.color = e.Style == "enemy" ? Ui.Blood : Ui.Candle;
             banner.gameObject.SetActive(true);
             bannerUntil = Time.unscaledTime + BannerSeconds;

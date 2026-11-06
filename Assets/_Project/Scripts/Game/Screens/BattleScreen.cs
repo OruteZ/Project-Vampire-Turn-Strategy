@@ -108,7 +108,7 @@ namespace VampireSpawn.Game.Screens
             Ui.Text(b.transform, label, 0.85f, Ui.Bone).horizontalOverflow = HorizontalWrapMode.Overflow;
         }
 
-        public static string Hint(BattleSession s, bool enemyPlaying) => enemyPlaying ? "적이 행동하고 있습니다." : s.Hint;
+        public static string Hint(BattleSession s, bool enemyPlaying) => Loc.Text(enemyPlaying ? new Message("hint.enemyActing") : s.Hint);
 
         static Text Flag(Transform parent, string text, Color edge)
         {
@@ -145,7 +145,7 @@ namespace VampireSpawn.Game.Screens
                 Ui.Text(brief, stg.Brief, 0.9f, Ui.Muted);
                 var obj = Ui.Col(brief, "Objectives", 4);
                 Def(obj, "목표", stg.Boss.Name + " 처치");
-                Def(obj, "추가 목표", stg.Bonus.Text);
+                Def(obj, "추가 목표", Loc.Text(stg.Bonus.Text));
                 Def(obj, "자원", CampaignScreen.Resources(stg));
                 Def(obj, "적", "스켈레톤 " + (stg.Enemies.Length - 1) + ", " + stg.Boss.Name);
 
@@ -194,7 +194,7 @@ namespace VampireSpawn.Game.Screens
                 var list = Ui.Col(log, "Lines", 3);
                 foreach (var l in b.Log)
                 {
-                    var t = Ui.Text(list, l.Text, 0.82f, LogColor.TryGetValue(l.Style, out var c) ? c : Ui.Bone, l.Style == "t");
+                    var t = Ui.Text(list, Loc.Text(l.Text), 0.82f, LogColor.TryGetValue(l.Style, out var c) ? c : Ui.Bone, l.Style == "t");
                     t.name = "Log";
                 }
             }
@@ -346,7 +346,7 @@ namespace VampireSpawn.Game.Screens
             var st = o.Stats;
             var stg = o.Stage;
             Ui.Text(box, o.Won ? "승리" : "패배", 1.6f, o.Won ? Ui.Candle : Ui.Blood, true, true);
-            Ui.Text(box, o.Won ? o.Turn + "턴에 " + Korean.Josa(stg.Boss.Name, "을", "를") + " 쓰러뜨렸다." : "부대가 전멸했다. 이 땅은 밤의 것이 되었다.", 0.95f, Ui.Muted);
+            Ui.Text(box, o.Won ? Loc.T("over.wonLine", o.Turn, stg.Boss.Name) : "부대가 전멸했다. 이 땅은 밤의 것이 되었다.", 0.95f, Ui.Muted);
             var tally = Ui.Col(box, "Tally", 6);
             Pair(tally, "전사", st.Lost.ToString());
             Pair(tally, "직접 처치한 아군", st.Executed.ToString());
@@ -360,7 +360,7 @@ namespace VampireSpawn.Game.Screens
                 var g2 = r.BonusGold;
                 var rew = Ui.Col(box, "Reward", 6);
                 Pair(rew, r.FirstClear ? "첫 클리어 보상" : "클리어 보상 (재도전)", g1 > 0 ? "+" + g1 : "이미 획득");
-                Pair(rew, "추가 목표 · " + stg.Bonus.Text, !ok ? "실패" : g2 > 0 ? "+" + g2 : "이미 획득", !ok);
+                Pair(rew, "추가 목표 · " + Loc.Text(stg.Bonus.Text), !ok ? "실패" : g2 > 0 ? "+" + g2 : "이미 획득", !ok);
                 Pair(rew, "획득", g1 + g2 + " 금화", false, true);
                 var nxt = Array.IndexOf(Campaign.Stages, stg) + 1;
                 var next = nxt < Campaign.Stages.Length ? Campaign.Stages[nxt] : null;
@@ -376,7 +376,7 @@ namespace VampireSpawn.Game.Screens
             else if (o.Won)
             {
                 var rew = Ui.Col(box, "Reward", 6);
-                Pair(rew, "추가 목표 · " + stg.Bonus.Text, ok ? "달성" : "실패", !ok);
+                Pair(rew, "추가 목표 · " + Loc.Text(stg.Bonus.Text), ok ? "달성" : "실패", !ok);
             }
             var acts = Ui.Row(box, "Acts", 8);
             if (o.Camp) Ui.Button(acts, "캠페인으로", a.ToCamp, Look.Primary);

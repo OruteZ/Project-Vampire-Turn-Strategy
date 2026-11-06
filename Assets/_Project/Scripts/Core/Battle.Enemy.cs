@@ -17,22 +17,22 @@ namespace VampireSpawn.Core
         void EnemyPhase()
         {
             Phase = Phase.Enemy;
-            Say("— " + Turn + "턴 적 페이즈 —", "t");
-            Emit(BattleEvent.Banner(Turn + "턴 · 적 페이즈", "enemy"));
+            Say(new Message("log.enemyTurn", Turn), "t");
+            Emit(BattleEvent.Banner(new Message("banner.enemyTurn", Turn), "enemy"));
             foreach (var c in corpses.ToList()) Rise(c);
 
             var v = Vampire;
             var wasAwake = v != null && !v.Asleep;
             Moon = Math.Min(Rules.MoonMax, Moon + 1);
             var full = wasAwake && Moon >= Rules.MoonMax && EatTarget.HasValue;
-            if (full) Say("보름달이 떴다!", "k");
+            if (full) Say(new Message("log.fullMoon"), "k");
             if (v != null && v.Asleep && Moon >= Rules.MoonWake)
             {
                 v.Asleep = false;
                 v.JustWoke = true;
                 Emit(BattleEvent.Woke(v.Id));
-                Say("달빛에 관이 열렸다. " + Korean.Josa(v.Name, "이", "가") + " 깨어났다!", "k");
-                Emit(BattleEvent.Banner("관이 열렸다", "enemy"));
+                Say(new Message("log.woke", v.Name), "k");
+                Emit(BattleEvent.Banner(new Message("banner.coffin"), "enemy"));
             }
             if (full)
             {
@@ -58,8 +58,8 @@ namespace VampireSpawn.Core
             }
             Turn++;
             Phase = Phase.Player;
-            Say("— " + Turn + "턴 아군 페이즈 —", "t");
-            Emit(BattleEvent.Banner(Turn + "턴 · 아군 페이즈", "player"));
+            Say(new Message("log.playerTurn", Turn), "t");
+            Emit(BattleEvent.Banner(new Message("banner.playerTurn", Turn), "player"));
             FixEatTarget();
         }
 
@@ -75,7 +75,7 @@ namespace VampireSpawn.Core
             units.Add(spawn);
             Emit(BattleEvent.Rose(spawn.Id, c.Id, spawn.Pos));
             Stats.Risen++;
-            Say(Korean.Josa(c.Name, "이", "가") + " 뱀파이어 스폰으로 일어났다.", "s");
+            Say(new Message("log.rose", c.Name), "s");
         }
 
         Unit PickEat(Unit v)
@@ -100,41 +100,40 @@ namespace VampireSpawn.Core
             if (t == null)
             {
                 if (Moon >= Rules.MoonMax)
-                    Say("보름달이 차 있다. " + Korean.Josa(v.Name, "은", "는") + " 곁에 아무도 없어 굶주린 채 다가온다.", "sys");
+                    Say(new Message("log.moonNoTarget", v.Name), "sys");
                 return;
             }
             EatTarget = t.Id;
-            Say("보름달이 다가온다. 다음 적 턴에 " + Korean.Josa(v.Name, "은", "는") + " " + Korean.Josa(t.Name, "을", "를")
-                + " 노린다. 범위 밖·빛 속으로 빼거나 처치하면 흡혈은 실패한다.", "k");
+            Say(new Message("log.moonTarget", v.Name, t.Name), "k");
         }
 
         void FullMoonAct(Unit v)
         {
             var t = EatTarget.HasValue ? Find(EatTarget.Value) : null;
-            Emit(BattleEvent.Banner("보름달", "enemy"));
+            Emit(BattleEvent.Banner(new Message("banner.fullMoon"), "enemy"));
             if (t != null && Hex.Distance(v.Pos, t.Pos) <= Rules.EatRange && !Board.Lit(t.Pos))
             {
-                Say("보름달 아래 " + Korean.Josa(v.Name, "이", "가") + " " + Korean.Josa(t.Name, "을", "를") + " 먹어치웠다!", "k");
-                Emit(BattleEvent.Popup(t.Id, "흡혈", "blood"));
+                Say(new Message("log.drained", v.Name, t.Name), "k");
+                Emit(BattleEvent.Popup(t.Id, new Message("popup.drain"), "blood"));
                 Emit(BattleEvent.Hit(t.Id, v.Id));
                 Stats.Drained++;
                 Kill(t, v, DeathCause.Drain);
                 v.Hp = Math.Min(v.MaxHp, v.Hp + v.Heal);
                 Emit(BattleEvent.HpChanged(v.Id, v.Hp));
-                Emit(BattleEvent.Popup(v.Id, "+" + v.Heal, "heal"));
+                Emit(BattleEvent.Popup(v.Id, new Message("popup.heal", v.Heal), "heal"));
                 Moon = 0;
                 EatTarget = null;
-                Say("달이 졌다.", "sys");
+                Say(new Message("log.moonSet"), "sys");
                 return;
             }
-            var why = t == null ? "노리던 아군이 이미 없다"
-                : Board.Lit(t.Pos) ? Korean.Josa(t.Name, "이", "가") + " 빛 속에 있다"
-                : Korean.Josa(t.Name, "이", "가") + " 손이 닿지 않는 곳에 있다";
-            Say("보름달이 떴지만 " + why + ". 흡혈 실패. " + Korean.Josa(v.Name, "이", "가") + " 굶주린 채 덤벼든다.", "h");
-            Emit(BattleEvent.Popup(v.Id, "흡혈 실패", "heal"));
+            var why = t == null ? new Message("why.gone")
+                : Board.Lit(t.Pos) ? new Message("why.lit", t.Name)
+                : new Message("why.far", t.Name);
+            Say(new Message("log.drainFailed", why, v.Name), "h");
+            Emit(BattleEvent.Popup(v.Id, new Message("popup.drainFailed"), "heal"));
             Moon = 0;
             EatTarget = null;
-            Say("달이 졌다.", "sys");
+            Say(new Message("log.moonSet"), "sys");
             MeleeAct(v);
         }
 
@@ -201,8 +200,8 @@ namespace VampireSpawn.Core
                 if (!a.Has(Ability.Pike) || Hex.Distance(a.Pos, e.Pos) != 1) continue;
                 e.Hp -= 1;
                 Emit(BattleEvent.HpChanged(e.Id, e.Hp));
-                Emit(BattleEvent.Popup(e.Id, "-1", "dmg"));
-                Say(a.Name + "의 창벽 → " + e.Name + " 1 피해", "h");
+                Emit(BattleEvent.Popup(e.Id, new Message("popup.damage", 1), "dmg"));
+                Say(new Message("log.pike", a.Name, e.Name), "h");
                 if (e.Hp <= 0) { Kill(e, a, DeathCause.Blow); break; }
             }
         }

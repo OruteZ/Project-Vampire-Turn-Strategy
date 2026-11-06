@@ -4,6 +4,7 @@ using System.Linq;
 using NUnit.Framework;
 using UnityEngine;
 using VampireSpawn.Core;
+using VampireSpawn.Game;
 
 namespace VampireSpawn.Tests
 {
@@ -115,7 +116,7 @@ namespace VampireSpawn.Tests
                 Assert.AreEqual(new[] { g.pop, g.silver, g.reward }, new[] { s.Pop, s.Silver, s.Reward }, at + "pop,silver,reward");
                 Assert.AreEqual(g.bonusType, Snake(s.Bonus.Type), at + "bonus.type");
                 Assert.AreEqual(new[] { g.bonusVal, g.bonusGold }, new[] { s.Bonus.Value, s.Bonus.Gold }, at + "bonus.val,gold");
-                Assert.AreEqual(g.bonusText, s.Bonus.Text, at + "bonusText");
+                Assert.AreEqual(g.bonusText, Loc.Text(s.Bonus.Text), at + "bonusText");
                 Assert.AreEqual(g.boss.name, s.Boss.Name, at + "boss.name");
                 Assert.AreEqual(new[] { g.boss.hp, g.boss.atk, g.boss.def, g.boss.mov, g.boss.heal },
                     new[] { s.Boss.Hp, s.Boss.Atk, s.Boss.Def, s.Boss.Mov, s.Boss.Heal }, at + "boss.hp,atk,def,mov,heal");
