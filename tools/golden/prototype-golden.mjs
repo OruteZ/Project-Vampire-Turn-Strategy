@@ -125,25 +125,25 @@ export function emitCSharp(d) {
   L.push(`        public static DataSet Create() => new DataSet(new RuleSet(${k0.drainHeal}, ${k0.moonMax}, ${k0.eatRange}, ${k0.moonWake}), Types(), Upgrades(), Skeleton(), Stages());`, '');
   L.push('        static UnitType[] Types() => new[]', '        {');
   for (const t of d.types) {
-    L.push(`            new UnitType(UnitKind.${pascal(t.key)}, ${str(t.key)}, ${str(t.name)}, ${str(t.glyph)}, Tier.${enumName(t.tier)}, ${t.pop}, ${t.silver}, ${t.hp}, ${t.atk}, ${t.def}, ${t.mov}, ${t.rng}, ${t.bane}, ${t.unlockAt}, ${str(t.desc)}),`);
+    L.push(`            new UnitType(UnitKind.${pascal(t.key)}, ${str(t.key)}, Tier.${enumName(t.tier)}, ${t.pop}, ${t.silver}, ${t.hp}, ${t.atk}, ${t.def}, ${t.mov}, ${t.rng}, ${t.bane}, ${t.unlockAt}),`);
   }
   L.push('        };', '');
   L.push('        static Upgrade[] Upgrades() => new[]', '        {');
   for (const u of d.upgrades) {
     const abil = u.abil ? `Ability.${enumName(u.abil)}` : 'Ability.None';
-    L.push(`            new Upgrade(UnitKind.${pascal(u.unit)}, ${str(u.id)}, ${str(u.name)}, ${str(u.desc)}, ${u.cost}, new StatMod(${u.hp}, ${u.atk}, ${u.def}, ${u.mov}, ${u.rng}, ${u.bane}), ${abil}),`);
+    L.push(`            new Upgrade(UnitKind.${pascal(u.unit)}, ${str(u.id)}, ${u.cost}, new StatMod(${u.hp}, ${u.atk}, ${u.def}, ${u.mov}, ${u.rng}, ${u.bane}), ${abil}),`);
   }
   L.push('        };', '');
   const k = d.skeleton;
-  L.push(`        static EnemyStats Skeleton() => new EnemyStats(${str(k.name)}, ${str(k.glyph)}, ${k.hp}, ${k.atk}, ${k.def}, ${k.mov}, ${k.rng});`, '');
+  L.push(`        static EnemyStats Skeleton() => new EnemyStats(${k.hp}, ${k.atk}, ${k.def}, ${k.mov}, ${k.rng});`, '');
   L.push('        static Stage[] Stages() => new[]', '        {');
   for (const s of d.stages) {
     const b = s.boss;
     L.push('            new Stage(');
-    L.push(`                ${str(s.id)}, ${str(s.label)}, ${str(s.title)}, ${str(s.brief)},`);
+    L.push(`                ${str(s.id)},`);
     L.push(`                new[] { ${s.units.map((u) => `UnitKind.${pascal(u)}`).join(', ')} },`);
     L.push(`                ${s.pop}, ${s.silver}, ${s.reward}, new Bonus(BonusType.${enumName(s.bonusType)}, ${s.bonusVal}, ${s.bonusGold}),`);
-    L.push(`                new Boss(${str(b.name)}, ${b.hp}, ${b.atk}, ${b.def}, ${b.mov}, ${b.heal}),`);
+    L.push(`                new Boss(${b.hp}, ${b.atk}, ${b.def}, ${b.mov}, ${b.heal}),`);
     L.push(`                new[] { ${s.map.map(str).join(', ')} },`);
     L.push(`                new[] { ${s.enemies.map((e) => `new Placement<EnemyKind>(EnemyKind.${enumName(e.kind)}, ${e.c}, ${e.r})`).join(', ')} },`);
     L.push(`                new[] { ${s.sample.map((e) => `new Placement<UnitKind>(UnitKind.${pascal(e.kind)}, ${e.c}, ${e.r})`).join(', ')} }),`);

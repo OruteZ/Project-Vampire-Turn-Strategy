@@ -14,8 +14,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: VampireSpawn.Game::VampireSpawn.Game.Data.UnitTypeData
   kind: 5
   key: hunter
-  displayName: "\uC0AC\uB0E5\uAFBC"
-  glyph: "\uC0AC"
   tier: 3
   pop: 3
   silver: 1
@@ -26,13 +24,8 @@ MonoBehaviour:
   rng: 2
   bane: 3
   unlockAt: 9
-  desc: "\uBC40\uD30C\uC774\uC5B4 \uC0AC\uB0E5\uAFBC(\uAC00\uCE6D). \uBC40\uD30C\uC774\uC5B4\xB7\uC2A4\uD3F0\uC5D0\uAC8C
-    \uCD94\uAC00 \uD53C\uD574. \uC740 1 \uC18C\uBAA8."
   upgrades:
   - id: hunter_bane
-    displayName: "\uC815\uB828\uD55C \uC740\uD0C4"
-    desc: "\uBC40\uD30C\uC774\uC5B4\xB7\uC2A4\uD3F0\uC5D0\uAC8C \uCD94\uAC00 \uD53C\uD574
-      +2"
     cost: 70
     hp: 0
     atk: 0
@@ -42,8 +35,6 @@ MonoBehaviour:
     bane: 2
     ability: 0
   - id: hunter_mov
-    displayName: "\uAC00\uBCBC\uC6B4 \uC7A5\uD654"
-    desc: "\uC774\uB3D9 +1"
     cost: 70
     hp: 0
     atk: 0

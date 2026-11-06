@@ -137,7 +137,7 @@ namespace VampireSpawn.Game
                     if (units.TryGetValue(e.UnitId, out var hurt)) hurt.SetHp(e.Value, Battle.Find(e.UnitId)?.MaxHp ?? MaxHpOf(hurt, e.Value));
                     break;
                 case BattleEventKind.Popup:
-                    if (units.TryGetValue(e.UnitId, out var shown)) Popup.Spawn(shown.transform.position + Vector3.up * (Art.unitHeight * Art.hexSize + 0.6f), e.Text, e.Style, speed);
+                    if (units.TryGetValue(e.UnitId, out var shown)) Popup.Spawn(shown.transform.position + Vector3.up * (Art.unitHeight * Art.hexSize + 0.6f), Loc.Text(e.Text), e.Style, speed);
                     break;
                 case BattleEventKind.Died:
                     if (units.TryGetValue(e.UnitId, out var dead)) { dead.Trigger("Death"); Remove(units, e.UnitId, Wait(1.2f)); }
@@ -233,15 +233,15 @@ namespace VampireSpawn.Game
             if (IsBusy) { problems.Add("still playing"); return problems; }
             foreach (var u in Battle.Units)
             {
-                if (!units.TryGetValue(u.Id, out var v)) { problems.Add($"unit {u.Id} {u.Name} has no view"); continue; }
-                if (Vector3.Distance(v.transform.position, Ground(u.Pos)) > 0.05f) problems.Add($"unit {u.Id} {u.Name} drawn away from {u.Pos}");
-                if (Mathf.Abs(v.HpFraction - Mathf.Clamp01((float)u.Hp / u.MaxHp)) > 0.001f) problems.Add($"unit {u.Id} {u.Name} hp bar {v.HpFraction:F2} vs {u.Hp}/{u.MaxHp}");
-                if (v.Lying != u.Asleep) problems.Add($"unit {u.Id} {u.Name} lying={v.Lying} asleep={u.Asleep}");
+                if (!units.TryGetValue(u.Id, out var v)) { problems.Add($"unit {u.Id} {u.Name.Key} has no view"); continue; }
+                if (Vector3.Distance(v.transform.position, Ground(u.Pos)) > 0.05f) problems.Add($"unit {u.Id} {u.Name.Key} drawn away from {u.Pos}");
+                if (Mathf.Abs(v.HpFraction - Mathf.Clamp01((float)u.Hp / u.MaxHp)) > 0.001f) problems.Add($"unit {u.Id} {u.Name.Key} hp bar {v.HpFraction:F2} vs {u.Hp}/{u.MaxHp}");
+                if (v.Lying != u.Asleep) problems.Add($"unit {u.Id} {u.Name.Key} lying={v.Lying} asleep={u.Asleep}");
             }
             foreach (var id in units.Keys) if (Battle.Find(id) == null) problems.Add($"view {id} has no unit");
             foreach (var c in Battle.Corpses)
             {
-                if (!corpses.TryGetValue(c.Id, out var v)) { problems.Add($"corpse {c.Id} {c.Name} has no view"); continue; }
+                if (!corpses.TryGetValue(c.Id, out var v)) { problems.Add($"corpse {c.Id} {c.Name.Key} has no view"); continue; }
                 if (Vector3.Distance(v.transform.position, Ground(c.Pos)) > 0.05f) problems.Add($"corpse {c.Id} drawn away from {c.Pos}");
             }
             foreach (var id in corpses.Keys)

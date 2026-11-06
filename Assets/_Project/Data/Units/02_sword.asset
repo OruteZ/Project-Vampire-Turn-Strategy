@@ -14,8 +14,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: VampireSpawn.Game::VampireSpawn.Game.Data.UnitTypeData
   kind: 2
   key: sword
-  displayName: "\uAC80\uC0AC"
-  glyph: "\uAC80"
   tier: 1
   pop: 2
   silver: 0
@@ -26,11 +24,8 @@ MonoBehaviour:
   rng: 1
   bane: 0
   unlockAt: 3
-  desc: "\uC815\uADDC\uAD70 \uBCF4\uBCD1. \uC804\uC5F4\uC744 \uC9C0\uD0F1\uD55C\uB2E4."
   upgrades:
   - id: sword_def
-    displayName: "\uC0AC\uC2AC \uAC11\uC637"
-    desc: "\uBC29\uC5B4 +1"
     cost: 60
     hp: 0
     atk: 0
@@ -40,9 +35,6 @@ MonoBehaviour:
     bane: 0
     ability: 0
   - id: sword_cleave
-    displayName: "\uBCA0\uC5B4 \uB118\uAE30\uAE30"
-    desc: "\uC801\uC744 \uC4F0\uB7EC\uB728\uB9AC\uBA74 \uD55C \uBC88 \uB354 \uACF5\uACA9
-      (\uD134\uB2F9 1\uD68C)"
     cost: 70
     hp: 0
     atk: 0

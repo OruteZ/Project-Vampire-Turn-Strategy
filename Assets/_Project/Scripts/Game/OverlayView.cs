@@ -72,11 +72,11 @@ namespace VampireSpawn.Game
             var moon = session.Moon();
             if (moon != null)
             {
-                Label(used++, Center(moon.Vampire), moon.VampireLabel);
+                Label(used++, Center(moon.Vampire), Loc.Text(moon.VampireLabel));
                 if (moon.Target is Hex t)
                 {
                     Dashed(Center(moon.Vampire), Center(t), 1.6f * Scale, A(Blood, 0.75f), 3f * Scale, 5f * Scale);
-                    Label(used++, Center(t), moon.TargetLabel);
+                    Label(used++, Center(t), Loc.Text(moon.TargetLabel));
                 }
             }
             if (drop is Hex d && session.Battle.Board.InBounds(d)) Hexagon(Center(d), session.Battle.InDeploy(d) ? DropIn : DropOut);

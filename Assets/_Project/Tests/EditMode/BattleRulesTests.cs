@@ -1,6 +1,7 @@
 using System.Linq;
 using NUnit.Framework;
 using VampireSpawn.Core;
+using VampireSpawn.Game;
 
 namespace VampireSpawn.Tests
 {
@@ -12,12 +13,12 @@ namespace VampireSpawn.Tests
         public void CommandOutsideItsPhaseIsRejectedAndChangesNothing()
         {
             var b = Demo();
-            var before = b.Snapshot();
+            var before = b.Snapshot(m => m.ToString());
             var knight = b.Allies.First(u => u.Kind == "knight");
             var skeleton = b.Enemies.First(u => u.Kind == "skeleton");
             Assert.IsFalse(b.Attack(knight.Id, skeleton.Id).Ok, "attack during deploy");
             Assert.IsFalse(b.EndTurn().Ok, "end turn during deploy");
-            Assert.AreEqual(before, b.Snapshot());
+            Assert.AreEqual(before, b.Snapshot(m => m.ToString()));
             Assert.IsTrue(b.Start().Ok);
             Assert.IsFalse(b.Start().Ok, "start twice");
         }
@@ -41,7 +42,7 @@ namespace VampireSpawn.Tests
             Assert.AreEqual(10, b.Used(t => t.Pop), "sample formation fills the demo's population of 10");
             var result = b.Place(UnitKind.PSpear, free);
             Assert.IsFalse(result.Ok);
-            Assert.AreEqual("인구가 부족합니다. 배치한 유닛을 구역 밖으로 끌어내 회수하세요.", result.Reason);
+            Assert.AreEqual("인구가 부족합니다. 배치한 유닛을 구역 밖으로 끌어내 회수하세요.", Loc.Text(result.Reason));
             Assert.IsNull(b.UnitAt(free));
         }
 
@@ -59,13 +60,15 @@ namespace VampireSpawn.Tests
             Assert.AreEqual(0, b.Corpses.Count, "an executed ally leaves no corpse");
         }
 
+        static string Josa(string word, string withFinal, string withoutFinal) => word + JosaFormatter.Pick(word, withFinal, withoutFinal);
+
         [Test]
         public void JosaFollowsTheFinalConsonant()
         {
-            Assert.AreEqual("기사가", Korean.Josa("기사", "이", "가"));
-            Assert.AreEqual("검사 2이", Korean.Josa("검사 2", "이", "가"));
-            Assert.AreEqual("스폰(궁수)을", Korean.Josa("스폰(궁수)", "을", "를"));
-            Assert.AreEqual("뱀파이어 백작을", Korean.Josa("뱀파이어 백작", "을", "를"));
+            Assert.AreEqual("기사가", Josa("기사", "이", "가"));
+            Assert.AreEqual("검사 2이", Josa("검사 2", "이", "가"));
+            Assert.AreEqual("스폰(궁수)을", Josa("스폰(궁수)", "을", "를"));
+            Assert.AreEqual("뱀파이어 백작을", Josa("뱀파이어 백작", "을", "를"));
         }
     }
 }

@@ -3,6 +3,7 @@
     "rootNamespace": "VampireSpawn.Game",
     "references": [
         "VampireSpawn.Core",
+        "Unity.Localization",
         "Unity.InputSystem",
         "UnityEngine.UI"
     ],

@@ -1,7 +1,7 @@
 {
     "name": "VampireSpawn.Editor",
     "rootNamespace": "VampireSpawn.Editor",
-    "references": ["VampireSpawn.Core", "VampireSpawn.Game"],
+    "references": ["VampireSpawn.Core", "VampireSpawn.Game", "Unity.Localization", "Unity.Localization.Editor"],
     "includePlatforms": ["Editor"],
     "excludePlatforms": [],
     "allowUnsafeCode": false,

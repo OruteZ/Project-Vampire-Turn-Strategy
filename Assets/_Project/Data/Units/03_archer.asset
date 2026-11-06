@@ -14,8 +14,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: VampireSpawn.Game::VampireSpawn.Game.Data.UnitTypeData
   kind: 3
   key: archer
-  displayName: "\uAD81\uC218"
-  glyph: "\uAD81"
   tier: 1
   pop: 2
   silver: 0
@@ -26,12 +24,8 @@ MonoBehaviour:
   rng: 3
   bane: 0
   unlockAt: 5
-  desc: "\uC815\uADDC\uAD70 \uAD81\uC218. \uC0AC\uAC70\uB9AC 3\uC73C\uB85C \uBA40\uB9AC\uC11C
-    \uC3DC\uB2E4. \uC2A4\uD3F0\uC774 \uB418\uBA74 \uD65C\uC744 \uC783\uB294\uB2E4."
   upgrades:
   - id: archer_rng
-    displayName: "\uC7A5\uAD81"
-    desc: "\uC0AC\uAC70\uB9AC +1"
     cost: 60
     hp: 0
     atk: 0
@@ -41,8 +35,6 @@ MonoBehaviour:
     bane: 0
     ability: 0
   - id: archer_atk
-    displayName: "\uB2E8\uB828\uB41C \uD654\uC0B4\uCD09"
-    desc: "\uACF5\uACA9 +1"
     cost: 60
     hp: 0
     atk: 1

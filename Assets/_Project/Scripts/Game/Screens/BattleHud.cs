@@ -8,6 +8,7 @@ using VampireSpawn.Core;
 namespace VampireSpawn.Game.Screens
 {
     // Battle HUD in the "달과 피" style (docs/art/ui-style.md). Sizes are 1920x1080 px.
+    // ponytail: panel warnings, "적 페이즈" and "닫기" are Korean literals until the mockup is approved (stage 8 moves them to the Text table).
     public sealed class BattleHud
     {
         const float Edge = 24f, FramePpu = 9f;
@@ -97,9 +98,9 @@ namespace VampireSpawn.Game.Screens
             var spawns = b.Enemies.Count(e => e.Role == Role.Spawn);
             foreach (var (v, l, c) in new[]
             {
-                (b.Turn.ToString(), "턴", Ui.Bone), (b.Allies.Count().ToString(), "아군", Ui.Steel),
-                (b.Enemies.Count(e => e.Role != Role.Spawn).ToString(), "적", Ui.Blood),
-                (spawns + (b.Corpses.Count > 0 ? " +" + b.Corpses.Count : ""), "스폰", Ui.Spawn),
+                (b.Turn.ToString(), Loc.T("battle.turn"), Ui.Bone), (b.Allies.Count().ToString(), Loc.T("battle.allies"), Ui.Steel),
+                (b.Enemies.Count(e => e.Role != Role.Spawn).ToString(), Loc.T("battle.enemies"), Ui.Blood),
+                (spawns + (b.Corpses.Count > 0 ? " +" + b.Corpses.Count : ""), Loc.T("unit.card.spawn"), Ui.Spawn),
             })
             {
                 var col = Ui.Col(row, "Stat " + l, 0);
@@ -141,8 +142,8 @@ namespace VampireSpawn.Game.Screens
             label.anchorMin = label.anchorMax = label.pivot = new Vector2(0.5f, 1f);
             label.anchoredPosition = new Vector2(0f, -Edge - D - 6f);
             label.sizeDelta = new Vector2(300f, 44f);
-            T(label, "달 " + b.Moon + "/" + max, 20, Ui.Bone, true, false, TextAnchor.UpperCenter);
-            var state = hot ? "다음 턴 보름달" : v != null && v.Asleep ? Rules.MoonWake + "에 관이 열림" : "";
+            T(label, Loc.T("battle.moon") + " " + b.Moon + "/" + max, 20, Ui.Bone, true, false, TextAnchor.UpperCenter);
+            var state = hot ? Loc.T("moon.nextTurn") : v != null && v.Asleep ? Loc.T("battle.coffinAt", Rules.MoonWake) : "";
             if (state.Length > 0) T(label, state, 14, hot ? Ui.Blood : Ui.Muted, hot, false, TextAnchor.UpperCenter);
         }
 
@@ -157,7 +158,7 @@ namespace VampireSpawn.Game.Screens
             fill.offsetMin = new Vector2(24f, 10f);
             fill.offsetMax = new Vector2(-24f * (float)v.Hp / v.MaxHp, -10f);
             Ui.Stretch(Ui.Sprite(bar, "Frame", S("SPR_DarkFantasyMenus_Frame_Bar_Medium_01"), Ui.Blood, 12f).rectTransform);
-            var name = T(bar, v.Name + "   " + v.Hp + "/" + v.MaxHp, 17, Ui.Bone, true, true, TextAnchor.MiddleCenter);
+            var name = T(bar, Loc.Text(v.Name) + "   " + v.Hp + "/" + v.MaxHp, 17, Ui.Bone, true, true, TextAnchor.MiddleCenter);
             Ui.Stretch(name.rectTransform);
             name.gameObject.AddComponent<Outline>().effectColor = Ui.Deep;
             foreach (var x in new[] { 0f, 1f })
@@ -177,10 +178,10 @@ namespace VampireSpawn.Game.Screens
             col.anchoredPosition = new Vector2(-Edge, -Edge);
             col.sizeDelta = new Vector2(320f, 0f);
             col.gameObject.AddComponent<ContentSizeFitter>().verticalFit = ContentSizeFitter.FitMode.PreferredSize;
-            T(col, "전투 기록 ▾", 14, Ui.Dim, false, false, TextAnchor.UpperRight);
+            T(col, Loc.T("battle.log") + " ▾", 14, Ui.Dim, false, false, TextAnchor.UpperRight);
             foreach (var l in b.Log.Take(3))
             {
-                var t = T(col, l.Text, 17, BattleScreen.LogColor.TryGetValue(l.Style, out var c) ? Color.Lerp(c, Ui.Muted, 0.3f) : Ui.Muted, false, false, TextAnchor.UpperRight);
+                var t = T(col, Loc.Text(l.Text), 17, BattleScreen.LogColor.TryGetValue(l.Style, out var c) ? Color.Lerp(c, Ui.Muted, 0.3f) : Ui.Muted, false, false, TextAnchor.UpperRight);
                 t.horizontalOverflow = HorizontalWrapMode.Wrap;
             }
         }
@@ -211,15 +212,15 @@ namespace VampireSpawn.Game.Screens
             Ui.Stretch(col);
             col.GetComponent<VerticalLayoutGroup>().padding = new RectOffset(20, 20, 16, 14);
             var head = Ui.Row(col, "Head", 10, 0, null, null, TextAnchor.LowerLeft);
-            T(head, spawn ? o.Origin + " · 스폰" : o.Name, 22, Ui.Bone, true, true);
-            T(head, o.Side == Side.Ally ? "아군" : o.Role == Role.Vampire ? "보스" : spawn ? "스폰" : "하수인", 14, side);
+            T(head, spawn ? Loc.Text(o.Origin) + " · " + Loc.T("unit.card.spawn") : Loc.Text(o.Name), 22, Ui.Bone, true, true);
+            T(head, Loc.T(o.Side == Side.Ally ? "unit.card.ally" : o.Role == Role.Vampire ? "unit.card.boss" : spawn ? "unit.card.spawn" : "unit.card.minion"), 14, side);
             var big = Ui.Row(col, "Big", 22);
-            Stat(big, "ICON_DarkFantasy_Stat_Health_01_Clean", o.Hp + "/" + o.MaxHp, "체력", 34, side, o.Side == Side.Ally && o.Hp * 3 <= o.MaxHp ? Ui.Blood : Ui.Bone);
-            Stat(big, "ICON_DarkFantasy_Stat_Speed_01_Clean", o.Mov.ToString(), "이동", 34, side, Ui.Bone);
+            Stat(big, "ICON_DarkFantasy_Stat_Health_01_Clean", o.Hp + "/" + o.MaxHp, Loc.T("unit.card.hp"), 34, side, o.Side == Side.Ally && o.Hp * 3 <= o.MaxHp ? Ui.Blood : Ui.Bone);
+            Stat(big, "ICON_DarkFantasy_Stat_Speed_01_Clean", o.Mov.ToString(), Loc.T("unit.card.mov"), 34, side, Ui.Bone);
             var small = Ui.Row(col, "Small", 18);
-            Stat(small, "ICON_DarkFantasy_Stat_Strength_01_Clean", o.Atk + (o.Bane > 0 ? "+" + o.Bane : ""), "공격", 20, side, Ui.Muted);
-            Stat(small, "ICON_DarkFantasy_Status_Defense_01_Clean", o.Def.ToString(), "방어", 20, side, Ui.Muted);
-            Stat(small, "ICON_DarkFantasy_Stat_Accuracy_01_Clean", o.Rng.ToString(), "사거리", 20, side, Ui.Muted);
+            Stat(small, "ICON_DarkFantasy_Stat_Strength_01_Clean", o.Atk + (o.Bane > 0 ? "+" + o.Bane : ""), Loc.T("unit.card.atk"), 20, side, Ui.Muted);
+            Stat(small, "ICON_DarkFantasy_Status_Defense_01_Clean", o.Def.ToString(), Loc.T("unit.card.def"), 20, side, Ui.Muted);
+            Stat(small, "ICON_DarkFantasy_Stat_Accuracy_01_Clean", o.Rng.ToString(), Loc.T("unit.card.rng"), 20, side, Ui.Muted);
             string warn = null;
             var warnColor = Ui.Blood;
             if (o.Side == Side.Ally && b.EatTarget == o.Id) warn = "보름달 표적 · 다음 적 턴에 흡혈당한다";
@@ -245,8 +246,8 @@ namespace VampireSpawn.Game.Screens
             row.sizeDelta = new Vector2(400f, 84f);
             foreach (var (icon, label, act, on, danger) in new[]
             {
-                ("ICON_DarkFantasy_Status_Dead_01_Clean", exec ? "처치 취소" : "아군 처치", a.Exec, exec, true),
-                ("ICON_DarkFantasy_Status_Defense_01_Clean", "대기", a.Wait, false, false),
+                ("ICON_DarkFantasy_Status_Dead_01_Clean", Loc.T(exec ? "unit.card.cancelExec" : "unit.card.exec"), a.Exec, exec, true),
+                ("ICON_DarkFantasy_Status_Defense_01_Clean", Loc.T("unit.card.wait"), a.Wait, false, false),
             })
             {
                 var col = Ui.Col(row, "Slot " + label, 4);
@@ -289,7 +290,7 @@ namespace VampireSpawn.Game.Screens
                 Ui.Stretch(T(badge, left.ToString(), 14, Ui.Bone, true, false, TextAnchor.MiddleCenter).rectTransform);
             }
             var phase = T(Ui.Place(root, "Phase", new Vector2(1f, 0f), new Vector2(-Edge, Edge + 60f), new Vector2(200f, 20f)),
-                b.Phase == Phase.Player ? "아군 페이즈" : b.Phase == Phase.Enemy ? "적 페이즈" : "", 14, Ui.Muted, false, false, TextAnchor.LowerCenter);
+                b.Phase == Phase.Player ? Loc.T("battle.allyPhase") : b.Phase == Phase.Enemy ? "적 페이즈" : "", 14, Ui.Muted, false, false, TextAnchor.LowerCenter);
             Ui.Stretch(phase.rectTransform);
         }
 
@@ -299,8 +300,8 @@ namespace VampireSpawn.Game.Screens
             row.anchorMin = row.anchorMax = row.pivot = Vector2.zero;
             row.anchoredPosition = new Vector2(Edge - 12f, Edge - 6f);
             row.sizeDelta = new Vector2(400f, 36f);
-            Ui.Button(row, "?  규칙", () => rulesToggled?.Invoke(!rulesOpen), Look.Ghost, true);
-            Ui.Button(row, leaveArmed ? "전투를 포기할까요?" : "나가기", a.Leave, Look.Ghost, true);
+            Ui.Button(row, "?  " + Loc.T("battle.rules"), () => rulesToggled?.Invoke(!rulesOpen), Look.Ghost, true);
+            Ui.Button(row, Loc.T(leaveArmed ? "battle.leaveConfirm" : "battle.leave"), a.Leave, Look.Ghost, true);
         }
 
         void RulesPopup(RectTransform root, Action<bool> toggled)
@@ -310,7 +311,7 @@ namespace VampireSpawn.Game.Screens
             p.sizeDelta = new Vector2(720f, 0f);
             p.gameObject.AddComponent<ContentSizeFitter>().verticalFit = ContentSizeFitter.FitMode.PreferredSize;
             Ui.Frame(p, S("SPR_DarkFantasyMenus_Frame_Box_Medium_02"), S("SPR_DarkFantasyMenus_Frame_Box_Medium_02_Background"), Ui.Steel, FramePpu);
-            T(p, "규칙 요약", 32, Ui.Bone, true, true);
+            T(p, Loc.T("battle.rules"), 32, Ui.Bone, true, true);
             foreach (var line in BattleScreen.RuleLines) Ui.Text(p, line, 17f / Ui.Base, Ui.Muted);
             Ui.Button(p, "닫기", () => toggled?.Invoke(false), Look.Ghost, true);
         }
@@ -344,7 +345,7 @@ namespace VampireSpawn.Game.Screens
             }
             if (named)
             {
-                var n = T(Ui.Place(rt, "Name", new Vector2(0.5f, 1f), new Vector2(0f, y - 4f), new Vector2(200f, 18f)), u.Name + "  " + u.Hp + "/" + u.MaxHp, 14, Ui.Bone, true, false, TextAnchor.LowerCenter);
+                var n = T(Ui.Place(rt, "Name", new Vector2(0.5f, 1f), new Vector2(0f, y - 4f), new Vector2(200f, 18f)), Loc.Text(u.Name) + "  " + u.Hp + "/" + u.MaxHp, 14, Ui.Bone, true, false, TextAnchor.LowerCenter);
                 n.rectTransform.pivot = new Vector2(0.5f, 0f);
                 n.gameObject.AddComponent<Outline>().effectColor = Ui.Ink;
                 y += 18f;

@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -17,10 +18,22 @@ namespace VampireSpawn.Game.Screens
         public const int Base = 15;
 
         static Font body, display;
+        static string fontsFor;
 
-        // Same fallback chains as the prototype's --f-body and --f-display; the OS supplies whichever is installed.
-        public static Font Body => body != null ? body : body = Font.CreateDynamicFontFromOSFont(new[] { "IBM Plex Sans KR", "Apple SD Gothic Neo", "Malgun Gothic", "Noto Sans CJK KR", "Arial" }, Base);
-        public static Font Display => display != null ? display : display = Font.CreateDynamicFontFromOSFont(new[] { "Nanum Myeongjo", "Noto Serif KR", "Batang", "AppleMyungjo", "Malgun Gothic" }, Base);
+        // Each language lists its OS font chain in the Text table (font.body, font.display); the OS supplies whichever is installed.
+        public static Font Body { get { Fonts(); return body; } }
+        public static Font Display { get { Fonts(); return display; } }
+
+        static void Fonts()
+        {
+            var code = Loc.Current?.Identifier.Code;
+            if (body != null && code == fontsFor) return;
+            fontsFor = code;
+            body = OsFont("font.body");
+            display = OsFont("font.display");
+        }
+
+        static Font OsFont(string key) => Font.CreateDynamicFontFromOSFont(Loc.T(key).Split(',').Select(n => n.Trim()).ToArray(), Base);
 
         static Color C(int rgb) => new Color(((rgb >> 16) & 255) / 255f, ((rgb >> 8) & 255) / 255f, (rgb & 255) / 255f);
 
@@ -223,7 +236,7 @@ namespace VampireSpawn.Game.Screens
         {
             var box = Row(parent, "Glyph", 0, 0, Panel2, TierColor(t.Tier), TextAnchor.MiddleCenter);
             Size(box, size, size);
-            var g = Text(box, t.Glyph, 1f, TierColor(t.Tier), true, true, TextAnchor.MiddleCenter);
+            var g = Text(box, Loc.Text(t.Glyph), 1f, TierColor(t.Tier), true, true, TextAnchor.MiddleCenter);
             return g;
         }
     }

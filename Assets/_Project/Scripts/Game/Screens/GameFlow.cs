@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem.UI;
 using UnityEngine.UI;
+using UnityEngine.Localization.Settings;
 using VampireSpawn.Core;
 using VampireSpawn.Game.Data;
 
@@ -80,7 +81,16 @@ namespace VampireSpawn.Game.Screens
             };
         }
 
-        void Start() => ShowMenu();
+        void Start()
+        {
+            LocalizationSettings.SelectedLocaleChanged += OnLocaleChanged;
+            ShowMenu();
+        }
+
+        void OnDestroy() => LocalizationSettings.SelectedLocaleChanged -= OnLocaleChanged;
+
+        // Only the main menu offers a language switch (docs/ui/localization.md 9).
+        void OnLocaleChanged(UnityEngine.Localization.Locale _) { if (Current == "menu") ShowMenu(); }
 
         void UseData()
         {
@@ -252,7 +262,7 @@ namespace VampireSpawn.Game.Screens
         void OnPlayed(BattleEvent e)
         {
             if (e.Kind != BattleEventKind.Banner || banner == null) return;
-            banner.text = e.Text;
+            banner.text = Loc.Text(e.Text);
             banner.color = e.Style == "enemy" ? Ui.Blood : Ui.Candle;
             banner.gameObject.SetActive(true);
             bannerUntil = Time.unscaledTime + BannerSeconds;

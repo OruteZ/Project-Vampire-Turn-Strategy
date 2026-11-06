@@ -13,9 +13,9 @@ namespace VampireSpawn.Core
         public Role Role { get; internal set; }
         // Ally type, or for a spawn the type it rose from. Null for skeletons and the vampire.
         public UnitKind? Type { get; internal set; }
-        public string Name { get; internal set; }
-        public string Glyph { get; internal set; }
-        public string Origin { get; internal set; }
+        public Message Name { get; internal set; }
+        public Message Glyph { get; internal set; }
+        public Message Origin { get; internal set; }
         public Hex Pos { get; internal set; }
         public int Hp { get; internal set; }
         public int MaxHp { get; internal set; }
@@ -45,8 +45,8 @@ namespace VampireSpawn.Core
     {
         public int Id { get; internal set; }
         public Hex Pos { get; internal set; }
-        public string Name { get; internal set; }
-        public string Glyph { get; internal set; }
+        public Message Name { get; internal set; }
+        public Message Glyph { get; internal set; }
         public UnitKind Type { get; internal set; }
         public int MaxHp { get; internal set; }
         public int Atk { get; internal set; }
@@ -64,8 +64,9 @@ namespace VampireSpawn.Core
 
     public readonly struct LogEntry
     {
-        public readonly string Text, Style;
-        public LogEntry(string text, string style) { Text = text; Style = style; }
+        public readonly Message Text;
+        public readonly string Style;
+        public LogEntry(Message text, string style) { Text = text; Style = style; }
     }
 
     public sealed partial class Battle
@@ -153,7 +154,7 @@ namespace VampireSpawn.Core
                 var b = Stage.Boss;
                 return new Unit
                 {
-                    Id = nextId++, Role = Role.Vampire, Name = b.Name, Glyph = "흡", Pos = at,
+                    Id = nextId++, Role = Role.Vampire, Name = Stage.BossName, Glyph = new Message("vampire.glyph"), Pos = at,
                     Hp = b.Hp, MaxHp = b.Hp, Atk = b.Atk, Def = b.Def, Mov = b.Mov, Rng = 1, Heal = b.Heal, Asleep = true,
                 };
             }
@@ -177,25 +178,19 @@ namespace VampireSpawn.Core
 
         void Emit(BattleEvent e) => events.Add(e);
 
-        void Say(string text, string style = "")
+        void Say(Message text, string style = "")
         {
             log.Insert(0, new LogEntry(text, style));
             if (log.Count > LogCap) log.RemoveAt(log.Count - 1);
             Emit(BattleEvent.Log(text, style));
         }
 
-        static string PhaseName(Phase p) => p switch
-        {
-            Phase.Deploy => "배치",
-            Phase.Player => "아군",
-            Phase.Enemy => "적",
-            _ => "종료",
-        };
+        static Message PhaseName(Phase p) => new Message("phase." + p.ToString().ToLowerInvariant());
 
         bool Begin(Phase phase, out CommandResult rejected)
         {
             events.Clear();
-            rejected = Phase == phase ? default : CommandResult.Rejected("지금은 " + PhaseName(phase) + " 단계가 아니다");
+            rejected = Phase == phase ? default : CommandResult.Rejected(new Message("reason.notPhase", PhaseName(phase)));
             return Phase == phase;
         }
 
@@ -204,11 +199,11 @@ namespace VampireSpawn.Core
         public CommandResult Place(UnitKind kind, Hex at)
         {
             if (!Begin(Phase.Deploy, out var no)) return no;
-            if (!Stage.Units.Contains(kind)) return CommandResult.Rejected("이 장에서 쓸 수 없는 병종이다");
-            if (!InDeploy(at) || UnitAt(at) != null) return CommandResult.Rejected("배치할 수 없는 칸이다");
+            if (!Stage.Units.Contains(kind)) return CommandResult.Rejected(new Message("reason.typeNotAllowed"));
+            if (!InDeploy(at) || UnitAt(at) != null) return CommandResult.Rejected(new Message("reason.cannotPlace"));
             var t = GameData.Type(kind);
-            if (Used(x => x.Pop) + t.Pop > Stage.Pop) return CommandResult.Rejected("인구가 부족합니다. 배치한 유닛을 구역 밖으로 끌어내 회수하세요.");
-            if (Used(x => x.Silver) + t.Silver > Stage.Silver) return CommandResult.Rejected("은이 부족합니다.");
+            if (Used(x => x.Pop) + t.Pop > Stage.Pop) return CommandResult.Rejected(new Message("reason.noPop"));
+            if (Used(x => x.Silver) + t.Silver > Stage.Silver) return CommandResult.Rejected(new Message("reason.noSilver"));
             units.Add(MakeAlly(kind, at));
             return Done();
         }
@@ -217,7 +212,7 @@ namespace VampireSpawn.Core
         {
             if (!Begin(Phase.Deploy, out var no)) return no;
             var u = Find(id);
-            if (u == null || u.Side != Side.Ally) return CommandResult.Rejected("회수할 아군이 없다");
+            if (u == null || u.Side != Side.Ally) return CommandResult.Rejected(new Message("reason.noRecall"));
             units.Remove(u);
             return Done();
         }
@@ -226,11 +221,11 @@ namespace VampireSpawn.Core
         {
             if (!Begin(Phase.Deploy, out var no)) return no;
             var u = Find(id);
-            if (u == null || u.Side != Side.Ally) return CommandResult.Rejected("옮길 아군이 없다");
+            if (u == null || u.Side != Side.Ally) return CommandResult.Rejected(new Message("reason.noRelocate"));
             if (!InDeploy(to))
             {
                 units.Remove(u);
-                Emit(BattleEvent.Hint(Korean.Josa(u.Name, "을", "를") + " 회수했습니다."));
+                Emit(BattleEvent.Hint(new Message("hint.recalled", u.Name)));
                 return Done();
             }
             var o = UnitAt(to);
@@ -259,19 +254,19 @@ namespace VampireSpawn.Core
         public CommandResult Start()
         {
             if (!Begin(Phase.Deploy, out var no)) return no;
-            if (!Allies.Any()) return CommandResult.Rejected("배치한 아군이 없다");
+            if (!Allies.Any()) return CommandResult.Rejected(new Message("reason.noAllies"));
             var count = Allies.GroupBy(u => u.Type.Value).ToDictionary(g => g.Key, g => g.Count());
             var index = new Dictionary<UnitKind, int>();
             foreach (var u in Allies)
             {
                 if (count[u.Type.Value] <= 1) continue;
                 index[u.Type.Value] = index.TryGetValue(u.Type.Value, out var n) ? n + 1 : 1;
-                u.Name = GameData.Type(u.Type.Value).Name + " " + index[u.Type.Value];
+                u.Name = new Message("name.numbered", GameData.Type(u.Type.Value).Name, index[u.Type.Value]);
             }
             StartFormation = Allies.Select(u => new Placement<UnitKind>(u.Type.Value, u.Pos.Col, u.Pos.Row)).ToArray();
             Phase = Phase.Player;
-            Say("전투 개시. 목표: " + Korean.Josa(Stage.Boss.Name, "을", "를") + " 처치하라.", "t");
-            Emit(BattleEvent.Banner("1턴 · 아군 페이즈", "player"));
+            Say(new Message("log.start", Stage.BossName), "t");
+            Emit(BattleEvent.Banner(new Message("banner.playerTurn", 1), "player"));
             return Done();
         }
 
@@ -285,10 +280,10 @@ namespace VampireSpawn.Core
         {
             if (!Begin(Phase.Player, out var no)) return no;
             var u = Ready(id);
-            if (u == null || u.Moved) return CommandResult.Rejected("움직일 수 없는 유닛이다");
+            if (u == null || u.Moved) return CommandResult.Rejected(new Message("reason.cannotMove"));
             var reach = Reach(u);
             if (to == u.Pos || OccupantAt(to) != Occupant.Empty || !reach.TryGetValue(to, out var steps))
-                return CommandResult.Rejected("갈 수 없는 칸이다");
+                return CommandResult.Rejected(new Message("reason.cannotReach"));
             u.MovedDist = steps;
             u.Moved = true;
             Walk(u, to);
@@ -301,14 +296,14 @@ namespace VampireSpawn.Core
             var u = Ready(id);
             var t = Find(targetId);
             if (u == null || t == null || t.Side != Side.Enemy || t.Asleep || Hex.Distance(u.Pos, t.Pos) > u.Rng)
-                return CommandResult.Rejected("공격할 수 없다");
+                return CommandResult.Rejected(new Message("reason.cannotAttack"));
             ApplyHit(u, t);
             u.Acted = u.Moved = true;
             if (!units.Contains(t) && u.Has(Ability.Cleave) && !u.Cleaved && Vampire != null)
             {
                 u.Cleaved = true;
                 u.Acted = false;
-                Say(Korean.Josa(u.Name, "이", "가") + " 베어 넘기고 한 번 더 공격할 수 있다.", "h");
+                Say(new Message("log.cleave", u.Name), "h");
             }
             CheckEnd();
             return Done();
@@ -320,8 +315,8 @@ namespace VampireSpawn.Core
             var u = Ready(id);
             var t = Find(targetId);
             if (u == null || t == null || t.Side != Side.Ally || t == u || Hex.Distance(u.Pos, t.Pos) > u.Rng)
-                return CommandResult.Rejected("처치할 수 없다");
-            Emit(BattleEvent.Popup(t.Id, "처치", "heal"));
+                return CommandResult.Rejected(new Message("reason.cannotExecute"));
+            Emit(BattleEvent.Popup(t.Id, new Message("popup.execute"), "heal"));
             Kill(t, u, DeathCause.Execute);
             u.Acted = u.Moved = true;
             CheckEnd();
@@ -332,7 +327,7 @@ namespace VampireSpawn.Core
         {
             if (!Begin(Phase.Player, out var no)) return no;
             var u = Ready(id);
-            if (u == null) return CommandResult.Rejected("대기할 유닛이 없다");
+            if (u == null) return CommandResult.Rejected(new Message("reason.noWait"));
             u.Acted = u.Moved = true;
             return Done();
         }
@@ -351,13 +346,13 @@ namespace VampireSpawn.Core
             if (path.Count > 0) u.Pos = path[path.Count - 1];
         }
 
-        public (int damage, List<string> tags) DamageParts(Unit att, Unit def)
+        public (int damage, List<Message> tags) DamageParts(Unit att, Unit def)
         {
             var d = att.Atk;
-            var tags = new List<string>();
-            if (att.Bane > 0 && def.IsUndead) { d += att.Bane; tags.Add("대뱀파이어"); }
-            if (att.Has(Ability.Ambush) && !att.Moved) { d += 1; tags.Add("매복"); }
-            if (att.Has(Ability.Charge) && att.MovedDist >= 2) { d += 2; tags.Add("돌격"); }
+            var tags = new List<Message>();
+            if (att.Bane > 0 && def.IsUndead) { d += att.Bane; tags.Add(new Message("tag.bane")); }
+            if (att.Has(Ability.Ambush) && !att.Moved) { d += 1; tags.Add(new Message("tag.ambush")); }
+            if (att.Has(Ability.Charge) && att.MovedDist >= 2) { d += 2; tags.Add(new Message("tag.charge")); }
             return (Math.Max(1, d - def.Def), tags);
         }
 
@@ -369,9 +364,11 @@ namespace VampireSpawn.Core
             def.Hp -= d;
             Emit(BattleEvent.Hit(def.Id, att.Id));
             Emit(BattleEvent.HpChanged(def.Id, def.Hp));
-            Emit(BattleEvent.Popup(def.Id, "-" + d, "dmg"));
-            Say(att.Name + " → " + def.Name + " " + d + " 피해" + (tags.Count > 0 ? " (" + string.Join(", ", tags) + ")" : ""),
-                att.Side == Side.Enemy ? "k" : "");
+            Emit(BattleEvent.Popup(def.Id, new Message("popup.damage", d), "dmg"));
+            var line = tags.Count == 0
+                ? new Message("log.hit", att.Name, def.Name, d)
+                : new Message("log.hitTags", att.Name, def.Name, d, new Message("tags." + tags.Count, tags.Cast<object>().ToArray()));
+            Say(line, att.Side == Side.Enemy ? "k" : "");
             if (def.Hp <= 0) Kill(def, att, DeathCause.Blow);
         }
 
@@ -384,18 +381,18 @@ namespace VampireSpawn.Core
             Emit(BattleEvent.Died(u.Id, u.Pos));
             if (u.Side == Side.Enemy)
             {
-                Say(Korean.Josa(u.Name, "이", "가") + " 쓰러졌다.", u.Role == Role.Vampire ? "t" : "sys");
+                Say(new Message("log.enemyFell", u.Name), u.Role == Role.Vampire ? "t" : "sys");
                 return;
             }
             if (cause == DeathCause.Execute)
             {
                 Stats.Executed++;
-                Say(Korean.Josa(killer.Name, "이", "가") + " " + Korean.Josa(u.Name, "을", "를") + " 처치했다. 변이 없이 잠든다.", "h");
+                Say(new Message("log.executed", killer.Name, u.Name), "h");
                 return;
             }
             Stats.Lost++;
-            if (!killer.IsUndead) { Say(u.Name + " 전사. 하수인에게 쓰러져 변이하지 않는다.", "sys"); return; }
-            if (Board.Lit(u.Pos)) { Say(u.Name + " 전사. 빛 속에서 쓰러져 변이하지 않는다.", "h"); return; }
+            if (!killer.IsUndead) { Say(new Message("log.diedToMinion", u.Name), "sys"); return; }
+            if (Board.Lit(u.Pos)) { Say(new Message("log.diedInLight", u.Name), "h"); return; }
             var corpse = new Corpse
             {
                 Id = nextId++, Pos = u.Pos, Name = u.Name, Type = u.Type.Value, Glyph = u.Glyph,
@@ -403,7 +400,7 @@ namespace VampireSpawn.Core
             };
             corpses.Add(corpse);
             Emit(BattleEvent.CorpseLeft(corpse.Id, corpse.Pos));
-            Say(Korean.Josa(u.Name, "이", "가") + " 쓰러졌다. 다음 적 페이즈에 스폰으로 일어난다!", "s");
+            Say(new Message("log.willRise", u.Name), "s");
         }
 
         bool CheckEnd()
@@ -419,7 +416,7 @@ namespace VampireSpawn.Core
             Won = win;
         }
 
-        public string Snapshot()
+        public string Snapshot(Func<Message, string> text)
         {
             static int B(bool v) => v ? 1 : 0;
             var won = Won.HasValue ? B(Won.Value).ToString() : "-";
@@ -434,10 +431,10 @@ namespace VampireSpawn.Core
                     : $"s{B(u.Asleep)}r{B(u.JustRisen)}w{B(u.JustWoke)}";
                 var side = u.Side == Side.Ally ? "ally" : "enemy";
                 var abil = string.Join("+", u.abil.Select(a => a.ToString().ToLowerInvariant()));
-                lines.Add($"U {u.Id}:{side}:{u.Kind}:{u.Name}:{u.Glyph}:{u.Origin}:{u.Pos}:{u.Hp}/{u.MaxHp}:{u.Atk},{u.Def},{u.Mov},{u.Rng},{u.Bane},{u.Heal}:{abil}:{flags}");
+                lines.Add($"U {u.Id}:{side}:{u.Kind}:{text(u.Name)}:{text(u.Glyph)}:{text(u.Origin)}:{u.Pos}:{u.Hp}/{u.MaxHp}:{u.Atk},{u.Def},{u.Mov},{u.Rng},{u.Bane},{u.Heal}:{abil}:{flags}");
             }
             foreach (var c in corpses)
-                lines.Add($"C {c.Id}:{GameData.Type(c.Type).Key}:{c.Name}:{c.Glyph}:{c.Pos}:{c.MaxHp},{c.Atk},{c.Def},{c.Mov}");
+                lines.Add($"C {c.Id}:{GameData.Type(c.Type).Key}:{text(c.Name)}:{text(c.Glyph)}:{c.Pos}:{c.MaxHp},{c.Atk},{c.Def},{c.Mov}");
             return string.Join("\n", lines);
         }
     }

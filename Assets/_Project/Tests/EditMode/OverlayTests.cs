@@ -5,6 +5,7 @@ using System.Linq;
 using NUnit.Framework;
 using UnityEngine;
 using VampireSpawn.Core;
+using VampireSpawn.Game;
 
 namespace VampireSpawn.Tests
 {
@@ -44,11 +45,11 @@ namespace VampireSpawn.Tests
             var moon = s.Moon();
             if (moon != null)
             {
-                o.Add("label:" + moon.VampireLabel + "@" + moon.Vampire);
+                o.Add("label:" + Loc.Text(moon.VampireLabel) + "@" + moon.Vampire);
                 if (moon.Target is Hex t)
                 {
                     o.Add("line@" + moon.Vampire + ">" + t);
-                    o.Add("label:" + moon.TargetLabel + "@" + t);
+                    o.Add("label:" + Loc.Text(moon.TargetLabel) + "@" + t);
                 }
             }
             o.Sort(string.CompareOrdinal);
@@ -92,7 +93,7 @@ namespace VampireSpawn.Tests
                 Apply(s, step.op);
                 var at = $"{run.stage} step {i} ({step.op})";
                 CollectionAssert.AreEqual(step.ov.OrderBy(x => x, StringComparer.Ordinal).ToList(), Describe(s), at + " overlay");
-                Assert.AreEqual(step.hint, s.Hint, at + " hint");
+                Assert.AreEqual(step.hint, Loc.Text(s.Hint), at + " hint");
                 Assert.AreEqual(step.sel, s.Selected ?? -1, at + " selected");
                 Assert.AreEqual(step.ins, s.InspectCorpse is int c ? "c" + c : s.InspectUnit?.ToString() ?? "", at + " inspect");
                 Assert.AreEqual(step.mode, s.Mode == SelectMode.Execute ? "execute" : "act", at + " mode");
