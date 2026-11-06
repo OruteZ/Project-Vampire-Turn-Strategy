@@ -886,7 +886,7 @@ MonoBehaviour:
       m_Items:
       - rid: 7201578077006332005
   - m_Id: 9846568841221
-    m_Localized: Enemy Threat Range
+    m_Localized: Threat Range
     m_Metadata:
       m_Items:
       - rid: 7201578077006332005
