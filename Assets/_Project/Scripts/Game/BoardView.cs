@@ -12,6 +12,7 @@ namespace VampireSpawn.Game
         public Board Board { get; private set; }
         public Stage Stage { get; private set; }
         Mesh hexMesh;
+        float fittedAspect;
 
         static readonly float Sqrt3 = Mathf.Sqrt(3f);
 
@@ -30,6 +31,11 @@ namespace VampireSpawn.Game
                 for (var c = 0; c < Board.Cols; c++)
                     BuildTile(new Hex(c, r));
             FitCamera();
+        }
+
+        void LateUpdate()
+        {
+            if (Board != null && viewCamera != null && !Mathf.Approximately(viewCamera.aspect, fittedAspect)) FitCamera();
         }
 
         public void Clear()
@@ -119,7 +125,16 @@ namespace VampireSpawn.Game
             var distance = span * 0.5f / Mathf.Tan(viewCamera.fieldOfView * 0.5f * Mathf.Deg2Rad) * 0.8f;
             var rot = Quaternion.Euler(pitch, 0f, 0f);
             viewCamera.transform.rotation = rot;
-            viewCamera.transform.position = center - rot * Vector3.forward * distance;
+            fittedAspect = viewCamera.aspect;
+            // A narrow viewport (4:3, 5:4) crops the near rows sideways under perspective, so back off until every board corner is in view.
+            var h = art.hexSize;
+            var corners = new[] { a + new Vector3(-h, 0f, h), new Vector3(b.x + h, 0f, a.z + h), new Vector3(a.x - h, 0f, b.z - h), b + new Vector3(h, 0f, -h) };
+            for (var i = 0; i < 40; i++)
+            {
+                viewCamera.transform.position = center - rot * Vector3.forward * distance;
+                if (System.Array.TrueForAll(corners, c => { var v = viewCamera.WorldToViewportPoint(c); return v.x >= 0f && v.x <= 1f; })) break;
+                distance *= 1.04f;
+            }
         }
 
         static Mesh BuildHexMesh(float radius, float height)

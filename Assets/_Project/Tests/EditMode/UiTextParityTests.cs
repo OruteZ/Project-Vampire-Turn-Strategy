@@ -29,8 +29,17 @@ namespace VampireSpawn.Tests
 
         static Golden Load() => golden ??= JsonUtility.FromJson<Golden>("{\"shots\":" + File.ReadAllText(Out("strings.json")) + "}");
 
-        // The battle screen follows docs/ui/battle-hud.md, not the HTML layout; BattleHudShowsEveryGoldenState covers it.
+        // Menu and result screens follow docs/art/ui-style.md 14 (names and numbers only), not the HTML text; ScreenFollowsGoldenState checks what they must still show.
         static IEnumerable<string> ShotNames() => Load().shots.Where(s => s.screen != "battle" && s.screen != "camp").Select(s => s.name);
+
+        // ui-style.md 14-1-1: no sentence on screen outside the rules window, the mode hint, warnings and button labels.
+        static readonly Regex Sentence = new Regex("[.!?。]\\s*$|다\\.?$");
+
+        static void AssertNoSentences(Transform root, string name, params string[] allowed)
+        {
+            var bad = root.GetComponentsInChildren<Text>(true).Where(t => t.name != "Warn" && t.GetComponentInParent<Button>(true) == null).Select(t => t.text.Trim()).Where(t => t.Length > 8 && Sentence.IsMatch(t) && !allowed.Contains(t)).ToList();
+            CollectionAssert.IsEmpty(bad, name + " shows sentences");
+        }
 
         // The campaign screen follows docs/ui/stage-select.md and upgrade.md; CampaignScreenShowsEveryGoldenState covers it.
         static IEnumerable<string> CampShots() => Load().shots.Where(s => s.screen == "camp").Select(s => s.name);
@@ -38,12 +47,6 @@ namespace VampireSpawn.Tests
         static IEnumerable<string> BattleShots() => Load().shots.Where(s => s.screen == "battle").Select(s => s.name);
 
         static readonly Regex RawKey = new Regex("^[a-z]+(\\.[a-zA-Z]+)+$");
-
-        static readonly Regex Tag = new Regex("<[^>]+>"), Space = new Regex("\\s+");
-
-        // The language row (docs/ui/localization.md 6) is new UI with no prototype twin.
-        static List<string> Blocks(Transform root) =>
-            root.GetComponentsInChildren<Text>(true).Where(t => t.GetComponentsInParent<Transform>(true).All(p => p.name != "Languages")).Select(t => Space.Replace(Tag.Replace(t.text, ""), "")).Where(s => s.Length > 0).OrderBy(s => s, StringComparer.Ordinal).ToList();
 
         RectTransform root;
 
@@ -71,7 +74,9 @@ namespace VampireSpawn.Tests
             new BattleHud(null).Build(root, s, new HudState { Hover = hover, Demo = true, Alt = true }, new BattleActions());
             var texts = root.GetComponentsInChildren<Text>(true).Select(t => t.text).ToList();
             CollectionAssert.IsEmpty(texts.Where(t => RawKey.IsMatch(t)), name + " shows a table key instead of its text");
-            CollectionAssert.Contains(texts, BattleScreen.Hint(s, false), name + " hint");
+            if (BattleScreen.ShowsHint(s, false)) CollectionAssert.Contains(texts, BattleScreen.Hint(s, false), name + " hint");
+            else CollectionAssert.DoesNotContain(texts, BattleScreen.Hint(s, false), name + " hint only in deploy and execute");
+            AssertNoSentences(root, name, BattleScreen.Hint(s, false));
             CollectionAssert.Contains(texts, BattleScreen.PrimaryLabel(b, false, out _), name + " primary button");
             if (b.Phase == Phase.Deploy)
                 foreach (var k in b.Stage.Units) Assert.That(texts, Has.Some.Contains(Loc.Text(GameData.Type(k).Name)), name + " roster");
@@ -79,7 +84,7 @@ namespace VampireSpawn.Tests
             {
                 Assert.That(texts, Has.Some.Contains(b.Turn.ToString()), name + " turn");
                 if (hover != null) Assert.That(texts, Has.Some.Contains(hover.Hp + "/" + hover.MaxHp), name + " enemy panel");
-                foreach (var l in b.Log.Take(3)) Assert.That(texts, Has.Some.StartsWith(Loc.Text(l.Text).Substring(0, 1)), name + " log");
+                foreach (var l in b.Log.Take(1)) Assert.That(texts, Has.Some.StartsWith(Loc.Text(l.Text).Substring(0, 1)), name + " log");
             }
         }
 
@@ -94,20 +99,29 @@ namespace VampireSpawn.Tests
             CollectionAssert.IsEmpty(texts.Where(t => RawKey.IsMatch(t)), name + " shows a table key instead of its text");
             CollectionAssert.Contains(texts, c.Gold.ToString(), name + " gold");
             foreach (var st in Campaign.Stages) CollectionAssert.Contains(texts, Loc.Text(st.Title), name + " route");
-            CollectionAssert.Contains(texts, Loc.Text(Campaign.Stages[sel].Brief), name + " stage info");
+            CollectionAssert.DoesNotContain(texts, Loc.Text(Campaign.Stages[sel].Brief), name + " brief moved to the tooltip");
+            AssertNoSentences(root, name, GameData.Upgrades.Select(u => Loc.Text(u.Desc)).ToArray());
             foreach (var t in GameData.Types.Where(t => c.UpgradesOpen(t.Kind))) CollectionAssert.Contains(texts, Loc.Text(t.Name), name + " barracks");
             if (shot.arm) CollectionAssert.Contains(texts, Loc.T("camp.resetConfirm"), name + " reset armed");
         }
 
         [TestCaseSource(nameof(ShotNames))]
-        public void ScreenTextMatchesPrototype(string name)
+        public void ScreenFollowsGoldenState(string name)
         {
             var shot = Load().shots.First(s => s.name == name);
             switch (shot.screen)
             {
                 case "menu":
-                    MenuScreen.Build(root, Campaign.Parse(shot.camp), null, null);
-                    break;
+                {
+                    var c = Campaign.Parse(shot.camp);
+                    MenuScreen.Build(root, c, null, null);
+                    var texts = root.GetComponentsInChildren<Text>(true).Select(t => t.text).ToList();
+                    foreach (var want in new[] { "PROJECT VAMPIRE SPAWN", Loc.T("menu.demo"), Loc.T("menu.campaign"), c.Gold.ToString(), Campaign.Stages.Count(c.IsCleared) + "/" + Campaign.Stages.Length })
+                        CollectionAssert.Contains(texts, want, name);
+                    CollectionAssert.DoesNotContain(texts, Loc.T("menu.tagline"), name + " tagline cut");
+                    AssertNoSentences(root, name);
+                    return;
+                }
                 case "over":
                 {
                     traces ??= JsonUtility.FromJson<Traces>("{\"traces\":" + File.ReadAllText(Out("battles.json")) + "}");
@@ -116,19 +130,19 @@ namespace VampireSpawn.Tests
                     var c = Campaign.Parse(shot.camp);
                     var b = demo ? new Battle(GameData.Stages[0]) : c.NewBattle(GameData.Stages.First(x => x.Id == tr.stage));
                     foreach (var step in tr.steps) Assert.IsTrue(BattleParityTests.Run(b, JsonUtility.FromJson<BattleParityTests.Cmd>(step.cmd)).Ok, step.cmd);
-                    new BattleHud(null).Over(root, OverInfo.From(b, demo, c), new BattleActions());
+                    var info = OverInfo.From(b, demo, c);
+                    new BattleHud(null).Over(root, info, new BattleActions());
                     Assert.AreEqual(shot.campAfter, c.ToJson(), name + " campaign after finish");
-                    break;
+                    var texts = root.GetComponentsInChildren<Text>(true).Select(t => t.text).ToList();
+                    CollectionAssert.Contains(texts, Loc.T(info.Won ? "over.won" : "over.lost"), name);
+                    foreach (var n in new[] { info.Stats.Lost, info.Stats.Executed, info.Stats.Risen, info.Stats.Drained }) CollectionAssert.Contains(texts, n.ToString(), name + " tally");
+                    CollectionAssert.Contains(texts, Loc.T("over.retry"), name);
+                    if (info.Won && info.Camp && info.Result.ClearGold > 0) CollectionAssert.Contains(texts, "+" + info.Result.ClearGold, name + " gold");
+                    AssertNoSentences(root, name);
+                    return;
                 }
                 default: throw new ArgumentException(shot.screen);
             }
-            var want = shot.blocks.OrderBy(s => s, StringComparer.Ordinal).ToList();
-            var got = Blocks(root);
-            var missing = want.ToList();
-            foreach (var g in got) missing.Remove(g);
-            var extra = got.ToList();
-            foreach (var w in want) extra.Remove(w);
-            Assert.IsTrue(missing.Count == 0 && extra.Count == 0, name + "\nmissing: " + string.Join(" | ", missing) + "\nextra: " + string.Join(" | ", extra));
         }
     }
 }

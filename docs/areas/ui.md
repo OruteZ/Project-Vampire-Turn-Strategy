@@ -6,7 +6,8 @@
 - 코드: Assets/_Project/Scripts/Game/Screens/ (`Ui.cs` 색 토큰·글꼴·틀·말줄임, `Kit.cs` 글자·버튼·무기 아이콘·장식 프리팹, `BattleHud.cs` 전투 화면, `CampaignScreen.cs` 장 선택·병영, `MenuScreen.cs` 메인 메뉴, `HoverTip.cs` 툴팁, `Fx.cs` 맥박·번쩍임). 구현 기록 docs/dev/unity-port.md "전투 화면 달과 피"
 - UI 스프라이트: `ArtCatalog.ui`, 장식 프리팹: `ArtCatalog.uiPrefabs` (이름으로 찾는다). 새 스프라이트는 이 배열에 더하고 `node tools/assets/scan.mjs`
 - 아트: Assets/Synty/InterfaceDarkFantasyMenus, Assets/Synty/InterfaceDarkFantasyHUD, Assets/Synty/InterfaceCore (분류는 art-assets.md)
-- 검토 스크린샷: docs/review/
+- 검토 스크린샷: docs/review/ (개편 전후 `ui-overhaul-*.png`)
+- 화면 검사: `tools/ui-audit/sweep.sh`, `Scripts/Editor/UiAudit.cs`, 기록 docs/dev/ui-audit.md
 
 ## UI 아트 파이프라인
 1. 테마 후보 2~3개 (기획 에이전트) → docs/art/ui-theme-candidates.md
@@ -28,6 +29,8 @@
 | UI 테마는 "달과 피": 아군은 달빛·쇠, 적은 피·악마 장식, 보름달 게이지가 화면 상징. 후보 A·B 는 커밋 851bfe8 docs/art/ui-theme-candidates.md | 시험 중 | 2026-11-06 | #24 "C 달과 피" |
 | 보름달 직전 비네트는 8%·폭 80px (보름달 턴 15%) | 시험 중 | 2026-11-06 | #24 "추천대로" |
 | 보드 위에 글자 라벨을 두지 않는다 (게이지·표적 아이콘·패널이 대신) | 시험 중 | 2026-11-06 | #24 "추천대로" |
+| 화면에는 이름·숫자·아이콘만, 설명 문장은 툴팁으로 (ui-style.md 14). 레퍼런스는 Desperados III 임무 선택 | 시험 중 | 2026-11-07 | #33 "글보단 그림과 아이콘이 주가되고 설명문이 최대한 줄어들어야" |
+| 모든 화면은 6개 화면비(16:9, 16:10, 4:3, 5:4, 21:9, 720p)에서 화면 밖·틀 밖·글자 넘침 0 (`tools/ui-audit/sweep.sh`) | 시험 중 | 2026-11-07 | #33 "레터박스 밖으로 튀어나가는 문제" |
 
 ## 열린 작업
 - #24 UI 아트 테마·파이프라인: 8단계 화면별 구현 끝, 남은 것(보름달 턴 상태·연출·배지 절)도 #28 에서 끝. 전투 (#25), 장 선택·병영 (#26), 메인 메뉴 (#27). 스크린샷 docs/review/battle-hud-*, stage-select-*, main-menu*.png

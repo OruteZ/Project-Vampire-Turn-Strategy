@@ -49,7 +49,15 @@ namespace VampireSpawn.Game.Screens
             Ui.Text(tip, text, 14f / Ui.Base, Ui.Muted);
             var corners = new Vector3[4];
             ((RectTransform)transform).GetWorldCorners(corners);
-            tip.position = (corners[1] + corners[2]) / 2f + Vector3.up * 8f * canvas.rootCanvas.scaleFactor;
+            var gap = 8f * canvas.rootCanvas.scaleFactor;
+            tip.position = (corners[1] + corners[2]) / 2f + Vector3.up * gap;
+            LayoutRebuilder.ForceRebuildLayoutImmediate(tip);
+            var own = new Vector3[4];
+            tip.GetWorldCorners(own);
+            if (own[1].y > Screen.height) { tip.pivot = new Vector2(0.5f, 1f); tip.position = (corners[0] + corners[3]) / 2f - Vector3.up * gap; tip.GetWorldCorners(own); }
+            var dx = Mathf.Max(0f, gap - own[0].x) - Mathf.Max(0f, own[2].x - (Screen.width - gap));
+            var dy = Mathf.Max(0f, gap - own[0].y);
+            tip.position += new Vector3(dx, dy, 0f);
         }
     }
 

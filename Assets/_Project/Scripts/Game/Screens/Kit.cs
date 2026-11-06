@@ -87,11 +87,85 @@ namespace VampireSpawn.Game.Screens
             return rt;
         }
 
+        // ui-style.md 14-3: the key sits inside the button's bottom-right corner, never past its frame.
         public static void Hotkey(RectTransform button, string key)
         {
-            var box = Ui.Place(button, "Key", new Vector2(1f, 0f), new Vector2(4f, -4f), new Vector2(key.Length > 1 ? 46f : 18f, 18f));
-            Ui.Bg(box, Ui.Deep, Ui.Line, false);
+            var box = Ui.Place(button, "Key", new Vector2(1f, 0f), new Vector2(-7f, 7f), new Vector2(key.Length > 1 ? 8f + key.Length * 8f : 18f, 18f));
+            box.pivot = new Vector2(1f, 0f);
+            box.gameObject.AddComponent<LayoutElement>().ignoreLayout = true;
+            Ui.Bg(box, Ui.Alpha(Ui.Deep, 0.85f), Ui.Line, false);
             Ui.Stretch(T(box, key, 14, Ui.Muted, false, false, TextAnchor.MiddleCenter).rectTransform);
+        }
+
+        // ui-style.md 9 and 14-2.
+        public static class Icon
+        {
+            public const string Hp = "ICON_DarkFantasy_Stat_Health_01_Clean", Mov = "ICON_DarkFantasy_Stat_Speed_01_Clean", Atk = "ICON_DarkFantasy_Stat_Strength_01_Clean",
+                Def = "ICON_DarkFantasy_Status_Defense_01_Clean", Rng = "ICON_DarkFantasy_Stat_Accuracy_01_Clean", Fang = "ICON_DarkFantasy_Status_Vampiric_01_Clean",
+                Dead = "ICON_DarkFantasy_Status_Dead_01_Clean", Target = "ICON_DarkFantasy_Status_Targeted_01_Stroke",
+                Gold = "ICON_DarkFantasyMenus_Currency_Coin_01_Clean", Silver = "ICON_DarkFantasy_Inventory_Currency_01_Clean", Pop = "ICON_DarkFantasy_Inventory_Helmets_01_Clean",
+                Boss = "ICON_DarkFantasy_Map_Monster_01_Clean", Star = "ICON_DarkFantasy_Map_Star_01_Clean", Skulls = "ICON_DarkFantasy_Map_Skull_01_Clean",
+                Turn = "ICON_DarkFantasy_Status_Time_01_Clean", Lock = "ICON_DarkFantasyMenus_Menu_Lock_Closed_01_Clean", Trophy = "ICON_DarkFantasyMenus_Menu_Trophy_01_Clean",
+                Retry = "ICON_DarkFantasyMenus_Menu_Refresh_01_Clean", Leave = "ICON_DarkFantasyMenus_Menu_Quit_01_Clean", Rules = "ICON_DarkFantasy_Inventory_Notes_01_Clean",
+                Up = "ICON_DarkFantasy_Status_Up_01_Clean", Wait = "ICON_DarkFantasy_Status_Down_01_Clean", Flag = "ICON_DarkFantasy_Map_Flag_01_Clean", Home = "ICON_DarkFantasy_Map_Home_01_Clean", Sword = "ICON_SM_Wep_Sword_01_DarkFantasy";
+
+            public static readonly string[] All = { Hp, Mov, Atk, Def, Rng, Fang, Dead, Target, Gold, Silver, Pop, Boss, Star, Skulls, Turn, Lock, Trophy, Retry, Leave, Rules, Up, Wait, Flag, Home, Sword };
+        }
+
+        // ui-style.md 14-3-1: [icon][number], the label lives in the tooltip.
+        public RectTransform Value(Transform parent, string icon, string value, float px, Color iconColor, Color valueColor, string tip = null, bool bold = true)
+        {
+            var row = Ui.Row(parent, "Value", 5, 0, null, null, TextAnchor.MiddleLeft);
+            row.GetComponent<HorizontalLayoutGroup>().childForceExpandWidth = false;
+            Ui.Size(Ui.Sprite(row, "Icon", S(icon), iconColor), px + 6f, px + 6f);
+            T(row, value, px, valueColor, bold, false, TextAnchor.MiddleLeft);
+            HoverTip.Add(row, tip, 0.3f);
+            return row;
+        }
+
+        public RectTransform Stats(Transform parent, Unit u, float px, Color icon, Color value)
+        {
+            var row = Ui.Row(parent, "Stats", 14, 0, null, null, TextAnchor.MiddleLeft);
+            row.GetComponent<HorizontalLayoutGroup>().childForceExpandWidth = false;
+            Value(row, Icon.Hp, u.Hp.ToString(), px, icon, value, Loc.T("unit.card.hp"));
+            Value(row, Icon.Atk, u.Atk + (u.Bane > 0 ? "+" + u.Bane : ""), px, icon, value, Loc.T("unit.card.atk"));
+            Value(row, Icon.Def, u.Def.ToString(), px, icon, value, Loc.T("unit.card.def"));
+            Value(row, Icon.Mov, u.Mov.ToString(), px, icon, value, Loc.T("unit.card.mov"));
+            Value(row, Icon.Rng, u.Rng.ToString(), px, icon, value, Loc.T("unit.card.rng"));
+            return row;
+        }
+
+        // ui-style.md 14-3-2: a stage number in a ring.
+        public RectTransform Badge(Transform parent, string text, float d, Color ring, Color fill, Color ink)
+        {
+            var rt = Ui.Node(parent, "Badge");
+            rt.sizeDelta = new Vector2(d, d);
+            Ui.Size(rt, d, d);
+            Ui.Stretch(Ui.Sprite(rt, "Fill", S("SPR_DarkFantasyMenus_Frame_Ring_01_Background"), fill).rectTransform);
+            Ui.Stretch(Ui.Sprite(rt, "Ring", S("SPR_DarkFantasyMenus_Frame_Ring_01"), ring).rectTransform, -2, -2, -2, -2);
+            if (text != null) Ui.Stretch(T(rt, text, Mathf.Max(14f, d * 0.5f), ink, true, false, TextAnchor.MiddleCenter).rectTransform);
+            return rt;
+        }
+
+        public Button IconBtn(Transform parent, string icon, string tip, Action click, float size = 40f, Color? tint = null, bool enabled = true)
+        {
+            var rt = Ui.Node(parent, "IconBtn");
+            rt.sizeDelta = new Vector2(size, size);
+            Ui.Size(rt, size, size);
+            Ui.Bg(rt, Ui.Alpha(Ui.Ink, 0f));
+            var img = Ui.Sprite(rt, "Icon", S(icon), tint ?? Ui.Muted);
+            Ui.Stretch(img.rectTransform, 6, 6, 6, 6);
+            var btn = rt.gameObject.AddComponent<Button>();
+            btn.targetGraphic = img;
+            btn.interactable = enabled;
+            var colors = btn.colors;
+            colors.highlightedColor = new Color(1.4f, 1.4f, 1.4f);
+            colors.disabledColor = new Color(1f, 1f, 1f, 0.35f);
+            colors.fadeDuration = 0.08f;
+            btn.colors = colors;
+            if (click != null) btn.onClick.AddListener(() => click());
+            HoverTip.Add(rt, tip, 0.3f);
+            return btn;
         }
     }
 }
