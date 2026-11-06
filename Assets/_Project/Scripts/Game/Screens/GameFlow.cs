@@ -28,6 +28,7 @@ namespace VampireSpawn.Game.Screens
         float leaveUntil, bannerUntil, buyUntil;
         string buyArm, bought;
         int? campSel;
+        int menuSel = 1;
         RenderTexture backdropTex;
         Stage stage;
         OverInfo over;
@@ -94,7 +95,7 @@ namespace VampireSpawn.Game.Screens
         void OnDestroy() => LocalizationSettings.SelectedLocaleChanged -= OnLocaleChanged;
 
         // Only the main menu offers a language switch (docs/ui/localization.md 9).
-        void OnLocaleChanged(UnityEngine.Localization.Locale _) { if (Current == "menu") ShowMenu(); }
+        void OnLocaleChanged(UnityEngine.Localization.Locale _) { if (Current == "menu") ShowMenu(false); }
 
         void UseData()
         {
@@ -118,6 +119,7 @@ namespace VampireSpawn.Game.Screens
             scaler = go.GetComponent<CanvasScaler>();
             scaler.uiScaleMode = CanvasScaler.ScaleMode.ScaleWithScreenSize;
             scaler.matchWidthOrHeight = 0.5f;
+            scaler.referenceResolution = new Vector2(1920f, 1080f);
             screen = Ui.Node(go.transform, "Screen");
             Ui.Stretch(screen);
             // The board camera draws only into the board area; without a full-screen clear the overlay UI blends over stale pixels.
@@ -138,8 +140,6 @@ namespace VampireSpawn.Game.Screens
 
         void ClearScreen(bool opaque)
         {
-            // The menu is still laid out for 1600x900; at 1920x1080 their 14 px text drops under the ui-style.md minimum.
-            scaler.referenceResolution = Current == "menu" ? new Vector2(1600f, 900f) : new Vector2(1920f, 1080f);
             Ui.Clear(screen);
             if (!screen.TryGetComponent<Image>(out var bg)) bg = screen.gameObject.AddComponent<Image>();
             bg.color = Ui.Ink;
@@ -167,11 +167,30 @@ namespace VampireSpawn.Game.Screens
             img.transform.SetAsFirstSibling();
         }
 
-        public void ShowMenu()
+        public void ShowMenu() => ShowMenu(true);
+
+        void ShowMenu(bool fade)
         {
             Current = "menu";
             ClearScreen(true);
-            MenuScreen.Build(screen, Campaign, () => { demo = true; StartBattle(GameData.Stages[0], null, false); }, () => { demo = false; ShowCamp(); });
+            Backdrop(Campaign.Stages[0]);
+            MenuScreen.Build(screen, Campaign, MenuDemo, MenuCamp, View.board.art, menuSel, i => { if (menuSel != i) { menuSel = i; ShowMenu(false); } });
+            if (fade) Fx.FadeIn(screen);
+        }
+
+        void MenuDemo() { demo = true; StartBattle(GameData.Stages[0], null, false); }
+
+        void MenuCamp() { demo = false; ShowCamp(); }
+
+        void MenuKeys()
+        {
+            var kb = UnityEngine.InputSystem.Keyboard.current;
+            if (kb == null) return;
+            var left = Pressed("left", kb.leftArrowKey.isPressed);
+            var right = Pressed("right", kb.rightArrowKey.isPressed);
+            var enter = Pressed("enter", kb.enterKey.isPressed || kb.numpadEnterKey.isPressed);
+            if ((left && menuSel != 0) || (right && menuSel != 1)) { menuSel = left ? 0 : 1; ShowMenu(false); }
+            else if (enter) { if (menuSel == 0) MenuDemo(); else MenuCamp(); }
         }
 
         public void ShowCamp()
@@ -283,6 +302,7 @@ namespace VampireSpawn.Game.Screens
             if (banner != null && banner.gameObject.activeSelf && Time.unscaledTime > bannerUntil) banner.gameObject.SetActive(false);
             if (Current == "battle" && Session != null) { TrackHover(); Hotkeys(); }
             if (Current == "camp") CampKeys();
+            else if (Current == "menu") MenuKeys();
         }
 
         bool Pressed(string name, bool down)

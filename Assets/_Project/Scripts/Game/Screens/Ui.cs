@@ -5,14 +5,12 @@ using UnityEngine.UI;
 
 namespace VampireSpawn.Game.Screens
 {
-    public enum Look { Normal, Primary, Ghost, Danger, DangerOn, Choice, Roster, RosterOn }
-
     // uGUI built from code so screens are re-rendered like the prototype's innerHTML templates. Colour tokens: docs/art/ui-style.md 2-1.
     public static class Ui
     {
         public static readonly Color Ink = C(0x12131a), Deep = C(0x0f1016), Panel = C(0x1a1c25), Panel2 = C(0x25212d), Line = C(0x3a3442),
-            HexLine = C(0x2e2a36), Bone = C(0xebe3d2), Muted = C(0xb9b2bf), Dim = C(0x7d7684), Candle = C(0xe3a84b), Blood = C(0xc8304a), BloodDim = C(0x6e1e2c),
-            Spawn = C(0xa650c4), Steel = C(0x8fb0cc), SteelDim = C(0x4a5d6e), Peasant = C(0xb89c72), Knight = C(0xd9dde4), Hunter = C(0x86b8a6),
+            Bone = C(0xebe3d2), Muted = C(0xb9b2bf), Dim = C(0x7d7684), Candle = C(0xe3a84b), Blood = C(0xc8304a), BloodDim = C(0x6e1e2c),
+            Spawn = C(0xa650c4), Steel = C(0x8fb0cc), SteelDim = C(0x4a5d6e),
             Sun = C(0xeadcae), MoonBlood = C(0x9e1b2f);
 
         public const int Base = 15;
@@ -38,8 +36,6 @@ namespace VampireSpawn.Game.Screens
         static Color C(int rgb) => new Color(((rgb >> 16) & 255) / 255f, ((rgb >> 8) & 255) / 255f, (rgb & 255) / 255f);
 
         public static Color Alpha(Color c, float a) { c.a = a; return c; }
-
-        public static string Hex(Color c) => ColorUtility.ToHtmlStringRGB(c);
 
         public static RectTransform Node(Transform parent, string name)
         {
@@ -140,8 +136,6 @@ namespace VampireSpawn.Game.Screens
             return (RectTransform)g.transform;
         }
 
-        public static RectTransform Card(Transform parent, string name) => Col(parent, name, 6, 12, Panel, Line);
-
         public static LayoutElement Size(Component c, float width = -1, float height = -1, float flexW = -1, float flexH = -1)
         {
             if (!c.TryGetComponent<LayoutElement>(out var le)) le = c.gameObject.AddComponent<LayoutElement>();
@@ -168,42 +162,6 @@ namespace VampireSpawn.Game.Screens
             t.lineSpacing = 1.1f;
             t.text = s;
             return t;
-        }
-
-        public static Button Button(Transform parent, string label, Action click, Look look = Look.Normal, bool small = false, bool interactable = true)
-        {
-            var fill = look switch
-            {
-                Look.Primary => Candle,
-                Look.Ghost => Alpha(Panel2, 0f),
-                Look.DangerOn => Blood,
-                Look.Choice or Look.Roster or Look.RosterOn => Panel,
-                _ => Panel2,
-            };
-            var edge = look switch
-            {
-                Look.Primary => Candle,
-                Look.Danger or Look.DangerOn => Blood,
-                Look.RosterOn => Candle,
-                _ => Line,
-            };
-            var pad = small ? 6 : 9;
-            var rt = Row(parent, "Button " + label, 8, pad, fill, edge, TextAnchor.MiddleCenter);
-            rt.GetComponent<HorizontalLayoutGroup>().padding = new RectOffset(small ? 12 : 16, small ? 12 : 16, pad, pad);
-            var b = rt.gameObject.AddComponent<Button>();
-            b.targetGraphic = rt.GetComponent<Image>();
-            b.interactable = interactable;
-            var colors = b.colors;
-            colors.disabledColor = new Color(1f, 1f, 1f, 0.45f);
-            colors.highlightedColor = new Color(1.08f, 1.08f, 1.08f);
-            b.colors = colors;
-            if (click != null) b.onClick.AddListener(() => click());
-            if (label != null)
-            {
-                var t = Text(rt, label, small ? 0.85f : 1f, look == Look.Primary ? Deep : Bone, true, false, TextAnchor.MiddleCenter);
-                t.horizontalOverflow = HorizontalWrapMode.Overflow;
-            }
-            return b;
         }
 
         public static RectTransform Scroll(Transform parent, string name, out ScrollRect scroll)
@@ -236,21 +194,5 @@ namespace VampireSpawn.Game.Screens
             }
         }
 
-        public static Color TierColor(VampireSpawn.Core.Tier tier) => tier switch
-        {
-            VampireSpawn.Core.Tier.Peasant => Peasant,
-            VampireSpawn.Core.Tier.Knight => Knight,
-            VampireSpawn.Core.Tier.Hunter => Hunter,
-            _ => Steel,
-        };
-
-        // Prototype .rg: the unit glyph in a tier-coloured badge.
-        public static Text Glyph(Transform parent, VampireSpawn.Core.UnitType t, float size = 34f)
-        {
-            var box = Row(parent, "Glyph", 0, 0, Panel2, TierColor(t.Tier), TextAnchor.MiddleCenter);
-            Size(box, size, size);
-            var g = Text(box, Loc.Text(t.Glyph), 1f, TierColor(t.Tier), true, true, TextAnchor.MiddleCenter);
-            return g;
-        }
     }
 }

@@ -76,3 +76,4 @@ MonoBehaviour:
   uiPrefabs:
   - {fileID: 4654971216602336425, guid: 8a6d5f97315c9a04f9ceb0e8317bb261, type: 3}
   - {fileID: 7476782851927854031, guid: 91a89f5b582042147a074fc07aa52830, type: 3}
+  - {fileID: 4654971216602336425, guid: 66b14809b3695fa47bbbc4610a2a135f, type: 3}

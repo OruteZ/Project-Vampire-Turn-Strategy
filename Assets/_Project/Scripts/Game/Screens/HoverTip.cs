@@ -52,4 +52,13 @@ namespace VampireSpawn.Game.Screens
             tip.position = (corners[1] + corners[2]) / 2f + Vector3.up * 8f * canvas.rootCanvas.scaleFactor;
         }
     }
+
+    public sealed class OnHover : MonoBehaviour, IPointerEnterHandler
+    {
+        System.Action enter;
+
+        public static void Add(RectTransform owner, System.Action enter) => owner.gameObject.AddComponent<OnHover>().enter = enter;
+
+        public void OnPointerEnter(PointerEventData e) => enter?.Invoke();
+    }
 }

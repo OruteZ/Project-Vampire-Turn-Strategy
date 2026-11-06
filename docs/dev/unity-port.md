@@ -114,6 +114,16 @@ HTML 이 바뀌면 두 명령을 차례로 돌리고, `data.json` 과 `GameData.
 - 기획서와 다른 점: 장 정보 위 문장(Crest)은 악마 해골이라 마지막 장에서만 보인다 (기획서도 고침). 원정 길은 열 장이 칸 안에 들어가 스크롤을 두지 않았다.
 - 확인 스크린샷: docs/review/stage-select-*.png. 강화를 실제로 사는 두 번째 누르기는 사용자 저장을 바꾸므로 게임에서 누르지 않았다(확인 상태까지).
 
+## 메인 메뉴 달과 피 (#27)
+
+- 기획서 docs/ui/main-menu.md 8~13 대로 `Game/Screens/MenuScreen` 을 다시 썼다. 문장 → 제목 → 소개 → 구분선 → 선택 카드 둘. 고른 카드는 `GameFlow.menuSel`(처음 캠페인), 마우스를 올리거나 ←/→ 로 바뀌고 Enter 로 들어간다(`GameFlow.MenuKeys`).
+- 문장은 `Crest_DarkFantasyMenus_Large_03`(해골 없는 마름모). 키트 문장은 거의 다 해골·악마 장식이다.
+- 바탕은 장 선택과 같은 `GameFlow.Backdrop`(1장 보드), 들어올 때 0.3초 검은 화면에서 밝아진다(`Fx.FadeIn`). 언어를 바꿔 다시 그릴 때와 카드 고르기로 다시 그릴 때는 밝아짐을 하지 않는다.
+- 언어 줄은 글자 + 고른 언어 밑줄 (localization.md 7 은 main-menu.md 12 를 가리키게 고쳤다).
+- 기준 해상도는 이제 모든 화면 1920×1080 하나. 옛 `Ui.Button`·`Look`·`Card`·`Glyph`·`TierColor` 는 쓰는 곳이 없어 지웠다.
+- 시험: 메뉴 글은 HTML 데모와 같아 `UiTextParityTests` 의 메뉴 비교를 그대로 둔다.
+- 확인 스크린샷: docs/review/main-menu*.png.
+
 ## 게임 데이터 에셋 (요청 001)
 
 - 규칙이 읽는 수치·문장은 `Core/DataSet` 하나에 모인다. `GameData.Current` 가 지금 쓰는 것이고, `GameData.Use(set)` 으로 바꾸며, `Use(null)` 이면 HTML 값(`PrototypeData.Create()`)으로 돌아간다. `Rules.MoonMax` 등도 이 데이터를 읽는다.
