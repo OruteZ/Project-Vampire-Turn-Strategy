@@ -1191,6 +1191,50 @@ MonoBehaviour:
     m_Key: font.display
     m_Metadata:
       m_Items: []
+  - m_Id: 51181313126400
+    m_Key: hud.warn.target
+    m_Metadata:
+      m_Items: []
+  - m_Id: 51181384429568
+    m_Key: hud.warn.safeNow
+    m_Metadata:
+      m_Items: []
+  - m_Id: 51181384429569
+    m_Key: hud.warn.lit
+    m_Metadata:
+      m_Items: []
+  - m_Id: 51181384429570
+    m_Key: hud.warn.risen
+    m_Metadata:
+      m_Items: []
+  - m_Id: 51181384429571
+    m_Key: hud.warn.coffin
+    m_Metadata:
+      m_Items: []
+  - m_Id: 51181384429572
+    m_Key: hud.warn.corpse
+    m_Metadata:
+      m_Items: []
+  - m_Id: 51181384429573
+    m_Key: hud.enemyPhase
+    m_Metadata:
+      m_Items: []
+  - m_Id: 51181384429574
+    m_Key: hud.close
+    m_Metadata:
+      m_Items: []
+  - m_Id: 51181384429575
+    m_Key: hud.needAlly
+    m_Metadata:
+      m_Items: []
+  - m_Id: 51181384429576
+    m_Key: hud.deployHelp
+    m_Metadata:
+      m_Items: []
+  - m_Id: 51181384429577
+    m_Key: hud.spawnOf
+    m_Metadata:
+      m_Items: []
   m_Metadata:
     m_Items: []
   m_KeyGenerator:

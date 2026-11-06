@@ -318,11 +318,10 @@ MonoBehaviour:
       m_Items:
       - rid: 7201578077006332005
   - m_Id: 3991484035128
-    m_Localized: Click an ally to select it. Click an enemy or a corpse to see its
-      details and threat range.
+    m_Localized: Click an ally to select it. Hover an enemy or a corpse to see its
+      details.
     m_Metadata:
-      m_Items:
-      - rid: 7201578077006332005
+      m_Items: []
   - m_Id: 3991484035129
     m_Localized: Click an ally in a white dashed ring to mercy kill it. Click elsewhere
       to cancel.
@@ -1548,6 +1547,53 @@ MonoBehaviour:
     m_Metadata:
       m_Items:
       - rid: 7201578077006332005
+  - m_Id: 51181313126400
+    m_Localized: "Full-moon target \xB7 drained next enemy turn"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 51181384429568
+    m_Localized: safe for now
+    m_Metadata:
+      m_Items: []
+  - m_Id: 51181384429569
+    m_Localized: "In light \xB7 cannot be targeted"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 51181384429570
+    m_Localized: "Just risen \xB7 will not act this enemy phase"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 51181384429571
+    m_Localized: "In the coffin \xB7 wakes at moon {0}"
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 51181384429572
+    m_Localized: Rises as a spawn when the next enemy phase starts
+    m_Metadata:
+      m_Items: []
+  - m_Id: 51181384429573
+    m_Localized: Enemy Phase
+    m_Metadata:
+      m_Items: []
+  - m_Id: 51181384429574
+    m_Localized: Close
+    m_Metadata:
+      m_Items: []
+  - m_Id: 51181384429575
+    m_Localized: Deploy at least one ally
+    m_Metadata:
+      m_Items: []
+  - m_Id: 51181384429576
+    m_Localized: Click an empty cell to deploy. Drag to move or swap; drag out of
+      the zone to recall.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 51181384429577
+    m_Localized: "{0} \xB7 Spawn"
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
   references:
     version: 2
     RefIds:
@@ -1615,7 +1661,6 @@ MonoBehaviour:
         - id: 3991484035125
         - id: 3991484035126
         - id: 3991484035127
-        - id: 3991484035128
         - id: 3991484035129
         - id: 3991484035130
         - id: 3991484035131
@@ -1850,3 +1895,5 @@ MonoBehaviour:
         - id: 9846573035529
         - id: 10777284898816
         - id: 10777347813376
+        - id: 51181384429571
+        - id: 51181384429577

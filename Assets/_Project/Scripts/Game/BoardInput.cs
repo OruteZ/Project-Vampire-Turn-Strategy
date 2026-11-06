@@ -17,6 +17,7 @@ namespace VampireSpawn.Game
         public BattleSession Session { get; private set; }
         public event Action Changed;
         public Func<bool> PointerBlocked = () => false;
+        public Func<bool> EscapeFirst = () => false;
 
         class Drag { public int Id; public Vector2 Start; public bool Moved; public Hex? Target; }
         Drag drag;
@@ -74,7 +75,7 @@ namespace VampireSpawn.Game
             }
             var kb = Keyboard.current;
             var esc = kb != null && kb.escapeKey.isPressed;
-            if (esc && !escDown && !battle.IsBusy) { Session.Escape(); Redraw(); }
+            if (esc && !escDown && !battle.IsBusy && !EscapeFirst()) { Session.Escape(); Redraw(); }
             escDown = esc;
             var m = Mouse.current;
             if (m == null) return;

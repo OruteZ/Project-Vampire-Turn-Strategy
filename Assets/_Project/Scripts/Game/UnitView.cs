@@ -12,14 +12,14 @@ namespace VampireSpawn.Game
         static readonly int BaseColor = Shader.PropertyToID("_BaseColor");
 
         Animator animator;
-        Transform model, barFill, bar;
+        Transform model;
         MeshRenderer ring;
         Color ringColor;
         public bool Done { get; private set; }
         GameObject coffin;
         ArtCatalog art;
 
-        public static UnitView Create(ArtCatalog art, GameObject prefab, Transform parent, int id, Vector3 at, float yaw, Color ring, bool showBar)
+        public static UnitView Create(ArtCatalog art, GameObject prefab, Transform parent, int id, Vector3 at, float yaw, Color ring)
         {
             var root = new GameObject("Unit " + id);
             root.transform.SetParent(parent, false);
@@ -44,14 +44,6 @@ namespace VampireSpawn.Game
             r.localPosition = Vector3.up * 0.01f;
             view.ring = r.GetComponent<MeshRenderer>();
             view.ringColor = ring * 0.55f;
-            if (showBar)
-            {
-                view.bar = new GameObject("HpBar").transform;
-                view.bar.SetParent(root.transform, false);
-                view.bar.localPosition = Vector3.up * (art.unitHeight * art.hexSize + 0.25f);
-                Quad(art, view.bar, "Back", art.hpBack, new Vector3(0.9f, 0.1f, 0.02f), PrimitiveType.Cube);
-                view.barFill = Quad(art, view.bar, "Fill", ring, new Vector3(0.86f, 0.07f, 0.03f), PrimitiveType.Cube);
-            }
             return view;
         }
 
@@ -94,9 +86,6 @@ namespace VampireSpawn.Game
         public void SetHp(int hp, int max)
         {
             HpFraction = max > 0 ? Mathf.Clamp01((float)hp / max) : 0f;
-            if (barFill == null) return;
-            barFill.localScale = new Vector3(0.86f * HpFraction, barFill.localScale.y, barFill.localScale.z);
-            barFill.localPosition = new Vector3(-0.43f * (1f - HpFraction), 0f, -0.01f);
         }
 
         public void SetWalking(bool walking)
@@ -133,12 +122,6 @@ namespace VampireSpawn.Game
             model.localRotation = Quaternion.Euler(0f, model.localEulerAngles.y, 0f);
             model.localPosition = Vector3.zero;
             if (animator != null) animator.enabled = true;
-        }
-
-        void LateUpdate()
-        {
-            var cam = Camera.main;
-            if (bar != null && cam != null) bar.rotation = cam.transform.rotation;
         }
     }
 }

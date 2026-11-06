@@ -95,6 +95,17 @@ namespace VampireSpawn.Game.Screens
             }
         }
 
+        // uGUI Text has no ellipsis; trims characters until the line fits.
+        public static void Ellipsize(Text t, float width)
+        {
+            var full = t.text;
+            var settings = t.GetGenerationSettings(new Vector2(width, 0f));
+            if (t.cachedTextGeneratorForLayout.GetPreferredWidth(full, settings) / t.pixelsPerUnit <= width) return;
+            var n = full.Length;
+            while (n > 1 && t.cachedTextGeneratorForLayout.GetPreferredWidth(full.Substring(0, n) + "…", settings) / t.pixelsPerUnit > width) n--;
+            t.text = full.Substring(0, n).TrimEnd() + "…";
+        }
+
         public static RectTransform Place(Transform parent, string name, Vector2 anchor, Vector2 pos, Vector2 size)
         {
             var rt = Node(parent, name);

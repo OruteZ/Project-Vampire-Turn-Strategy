@@ -6,7 +6,7 @@ namespace VampireSpawn.Core
     public enum SelectMode { Act, Execute }
 
     // One per prototype overlay class: ov-deploy, ov-threat, ov-move, ov-atk, ov-exec, ov-sel, ov-markzone, ov-mark.
-    public enum Mark { Deploy, Threat, Move, Atk, Exec, Sel, MarkZone, Target }
+    public enum Mark { Deploy, Move, Atk, Exec, Sel, MarkZone, Target }
 
     public readonly struct MarkedHex
     {
@@ -23,7 +23,7 @@ namespace VampireSpawn.Core
         public Message TargetLabel;
     }
 
-    // The prototype's click and selection state (S.selected, S.inspect, S.mode, S.deployType, S.showThreat) and onHex.
+    // The prototype's click and selection state (S.selected, S.inspect, S.mode, S.deployType) and onHex. Threat cells are gone: docs/ui/battle-hud.md 1-4.
     public sealed class BattleSession
     {
         public readonly Battle Battle;
@@ -32,8 +32,6 @@ namespace VampireSpawn.Core
         public int? InspectCorpse { get; private set; }
         public SelectMode Mode { get; private set; }
         public UnitKind DeployType { get; private set; }
-        public bool ShowThreat { get => showThreat; set { showThreat = value; Flash = default; } }
-        bool showThreat;
         public Message Flash { get; private set; }
 
         static readonly CommandResult Nothing = CommandResult.Done(new List<BattleEvent>());
@@ -179,21 +177,6 @@ namespace VampireSpawn.Core
             return new Message(sel.Moved ? "hint.attack" : "hint.moveAttack");
         }
 
-        public HashSet<Hex> Threat(IEnumerable<Unit> enemies)
-        {
-            var set = new HashSet<Hex>();
-            foreach (var e in enemies)
-            {
-                if (e.JustRisen || e.Asleep) continue;
-                foreach (var h in Battle.Reach(e).Keys)
-                {
-                    set.Add(h);
-                    foreach (var n in Battle.Board.Neighbors(h)) if (Battle.Board.Walkable(n)) set.Add(n);
-                }
-            }
-            return set;
-        }
-
         IEnumerable<Hex> Cells()
         {
             for (var r = 0; r < Battle.Board.Rows; r++)
@@ -205,14 +188,6 @@ namespace VampireSpawn.Core
             var o = new List<MarkedHex>();
             var b = Battle;
             if (b.Phase == Phase.Deploy) o.AddRange(Cells().Where(b.InDeploy).Select(h => new MarkedHex(Mark.Deploy, h)));
-            if (b.Phase != Phase.Over)
-            {
-                var ins = InspectUnit is int id ? b.Find(id) : null;
-                HashSet<Hex> th = null;
-                if (ShowThreat && b.Phase != Phase.Deploy) th = Threat(b.Enemies);
-                else if (ins != null && ins.Side == Side.Enemy) th = Threat(new[] { ins });
-                if (th != null) o.AddRange(th.Select(h => new MarkedHex(Mark.Threat, h)));
-            }
             var sel = SelectedUnit;
             if (sel != null && b.Phase == Phase.Player)
             {

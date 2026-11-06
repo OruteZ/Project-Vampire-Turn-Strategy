@@ -11,7 +11,6 @@ namespace VampireSpawn.Game
         public BoardView board;
         [Tooltip("Playback speed multiplier; 1 uses the prototype's delays.")]
         public float speed = 1f;
-        public bool worldBars = true;
 
         // Delays copied from the prototype's wait() calls (ms): one walk step 120, strike 380, rise batch 600, coffin opens 700, phase banner 500.
         const float StepSeconds = 0.12f, StrikeSeconds = 0.38f, RiseSeconds = 0.6f, WakeSeconds = 0.7f, BannerSeconds = 0.5f;
@@ -188,7 +187,7 @@ namespace VampireSpawn.Game
                 _ => Art.allyModels[(int)u.Type.Value],
             };
             var yaw = u.Side == Side.Ally ? 160f : 200f;
-            var view = UnitView.Create(Art, prefab, layer, u.Id, Ground(at ?? u.Pos), yaw, RingColor(u), worldBars);
+            var view = UnitView.Create(Art, prefab, layer, u.Id, Ground(at ?? u.Pos), yaw, RingColor(u));
             view.SetHp(u.Hp, u.MaxHp);
             if (u.Asleep) view.LieDown(true);
             units[u.Id] = view;
@@ -196,7 +195,7 @@ namespace VampireSpawn.Game
 
         void AddCorpse(int id, UnitKind type, Hex at)
         {
-            var view = UnitView.Create(Art, Art.allyModels[(int)type], layer, -id, Ground(at), 20f, Art.spawnRing * 0.6f, false);
+            var view = UnitView.Create(Art, Art.allyModels[(int)type], layer, -id, Ground(at), 20f, Art.spawnRing * 0.6f);
             view.name = "Corpse " + id;
             view.LieDown(false);
             corpses[id] = view;

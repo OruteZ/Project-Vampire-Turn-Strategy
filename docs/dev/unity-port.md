@@ -90,6 +90,18 @@ HTML 이 바뀌면 두 명령을 차례로 돌리고, `data.json` 과 `GameData.
 - `node tools/golden/prototype-golden.mjs strings` 가 `tools/golden/out/strings.json` 을 만든다 (`tools/golden/strings.mjs`). 메뉴 둘, 캠페인 셋, 데모 전투 19개 상태(배치, 선택, 처치 모드, 적·뱀파이어·시신·스폰·보름달 표적 보기, 턴마다), 결과 창 여섯(데모 승·패, 1장 첫 클리어·재도전·패배, 2장 첫 클리어)과 그 뒤 캠페인 화면을 HTML 로 그려 글 덩어리를 뽑는다. `UiTextParityTests` 가 같은 상태의 Unity 화면 글(`Text`)과 덩어리 단위로 비교하고, 결과 뒤 캠페인 저장 문자열도 비교한다.
 - HTML 과 다른 점: 적 턴 동안 전투 기록과 수치는 재생이 끝난 뒤 한 번에 바뀐다(HTML 은 적 하나가 움직일 때마다 바뀐다). 달 수치 옆 달 그림, 스크롤 막대 모양, 마우스를 올렸을 때의 테두리 색은 옮기지 않았다.
 
+## 전투 화면 달과 피 (#25)
+
+- 기획서 docs/ui/battle-hud.md 대로 전투 화면 전체(배치, 아군 턴, 적 턴, 결과 창)를 `Game/Screens/BattleHud` 하나가 그린다. 옛 머리 줄·옆 칸(`BattleScreen.Header`, `SidePanel`, 카드들)은 지웠다. `BattleScreen` 에는 문장 도우미(버튼 글, 안내, 규칙 줄, 유닛 노트)만 남았다.
+- `GameFlow` 는 상태가 바뀔 때마다 `HudState`(호버한 유닛·시신, Alt, 적 행동 중, 나가기 확인, 규칙·기록 펼침)로 HUD 를 다시 만든다. 호버는 매 프레임 `BoardInput.HexAt` 으로 읽고, 바뀔 때만 다시 그린다. 단축키 1·2·Space 는 `GameFlow.Hotkeys`, Esc 는 `BoardInput.EscapeFirst` 로 창 닫기 → 처치 모드 끄기를 먼저 하고 그다음 `Session.Escape`.
+- 머리 위 표시는 화면 공간 UI 다. `BattleHud.Tick` 이 매 프레임 유닛 모델 위치로 옮기고, 체력 칸은 `UnitView.HpFraction`(맞는 연출을 따라가는 값)으로 채운다. 3D 체력 막대는 지웠다.
+- 보드 칸 표시(`OverlayView`)는 ui-style.md 8-2 색. 보드 글자(TextMesh)는 지웠고, 호버 칸 테두리(`SetHover`)를 더했다. 위협 칸(`Mark.Threat`, `ShowThreat`, `Threat()`)은 Core 에서 지웠다.
+- 보드 카메라는 여전히 보드 영역에만 그린다. 보드 카메라 지우는 색을 배경 카메라와 같은 `bg.night` 로 맞춰 경계 사각형을 없앴다 (기획서 1-2 의 "화면 전체에 그린다" 대신, 보이는 결과는 같다).
+- 기준 해상도는 전투 1920×1080, 메뉴·캠페인은 다시 만들 때까지 1600×900 (`ClearScreen`).
+- 시험: `UiTextParityTests.BattleHudShowsEveryGoldenState` 가 HTML 전투 상태 19개마다 HUD 를 만들어 표 키가 그대로 나오지 않는지, 안내·주 버튼·편성·적 패널·기록이 있는지 본다. 전투 화면 글 덩어리 비교는 뺐다(데모와 화면 구성이 다르다). `OverlayTests` 는 HTML 기준값에서 위협 칸을 빼고, 바뀐 안내 문장 하나를 새 문장으로 읽는다.
+- 확인 스크린샷: docs/review/battle-hud-*.png (verify-unity, 1920×1080 게임 뷰).
+- 안 한 것: 보름달 턴(적 턴 중) 게이지 상태. 적 턴 재생 중에는 모델이 이미 다음 아군 턴이라 그 순간을 알 수 없다. 버튼 호버 밝기 외의 움직임(패널 등장, 1단계 번쩍임).
+
 ## 게임 데이터 에셋 (요청 001)
 
 - 규칙이 읽는 수치·문장은 `Core/DataSet` 하나에 모인다. `GameData.Current` 가 지금 쓰는 것이고, `GameData.Use(set)` 으로 바꾸며, `Use(null)` 이면 HTML 값(`PrototypeData.Create()`)으로 돌아간다. `Rules.MoonMax` 등도 이 데이터를 읽는다.

@@ -3,7 +3,7 @@
 ## 경로
 - 기획: docs/design/ui.md, docs/design/art.md
 - 기획서: docs/ui/ (화면별), docs/art/ui-style.md (UI 스타일: 색·글꼴·틀·버튼·배치 토큰), docs/art/ui-references.md (요소별 레퍼런스)
-- 코드: Assets/_Project/Scripts/Game/Screens/ (`Ui.cs` 가 색 토큰·글꼴·공용 요소·틀). 달과 피 전투 HUD 는 `BattleHud.cs`, `GameFlow.styleTile` 을 켜야 쓴다 (꺼져 있으면 지금 데모 화면, UiTextParityTests 가 이쪽을 본다)
+- 코드: Assets/_Project/Scripts/Game/Screens/ (`Ui.cs` 색 토큰·글꼴·틀·말줄임, `BattleHud.cs` 전투 화면 전체, `HoverTip.cs` 툴팁). 구현 기록 docs/dev/unity-port.md "전투 화면 달과 피"
 - UI 스프라이트: `ArtCatalog.ui` (이름으로 찾는다). 새 스프라이트는 이 배열에 더하고 `node tools/assets/scan.mjs`
 - 아트: Assets/Synty/InterfaceDarkFantasyMenus, Assets/Synty/InterfaceDarkFantasyHUD, Assets/Synty/InterfaceCore (분류는 art-assets.md)
 - 검토 스크린샷: docs/review/
@@ -30,16 +30,9 @@
 | 보드 위에 글자 라벨을 두지 않는다 (게이지·표적 아이콘·패널이 대신) | 시험 중 | 2026-11-06 | #24 "추천대로" |
 
 ## 열린 작업
-- #24 UI 아트 테마·파이프라인 (7단계 끝: battle-hud, stage-select 새로, main-menu·upgrade 에 스타일 절. 다음은 8단계 화면별 구현, 화면 하나에 이슈 하나)
+- #24 UI 아트 테마·파이프라인: 8단계 화면별 구현 중. 전투 화면 끝 (#25, docs/review/battle-hud-*.png). 남은 화면: 장 선택·병영(docs/ui/stage-select.md, upgrade.md), 메인 메뉴(main-menu.md). 다시 만들면 기준 해상도를 1920×1080 하나로 (`GameFlow.ClearScreen`)
+- 전투 화면에서 안 한 것: 보름달 턴(적 턴 중) 게이지 상태(재생 중엔 모델이 이미 다음 턴), 패널 등장·1단계 번쩍임 연출
 - 병종 글자 배지(docs/ui/localization.md 14~)를 화면에서 무기 아이콘으로 바꾸기로 했다(upgrade.md 정한 세부). 배지를 쓰는 곳이 없어지면 localization.md 배지 절을 정리한다
-- 8단계 전투 화면 구현 때 할 것 (방향 검토에서 나옴)
-  - 적을 살펴볼 때 위협 칸(`Mark.Threat`)과 체크박스·안내 문구 지우기 (ui-style.md 8-4)
-  - 보드 칸 표시 색을 8-2 토큰으로, 흡혈 범위 칸 따로 (`OverlayView`)
-  - `OverlayView` 의 보드 글자 라벨 지우기 (8-1 의 6)
-  - 전투 기록 조용하게 (10절), 보드 카메라를 전체 화면으로 그려 경계 사각형 없애기
-  - 기준 해상도: 지금은 `styleTile` 이 켜져야 1920×1080, 꺼지면 예전 1600×900. 화면을 다시 만들면 1920×1080 하나로
-  - docs/review/ui-style-tile-2.png 다시 찍기 (호버가 잡히지 않아 피해 미리 보기가 빠졌다)
-  - 패널 경고 줄, "적 페이즈", "닫기" 를 Text 표 키로
 - #16 한글 글꼴 파일 들이기 (막힘: 내려받기 허락)
 
 ## 맡길 때
