@@ -125,6 +125,13 @@ HTML 이 바뀌면 두 명령을 차례로 돌리고, `data.json` 과 `GameData.
 - 시험: 메뉴 글은 HTML 데모와 같아 `UiTextParityTests` 의 메뉴 비교를 그대로 둔다.
 - 확인 스크린샷: docs/review/main-menu*.png.
 
+## 유닛 모습 (#29)
+
+- `Game/UnitLook`(ScriptableObject): 모델, 뼈대(Sidekick/Polygon), 무기(프리팹, 손, 위치, 회전), 동작 묶음. `UnitView.Create(art, look, …, armed)` 가 모델을 세우고 키를 맞춘 뒤 손 뼈(`UnitLook.Bone`)에 무기를 붙이고 애니메이터를 건다. 스폰·시신은 `armed: false` (무기 없음, Sidekick 은 `ArtCatalog.spawnAnimator`).
+- 동작 묶음은 `Art/Unit.controller` 의 `AnimatorOverrideController` (`Art/Units/*.overrideController`). 상태·트리거 이름이 같아 `BattleView` 는 그대로다.
+- 에셋은 에디터에서 한 번 만든 손질 코드로 만들었고 코드는 남기지 않았다 (CLAUDE.md). 다시 만들 일은 없고, 바꿀 때는 에셋 칸을 고친다.
+- 확인: docs/review/unit-looks-idle.png, unit-looks-attack.png (실제 `UnitView.Create` 경로로 세운 8종), unit-battle.png (데모 전투). EditMode 163, PlayMode 4.
+
 ## 게임 데이터 에셋 (요청 001)
 
 - 규칙이 읽는 수치·문장은 `Core/DataSet` 하나에 모인다. `GameData.Current` 가 지금 쓰는 것이고, `GameData.Use(set)` 으로 바꾸며, `Use(null)` 이면 HTML 값(`PrototypeData.Create()`)으로 돌아간다. `Rules.MoonMax` 등도 이 데이터를 읽는다.

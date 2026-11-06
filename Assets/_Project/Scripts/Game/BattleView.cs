@@ -180,14 +180,14 @@ namespace VampireSpawn.Game
 
         void AddUnit(Unit u, Hex? at = null)
         {
-            var prefab = u.Role switch
+            var look = u.Role switch
             {
-                Role.Skeleton => Art.skeleton,
-                Role.Vampire => Art.vampire,
-                _ => Art.allyModels[(int)u.Type.Value],
+                Role.Skeleton => Art.skeletonLook,
+                Role.Vampire => Art.vampireLook,
+                _ => Art.allyLooks[(int)u.Type.Value],
             };
             var yaw = u.Side == Side.Ally ? 160f : 200f;
-            var view = UnitView.Create(Art, prefab, layer, u.Id, Ground(at ?? u.Pos), yaw, RingColor(u));
+            var view = UnitView.Create(Art, look, layer, u.Id, Ground(at ?? u.Pos), yaw, RingColor(u), u.Role != Role.Spawn);
             view.SetHp(u.Hp, u.MaxHp);
             if (u.Asleep) view.LieDown(true);
             units[u.Id] = view;
@@ -195,7 +195,7 @@ namespace VampireSpawn.Game
 
         void AddCorpse(int id, UnitKind type, Hex at)
         {
-            var view = UnitView.Create(Art, Art.allyModels[(int)type], layer, -id, Ground(at), 20f, Art.spawnRing * 0.6f);
+            var view = UnitView.Create(Art, Art.allyLooks[(int)type], layer, -id, Ground(at), 20f, Art.spawnRing * 0.6f, false);
             view.name = "Corpse " + id;
             view.LieDown(false);
             corpses[id] = view;

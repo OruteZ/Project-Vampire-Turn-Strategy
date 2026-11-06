@@ -27,16 +27,17 @@ MonoBehaviour:
   fire: {fileID: 5879195395630746260, guid: 66935891f0cc76c46869337a4d1b7fd5, type: 3}
   torchLight: {r: 0.89, g: 0.66, b: 0.29, a: 1}
   sunLight: {r: 0.92, g: 0.86, b: 0.68, a: 1}
-  allyModels:
-  - {fileID: 2323011827037694792, guid: 679546d0032e80247a16b67a54cfe2eb, type: 3}
-  - {fileID: 4583569348428284085, guid: d4657b5116e54954e8187f8d35c7f30b, type: 3}
-  - {fileID: 161600633347405171, guid: 97c7d0232c6ce564199adc2aa05e169c, type: 3}
-  - {fileID: 5533246882707064096, guid: a28e6ae6d2fd4ef4cabedbe5dc94cde6, type: 3}
-  - {fileID: 7289070577727616673, guid: 974afb265987efa4182fcd6250d0f2f5, type: 3}
-  - {fileID: 3186528172670679936, guid: 48e71803e3dc7e248a1a532cdef1be17, type: 3}
-  skeleton: {fileID: 8146240625886029692, guid: 15f1b724e0139c5428bff76a4ad9bffe, type: 3}
-  vampire: {fileID: 5669538231628601157, guid: c40f7c9d822c08b43a34200e6ec68ec3, type: 3}
+  allyLooks:
+  - {fileID: 11400000, guid: 7f5413a4c00440d48a8145a5224ad24a, type: 2}
+  - {fileID: 11400000, guid: 9f9bd31ff4586394ea905716c8df4be9, type: 2}
+  - {fileID: 11400000, guid: 5cbdc323d67dfd047ab27f940e20c4a0, type: 2}
+  - {fileID: 11400000, guid: b8576f9ef41446941a8892294469fe04, type: 2}
+  - {fileID: 11400000, guid: 1581e270dd9c77d41b7929a2e065869e, type: 2}
+  - {fileID: 11400000, guid: 4e64c1817ded2194aa09ada82f761954, type: 2}
+  skeletonLook: {fileID: 11400000, guid: bda20e5804f236b4487296b250518250, type: 2}
+  vampireLook: {fileID: 11400000, guid: 2aa0e12222516714582208c22eb067d2, type: 2}
   unitAnimator: {fileID: 9100000, guid: 2b7b31fac4d09d24bab28abb943acab0, type: 2}
+  spawnAnimator: {fileID: 22100000, guid: 1fdfeebf2685688439c5272f58b765dd, type: 2}
   flat: {fileID: 2100000, guid: 2024b0488a33d814a987b2e5a4be5fbd, type: 2}
   unitHeight: 1.5
   peasantRing: {r: 0.72, g: 0.61, b: 0.45, a: 1}

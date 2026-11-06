@@ -44,17 +44,23 @@
 | 햇빛 `S` | `Hex_Sun.mat` + 위에서 비추는 스폿라이트 |
 | 물 `~` | `Hex_Water.mat`, 한 단 낮게 |
 
-## 유닛에 쓰는 것 (P7)
+## 유닛에 쓰는 것 (#29, docs/art/unit-visuals.md)
 
-| 유닛 | 모델 |
-|---|---|
-| 농민 창병 | `SidekickCharacters/.../FantasyVillagers_01` |
-| 농민 궁수 | `FantasyVillagers_03` |
-| 검사 | `FantasyKnights_02` |
-| 궁수 | `FantasyKnights_05` |
-| 기사 | `FantasyKnights_01` |
-| 사냥꾼 | `PolygonDarkFantasy/.../SM_Chr_Hunter_Male_01` |
-| 스켈레톤 | `SM_Chr_Skeleton_01` |
-| 뱀파이어 | `SM_Chr_DarkLord_Male_01` (잠들면 짙은 붉은 상자 위에 눕힘) |
-| 스폰 | 원래 병종 모델 + 보라 고리 |
-| 애니메이션 | `Art/Unit.controller` (기본 이동·검 전투 클립) |
+병종 하나 = `Assets/_Project/Art/Units/<병종>.asset` (`UnitLook`: 모델, 뼈대, 무기와 손·위치·회전, 동작 묶음). `ArtCatalog.allyLooks`(UnitKind 순서), `skeletonLook`, `vampireLook` 이 가리킨다.
+
+| 유닛 | 모델 | 무기 | 동작 묶음 |
+|---|---|---|---|
+| 농민 창병 | `FantasyVillagers_05` | 쇠스랑 (자루 가운데, y −0.45) | `Units/Spear.overrideController` |
+| 농민 궁수 | `FantasyVillagers_04` | 활 `SM_Wep_Rigged_Bow_01` 왼손 | `Units/Bow` |
+| 검사 | `FantasyKnights_05` | 검 + 방패 | `Units/SwordShield` |
+| 궁수 | `FantasyKnights_02` | 활 왼손 | `Units/Bow` |
+| 기사 | `FantasyKnights_06` | 검 `Sword_02` + 방패 | `Units/SwordShield` |
+| 사냥꾼 | `SM_Chr_Hunter_Male_01` | 석궁 `SM_Wep_Rigged_CrossBow_01` | `Art/Unit.controller` (Polygon) |
+| 스켈레톤 | `SM_Chr_Skeleton_01` | 검 `Sword_03` | `Art/Unit.controller` |
+| 뱀파이어 | `SM_Chr_DarkLord_Male_01` (잠들면 짙은 붉은 상자 위에 눕힘) | 낫 (y −0.25) | `Art/Unit.controller` |
+| 스폰·시신 | 원래 병종 모델, 무기 없음 + 보라 고리 | | Sidekick 은 `Units/SidekickUnarmed` |
+
+### 모델 바꾸기 (Sidekick 으로 새로 만든 캐릭터)
+1. 새 프리팹을 그 병종 `Units/<병종>.asset` 의 모델 칸에 넣는다. 뼈대가 Sidekick 이면 다른 칸은 그대로 둔다 (무기 뼈 `prop_r`/`prop_l` 이 같다).
+2. 무기 위치가 어긋나면 그 에셋의 무기 위치·회전만 고친다.
+3. `node tools/assets/scan.mjs` 로 목록을 다시 뽑아 같이 커밋한다.

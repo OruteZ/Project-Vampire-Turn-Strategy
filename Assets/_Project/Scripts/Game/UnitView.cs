@@ -19,7 +19,8 @@ namespace VampireSpawn.Game
         GameObject coffin;
         ArtCatalog art;
 
-        public static UnitView Create(ArtCatalog art, GameObject prefab, Transform parent, int id, Vector3 at, float yaw, Color ring)
+        // armed: false for spawns and corpses, which lost their weapons (docs/art/unit-visuals.md 1).
+        public static UnitView Create(ArtCatalog art, UnitLook look, Transform parent, int id, Vector3 at, float yaw, Color ring, bool armed)
         {
             var root = new GameObject("Unit " + id);
             root.transform.SetParent(parent, false);
@@ -28,15 +29,17 @@ namespace VampireSpawn.Game
             view.Id = id;
             view.art = art;
 
-            view.model = Instantiate(prefab, root.transform).transform;
-            view.model.name = prefab.name;
+            view.model = Instantiate(look.model, root.transform).transform;
+            view.model.name = look.model.name;
             view.model.localPosition = Vector3.zero;
             view.model.localRotation = Quaternion.Euler(0f, yaw, 0f);
             FitHeight(view.model, art.unitHeight * art.hexSize);
+            if (armed) Arm(view.model, look);
             view.animator = view.model.GetComponentInChildren<Animator>();
             if (view.animator != null)
             {
-                view.animator.runtimeAnimatorController = art.unitAnimator;
+                view.animator.runtimeAnimatorController = !armed && look.rig == Rig.Sidekick && art.spawnAnimator != null ? art.spawnAnimator
+                    : look.animator != null ? look.animator : art.unitAnimator;
                 view.animator.applyRootMotion = false;
             }
 
@@ -45,6 +48,23 @@ namespace VampireSpawn.Game
             view.ring = r.GetComponent<MeshRenderer>();
             view.ringColor = ring * 0.55f;
             return view;
+        }
+
+        static void Arm(Transform model, UnitLook look)
+        {
+            if (look.weapons == null) return;
+            var bones = model.GetComponentsInChildren<Transform>(true);
+            foreach (var g in look.weapons)
+            {
+                if (g.prefab == null) continue;
+                var name = UnitLook.Bone(look.rig, g.hand);
+                var bone = System.Array.Find(bones, b => b.name == name);
+                if (bone == null) { Debug.LogWarning(look.name + ": 뼈 " + name + " 이 없어 " + g.prefab.name + " 를 붙이지 못했다"); continue; }
+                var w = Instantiate(g.prefab, bone, false).transform;
+                w.localPosition = g.position;
+                w.localRotation = Quaternion.Euler(g.rotation);
+                foreach (var c in w.GetComponentsInChildren<Collider>(true)) { if (Application.isPlaying) Destroy(c); else DestroyImmediate(c); }
+            }
         }
 
         static Transform Quad(ArtCatalog art, Transform parent, string name, Color color, Vector3 scale, PrimitiveType shape)
