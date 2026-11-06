@@ -66,6 +66,9 @@ namespace VampireSpawn.Game.Screens
             (lastPanels, panels) = (panels, lastPanels);
             panels.Clear();
             var b = s.Battle;
+            var shade = Ui.Sprite(root, "Shade", WideFade(), Ui.Alpha(Ui.Ink, 0.55f));
+            shade.preserveAspect = false;
+            Ui.Stretch(shade.rectTransform);
             var hot = b.Phase == Phase.Player && b.MoonNext() && !st.FullMoon;
             if (st.FullMoon || st.MoonFading)
             {
@@ -112,7 +115,24 @@ namespace VampireSpawn.Game.Screens
 
         // ---------- shared pieces ----------
 
-        static Sprite edgeFade;
+        static Sprite edgeFade, wideFade;
+
+        // stage-dressing.md 1-6: the world runs behind the HUD, so the outer quarter darkens to keep HUD text readable.
+        static Sprite WideFade()
+        {
+            if (wideFade != null) return wideFade;
+            const int N = 64;
+            var tex = new Texture2D(N, N, TextureFormat.RGBA32, false) { wrapMode = TextureWrapMode.Clamp };
+            for (var y = 0; y < N; y++)
+                for (var x = 0; x < N; x++)
+                {
+                    float u = (x + 0.5f) / N, v = (y + 0.5f) / N;
+                    var a = Mathf.Clamp01(1f - Mathf.Min(Mathf.Min(u, 1f - u), Mathf.Min(v, 1f - v)) / 0.25f);
+                    tex.SetPixel(x, y, new Color(1f, 1f, 1f, a * a));
+                }
+            tex.Apply();
+            return wideFade = Sprite.Create(tex, new Rect(0, 0, N, N), new Vector2(0.5f, 0.5f));
+        }
 
         // ui-style.md 7-2: an 80 px fade on all four edges, as one full-screen texture.
         static Sprite EdgeFade()

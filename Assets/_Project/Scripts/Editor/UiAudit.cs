@@ -36,6 +36,9 @@ namespace VampireSpawn.Editor
                 if (g is Text t && Over(World(g.rectTransform), drawn) is var o && o != "") found.Add("text>box\t" + path + "\t" + o + " \"" + Clip(t.text) + "\"");
                 var frame = FramedAncestor(g.transform);
                 if (frame != null && Over(World(frame), drawn) is var f && f != "") found.Add("out-of-frame\t" + path + "\t" + f + " frame=" + frame.name);
+                // A button label running under its key cap (Kit.Hotkey).
+                if (g is Text lt && g.transform.parent != null && g.transform.parent.Find("Key") is RectTransform key && key != g.transform && World(key).Overlaps(drawn))
+                    found.Add("key-overlap\t" + path + "\t\"" + Clip(lt.text) + "\"");
             }
             var board = Object.FindFirstObjectByType<VampireSpawn.Game.BoardView>();
             if (board != null && board.Board != null && board.viewCamera != null && board.viewCamera.targetTexture == null)
@@ -46,7 +49,7 @@ namespace VampireSpawn.Editor
                     // The hex's outer edge, not its centre: the old crop cut edge hexes in half.
                     var side = h.Col == 0 ? -1f : 1f;
                     var v = board.viewCamera.WorldToViewportPoint(board.HexToWorld(h) + Vector3.right * side * board.art.hexSize);
-                    if (v.x < 0f || v.x > 1f || v.y < 0f || v.y > 1f) found.Add("board-cropped\tBoardView\thex " + h.Col + "," + h.Row + " edge at viewport " + v.x.ToString("0.00") + "," + v.y.ToString("0.00"));
+                    var fr = board.Frame; if (v.x < fr.xMin - 0.005f || v.x > fr.xMax + 0.005f || v.y < fr.yMin - 0.005f || v.y > fr.yMax + 0.005f) found.Add("board-cropped\tBoardView\thex " + h.Col + "," + h.Row + " edge at viewport " + v.x.ToString("0.00") + "," + v.y.ToString("0.00"));
                 }
             }
             var sb = new StringBuilder();
