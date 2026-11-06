@@ -16,7 +16,7 @@ MonoBehaviour:
   m_GUID: 7972359ea03b5f9418a2ffa39be4b15e
   m_SerializeEntries:
   - m_GUID: 6e43de1e596823c4d8f2f3875118a697
-    m_Address: Korean
+    m_Address: "\uD55C\uAD6D\uC5B4"
     m_ReadOnly: 1
     m_SerializedLabels:
     - Locale

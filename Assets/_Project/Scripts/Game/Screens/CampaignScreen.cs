@@ -16,9 +16,11 @@ namespace VampireSpawn.Game.Screens
     public static class CampaignScreen
     {
         public static string StatLine(Unit s) =>
-            "체력 " + s.Hp + " · 공격 " + s.Atk + (s.Bane > 0 ? "(+" + s.Bane + ")" : "") + " · 방어 " + s.Def + " · 이동 " + s.Mov + " · 사거리 " + s.Rng;
+            Loc.T("camp.statLine", s.Hp, s.Atk + (s.Bane > 0 ? "(+" + s.Bane + ")" : ""), s.Def, s.Mov, s.Rng);
 
-        public static string Resources(Stage s) => "인구 " + s.Pop + (s.Silver > 0 ? " · 은 " + s.Silver : "");
+        public static string Resources(Stage s) => Resources(s.Pop, s.Silver);
+
+        public static string Resources(int pop, int silver) => Loc.T("camp.pop", pop) + (silver > 0 ? " · " + Loc.T("camp.silver", silver) : "");
 
         public static void Build(RectTransform root, Campaign c, bool resetArm, string buyArm, CampaignActions a)
         {
@@ -28,11 +30,11 @@ namespace VampireSpawn.Game.Screens
             var head = Ui.Row(page, "Head", 12, 0, null, null, TextAnchor.LowerLeft);
             var title = Ui.Col(head, "Title", 2);
             Ui.Size(title, -1, -1, 1);
-            Ui.Text(title, "캠페인", 0.75f, Ui.Muted);
-            Ui.Text(title, "뱀파이어 토벌 원정", 1.55f, Ui.Bone, true, true);
-            Ui.Text(head, c.Gold + "\n<size=" + Mathf.RoundToInt(Ui.Base * 0.68f) + "><color=#" + Ui.Hex(Ui.Muted) + ">금화</color></size>", 1.3f, Ui.Candle, true);
-            Ui.Button(head, resetArm ? "정말 초기화할까요?" : "진행 초기화", a.Reset, Look.Ghost, true);
-            Ui.Button(head, "메뉴로", a.Menu, Look.Normal, true);
+            Ui.Text(title, Loc.T("camp.title"), 0.75f, Ui.Muted);
+            Ui.Text(title, Loc.T("camp.heading"), 1.55f, Ui.Bone, true, true);
+            Ui.Text(head, c.Gold + "\n<size=" + Mathf.RoundToInt(Ui.Base * 0.68f) + "><color=#" + Ui.Hex(Ui.Muted) + ">" + Loc.T("camp.gold") + "</color></size>", 1.3f, Ui.Candle, true);
+            Ui.Button(head, resetArm ? Loc.T("camp.resetConfirm") : Loc.T("camp.reset"), a.Reset, Look.Ghost, true);
+            Ui.Button(head, Loc.T("camp.menu"), a.Menu, Look.Normal, true);
 
             var grid = Ui.Row(page, "Grid", 16, 0, null, null, TextAnchor.UpperLeft);
             Ui.Size(grid, -1, -1, 1, 1);
@@ -42,20 +44,20 @@ namespace VampireSpawn.Game.Screens
             var left = Ui.Scroll(grid, "Stages", out var ls);
             Ui.Size(ls, -1, -1, 1f, 1);
             var intro = Ui.Card(left, "Intro");
-            Ui.Text(intro, "장 선택", 1.05f, Ui.Bone, true, true);
-            Ui.Text(intro, "각 장을 클리어하면 다음 장과 새 유닛이 열립니다. 추가 목표 보상은 처음 달성할 때 한 번만 받습니다. 금화는 모든 강화를 사기에 부족하니 주력을 골라 투자하세요.", 0.9f, Ui.Muted);
+            Ui.Text(intro, Loc.T("camp.chapters"), 1.05f, Ui.Bone, true, true);
+            Ui.Text(intro, Loc.T("camp.intro"), 0.9f, Ui.Muted);
             for (var i = 0; i < Campaign.Stages.Length; i++) StageCard(left, c, i, a);
 
             var right = Ui.Scroll(grid, "Armory", out var rs);
             Ui.Size(rs, -1, -1, 1.25f, 1);
             var arm = Ui.Card(right, "Barracks");
-            Ui.Text(arm, "병영 · 유닛 강화", 1.05f, Ui.Bone, true, true);
-            Ui.Text(arm, "강화는 같은 병종 전체에 적용되고, 한 번 사면 되돌릴 수 없습니다. 유닛이 해금된 장을 클리어한 뒤부터 그 유닛을 강화할 수 있습니다. 스폰이 되면 체력·공격·이동 강화만 물려받습니다.", 0.9f, Ui.Muted);
+            Ui.Text(arm, Loc.T("camp.barracks"), 1.05f, Ui.Bone, true, true);
+            Ui.Text(arm, Loc.T("camp.barracksHelp"), 0.9f, Ui.Muted);
             var open = GameData.Types.Where(t => c.UpgradesOpen(t.Kind)).ToList();
             if (open.Count == 0)
             {
                 var none = Ui.Card(right, "Locked");
-                Ui.Text(none, "아직 강화할 수 있는 병종이 없습니다. 1장을 클리어하면 농민군 강화가 열립니다.", 0.9f, Ui.Muted);
+                Ui.Text(none, Loc.T("camp.noUpgrades"), 0.9f, Ui.Muted);
             }
             foreach (var t in open) ArmCard(right, c, t, buyArm, a);
         }
@@ -72,7 +74,7 @@ namespace VampireSpawn.Game.Screens
             Ui.Size(name, -1, -1, 1);
             Ui.Text(name, Loc.Text(s.Label), 0.72f, Ui.Muted);
             Ui.Text(name, Loc.Text(s.Title), 1.12f, Ui.Bone, true, true);
-            Ui.Text(row, clear ? "클리어" : open ? "도전 가능" : "잠김", 0.75f, clear ? Ui.Candle : open ? Ui.Bone : Ui.Muted);
+            Ui.Text(row, clear ? Loc.T("camp.cleared") : open ? Loc.T("camp.open") : Loc.T("camp.locked"), 0.75f, clear ? Ui.Candle : open ? Ui.Bone : Ui.Muted);
             Ui.Text(card, Loc.Text(s.Brief), 0.86f, Ui.Muted);
             var chips = Ui.Row(card, "Chips", 6);
             foreach (var k in s.Units)
@@ -81,18 +83,18 @@ namespace VampireSpawn.Game.Screens
                 var isNew = t.UnlockAt == i + 1;
                 var chip = Ui.Row(chips, "Chip", 0, 3, Ui.Panel2, isNew ? Ui.Candle : Ui.Line);
                 chip.GetComponent<HorizontalLayoutGroup>().padding = new RectOffset(8, 8, 2, 2);
-                Ui.Text(chip, (isNew ? "해금 · " : "") + Loc.Text(t.Name), 0.75f, isNew ? Ui.Candle : Ui.Bone).horizontalOverflow = HorizontalWrapMode.Overflow;
+                Ui.Text(chip, isNew ? Loc.T("camp.new", t.Name) : Loc.Text(t.Name), 0.75f, isNew ? Ui.Candle : Ui.Bone).horizontalOverflow = HorizontalWrapMode.Overflow;
             }
             var bon = Ui.Row(card, "Bonus", 14);
             var got = c.BonusDone.Contains(s.Id);
-            Ui.Text(bon, "클리어 +" + s.Reward, 0.78f, Ui.Muted).horizontalOverflow = HorizontalWrapMode.Overflow;
+            Ui.Text(bon, Loc.T("camp.clearReward", s.Reward), 0.78f, Ui.Muted).horizontalOverflow = HorizontalWrapMode.Overflow;
             Ui.Text(bon, (got ? "✓" : "○") + " " + Loc.Text(s.Bonus.Text) + " +" + s.Bonus.Gold, 0.78f, got ? Ui.Candle : Ui.Muted).horizontalOverflow = HorizontalWrapMode.Overflow;
             Ui.Text(bon, Resources(s), 0.78f, Ui.Muted).horizontalOverflow = HorizontalWrapMode.Overflow;
             if (open)
             {
                 var acts = Ui.Row(card, "Acts", 8);
                 var index = i;
-                Ui.Button(acts, "출전", () => a.Play?.Invoke(index), clear ? Look.Normal : Look.Primary, true);
+                Ui.Button(acts, Loc.T("camp.march"), () => a.Play?.Invoke(index), clear ? Look.Normal : Look.Primary, true);
             }
         }
 
@@ -113,15 +115,15 @@ namespace VampireSpawn.Game.Screens
                 Ui.Size(box, -1, -1, 1);
                 var line = Ui.Row(box, "T", 8);
                 Ui.Size(Ui.Text(line, Loc.Text(u.Name), 0.95f, Ui.Bone, true), -1, -1, 1);
-                Ui.Text(line, own ? "보유" : u.Cost + " 금화", 0.85f, Ui.Muted).horizontalOverflow = HorizontalWrapMode.Overflow;
+                Ui.Text(line, own ? Loc.T("camp.owned") : Loc.T("camp.cost", u.Cost), 0.85f, Ui.Muted).horizontalOverflow = HorizontalWrapMode.Overflow;
                 Ui.Text(box, Loc.Text(u.Desc), 0.8f, Ui.Muted);
-                Ui.Text(box, u.Inherit ? "스폰이 물려받음" : "스폰이 물려받지 않음", 0.68f, u.Inherit ? Ui.Spawn : Ui.Muted);
+                Ui.Text(box, u.Inherit ? Loc.T("camp.inherit") : Loc.T("camp.noInherit"), 0.68f, u.Inherit ? Ui.Spawn : Ui.Muted);
                 if (!own)
                 {
                     var id = u.Id;
                     var acts = Ui.Row(box, "Acts", 0);
                     var armed = buyArm == u.Id;
-                    Ui.Button(acts, armed ? "정말 살까요? " + u.Cost + " 금화" : "강화", () => a.Buy?.Invoke(id), armed ? Look.DangerOn : Look.Normal, true, c.Gold >= u.Cost);
+                    Ui.Button(acts, armed ? Loc.T("camp.buyConfirm", u.Cost) : Loc.T("camp.upgrade"), () => a.Buy?.Invoke(id), armed ? Look.DangerOn : Look.Normal, true, c.Gold >= u.Cost);
                 }
             }
         }

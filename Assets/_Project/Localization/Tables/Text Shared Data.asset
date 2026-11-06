@@ -667,6 +667,522 @@ MonoBehaviour:
     m_Key: name.spawn
     m_Metadata:
       m_Items: []
+  - m_Id: 9846489149440
+    m_Key: battle.demo
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9846568841216
+    m_Key: battle.campaignSub
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9846568841217
+    m_Key: battle.enemyActing
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9846568841218
+    m_Key: battle.start
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9846568841219
+    m_Key: battle.endTurn
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9846568841220
+    m_Key: battle.results
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9846568841221
+    m_Key: battle.threat
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9846568841222
+    m_Key: battle.leaveConfirm
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9846568841223
+    m_Key: battle.leave
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9846568841224
+    m_Key: battle.pop
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9846568841225
+    m_Key: battle.silver
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9846568841226
+    m_Key: battle.deployed
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9846568841227
+    m_Key: battle.coffinAt
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9846568841228
+    m_Key: battle.moon
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9846568841229
+    m_Key: battle.turn
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9846568841230
+    m_Key: battle.allies
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9846568841231
+    m_Key: battle.enemies
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9846568841232
+    m_Key: battle.rising
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9846568841233
+    m_Key: battle.risen
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9846568841234
+    m_Key: skill.pike
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9846568841235
+    m_Key: skill.ambush
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9846568841236
+    m_Key: skill.cleave
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9846568841237
+    m_Key: skill.charge
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9846568841238
+    m_Key: battle.brief
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9846568841239
+    m_Key: battle.objective
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9846568841240
+    m_Key: battle.defeatBoss
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9846568841241
+    m_Key: battle.bonus
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9846568841242
+    m_Key: battle.resources
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9846568841243
+    m_Key: battle.enemy
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9846568841244
+    m_Key: battle.enemyList
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9846568841245
+    m_Key: battle.formation
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9846568841246
+    m_Key: battle.deployHelp
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9846568841247
+    m_Key: battle.recallAll
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9846568841248
+    m_Key: battle.sample
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9846568841249
+    m_Key: battle.allyPhase
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9846568841250
+    m_Key: battle.readyAllies
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9846568841251
+    m_Key: battle.log
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9846568841252
+    m_Key: unit.card.corpse
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9846568841253
+    m_Key: unit.card.corpseOf
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9846568841254
+    m_Key: unit.card.corpseRise
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9846568841255
+    m_Key: unit.card.corpseStats
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9846568841256
+    m_Key: unit.card.ally
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9846568841257
+    m_Key: unit.card.boss
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9846568841258
+    m_Key: unit.card.spawn
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9846568841259
+    m_Key: unit.card.minion
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9846568841260
+    m_Key: unit.card.hp
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9846568841261
+    m_Key: unit.card.atk
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9846568841262
+    m_Key: unit.card.def
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9846568841263
+    m_Key: unit.card.mov
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9846568841264
+    m_Key: unit.card.rng
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9846568841265
+    m_Key: unit.card.target
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9846568841266
+    m_Key: unit.card.safeNow
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9846568841267
+    m_Key: unit.card.inLight
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9846568841268
+    m_Key: unit.card.coffin
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9846568841269
+    m_Key: unit.card.moonNext
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9846568841270
+    m_Key: unit.card.moon
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9846568841271
+    m_Key: unit.card.justRisen
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9846568841272
+    m_Key: unit.card.skills
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9846568841273
+    m_Key: unit.card.recall
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9846568841274
+    m_Key: unit.card.acted
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9846568841275
+    m_Key: unit.card.cancelExec
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9846568841276
+    m_Key: unit.card.exec
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9846568841277
+    m_Key: unit.card.wait
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9846568841278
+    m_Key: unit.card.skeletonNote
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9846568841279
+    m_Key: unit.card.vampireNote
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9846568841280
+    m_Key: unit.card.spawnNote
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9846568841281
+    m_Key: battle.rule.corpse
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9846568841282
+    m_Key: battle.rule.coffin
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9846568841283
+    m_Key: battle.rule.moon
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9846568841284
+    m_Key: battle.rule.target
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9846568841285
+    m_Key: battle.rule.drain
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9846568841286
+    m_Key: battle.rule.exec
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9846568841287
+    m_Key: battle.rule.light
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9846568841288
+    m_Key: battle.rule.spawn
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9846568841289
+    m_Key: battle.rule.damage
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9846568841290
+    m_Key: battle.rules
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9846568841291
+    m_Key: over.won
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9846568841292
+    m_Key: over.lost
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9846568841293
+    m_Key: over.lostLine
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9846568841294
+    m_Key: over.fallen
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9846568841295
+    m_Key: over.execs
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9846568841296
+    m_Key: over.risen
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9846568841297
+    m_Key: over.drained
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9846568841298
+    m_Key: over.firstClear
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9846568841299
+    m_Key: over.replayClear
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9846568841300
+    m_Key: over.claimed
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9846568841301
+    m_Key: over.bonus
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9846568841302
+    m_Key: over.failed
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9846568841303
+    m_Key: over.done
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9846568841304
+    m_Key: over.earned
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9846568841305
+    m_Key: over.nextOpen
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9846568841306
+    m_Key: over.unitsUnlocked
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9846568841307
+    m_Key: over.campaignDone
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9846568841308
+    m_Key: over.armoryOpen
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9846568841309
+    m_Key: over.toCamp
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9846568841310
+    m_Key: over.retry
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9846568841311
+    m_Key: over.redeploy
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9846568841312
+    m_Key: camp.statLine
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9846568841313
+    m_Key: camp.pop
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9846568841314
+    m_Key: camp.silver
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9846568841315
+    m_Key: camp.title
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9846568841316
+    m_Key: camp.heading
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9846568841317
+    m_Key: camp.gold
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9846568841318
+    m_Key: camp.resetConfirm
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9846568841319
+    m_Key: camp.reset
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9846568841320
+    m_Key: camp.menu
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9846568841321
+    m_Key: camp.chapters
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9846568841322
+    m_Key: camp.intro
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9846568841323
+    m_Key: camp.barracks
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9846568841324
+    m_Key: camp.barracksHelp
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9846568841325
+    m_Key: camp.noUpgrades
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9846568841326
+    m_Key: camp.cleared
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9846568841327
+    m_Key: camp.open
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9846568841328
+    m_Key: camp.locked
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9846568841329
+    m_Key: camp.new
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9846568841330
+    m_Key: camp.clearReward
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9846568841331
+    m_Key: camp.march
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9846568841332
+    m_Key: camp.owned
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9846568841333
+    m_Key: camp.cost
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9846573035520
+    m_Key: camp.inherit
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9846573035521
+    m_Key: camp.noInherit
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9846573035522
+    m_Key: camp.buyConfirm
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9846573035523
+    m_Key: camp.upgrade
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9846573035524
+    m_Key: menu.campMeta
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9846573035525
+    m_Key: menu.tagline
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9846573035526
+    m_Key: menu.demo
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9846573035527
+    m_Key: menu.demoDesc
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9846573035528
+    m_Key: menu.campaign
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9846573035529
+    m_Key: menu.campaignDesc
+    m_Metadata:
+      m_Items: []
   m_Metadata:
     m_Items: []
   m_KeyGenerator:
