@@ -11,7 +11,7 @@ namespace VampireSpawn.Game.Screens
     {
         public Unit Hover;
         public Corpse HoverCorpse;
-        public bool Alt, EnemyPlaying, LeaveArmed, RulesOpen, LogOpen, Demo;
+        public bool Alt, EnemyPlaying, LeaveArmed, RulesOpen, LogOpen, Demo, FullMoon, MoonFading;
         public IEnumerable<string> Upgrades = Enumerable.Empty<string>();
     }
 
@@ -31,6 +31,9 @@ namespace VampireSpawn.Game.Screens
         readonly ArtCatalog art;
         readonly List<Graphic> pulse = new List<Graphic>(), blink = new List<Graphic>();
         readonly Dictionary<int, HeadMark> heads = new Dictionary<int, HeadMark>();
+        // Values and panels of the previous build, so only real changes flash and only new panels slide in (ui-style.md 12).
+        Dictionary<string, string> lastValues = new Dictionary<string, string>(), values = new Dictionary<string, string>();
+        HashSet<string> lastPanels = new HashSet<string>(), panels = new HashSet<string>();
 
         public BattleHud(ArtCatalog art) { this.art = art; kit = new Kit(art); }
 
@@ -58,12 +61,21 @@ namespace VampireSpawn.Game.Screens
             pulse.Clear();
             blink.Clear();
             heads.Clear();
+            (lastValues, values) = (values, lastValues);
+            values.Clear();
+            (lastPanels, panels) = (panels, lastPanels);
+            panels.Clear();
             var b = s.Battle;
-            var hot = b.Phase == Phase.Player && b.MoonNext();
-            if (hot) Vignette(root, 0.08f);
+            var hot = b.Phase == Phase.Player && b.MoonNext() && !st.FullMoon;
+            if (st.FullMoon || st.MoonFading)
+            {
+                var vg = Vignette(root, 0.15f);
+                if (st.MoonFading) Fx.FadeOut(vg, 0.4f);
+            }
+            else if (hot) Vignette(root, 0.08f);
             var headLayer = Ui.Node(root, "Heads");
             Ui.Stretch(headLayer);
-            Moon(root, b, hot);
+            Moon(root, b, hot, st.FullMoon, st.MoonFading);
             if (b.Phase == Phase.Deploy) Deploy(root, s, st, a);
             else Fight(root, s, st, a, headLayer);
             EndTurn(root, b, st, a);
@@ -118,23 +130,33 @@ namespace VampireSpawn.Game.Screens
             return edgeFade = Sprite.Create(tex, new Rect(0, 0, N, N), new Vector2(0.5f, 0.5f));
         }
 
-        void Vignette(RectTransform root, float alpha)
+        Image Vignette(RectTransform root, float alpha)
         {
             var img = Ui.Sprite(root, "Vignette", EdgeFade(), Ui.Alpha(Ui.MoonBlood, alpha));
             img.preserveAspect = false;
             Ui.Stretch(img.rectTransform);
+            return img;
         }
 
-        void Moon(RectTransform root, Battle b, bool hot)
+        Text Watch(Text t, string key)
+        {
+            values[key] = t.text;
+            if (lastValues.TryGetValue(key, out var was) && was != t.text) Fx.Flash(t);
+            return t;
+        }
+
+        // full: the full-moon enemy turn is playing (7-2); fading: it just ended, so the blood drains away over 0.4 s.
+        void Moon(RectTransform root, Battle b, bool hot, bool full, bool fading)
         {
             const float D = 112f;
             var box = Ui.Place(root, "Moon", new Vector2(0.5f, 1f), new Vector2(0f, -Edge), new Vector2(D, D));
             var disk = S("SPR_DarkFantasyMenus_Frame_Ring_01_Background");
             Ui.Stretch(Ui.Sprite(box, "Back", disk, Ui.Deep).rectTransform);
             var max = Rules.MoonMax;
+            var moon = full ? max : b.Moon;
             for (var i = 0; i < max; i++)
             {
-                var img = Ui.Sprite(box, "Phase " + i, disk, i < b.Moon ? (hot ? Ui.MoonBlood : Ui.Sun) : Ui.Panel2);
+                var img = Ui.Sprite(box, "Phase " + i, disk, i < moon ? (hot || full ? Ui.MoonBlood : Ui.Sun) : Ui.Panel2);
                 img.type = Image.Type.Filled;
                 img.fillMethod = Image.FillMethod.Radial360;
                 img.fillOrigin = (int)Image.Origin360.Top;
@@ -143,7 +165,19 @@ namespace VampireSpawn.Game.Screens
                 img.preserveAspect = true;
                 Ui.Stretch(img.rectTransform, 12, 12, 12, 12);
                 img.rectTransform.localEulerAngles = new Vector3(0f, 0f, -360f * i / max);
-                if (hot && i < b.Moon) pulse.Add(img);
+                if (hot && i < moon) pulse.Add(img);
+                if (fading)
+                {
+                    var drain = Ui.Sprite(box, "Drain " + i, disk, Ui.MoonBlood);
+                    drain.type = Image.Type.Filled;
+                    drain.fillMethod = Image.FillMethod.Radial360;
+                    drain.fillOrigin = (int)Image.Origin360.Top;
+                    drain.fillAmount = img.fillAmount;
+                    drain.preserveAspect = true;
+                    Ui.Stretch(drain.rectTransform, 12, 12, 12, 12);
+                    drain.rectTransform.localEulerAngles = img.rectTransform.localEulerAngles;
+                    Fx.FadeOut(drain, 0.4f);
+                }
             }
             var v = b.Vampire;
             if (v != null && v.Asleep)
@@ -152,12 +186,22 @@ namespace VampireSpawn.Game.Screens
                 pivot.localEulerAngles = new Vector3(0f, 0f, -360f * Rules.MoonWake / max);
                 Ui.Bg(Ui.Place(pivot, "Coffin", new Vector2(0.5f, 0.5f), new Vector2(0f, D / 2f - 14f), new Vector2(5f, 26f)), Ui.Line, null, false);
             }
-            Ui.Stretch(Ui.Sprite(box, "Ring", S("SPR_DarkFantasyMenus_Frame_Ring_01"), hot ? Ui.MoonBlood : Ui.Steel).rectTransform, -6, -6, -6, -6);
+            Ui.Stretch(Ui.Sprite(box, "Ring", S("SPR_DarkFantasyMenus_Frame_Ring_01"), hot || full ? Ui.MoonBlood : Ui.Steel).rectTransform, -6, -6, -6, -6);
+            if (full)
+                for (var k = 0; k < 4; k++)
+                {
+                    var pivot = Ui.Place(box, "SkullAt", new Vector2(0.5f, 0.5f), Vector2.zero, Vector2.zero);
+                    pivot.localEulerAngles = new Vector3(0f, 0f, 45f + 90f * k);
+                    Ui.Sprite(pivot, "Skull", S("SPR_DarkFantasyMenus_Greeble_DemonSkull_01"), Ui.MoonBlood).rectTransform.anchoredPosition = new Vector2(0f, D / 2f + 6f);
+                    var sk = (RectTransform)pivot.GetChild(0);
+                    sk.sizeDelta = new Vector2(28f, 28f);
+                    sk.localEulerAngles = Vector3.zero;
+                }
             var label = Ui.Col(root, "MoonLabel", 0);
             label.anchorMin = label.anchorMax = label.pivot = new Vector2(0.5f, 1f);
             label.anchoredPosition = new Vector2(0f, -Edge - D - 6f);
             label.sizeDelta = new Vector2(300f, 44f);
-            T(label, Loc.T("battle.moon") + " " + b.Moon + "/" + max, 20, Ui.Bone, true, false, TextAnchor.UpperCenter);
+            Watch(T(label, Loc.T("battle.moon") + " " + moon + "/" + max, 20, Ui.Bone, true, false, TextAnchor.UpperCenter), "moon");
             var state = hot ? Loc.T("moon.nextTurn") : v != null && v.Asleep ? Loc.T("battle.coffinAt", Rules.MoonWake) : "";
             if (state.Length > 0) T(label, state, 14, hot ? Ui.MoonBlood : Ui.Muted, hot, false, TextAnchor.UpperCenter);
         }
@@ -370,7 +414,7 @@ namespace VampireSpawn.Game.Screens
             fill.offsetMin = new Vector2(24f, 10f);
             fill.offsetMax = new Vector2(-24f * f, -10f);
             Ui.Stretch(Ui.Sprite(bar, "Frame", S("SPR_DarkFantasyMenus_Frame_Bar_Medium_01"), Ui.Blood, 12f).rectTransform);
-            var name = T(bar, Loc.Text(v.Name) + "   " + v.Hp + "/" + v.MaxHp, 17, Ui.Bone, true, false, TextAnchor.MiddleCenter);
+            var name = Watch(T(bar, Loc.Text(v.Name) + "   " + v.Hp + "/" + v.MaxHp, 17, Ui.Bone, true, false, TextAnchor.MiddleCenter), "boss");
             Ui.Stretch(name.rectTransform);
             name.gameObject.AddComponent<Outline>().effectColor = Ui.Deep;
             foreach (var x in new[] { 0f, 1f })
@@ -429,12 +473,13 @@ namespace VampireSpawn.Game.Screens
             else Ui.Ellipsize(t, width - iconW);
         }
 
-        void StatCell(Transform row, string icon, string value, string label, float px, Color iconColor, Color valueColor)
+        void StatCell(Transform row, string icon, string value, string label, float px, Color iconColor, Color valueColor, string watch = null)
         {
             var cell = Ui.Row(row, "Stat " + label, 6, 0, null, null, TextAnchor.LowerLeft);
             cell.GetComponent<HorizontalLayoutGroup>().childForceExpandWidth = false;
             Ui.Size(Ui.Sprite(cell, "Icon", S(icon), iconColor), 24, 24);
-            T(cell, value, px, valueColor, true);
+            var v = T(cell, value, px, valueColor, true);
+            if (watch != null) Watch(v, watch);
             T(cell, label, Mathf.Max(14f, px / 2f), Ui.Muted);
         }
 
@@ -442,6 +487,8 @@ namespace VampireSpawn.Game.Screens
         {
             var p = Ui.Place(root, name, anchor, pos, new Vector2(PanelW, PanelH));
             Frame(p, edge);
+            if (!lastPanels.Contains(name)) Fx.Appear(p);
+            panels.Add(name);
             return p;
         }
 
@@ -468,8 +515,8 @@ namespace VampireSpawn.Game.Screens
             T(head, Loc.T(o.Side == Side.Ally ? "unit.card.ally" : o.Role == Role.Vampire ? "unit.card.boss" : spawn ? "unit.card.spawn" : "unit.card.minion"), 14, side);
             var big = Ui.Row(col, "Big", 22);
             big.GetComponent<HorizontalLayoutGroup>().childForceExpandWidth = false;
-            StatCell(big, "ICON_DarkFantasy_Stat_Health_01_Clean", o.Hp + "/" + o.MaxHp, Loc.T("unit.card.hp"), 34, side, o.Side == Side.Ally && o.Hp * 3 <= o.MaxHp ? Ui.Blood : Ui.Bone);
-            StatCell(big, "ICON_DarkFantasy_Stat_Speed_01_Clean", o.Mov.ToString(), Loc.T("unit.card.mov"), 34, side, Ui.Bone);
+            StatCell(big, "ICON_DarkFantasy_Stat_Health_01_Clean", o.Hp + "/" + o.MaxHp, Loc.T("unit.card.hp"), 34, side, o.Side == Side.Ally && o.Hp * 3 <= o.MaxHp ? Ui.Blood : Ui.Bone, "hp" + o.Id);
+            StatCell(big, "ICON_DarkFantasy_Stat_Speed_01_Clean", o.Mov.ToString(), Loc.T("unit.card.mov"), 34, side, Ui.Bone, "mov" + o.Id);
             var small = Ui.Row(col, "Small", 18);
             small.GetComponent<HorizontalLayoutGroup>().childForceExpandWidth = false;
             StatCell(small, "ICON_DarkFantasy_Stat_Strength_01_Clean", o.Atk + (o.Bane > 0 ? "+" + o.Bane : ""), Loc.T("unit.card.atk"), 20, side, Ui.Muted);

@@ -24,7 +24,7 @@ namespace VampireSpawn.Game.Screens
         public Campaign Campaign { get; private set; }
         public bool OverShown => overRoot != null && overRoot.gameObject.activeSelf;
 
-        bool demo, resetArm, leaveArm, rulesOpen, logOpen, finished, enemyPlaying;
+        bool demo, resetArm, leaveArm, rulesOpen, logOpen, finished, enemyPlaying, fullMoon, moonFading;
         float leaveUntil, bannerUntil, buyUntil;
         string buyArm, bought;
         int? campSel;
@@ -260,6 +260,7 @@ namespace VampireSpawn.Game.Screens
                 Hover = hoverId is int id ? b.Find(id) : null,
                 HoverCorpse = hoverCorpse is int cid ? b.Corpses.FirstOrDefault(c => c.Id == cid) : null,
                 Alt = altDown, EnemyPlaying = enemyPlaying, LeaveArmed = leaveArm, RulesOpen = rulesOpen, LogOpen = logOpen, Demo = demo,
+                FullMoon = fullMoon, MoonFading = moonFading,
                 Upgrades = demo ? Enumerable.Empty<string>() : Campaign.Upgrades,
             }, battleActions);
         }
@@ -281,14 +282,21 @@ namespace VampireSpawn.Game.Screens
         void OnBattleChanged()
         {
             if (Current != "battle") return;
-            if (!View.IsBusy) enemyPlaying = false;
+            if (!View.IsBusy)
+            {
+                enemyPlaying = false;
+                if (fullMoon) { fullMoon = false; moonFading = true; }
+            }
             RenderBattle();
+            moonFading = false;
             if (!finished && Session.Battle.Phase == Phase.Over && !View.IsBusy) Finish();
         }
 
         void OnPlayed(BattleEvent e)
         {
             if (e.Kind != BattleEventKind.Banner || banner == null) return;
+            // The model has already left the full-moon turn while it plays back, so the banner is the only cue (ui-style.md 7-2).
+            if (e.Text.Key == "banner.fullMoon") { fullMoon = true; RenderBattle(); }
             banner.text = Loc.Text(e.Text);
             banner.color = e.Style == "enemy" ? Ui.Blood : Ui.Steel;
             banner.gameObject.SetActive(true);

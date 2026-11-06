@@ -19,10 +19,13 @@ namespace VampireSpawn.Game.Screens
         {
             var cover = Ui.Node(root, "FadeIn");
             Ui.Stretch(cover);
-            var img = Ui.Bg(cover, Color.black, null, false);
-            var fx = Add(img);
-            fx.fade = seconds;
+            FadeOut(Ui.Bg(cover, Color.black, null, false), seconds);
         }
+
+        public static void FadeOut(Graphic g, float seconds) => Add(g).fade = seconds;
+
+        // ui-style.md 12: a panel shows in 0.15 s, rising 8 px.
+        public static void Appear(RectTransform rt) => rt.gameObject.AddComponent<PanelAppear>();
 
         static Fx Add(Graphic g)
         {
@@ -40,7 +43,7 @@ namespace VampireSpawn.Game.Screens
             if (fade > 0f)
             {
                 if (t >= fade) { Destroy(gameObject); return; }
-                g.color = new Color(0f, 0f, 0f, 1f - t / fade);
+                g.color = new Color(baseColor.r, baseColor.g, baseColor.b, baseColor.a * (1f - t / fade));
                 return;
             }
             if (period > 0f) k = 1f + 0.1f * Mathf.Sin(t * Mathf.PI * 2f / period);
@@ -49,6 +52,33 @@ namespace VampireSpawn.Game.Screens
             var c = baseColor * k;
             c.a = baseColor.a;
             g.color = c;
+        }
+    }
+
+    public sealed class PanelAppear : MonoBehaviour
+    {
+        const float Seconds = 0.15f, Rise = 8f;
+        CanvasGroup group;
+        Vector2 end;
+        float start;
+
+        void Start()
+        {
+            var rt = (RectTransform)transform;
+            end = rt.anchoredPosition;
+            group = gameObject.AddComponent<CanvasGroup>();
+            start = Time.unscaledTime;
+            Update();
+        }
+
+        void Update()
+        {
+            var k = Mathf.Clamp01((Time.unscaledTime - start) / Seconds);
+            group.alpha = k;
+            ((RectTransform)transform).anchoredPosition = end - new Vector2(0f, Rise * (1f - k));
+            if (k < 1f) return;
+            Destroy(group);
+            Destroy(this);
         }
     }
 }

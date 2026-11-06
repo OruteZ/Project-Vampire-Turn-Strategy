@@ -100,7 +100,8 @@ HTML 이 바뀌면 두 명령을 차례로 돌리고, `data.json` 과 `GameData.
 - 기준 해상도는 전투 1920×1080, 메뉴·캠페인은 다시 만들 때까지 1600×900 (`ClearScreen`).
 - 시험: `UiTextParityTests.BattleHudShowsEveryGoldenState` 가 HTML 전투 상태 19개마다 HUD 를 만들어 표 키가 그대로 나오지 않는지, 안내·주 버튼·편성·적 패널·기록이 있는지 본다. 전투 화면 글 덩어리 비교는 뺐다(데모와 화면 구성이 다르다). `OverlayTests` 는 HTML 기준값에서 위협 칸을 빼고, 바뀐 안내 문장 하나를 새 문장으로 읽는다.
 - 확인 스크린샷: docs/review/battle-hud-*.png (verify-unity, 1920×1080 게임 뷰).
-- 안 한 것: 보름달 턴(적 턴 중) 게이지 상태. 적 턴 재생 중에는 모델이 이미 다음 아군 턴이라 그 순간을 알 수 없다. 버튼 호버 밝기 외의 움직임(패널 등장, 1단계 번쩍임).
+- 보름달 턴(#28): 적 턴 재생 중에는 모델이 이미 다음 아군 턴이라, `banner.fullMoon` 배너가 재생될 때 `GameFlow.fullMoon` 을 켠다. 재생이 끝나면 한 번 `MoonFading` 으로 그려 붉은 칸·비네트가 0.4초에 사라진다 (`Fx.FadeOut`). 스크린샷 docs/review/battle-hud-fullmoon.png.
+- 움직임(#28): `BattleHud` 가 앞 번 그림의 패널 이름·1단계 값을 기억해, 새로 생긴 패널만 0.15초 올라오고(`PanelAppear`) 바뀐 값(체력·이동·달·보스 체력)만 0.2초 번쩍인다(`Fx.Flash`). 호버로 다시 그릴 때는 움직이지 않는다.
 
 ## 장 선택·병영 화면 달과 피 (#26)
 
