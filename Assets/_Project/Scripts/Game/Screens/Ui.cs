@@ -6,12 +6,13 @@ namespace VampireSpawn.Game.Screens
 {
     public enum Look { Normal, Primary, Ghost, Danger, DangerOn, Choice, Roster, RosterOn }
 
-    // uGUI built from code so screens are re-rendered like the prototype's innerHTML templates. Colours are the prototype's CSS variables.
+    // uGUI built from code so screens are re-rendered like the prototype's innerHTML templates. Colour tokens: docs/art/ui-style.md 2-1.
     public static class Ui
     {
-        public static readonly Color Ink = C(0x15131a), Deep = C(0x0f0e13), Panel = C(0x1d1a23), Panel2 = C(0x25212d), Line = C(0x3a3442),
-            HexLine = C(0x2e2a36), Bone = C(0xebe3d2), Muted = C(0xa49bab), Candle = C(0xe3a84b), Blood = C(0xc8304a), Spawn = C(0xa650c4),
-            Steel = C(0x8fb0cc), Peasant = C(0xb89c72), Knight = C(0xd9dde4), Hunter = C(0x86b8a6), Sun = C(0xeadcae);
+        public static readonly Color Ink = C(0x12131a), Deep = C(0x0f1016), Panel = C(0x1a1c25), Panel2 = C(0x25212d), Line = C(0x3a3442),
+            HexLine = C(0x2e2a36), Bone = C(0xebe3d2), Muted = C(0xb9b2bf), Dim = C(0x7d7684), Candle = C(0xe3a84b), Blood = C(0xc8304a), BloodDim = C(0x6e1e2c),
+            Spawn = C(0xa650c4), Steel = C(0x8fb0cc), SteelDim = C(0x4a5d6e), Peasant = C(0xb89c72), Knight = C(0xd9dde4), Hunter = C(0x86b8a6),
+            Sun = C(0xeadcae), MoonBlood = C(0x9e1b2f);
 
         public const int Base = 15;
 
@@ -56,6 +57,38 @@ namespace VampireSpawn.Game.Screens
                 o.effectDistance = new Vector2(1f, -1f);
             }
             return img;
+        }
+
+        public static Image Sprite(Transform parent, string name, Sprite sprite, Color color, float ppu = 1f)
+        {
+            var rt = Node(parent, name);
+            var img = rt.gameObject.AddComponent<Image>();
+            img.sprite = sprite;
+            img.color = color;
+            img.raycastTarget = false;
+            if (sprite != null && sprite.border != Vector4.zero) { img.type = Image.Type.Sliced; img.pixelsPerUnitMultiplier = ppu; }
+            else img.preserveAspect = true;
+            return img;
+        }
+
+        // Synty 9-slice borders are 180~480 px, so ppu shrinks them to a 6~10 px stroke on screen (ui-style.md 5).
+        public static void Frame(RectTransform panel, Sprite frame, Sprite back, Color edge, float ppu)
+        {
+            foreach (var (s, c) in new[] { (back, Alpha(Panel, 0.92f)), (frame, edge) })
+            {
+                var img = Sprite(panel, s == back ? "FrameBack" : "Frame", s, c, ppu);
+                Stretch(img.rectTransform);
+                img.gameObject.AddComponent<LayoutElement>().ignoreLayout = true;
+            }
+        }
+
+        public static RectTransform Place(Transform parent, string name, Vector2 anchor, Vector2 pos, Vector2 size)
+        {
+            var rt = Node(parent, name);
+            rt.anchorMin = rt.anchorMax = rt.pivot = anchor;
+            rt.anchoredPosition = pos;
+            rt.sizeDelta = size;
+            return rt;
         }
 
         static T Group<T>(Transform parent, string name, float spacing, int pad, Color? bg, Color? border) where T : HorizontalOrVerticalLayoutGroup

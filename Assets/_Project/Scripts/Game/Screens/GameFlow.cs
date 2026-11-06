@@ -15,6 +15,7 @@ namespace VampireSpawn.Game.Screens
         public BoardInput input;
         [Tooltip("게임이 쓰는 데이터. 비었거나 문제가 있으면 HTML 기본값으로 돈다")] public GameDataAsset data;
         public Camera viewCamera;
+        [Tooltip("전투 화면을 달과 피 스타일 HUD 로 그린다 (docs/art/ui-style.md 13, 목업)")] public bool styleTile;
 
         // Prototype timers: leave confirmation 2500 ms, phase banner 1300 ms.
         const float LeaveSeconds = 2.5f, BannerSeconds = 1.3f;
@@ -29,7 +30,10 @@ namespace VampireSpawn.Game.Screens
         string buyArm;
         Stage stage;
         OverInfo over;
-        RectTransform screen, bar, side, boardArea, overRoot;
+        RectTransform screen, bar, barLine, side, boardArea, overRoot, hudRoot;
+        BattleHud hud;
+        int? hoverId;
+        bool altDown;
         Text hint, banner;
         ScrollRect sideScroll;
         CampaignActions campActions;
@@ -99,7 +103,7 @@ namespace VampireSpawn.Game.Screens
             go.GetComponent<Canvas>().renderMode = RenderMode.ScreenSpaceOverlay;
             var scaler = go.GetComponent<CanvasScaler>();
             scaler.uiScaleMode = CanvasScaler.ScaleMode.ScaleWithScreenSize;
-            scaler.referenceResolution = new Vector2(1600f, 900f);
+            scaler.referenceResolution = new Vector2(1920f, 1080f);
             scaler.matchWidthOrHeight = 0.5f;
             screen = Ui.Node(go.transform, "Screen");
             Ui.Stretch(screen);
@@ -153,7 +157,7 @@ namespace VampireSpawn.Game.Screens
             bar.offsetMin = new Vector2(Gap, -BarHeight);
             bar.offsetMax = new Vector2(-Gap, -8f);
             bar.GetComponent<HorizontalLayoutGroup>().padding = new RectOffset(0, 0, 0, 10);
-            var line = Ui.Node(screen, "BarLine");
+            var line = barLine = Ui.Node(screen, "BarLine");
             Ui.Bg(line, Ui.Line, null, false);
             line.anchorMin = new Vector2(0f, 1f);
             line.anchorMax = Vector2.one;
@@ -170,7 +174,9 @@ namespace VampireSpawn.Game.Screens
             side = sideView;
 
             boardArea = Ui.Node(screen, "BoardArea");
-            Ui.Stretch(boardArea, Gap, BarHeight + 8f, Gap * 2 + SideWidth, 40f);
+            // ui-style.md 1-3: the HUD keeps off a 360/150/360/190 px margin around the board.
+            if (styleTile) Ui.Stretch(boardArea, 360f, 150f, 360f, 190f);
+            else Ui.Stretch(boardArea, Gap, BarHeight + 8f, Gap * 2 + SideWidth, 40f);
             banner = Ui.Text(boardArea, "", 1.05f, Ui.Candle, true, true, TextAnchor.UpperCenter);
             var br = banner.rectTransform;
             br.anchorMin = new Vector2(0f, 1f);
@@ -186,6 +192,12 @@ namespace VampireSpawn.Game.Screens
             hr.anchorMax = new Vector2(1f, 0f);
             hr.offsetMin = new Vector2(Gap + 4f, 8f);
             hr.offsetMax = new Vector2(-Gap * 2 - SideWidth, 34f);
+
+            hudRoot = Ui.Node(screen, "Hud");
+            Ui.Stretch(hudRoot);
+            hud = new BattleHud(View.board.art);
+            hoverId = null;
+            View.worldBars = !styleTile;
 
             overRoot = Ui.Node(screen, "OverRoot");
             Ui.Stretch(overRoot);
@@ -210,6 +222,16 @@ namespace VampireSpawn.Game.Screens
         void RenderBattle()
         {
             if (Current != "battle" || Session == null) return;
+            var tile = styleTile && Session.Battle.Phase != Phase.Deploy;
+            foreach (var g in new[] { bar, barLine, (RectTransform)sideScroll.transform, hint.rectTransform }) g.gameObject.SetActive(!tile);
+            Ui.Clear(hudRoot);
+            if (tile)
+            {
+                var hover = hoverId is int id ? Session.Battle.Find(id) : null;
+                hud.Build(hudRoot, Session, hover, altDown, enemyPlaying, leaveArm, rulesOpen, battleActions, open => { rulesOpen = open; RenderBattle(); });
+                return;
+            }
+            hud.Heads.Clear();
             Ui.Clear(bar);
             BattleScreen.Header(bar, Session, demo, enemyPlaying, leaveArm, battleActions);
             var scroll = sideScroll.verticalNormalizedPosition;
@@ -241,6 +263,38 @@ namespace VampireSpawn.Game.Screens
             if (leaveArm && Time.unscaledTime > leaveUntil) { leaveArm = false; RenderBattle(); }
             if (buyArm != null && Time.unscaledTime > buyUntil) { buyArm = null; if (Current == "camp") ShowCamp(); }
             if (banner != null && banner.gameObject.activeSelf && Time.unscaledTime > bannerUntil) banner.gameObject.SetActive(false);
+            if (styleTile && Current == "battle" && Session != null) TrackHover();
+        }
+
+        void TrackHover()
+        {
+            var kb = UnityEngine.InputSystem.Keyboard.current;
+            var alt = kb != null && (kb.leftAltKey.isPressed || kb.rightAltKey.isPressed);
+            var m = UnityEngine.InputSystem.Mouse.current;
+            var over = m != null && input.HexAt(m.position.ReadValue()) is Hex h ? Session.Battle.UnitAt(h)?.Id : null;
+            if (over == hoverId && alt == altDown) return;
+            hoverId = over;
+            altDown = alt;
+            RenderBattle();
+        }
+
+        // ui-style.md 7-2 moon pulse (1.2 s, +-10%) and 8-3 damage blink (0.5 s).
+        void LateUpdate()
+        {
+            if (hud == null || Current != "battle") return;
+            var k = 1f + 0.1f * Mathf.Sin(Time.unscaledTime * Mathf.PI * 2f / 1.2f);
+            foreach (var g in hud.Pulse) { var c = Ui.MoonBlood * k; c.a = 1f; g.color = c; }
+            var on = Time.unscaledTime % 0.5f < 0.25f;
+            foreach (var g in hud.Blink) g.color = Ui.Alpha(g.color, on ? 1f : 0.15f);
+            var cam = viewCamera != null ? viewCamera : Camera.main;
+            var art = View.board.art;
+            foreach (var kv in hud.Heads)
+            {
+                var v = View.ViewOf(kv.Key);
+                var sp = v != null ? cam.WorldToScreenPoint(v.transform.position + Vector3.up * (art.unitHeight * art.hexSize + 0.15f)) : Vector3.back;
+                kv.Value.gameObject.SetActive(sp.z > 0f);
+                if (sp.z > 0f && RectTransformUtility.ScreenPointToLocalPointInRectangle((RectTransform)kv.Value.parent, sp, null, out var lp)) kv.Value.localPosition = lp;
+            }
         }
 
         void Primary()

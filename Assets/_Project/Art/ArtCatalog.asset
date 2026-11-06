@@ -48,3 +48,23 @@ MonoBehaviour:
   spawnRing: {r: 0.65, g: 0.31, b: 0.77, a: 1}
   coffin: {r: 0.25, g: 0.06, b: 0.11, a: 1}
   hpBack: {r: 0.06, g: 0.05, b: 0.07, a: 1}
+  ui:
+  - {fileID: 21300000, guid: 5190468f75372b34c9ce4e588be76293, type: 3}
+  - {fileID: 21300000, guid: e9242b3ca2c03c44e901fbfffe806b73, type: 3}
+  - {fileID: 21300000, guid: eb872d6acf0eab046860bf361f4e333b, type: 3}
+  - {fileID: 21300000, guid: e11f4b5daa4aa2141bf39aa71153ed3a, type: 3}
+  - {fileID: 21300000, guid: cc53efc87a6d4484ca8e15b278fab78f, type: 3}
+  - {fileID: 21300000, guid: 792e723bf4582be42986d1f51b86dc15, type: 3}
+  - {fileID: 21300000, guid: 4d985aaa8b6d71e4f95ff66b640a2f4a, type: 3}
+  - {fileID: 21300000, guid: 25be5d7b810b99246aaabd2953ac8134, type: 3}
+  - {fileID: 21300000, guid: 7b2e7ed42403e9d46a451b3e306b2d36, type: 3}
+  - {fileID: 21300000, guid: 05b50dcf3918c494aa471ebd6fc5523b, type: 3}
+  - {fileID: 21300000, guid: 6dccbb35f77b9db4093abfbd09745a70, type: 3}
+  - {fileID: 21300000, guid: cb0adf2d30704c7439c9db274718879a, type: 3}
+  - {fileID: 21300000, guid: d874acc82ea928f4f9f0e6f86d5d77d3, type: 3}
+  - {fileID: 21300000, guid: 2dc120dacdb04764f8a503687253288a, type: 3}
+  - {fileID: 21300000, guid: 824a4bd51feb360498c855d177d25eb6, type: 3}
+  - {fileID: 21300000, guid: e52e147582f5fcc40be69842669c83f2, type: 3}
+  - {fileID: 21300000, guid: 6e724ebd9b1cd3845b104480b7c36982, type: 3}
+  - {fileID: 21300000, guid: d2b23e507817810409a52b86b42f3ebc, type: 3}
+  - {fileID: 21300000, guid: 06d266fba38b9d4449ff3376a27523fb, type: 3}
