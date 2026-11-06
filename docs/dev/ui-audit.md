@@ -21,6 +21,8 @@ VU_RUN=<id> bash tools/ui-audit/sweep.sh
 | 개편 전 (dev 9acf95e) | 185 |
 | 개편 후 | 0 |
 
+보고서: `docs/review/ui-audit/` (ui-before = 첫 기준 6px, *-final = 지금 기준으로 잰 dev 와 이 브랜치, board-old/new = 보드 잘림 검사 빨강→초록)
+
 영어는 `LOCALE=en` 으로 돈다.
 
 못 하는 것: 툴팁(호버해야 생긴다).

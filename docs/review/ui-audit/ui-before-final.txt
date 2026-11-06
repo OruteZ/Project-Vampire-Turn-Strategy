@@ -1,0 +1,298 @@
+## 1-menu 1920x1080
+1920x1080 issues=0
+
+## 2-camp 1920x1080
+1920x1080 issues=2
+out-of-frame	Screen/Info/Foot/Button 출정/Key	R4,B4 frame=Button 출정
+out-of-frame	Screen/Gold/Button 메인 메뉴/Key	R4,B4 frame=Button 메인 메뉴
+
+## 3-deploy 1920x1080
+1920x1080 issues=2
+out-of-frame	Screen/Hud/Button 전투 개시/Key	R4,B4 frame=Button 전투 개시
+out-of-frame	Screen/Hud/Button 전투 개시/Key/Text	B8 frame=Button 전투 개시
+
+## 4-turn 1920x1080
+1920x1080 issues=6
+out-of-frame	Screen/Hud/Button 턴 종료/Badge/Ring	L13,T13 frame=Button 턴 종료
+out-of-frame	Screen/Hud/ActionBar/Slot 대기/Slot/Key	R4,B4 frame=Slot
+out-of-frame	Screen/Hud/Button 턴 종료/Key/Text	B8 frame=Button 턴 종료
+out-of-frame	Screen/Hud/ActionBar/Slot 아군 처치/Slot/Key	R4,B4 frame=Slot
+out-of-frame	Screen/Hud/Button 턴 종료/Key	R4,B4 frame=Button 턴 종료
+out-of-frame	Screen/Hud/Button 턴 종료/Badge/Disk	L10,T10 frame=Button 턴 종료
+
+## 5-rules 1920x1080
+1920x1080 issues=6
+out-of-frame	Screen/Hud/ActionBar/Slot 아군 처치/Slot/Key	R4,B4 frame=Slot
+out-of-frame	Screen/Hud/Button 턴 종료/Badge/Ring	L13,T13 frame=Button 턴 종료
+out-of-frame	Screen/Hud/Button 턴 종료/Key	R4,B4 frame=Button 턴 종료
+out-of-frame	Screen/Hud/Button 턴 종료/Key/Text	B8 frame=Button 턴 종료
+out-of-frame	Screen/Hud/Button 턴 종료/Badge/Disk	L10,T10 frame=Button 턴 종료
+out-of-frame	Screen/Hud/ActionBar/Slot 대기/Slot/Key	R4,B4 frame=Slot
+
+## 6-log 1920x1080
+1920x1080 issues=6
+out-of-frame	Screen/Hud/ActionBar/Slot 대기/Slot/Key	R4,B4 frame=Slot
+out-of-frame	Screen/Hud/Button 턴 종료/Badge/Ring	L13,T13 frame=Button 턴 종료
+out-of-frame	Screen/Hud/Button 턴 종료/Badge/Disk	L10,T10 frame=Button 턴 종료
+out-of-frame	Screen/Hud/Button 턴 종료/Key	R4,B4 frame=Button 턴 종료
+out-of-frame	Screen/Hud/Button 턴 종료/Key/Text	B8 frame=Button 턴 종료
+out-of-frame	Screen/Hud/ActionBar/Slot 아군 처치/Slot/Key	R4,B4 frame=Slot
+
+## 7-over 1920x1080
+1920x1080 issues=7
+out-of-frame	Screen/Hud/ActionBar/Slot 대기/Slot/Key	R4,B4 frame=Slot
+out-of-frame	Screen/Hud/Button 턴 종료/Badge/Ring	L13,T13 frame=Button 턴 종료
+out-of-frame	Screen/Hud/Button 턴 종료/Badge/Disk	L10,T10 frame=Button 턴 종료
+out-of-frame	Screen/Hud/Button 턴 종료/Key	R4,B4 frame=Button 턴 종료
+out-of-frame	Screen/OverRoot/Over/OverBox/Acts/Button 편성부터 다시/Frame	R28 frame=OverBox
+out-of-frame	Screen/Hud/Button 턴 종료/Key/Text	B8 frame=Button 턴 종료
+out-of-frame	Screen/Hud/ActionBar/Slot 아군 처치/Slot/Key	R4,B4 frame=Slot
+
+## 1-menu 1280x720
+1280x720 issues=0
+
+## 2-camp 1280x720
+1280x720 issues=2
+out-of-frame	Screen/Gold/Button 메인 메뉴/Key	R3,B3 frame=Button 메인 메뉴
+out-of-frame	Screen/Info/Foot/Button 출정/Key	R3,B3 frame=Button 출정
+
+## 3-deploy 1280x720
+1280x720 issues=1
+out-of-frame	Screen/Hud/Button 전투 개시/Key	R3,B3 frame=Button 전투 개시
+
+## 4-turn 1280x720
+1280x720 issues=5
+out-of-frame	Screen/Hud/Button 턴 종료/Badge/Disk	L7,T7 frame=Button 턴 종료
+out-of-frame	Screen/Hud/ActionBar/Slot 아군 처치/Slot/Key	R3,B3 frame=Slot
+out-of-frame	Screen/Hud/Button 턴 종료/Key	R3,B3 frame=Button 턴 종료
+out-of-frame	Screen/Hud/ActionBar/Slot 대기/Slot/Key	R3,B3 frame=Slot
+out-of-frame	Screen/Hud/Button 턴 종료/Badge/Ring	L9,T9 frame=Button 턴 종료
+
+## 5-rules 1280x720
+1280x720 issues=5
+out-of-frame	Screen/Hud/Button 턴 종료/Key	R3,B3 frame=Button 턴 종료
+out-of-frame	Screen/Hud/Button 턴 종료/Badge/Disk	L7,T7 frame=Button 턴 종료
+out-of-frame	Screen/Hud/ActionBar/Slot 대기/Slot/Key	R3,B3 frame=Slot
+out-of-frame	Screen/Hud/ActionBar/Slot 아군 처치/Slot/Key	R3,B3 frame=Slot
+out-of-frame	Screen/Hud/Button 턴 종료/Badge/Ring	L9,T9 frame=Button 턴 종료
+
+## 6-log 1280x720
+1280x720 issues=5
+out-of-frame	Screen/Hud/ActionBar/Slot 아군 처치/Slot/Key	R3,B3 frame=Slot
+out-of-frame	Screen/Hud/ActionBar/Slot 대기/Slot/Key	R3,B3 frame=Slot
+out-of-frame	Screen/Hud/Button 턴 종료/Badge/Disk	L7,T7 frame=Button 턴 종료
+out-of-frame	Screen/Hud/Button 턴 종료/Badge/Ring	L9,T9 frame=Button 턴 종료
+out-of-frame	Screen/Hud/Button 턴 종료/Key	R3,B3 frame=Button 턴 종료
+
+## 7-over 1280x720
+1280x720 issues=6
+out-of-frame	Screen/OverRoot/Over/OverBox/Acts/Button 편성부터 다시/Frame	R19 frame=OverBox
+out-of-frame	Screen/Hud/ActionBar/Slot 아군 처치/Slot/Key	R3,B3 frame=Slot
+out-of-frame	Screen/Hud/ActionBar/Slot 대기/Slot/Key	R3,B3 frame=Slot
+out-of-frame	Screen/Hud/Button 턴 종료/Badge/Disk	L7,T7 frame=Button 턴 종료
+out-of-frame	Screen/Hud/Button 턴 종료/Badge/Ring	L9,T9 frame=Button 턴 종료
+out-of-frame	Screen/Hud/Button 턴 종료/Key	R3,B3 frame=Button 턴 종료
+
+## 1-menu 1920x1200
+1920x1200 issues=0
+
+## 2-camp 1920x1200
+1920x1200 issues=2
+out-of-frame	Screen/Info/Foot/Button 출정/Key	R4,B4 frame=Button 출정
+out-of-frame	Screen/Gold/Button 메인 메뉴/Key	R4,B4 frame=Button 메인 메뉴
+
+## 3-deploy 1920x1200
+1920x1200 issues=2
+out-of-frame	Screen/Hud/Button 전투 개시/Key	R4,B4 frame=Button 전투 개시
+out-of-frame	Screen/Hud/Button 전투 개시/Key/Text	B8 frame=Button 전투 개시
+
+## 4-turn 1920x1200
+1920x1200 issues=6
+out-of-frame	Screen/Hud/ActionBar/Slot 대기/Slot/Key	R4,B4 frame=Slot
+out-of-frame	Screen/Hud/ActionBar/Slot 아군 처치/Slot/Key	R4,B4 frame=Slot
+out-of-frame	Screen/Hud/Button 턴 종료/Badge/Disk	L11,T11 frame=Button 턴 종료
+out-of-frame	Screen/Hud/Button 턴 종료/Badge/Ring	L14,T14 frame=Button 턴 종료
+out-of-frame	Screen/Hud/Button 턴 종료/Key	R4,B4 frame=Button 턴 종료
+out-of-frame	Screen/Hud/Button 턴 종료/Key/Text	B8 frame=Button 턴 종료
+
+## 5-rules 1920x1200
+1920x1200 issues=6
+out-of-frame	Screen/Hud/Button 턴 종료/Key/Text	B8 frame=Button 턴 종료
+out-of-frame	Screen/Hud/ActionBar/Slot 대기/Slot/Key	R4,B4 frame=Slot
+out-of-frame	Screen/Hud/Button 턴 종료/Badge/Ring	L14,T14 frame=Button 턴 종료
+out-of-frame	Screen/Hud/Button 턴 종료/Key	R4,B4 frame=Button 턴 종료
+out-of-frame	Screen/Hud/ActionBar/Slot 아군 처치/Slot/Key	R4,B4 frame=Slot
+out-of-frame	Screen/Hud/Button 턴 종료/Badge/Disk	L11,T11 frame=Button 턴 종료
+
+## 6-log 1920x1200
+1920x1200 issues=6
+out-of-frame	Screen/Hud/Button 턴 종료/Badge/Ring	L14,T14 frame=Button 턴 종료
+out-of-frame	Screen/Hud/ActionBar/Slot 대기/Slot/Key	R4,B4 frame=Slot
+out-of-frame	Screen/Hud/ActionBar/Slot 아군 처치/Slot/Key	R4,B4 frame=Slot
+out-of-frame	Screen/Hud/Button 턴 종료/Key	R4,B4 frame=Button 턴 종료
+out-of-frame	Screen/Hud/Button 턴 종료/Key/Text	B8 frame=Button 턴 종료
+out-of-frame	Screen/Hud/Button 턴 종료/Badge/Disk	L11,T11 frame=Button 턴 종료
+
+## 7-over 1920x1200
+1920x1200 issues=7
+out-of-frame	Screen/Hud/Button 턴 종료/Badge/Ring	L14,T14 frame=Button 턴 종료
+out-of-frame	Screen/Hud/ActionBar/Slot 대기/Slot/Key	R4,B4 frame=Slot
+out-of-frame	Screen/Hud/ActionBar/Slot 아군 처치/Slot/Key	R4,B4 frame=Slot
+out-of-frame	Screen/OverRoot/Over/OverBox/Acts/Button 편성부터 다시/Frame	R30 frame=OverBox
+out-of-frame	Screen/Hud/Button 턴 종료/Key	R4,B4 frame=Button 턴 종료
+out-of-frame	Screen/Hud/Button 턴 종료/Key/Text	B8 frame=Button 턴 종료
+out-of-frame	Screen/Hud/Button 턴 종료/Badge/Disk	L11,T11 frame=Button 턴 종료
+
+## 1-menu 1440x1080
+1440x1080 issues=0
+
+## 2-camp 1440x1080
+1440x1080 issues=2
+out-of-frame	Screen/Info/Foot/Button 출정/Key	R3,B3 frame=Button 출정
+out-of-frame	Screen/Gold/Button 메인 메뉴/Key	R3,B3 frame=Button 메인 메뉴
+
+## 3-deploy 1440x1080
+1440x1080 issues=2
+out-of-frame	Screen/Hud/Button 전투 개시/Key	R3,B3 frame=Button 전투 개시
+out-of-frame	Screen/Hud/Button 전투 개시/Key/Text	B7 frame=Button 전투 개시
+
+## 4-turn 1440x1080
+1440x1080 issues=6
+out-of-frame	Screen/Hud/Button 턴 종료/Key	R3,B3 frame=Button 턴 종료
+out-of-frame	Screen/Hud/ActionBar/Slot 대기/Slot/Key	R3,B3 frame=Slot
+out-of-frame	Screen/Hud/Button 턴 종료/Badge/Disk	L9,T9 frame=Button 턴 종료
+out-of-frame	Screen/Hud/Button 턴 종료/Key/Text	B7 frame=Button 턴 종료
+out-of-frame	Screen/Hud/ActionBar/Slot 아군 처치/Slot/Key	R3,B3 frame=Slot
+out-of-frame	Screen/Hud/Button 턴 종료/Badge/Ring	L11,T11 frame=Button 턴 종료
+
+## 5-rules 1440x1080
+1440x1080 issues=6
+out-of-frame	Screen/Hud/Button 턴 종료/Key	R3,B3 frame=Button 턴 종료
+out-of-frame	Screen/Hud/ActionBar/Slot 대기/Slot/Key	R3,B3 frame=Slot
+out-of-frame	Screen/Hud/ActionBar/Slot 아군 처치/Slot/Key	R3,B3 frame=Slot
+out-of-frame	Screen/Hud/Button 턴 종료/Badge/Disk	L9,T9 frame=Button 턴 종료
+out-of-frame	Screen/Hud/Button 턴 종료/Badge/Ring	L11,T11 frame=Button 턴 종료
+out-of-frame	Screen/Hud/Button 턴 종료/Key/Text	B7 frame=Button 턴 종료
+
+## 6-log 1440x1080
+1440x1080 issues=6
+out-of-frame	Screen/Hud/ActionBar/Slot 아군 처치/Slot/Key	R3,B3 frame=Slot
+out-of-frame	Screen/Hud/Button 턴 종료/Key	R3,B3 frame=Button 턴 종료
+out-of-frame	Screen/Hud/Button 턴 종료/Badge/Disk	L9,T9 frame=Button 턴 종료
+out-of-frame	Screen/Hud/Button 턴 종료/Key/Text	B7 frame=Button 턴 종료
+out-of-frame	Screen/Hud/ActionBar/Slot 대기/Slot/Key	R3,B3 frame=Slot
+out-of-frame	Screen/Hud/Button 턴 종료/Badge/Ring	L11,T11 frame=Button 턴 종료
+
+## 7-over 1440x1080
+1440x1080 issues=7
+out-of-frame	Screen/OverRoot/Over/OverBox/Acts/Button 편성부터 다시/Frame	R24 frame=OverBox
+out-of-frame	Screen/Hud/ActionBar/Slot 아군 처치/Slot/Key	R3,B3 frame=Slot
+out-of-frame	Screen/Hud/Button 턴 종료/Key	R3,B3 frame=Button 턴 종료
+out-of-frame	Screen/Hud/Button 턴 종료/Badge/Disk	L9,T9 frame=Button 턴 종료
+out-of-frame	Screen/Hud/Button 턴 종료/Key/Text	B7 frame=Button 턴 종료
+out-of-frame	Screen/Hud/ActionBar/Slot 대기/Slot/Key	R3,B3 frame=Slot
+out-of-frame	Screen/Hud/Button 턴 종료/Badge/Ring	L11,T11 frame=Button 턴 종료
+
+## 1-menu 1280x1024
+1280x1024 issues=0
+
+## 2-camp 1280x1024
+1280x1024 issues=5
+text>box	Screen/Barracks/Content/Arm pspear/Head/Text	L8 "체력 8 · 공격 2 · 방어 0 · 이동 3 · 사거리 1"
+text>box	Screen/Barracks/Content/Arm parcher/Head/Text	L8 "체력 4 · 공격 2 · 방어 0 · 이동 3 · 사거리 2"
+out-of-frame	Screen/Info/Foot/Button 출정/Key	R3,B3 frame=Button 출정
+text>box	Screen/Barracks/Content/Arm parcher/Head/Text	R5 "농민 궁수"
+out-of-frame	Screen/Gold/Button 메인 메뉴/Key	R3,B3 frame=Button 메인 메뉴
+
+## 3-deploy 1280x1024
+1280x1024 issues=2
+out-of-frame	Screen/Hud/Button 전투 개시/Key	R3,B3 frame=Button 전투 개시
+out-of-frame	Screen/Hud/Button 전투 개시/Key/Text	B6 frame=Button 전투 개시
+
+## 4-turn 1280x1024
+1280x1024 issues=6
+out-of-frame	Screen/Hud/ActionBar/Slot 아군 처치/Slot/Key	R3,B3 frame=Slot
+out-of-frame	Screen/Hud/Button 턴 종료/Badge/Disk	L8,T8 frame=Button 턴 종료
+out-of-frame	Screen/Hud/Button 턴 종료/Badge/Ring	L10,T10 frame=Button 턴 종료
+out-of-frame	Screen/Hud/ActionBar/Slot 대기/Slot/Key	R3,B3 frame=Slot
+out-of-frame	Screen/Hud/Button 턴 종료/Key/Text	B6 frame=Button 턴 종료
+out-of-frame	Screen/Hud/Button 턴 종료/Key	R3,B3 frame=Button 턴 종료
+
+## 5-rules 1280x1024
+1280x1024 issues=6
+out-of-frame	Screen/Hud/Button 턴 종료/Badge/Disk	L8,T8 frame=Button 턴 종료
+out-of-frame	Screen/Hud/Button 턴 종료/Badge/Ring	L10,T10 frame=Button 턴 종료
+out-of-frame	Screen/Hud/Button 턴 종료/Key/Text	B6 frame=Button 턴 종료
+out-of-frame	Screen/Hud/ActionBar/Slot 대기/Slot/Key	R3,B3 frame=Slot
+out-of-frame	Screen/Hud/Button 턴 종료/Key	R3,B3 frame=Button 턴 종료
+out-of-frame	Screen/Hud/ActionBar/Slot 아군 처치/Slot/Key	R3,B3 frame=Slot
+
+## 6-log 1280x1024
+1280x1024 issues=6
+out-of-frame	Screen/Hud/Button 턴 종료/Badge/Ring	L10,T10 frame=Button 턴 종료
+out-of-frame	Screen/Hud/ActionBar/Slot 아군 처치/Slot/Key	R3,B3 frame=Slot
+out-of-frame	Screen/Hud/Button 턴 종료/Key/Text	B6 frame=Button 턴 종료
+out-of-frame	Screen/Hud/Button 턴 종료/Badge/Disk	L8,T8 frame=Button 턴 종료
+out-of-frame	Screen/Hud/Button 턴 종료/Key	R3,B3 frame=Button 턴 종료
+out-of-frame	Screen/Hud/ActionBar/Slot 대기/Slot/Key	R3,B3 frame=Slot
+
+## 7-over 1280x1024
+1280x1024 issues=7
+out-of-frame	Screen/Hud/Button 턴 종료/Badge/Ring	L10,T10 frame=Button 턴 종료
+out-of-frame	Screen/Hud/ActionBar/Slot 아군 처치/Slot/Key	R3,B3 frame=Slot
+out-of-frame	Screen/OverRoot/Over/OverBox/Acts/Button 편성부터 다시/Frame	R22 frame=OverBox
+out-of-frame	Screen/Hud/Button 턴 종료/Key/Text	B6 frame=Button 턴 종료
+out-of-frame	Screen/Hud/Button 턴 종료/Badge/Disk	L8,T8 frame=Button 턴 종료
+out-of-frame	Screen/Hud/Button 턴 종료/Key	R3,B3 frame=Button 턴 종료
+out-of-frame	Screen/Hud/ActionBar/Slot 대기/Slot/Key	R3,B3 frame=Slot
+
+## 1-menu 2560x1080
+2560x1080 issues=0
+
+## 2-camp 2560x1080
+2560x1080 issues=2
+out-of-frame	Screen/Gold/Button 메인 메뉴/Key	R5,B5 frame=Button 메인 메뉴
+out-of-frame	Screen/Info/Foot/Button 출정/Key	R5,B5 frame=Button 출정
+
+## 3-deploy 2560x1080
+2560x1080 issues=2
+out-of-frame	Screen/Hud/Button 전투 개시/Key	R5,B5 frame=Button 전투 개시
+out-of-frame	Screen/Hud/Button 전투 개시/Key/Text	B8 frame=Button 전투 개시
+
+## 4-turn 2560x1080
+2560x1080 issues=6
+out-of-frame	Screen/Hud/ActionBar/Slot 대기/Slot/Key	R5,B5 frame=Slot
+out-of-frame	Screen/Hud/Button 턴 종료/Key/Text	B8 frame=Button 턴 종료
+out-of-frame	Screen/Hud/ActionBar/Slot 아군 처치/Slot/Key	R5,B5 frame=Slot
+out-of-frame	Screen/Hud/Button 턴 종료/Badge/Ring	L15,T15 frame=Button 턴 종료
+out-of-frame	Screen/Hud/Button 턴 종료/Key	R5,B5 frame=Button 턴 종료
+out-of-frame	Screen/Hud/Button 턴 종료/Badge/Disk	L12,T12 frame=Button 턴 종료
+
+## 5-rules 2560x1080
+2560x1080 issues=6
+out-of-frame	Screen/Hud/ActionBar/Slot 대기/Slot/Key	R5,B5 frame=Slot
+out-of-frame	Screen/Hud/Button 턴 종료/Badge/Disk	L12,T12 frame=Button 턴 종료
+out-of-frame	Screen/Hud/ActionBar/Slot 아군 처치/Slot/Key	R5,B5 frame=Slot
+out-of-frame	Screen/Hud/Button 턴 종료/Key	R5,B5 frame=Button 턴 종료
+out-of-frame	Screen/Hud/Button 턴 종료/Badge/Ring	L15,T15 frame=Button 턴 종료
+out-of-frame	Screen/Hud/Button 턴 종료/Key/Text	B8 frame=Button 턴 종료
+
+## 6-log 2560x1080
+2560x1080 issues=6
+out-of-frame	Screen/Hud/Button 턴 종료/Key/Text	B8 frame=Button 턴 종료
+out-of-frame	Screen/Hud/Button 턴 종료/Key	R5,B5 frame=Button 턴 종료
+out-of-frame	Screen/Hud/ActionBar/Slot 대기/Slot/Key	R5,B5 frame=Slot
+out-of-frame	Screen/Hud/Button 턴 종료/Badge/Disk	L12,T12 frame=Button 턴 종료
+out-of-frame	Screen/Hud/ActionBar/Slot 아군 처치/Slot/Key	R5,B5 frame=Slot
+out-of-frame	Screen/Hud/Button 턴 종료/Badge/Ring	L15,T15 frame=Button 턴 종료
+
+## 7-over 2560x1080
+2560x1080 issues=7
+out-of-frame	Screen/Hud/Button 턴 종료/Key/Text	B8 frame=Button 턴 종료
+out-of-frame	Screen/Hud/Button 턴 종료/Key	R5,B5 frame=Button 턴 종료
+out-of-frame	Screen/OverRoot/Over/OverBox/Acts/Button 편성부터 다시/Frame	R32 frame=OverBox
+out-of-frame	Screen/Hud/ActionBar/Slot 대기/Slot/Key	R5,B5 frame=Slot
+out-of-frame	Screen/Hud/Button 턴 종료/Badge/Disk	L12,T12 frame=Button 턴 종료
+out-of-frame	Screen/Hud/ActionBar/Slot 아군 처치/Slot/Key	R5,B5 frame=Slot
+out-of-frame	Screen/Hud/Button 턴 종료/Badge/Ring	L15,T15 frame=Button 턴 종료
+
