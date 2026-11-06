@@ -18,17 +18,14 @@
 가진 재료 (`Assets/Synty`, docs/areas/art-assets.md):
 
 - 무기 (`PolygonDarkFantasy/Prefabs/Weapons`): 쇠스랑 `Pitchfork_01`, 장창 `Polearm_01`, 미늘창 `Halberd_01·02`, 검 `Sword_01~03`, 방패 `Shield_01`, 석궁 `Crossbow_01`(+화살, 리깅판), 낫 `Scythe_01`, 도끼·메이스·망치 등.
-- **활 모델은 없다.** 석궁만 있다. 활 전투 애니메이션 팩(`AnimationBowCombat`, 남·여 각 164개, 공격 179개)은 있다.
+- 활: 사용자가 `POLYGON_Bow_Crossbow` 팩을 더해 임포트했다 (`Assets/Synty/PolygonBowCrossbow`). 시위까지 리깅된 활 `SM_Wep_Rigged_Bow_01`·`_NativeAmerican_01`, 화살 `SM_Prop_Arrow_01`, 리깅된 석궁 `SM_Wep_Rigged_CrossBow_01`, 석궁 화살.
 - **창 전용 애니메이션은 없다.** 검 전투 팩(공격 84개)과 기본 이동 팩만 있다.
 - 캐릭터: Sidekick 완성 프리팹(마을 사람 5, 기사 6), PolygonDarkFantasy 캐릭터 15(사냥꾼 남·여, 무덤지기, 사제, 역병 의사 등). Sidekick 조립 도구는 불러오지 못해(art-assets.md 함정) 부품 조합은 지금은 안 된다.
 
 ## 정할 것 (사용자)
 
 1. **각 병종의 복장.** 3단계의 후보 사진을 보고 고른다. 기획 에이전트가 병종마다 추천 하나를 붙인다.
-2. **활이 없는 문제.** 셋 중 하나.
-   - (가) 활을 만든다. Meshy 로 로우폴리 활을 생성하고, CLAUDE.md "에셋 파츠 분리" 대로 활대 위·아래, 시위를 나눠 당기는 애니메이션에 맞춘다. 추천.
-   - (나) 궁수 계열을 석궁병으로 바꾼다. 이름·기획이 바뀌므로 docs/design 쪽 결정이다.
-   - (다) 활이 든 Synty 팩을 산다(사용자가 사서 `UPackage/` 에 넣는다).
+2. ~~활이 없는 문제~~ 해결: (다) 사용자가 `POLYGON_Bow_Crossbow` 를 넣었다 (#29).
 3. **창 공격 동작.** 창 전용 클립이 없다. 검 팩의 찌르기 클립을 쓴다(추천), 또는 창 애니메이션이 든 팩을 산다.
 
 ## 단계
@@ -45,7 +42,27 @@
 - [ ] 손 뼈에 무기를 붙일 자리(뼈 이름, 방향)를 Sidekick 과 PolygonDarkFantasy 캐릭터에서 찾는다. 확인: 쇠스랑·검·석궁을 쥔 스크린샷.
 - [ ] 검 팩 찌르기 클립이 창 공격으로 읽히는지 본다. 확인: 공격 3프레임 스크린샷.
 
+#### 2단계 결과 (#29, 2026-11-06)
+
+- 클립은 팩마다 Sidekick 전용판이 있다 (`A_MOD_*`: 기본 이동 `A_MOD_BL_*`, 검 `A_MOD_SWD_*`, 활 `A_MOD_BOW_*`). 지금 `Unit.controller` 는 Polygon 판 클립을 Sidekick 캐릭터에도 쓴다. Sidekick 유닛은 `A_MOD_*`, Polygon 캐릭터(사냥꾼·스켈레톤·뱀파이어)는 Polygon 판을 쓴다.
+- 무기 자리 뼈: Sidekick 은 `prop_r`, `prop_l` (오른손·왼손), Polygon 캐릭터는 `Hand_R`, `Hand_L`. 붙이면 클립을 따라 움직인다.
+- 활 당기기(`Stand_Aiming_Drawn`)와 활 든 대기(`Stand_Idle_BowDown`), 검·방패가 맞는다. 검 찌르기(`HeavyStab01`)는 창 공격으로 읽힌다. 창은 쥐는 위치(자루 가운데)를 맞춰야 한다. 스크린샷 docs/review/unit-fit-weapons.png.
+- Sidekick 프리셋은 메시 하나로 합쳐져 있어 부품(모자, 어깨의 양)만 끌 수 없다. 부품을 바꾸려면 Sidekick 조립 도구가 필요하고, 그 도구는 지금 불러오지 못한다. 그래서 복장은 있는 프리셋 20개 중에서 고른다.
+
 ### 3. 후보 사진첩 (복장 고르기)
+
+사진첩: docs/review/unit-candidates-0.png (마을 사람 V01~05, 맨몸 H01~03), -1.png (기사 K01~06), -2.png (PolygonDarkFantasy 사냥꾼 남·여, 무덤지기, 사제, 역병 의사, 마녀).
+
+| 병종 | 지금 | 추천 모델 | 무기 | 이유 |
+|---|---|---|---|---|
+| 농민 창병 | V01 (어깨에 양) | **V05** 대장장이 남자 | 쇠스랑 `Pitchfork_01` | 싼 소모품 근접. campaign.md "마을 사람들이 창을 들고". 쇠스랑이 농민을 바로 보인다 |
+| 농민 궁수 | V03 (요리사 모자) | **V04** 앞치마 여자 | 활 `Rigged_Bow_01` | 마을 사람 줄에서 우스운 소품이 없는 것은 V04·V05 뿐이다. 창병과 다른 얼굴이어야 판에서 갈린다 |
+| 검사 | K02 | **K05** 두건 쓴 판금 | 검 `Sword_01` + 방패 `Shield_01` | 정규군 근접. 얼굴이 보이는 가벼운 갑옷이 기사와 갈린다 |
+| 궁수 | K05 (판금) | **K02** 곰 가죽 두건 | 활 `Rigged_Bow_01` | 정규군 원거리. 기사 줄에서 가장 가볍고 사냥꾼 느낌 |
+| 기사 | K01 | **K06** 깃털 투구 | 검 `Sword_02` + 방패 | 비싼 주력. 투구로 얼굴을 가린 판금이 가장 기사답다 |
+| 사냥꾼 | Hunter_Male | 그대로 | 석궁 `Rigged_CrossBow_01` | 뱀파이어 전문. 지금 UI 아이콘도 석궁 |
+| 스켈레톤 | Skeleton_01 | 그대로 | 검 `Sword_03` | 하수인 |
+| 뱀파이어 | DarkLord_Male | 그대로 | 낫 `Scythe_01` | UI 아이콘(낫)과 맞춘다 |
 - [ ] 병종마다 후보 3~4개(Sidekick 프리팹, PolygonDarkFantasy 캐릭터)에 그 병종 무기를 들려 같은 각도·조명으로 찍는다. 확인: `docs/review/unit-candidates-<병종>.png`.
 - [ ] 기획 에이전트(opus)가 docs/design 과 units.md 축(근접·원거리, 소모품·주력, 뱀파이어 전문)으로 병종마다 추천 하나와 이유를 붙인다.
 - [ ] 사용자에게 사진첩과 추천을 보이고 고르게 한다 (정할 것 1~3).
