@@ -30,7 +30,8 @@
 | 보드 위에 글자 라벨을 두지 않는다 (게이지·표적 아이콘·패널이 대신) | 시험 중 | 2026-11-06 | #24 "추천대로" |
 
 ## 열린 작업
-- #24 UI 아트 테마·파이프라인 (7단계: docs/ui/battle-hud.md, docs/ui/stage-select.md 끝. 남은 것: main-menu·upgrade 를 스타일 기준으로 다시)
+- #24 UI 아트 테마·파이프라인 (7단계 끝: battle-hud, stage-select 새로, main-menu·upgrade 에 스타일 절. 다음은 8단계 화면별 구현, 화면 하나에 이슈 하나)
+- 병종 글자 배지(docs/ui/localization.md 14~)를 화면에서 무기 아이콘으로 바꾸기로 했다(upgrade.md 정한 세부). 배지를 쓰는 곳이 없어지면 localization.md 배지 절을 정리한다
 - 8단계 전투 화면 구현 때 할 것 (방향 검토에서 나옴)
   - 적을 살펴볼 때 위협 칸(`Mark.Threat`)과 체크박스·안내 문구 지우기 (ui-style.md 8-4)
   - 보드 칸 표시 색을 8-2 토큰으로, 흡혈 범위 칸 따로 (`OverlayView`)
