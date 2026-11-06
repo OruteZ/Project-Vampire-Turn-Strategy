@@ -32,6 +32,7 @@ namespace VampireSpawn.Game.Screens
         Stage stage;
         OverInfo over;
         RectTransform screen, bar, barLine, side, boardArea, overRoot, hudRoot;
+        CanvasScaler scaler;
         BattleHud hud;
         int? hoverId;
         bool altDown;
@@ -111,9 +112,8 @@ namespace VampireSpawn.Game.Screens
             go.layer = 5;
             go.transform.SetParent(transform, false);
             go.GetComponent<Canvas>().renderMode = RenderMode.ScreenSpaceOverlay;
-            var scaler = go.GetComponent<CanvasScaler>();
+            scaler = go.GetComponent<CanvasScaler>();
             scaler.uiScaleMode = CanvasScaler.ScaleMode.ScaleWithScreenSize;
-            scaler.referenceResolution = new Vector2(1920f, 1080f);
             scaler.matchWidthOrHeight = 0.5f;
             screen = Ui.Node(go.transform, "Screen");
             Ui.Stretch(screen);
@@ -132,6 +132,8 @@ namespace VampireSpawn.Game.Screens
 
         void ClearScreen(bool opaque)
         {
+            // Old screens were laid out for 1600x900; at 1920x1080 their 14 px text drops under the ui-style.md minimum.
+            scaler.referenceResolution = styleTile ? new Vector2(1920f, 1080f) : new Vector2(1600f, 900f);
             Ui.Clear(screen);
             if (!screen.TryGetComponent<Image>(out var bg)) bg = screen.gameObject.AddComponent<Image>();
             bg.color = Ui.Ink;
