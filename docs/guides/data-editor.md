@@ -30,6 +30,7 @@ Unity 메뉴 `VampireSpawn > 도구 모음 (Tools)` 에서 **게임 데이터 �
   - **예시 붓:** 병종 글자. 배치 화면에 처음 놓이는 유닛이다.
   - **유닛 지우기**, **열·행 +/−.**
   - 칸을 누르거나 끌면 칠해진다. 실행 취소(Ctrl+Z)가 된다.
+- **문장 칸.** 오른쪽 맨 아래. 병종 이름·글자·설명, 강화 이름·설명, 스켈레톤 이름·글자, 장 번호·제목·소개·보스 이름. 에셋이 아니라 문자열 표 `Text` 의 한국어 칸에 쓰인다(`Assets/_Project/Localization/Tables/`). 저장을 누르면 표도 저장된다. 영어는 `Window > Asset Management > Localization Tables` 에서 고친다(docs/ui/localization.md).
 
 ## 에셋 위치
 

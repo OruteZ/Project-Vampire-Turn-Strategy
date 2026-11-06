@@ -38,9 +38,9 @@ namespace VampireSpawn.Game.Screens
     {
         static string Rich(Color c, string s) => "<color=#" + Ui.Hex(c) + ">" + s + "</color>";
 
-        public static string Subtitle(Stage s, bool demo) => demo ? "데모 전투" : "캠페인 · " + s.Label;
+        public static string Subtitle(Stage s, bool demo) => demo ? "데모 전투" : "캠페인 · " + Loc.Text(s.Label);
 
-        public static string Title(Stage s) => s.Label + " · " + Rich(Ui.Blood, s.Title);
+        public static string Title(Stage s) => Loc.Text(s.Label) + " · " + Rich(Ui.Blood, Loc.Text(s.Title));
 
         public static string PrimaryLabel(Battle b, bool enemyPlaying, out bool enabled)
         {
@@ -142,12 +142,12 @@ namespace VampireSpawn.Game.Screens
             {
                 var brief = Ui.Card(side, "Brief");
                 H2(brief, "작전 개요");
-                Ui.Text(brief, stg.Brief, 0.9f, Ui.Muted);
+                Ui.Text(brief, Loc.Text(stg.Brief), 0.9f, Ui.Muted);
                 var obj = Ui.Col(brief, "Objectives", 4);
-                Def(obj, "목표", stg.Boss.Name + " 처치");
+                Def(obj, "목표", Loc.Text(stg.BossName) + " 처치");
                 Def(obj, "추가 목표", Loc.Text(stg.Bonus.Text));
                 Def(obj, "자원", CampaignScreen.Resources(stg));
-                Def(obj, "적", "스켈레톤 " + (stg.Enemies.Length - 1) + ", " + stg.Boss.Name);
+                Def(obj, "적", "스켈레톤 " + (stg.Enemies.Length - 1) + ", " + Loc.Text(stg.BossName));
 
                 var roster = Ui.Card(side, "Roster");
                 H2(roster, "편성");
@@ -166,7 +166,7 @@ namespace VampireSpawn.Game.Screens
                     var col = Ui.Col(btn.transform, "Info", 2);
                     Ui.Size(col, -1, -1, 1);
                     var top = Ui.Row(col, "Top", 8);
-                    Ui.Size(Ui.Text(top, t.Name, 0.95f, Ui.Bone, true), -1, -1, 1);
+                    Ui.Size(Ui.Text(top, Loc.Text(t.Name), 0.95f, Ui.Bone, true), -1, -1, 1);
                     Ui.Text(top, "인구 " + t.Pop + (t.Silver > 0 ? " · 은 " + t.Silver : ""), 0.78f, can ? Ui.Muted : Ui.Blood).horizontalOverflow = HorizontalWrapMode.Overflow;
                     Ui.Text(col, CampaignScreen.StatLine(Battle.Preview(k, upgrades)), 0.72f, Ui.Muted);
                 }
@@ -232,7 +232,7 @@ namespace VampireSpawn.Game.Screens
             var card = Ui.Card(side, "Corpse");
             var head = Ui.Row(card, "Head", 8);
             RoleTag(head, "시신", Ui.Spawn);
-            Ui.Text(head, c.Name + "의 시신", 1f, Ui.Bone, true, true);
+            Ui.Text(head, Loc.Text(c.Name) + "의 시신", 1f, Ui.Bone, true, true);
             Flag(card, "다음 적 페이즈 시작에 스폰으로 일어납니다. 일어난 턴에는 행동하지 않습니다.", Ui.Spawn);
             Ui.Text(card, "체력 " + c.MaxHp + ", 공격 " + c.Atk + ", 이동 " + c.Mov + "을 물려받고 방어 0, 근접 공격만 합니다. 일어나기 전에 주변 아군을 물리거나 맞을 준비를 하세요.", 0.88f, Ui.Muted);
         }
@@ -247,7 +247,7 @@ namespace VampireSpawn.Game.Screens
             else if (o.Role == Core.Role.Vampire) RoleTag(head, "보스", Ui.Blood);
             else if (o.Role == Core.Role.Spawn) RoleTag(head, "스폰", Ui.Spawn);
             else RoleTag(head, "하수인", Ui.Muted);
-            Ui.Text(head, o.Name, 1f, Ui.Bone, true, true);
+            Ui.Text(head, Loc.Text(o.Name), 1f, Ui.Bone, true, true);
             HpBar(card, (float)o.Hp / o.MaxHp, ally ? Ui.Steel : o.Role == Core.Role.Spawn ? Ui.Spawn : Ui.Blood);
             var grid = Ui.Row(card, "Stats", 4);
             grid.GetComponent<HorizontalLayoutGroup>().childForceExpandWidth = true;
@@ -297,14 +297,14 @@ namespace VampireSpawn.Game.Screens
         {
             switch (o.Role)
             {
-                case Core.Role.Ally: return GameData.Type(o.Type.Value).Desc;
+                case Core.Role.Ally: return Loc.Text(GameData.Type(o.Type.Value).Desc);
                 case Core.Role.Skeleton: return "쓰러뜨린 아군을 변이시키지 않는다.";
                 case Core.Role.Vampire:
                     return "관 속에서 잠들어 있다가 달이 " + Rules.MoonWake + "까지 차면 깨어난다. 잠든 동안은 공격받지 않는다. 깨어나면 이동해서 일반 공격을 한다. 달이 " + Rules.MoonMax
                         + "이 되는 적 턴에는 움직이지 않고, 미리 정한 표적이 " + Rules.EatRange + "칸 안·빛 밖에 있으면 먹어치운다(즉사, 체력 " + o.Heal
                         + " 회복). 표적이 없거나 벗어났으면 흡혈은 실패하고 대신 평소처럼 이동해 공격한다. 어느 쪽이든 달은 진다.";
             }
-            return o.Origin + "의 체력·공격·이동을 물려받았다. 방어는 0 이고 근접 공격만 한다. 죽인 아군을 스폰으로 만든다.";
+            return Loc.Text(o.Origin) + "의 체력·공격·이동을 물려받았다. 방어는 0 이고 근접 공격만 한다. 죽인 아군을 스폰으로 만든다.";
         }
 
         static string[] RuleLines => new[]
@@ -346,7 +346,7 @@ namespace VampireSpawn.Game.Screens
             var st = o.Stats;
             var stg = o.Stage;
             Ui.Text(box, o.Won ? "승리" : "패배", 1.6f, o.Won ? Ui.Candle : Ui.Blood, true, true);
-            Ui.Text(box, o.Won ? Loc.T("over.wonLine", o.Turn, stg.Boss.Name) : "부대가 전멸했다. 이 땅은 밤의 것이 되었다.", 0.95f, Ui.Muted);
+            Ui.Text(box, o.Won ? Loc.T("over.wonLine", o.Turn, stg.BossName) : "부대가 전멸했다. 이 땅은 밤의 것이 되었다.", 0.95f, Ui.Muted);
             var tally = Ui.Col(box, "Tally", 6);
             Pair(tally, "전사", st.Lost.ToString());
             Pair(tally, "직접 처치한 아군", st.Executed.ToString());
@@ -366,11 +366,11 @@ namespace VampireSpawn.Game.Screens
                 var next = nxt < Campaign.Stages.Length ? Campaign.Stages[nxt] : null;
                 if (r.FirstClear && next != null)
                 {
-                    var news = next.Units.Where(u => GameData.Type(u).UnlockAt == nxt + 1).Select(u => GameData.Type(u).Name).ToList();
-                    Ui.Text(box, next.Label + " 「" + next.Title + "」이 열렸습니다." + string.Join(",", news.Select(n => " " + n)) + (news.Count > 0 ? " 해금." : ""), 0.9f, Ui.Muted);
+                    var news = next.Units.Where(u => GameData.Type(u).UnlockAt == nxt + 1).Select(u => Loc.Text(GameData.Type(u).Name)).ToList();
+                    Ui.Text(box, Loc.Text(next.Label) + " 「" + Loc.Text(next.Title) + "」이 열렸습니다." + string.Join(",", news.Select(n => " " + n)) + (news.Count > 0 ? " 해금." : ""), 0.9f, Ui.Muted);
                 }
                 if (r.FirstClear && next == null) Ui.Text(box, "캠페인을 끝냈습니다.", 0.9f, Ui.Muted);
-                var armory = GameData.Types.Where(t => t.UnlockAt == nxt).Select(t => t.Name).ToList();
+                var armory = GameData.Types.Where(t => t.UnlockAt == nxt).Select(t => Loc.Text(t.Name)).ToList();
                 if (r.FirstClear && armory.Count > 0) Ui.Text(box, "병영에서 " + string.Join(", ", armory) + " 강화가 열렸습니다.", 0.9f, Ui.Muted);
             }
             else if (o.Won)

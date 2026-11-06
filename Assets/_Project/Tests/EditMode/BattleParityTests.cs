@@ -65,7 +65,7 @@ namespace VampireSpawn.Tests
             var trace = Load().traces.First(t => t.policy + "/" + t.stage == name);
             var stage = GameData.Stages.First(s => s.Id == trace.stage);
             var battle = new Battle(stage, trace.upgrades);
-            Assert.AreEqual(trace.initial, battle.Snapshot(), name + " initial state");
+            Assert.AreEqual(trace.initial, battle.Snapshot(Loc.Text), name + " initial state");
             for (var i = 0; i < trace.steps.Length; i++)
             {
                 var step = trace.steps[i];
@@ -73,7 +73,7 @@ namespace VampireSpawn.Tests
                 var result = Run(battle, JsonUtility.FromJson<Cmd>(step.cmd));
                 Assert.IsTrue(result.Ok, at + "rejected: " + result.Reason);
                 Assert.AreEqual(step.events, result.Events.Where(e => e.InPrototype).Select(e => e.Format(Loc.Text)).ToArray(), at + "events");
-                Assert.AreEqual(step.snap, battle.Snapshot(), at + "state");
+                Assert.AreEqual(step.snap, battle.Snapshot(Loc.Text), at + "state");
             }
             Assert.AreEqual(battle.Vampire == null, battle.Won, name + " won flag");
             Assert.AreEqual(trace.finalLog, battle.Log.Select(l => Loc.Text(l.Text) + "|" + l.Style).ToArray(), name + " final 80-line log");

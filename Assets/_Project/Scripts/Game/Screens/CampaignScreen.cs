@@ -70,10 +70,10 @@ namespace VampireSpawn.Game.Screens
             var row = Ui.Row(card, "Row", 10, 0, null, null, TextAnchor.UpperLeft);
             var name = Ui.Col(row, "Name", 0);
             Ui.Size(name, -1, -1, 1);
-            Ui.Text(name, s.Label, 0.72f, Ui.Muted);
-            Ui.Text(name, s.Title, 1.12f, Ui.Bone, true, true);
+            Ui.Text(name, Loc.Text(s.Label), 0.72f, Ui.Muted);
+            Ui.Text(name, Loc.Text(s.Title), 1.12f, Ui.Bone, true, true);
             Ui.Text(row, clear ? "클리어" : open ? "도전 가능" : "잠김", 0.75f, clear ? Ui.Candle : open ? Ui.Bone : Ui.Muted);
-            Ui.Text(card, s.Brief, 0.86f, Ui.Muted);
+            Ui.Text(card, Loc.Text(s.Brief), 0.86f, Ui.Muted);
             var chips = Ui.Row(card, "Chips", 6);
             foreach (var k in s.Units)
             {
@@ -81,7 +81,7 @@ namespace VampireSpawn.Game.Screens
                 var isNew = t.UnlockAt == i + 1;
                 var chip = Ui.Row(chips, "Chip", 0, 3, Ui.Panel2, isNew ? Ui.Candle : Ui.Line);
                 chip.GetComponent<HorizontalLayoutGroup>().padding = new RectOffset(8, 8, 2, 2);
-                Ui.Text(chip, (isNew ? "해금 · " : "") + t.Name, 0.75f, isNew ? Ui.Candle : Ui.Bone).horizontalOverflow = HorizontalWrapMode.Overflow;
+                Ui.Text(chip, (isNew ? "해금 · " : "") + Loc.Text(t.Name), 0.75f, isNew ? Ui.Candle : Ui.Bone).horizontalOverflow = HorizontalWrapMode.Overflow;
             }
             var bon = Ui.Row(card, "Bonus", 14);
             var got = c.BonusDone.Contains(s.Id);
@@ -101,7 +101,7 @@ namespace VampireSpawn.Game.Screens
             var card = Ui.Card(parent, "Arm " + t.Key);
             var head = Ui.Row(card, "Head", 10);
             Ui.Glyph(head, t);
-            Ui.Text(head, t.Name, 1f, Ui.Bone, true, true).horizontalOverflow = HorizontalWrapMode.Overflow;
+            Ui.Text(head, Loc.Text(t.Name), 1f, Ui.Bone, true, true).horizontalOverflow = HorizontalWrapMode.Overflow;
             var basis = Ui.Text(head, StatLine(Battle.Preview(t.Kind, c.Upgrades)), 0.75f, Ui.Muted, false, false, TextAnchor.MiddleRight);
             Ui.Size(basis, -1, -1, 1);
             var ups = Ui.Row(card, "Ups", 8, 0, null, null, TextAnchor.UpperLeft);
@@ -112,9 +112,9 @@ namespace VampireSpawn.Game.Screens
                 var box = Ui.Col(ups, "Up " + u.Id, 4, 8, Ui.Panel2, own ? Ui.Candle : Ui.Line);
                 Ui.Size(box, -1, -1, 1);
                 var line = Ui.Row(box, "T", 8);
-                Ui.Size(Ui.Text(line, u.Name, 0.95f, Ui.Bone, true), -1, -1, 1);
+                Ui.Size(Ui.Text(line, Loc.Text(u.Name), 0.95f, Ui.Bone, true), -1, -1, 1);
                 Ui.Text(line, own ? "보유" : u.Cost + " 금화", 0.85f, Ui.Muted).horizontalOverflow = HorizontalWrapMode.Overflow;
-                Ui.Text(box, u.Desc, 0.8f, Ui.Muted);
+                Ui.Text(box, Loc.Text(u.Desc), 0.8f, Ui.Muted);
                 Ui.Text(box, u.Inherit ? "스폰이 물려받음" : "스폰이 물려받지 않음", 0.68f, u.Inherit ? Ui.Spawn : Ui.Muted);
                 if (!own)
                 {

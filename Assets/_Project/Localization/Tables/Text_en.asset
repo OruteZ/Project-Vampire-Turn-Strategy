@@ -25,7 +25,7 @@ MonoBehaviour:
       m_Items:
       - rid: 7201578077006332005
   - m_Id: 3991479840769
-    m_Localized: Player
+    m_Localized: Ally
     m_Metadata:
       m_Items:
       - rid: 7201578077006332005
@@ -55,8 +55,8 @@ MonoBehaviour:
       m_Items:
       - rid: 7201578077006332005
   - m_Id: 3991484035076
-    m_Localized: Not enough population. Drag a deployed unit out of the zone to recall
-      it.
+    m_Localized: Not enough population. Drag a deployed unit out of the deployment
+      zone to recall it.
     m_Metadata:
       m_Items:
       - rid: 7201578077006332005
@@ -91,7 +91,7 @@ MonoBehaviour:
       m_Items:
       - rid: 7201578077006332005
   - m_Id: 3991484035083
-    m_Localized: "Turn {0} \xB7 Player Phase"
+    m_Localized: "Turn {0} \xB7 Ally Phase"
     m_Metadata:
       m_Items:
       - rid: 7201578077006332005
@@ -101,7 +101,7 @@ MonoBehaviour:
       m_Items:
       - rid: 7201578077006332005
   - m_Id: 3991484035085
-    m_Localized: "\u2014 Turn {0} Player Phase \u2014"
+    m_Localized: "\u2014 Turn {0} Ally Phase \u2014"
     m_Metadata:
       m_Items:
       - rid: 7201578077006332005
@@ -262,7 +262,7 @@ MonoBehaviour:
       m_Items:
       - rid: 7201578077006332005
   - m_Id: 3991484035117
-    m_Localized: Drain
+    m_Localized: Drained
     m_Metadata:
       m_Items:
       - rid: 7201578077006332005
@@ -292,7 +292,7 @@ MonoBehaviour:
       m_Items:
       - rid: 7201578077006332005
   - m_Id: 3991484035123
-    m_Localized: Drain Failed
+    m_Localized: Drain failed
     m_Metadata:
       m_Items:
       - rid: 7201578077006332005
@@ -302,8 +302,8 @@ MonoBehaviour:
       m_Items:
       - rid: 7201578077006332005
   - m_Id: 3991484035125
-    m_Localized: '{0}: Tap an empty hex in the deploy zone to place it. Drag placed
-      units to move or swap them.'
+    m_Localized: '{0}: Tap an empty hex in the deployment zone to place it. Drag
+      placed units to move or swap them.'
     m_Metadata:
       m_Items:
       - rid: 7201578077006332005
@@ -381,6 +381,477 @@ MonoBehaviour:
       - rid: 7201578077006332005
   - m_Id: 3991484035140
     m_Localized: '{1} fell on turn {0}.'
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 5832070459392
+    m_Localized: Peasant Spearman
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 5832187899904
+    m_Localized: PS
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 5832187899905
+    m_Localized: A villager with a pitchfork and spear. Cheap and plentiful.
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 5832187899906
+    m_Localized: Quilted Armor
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 5832187899907
+    m_Localized: HP +2
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 5832187899908
+    m_Localized: Pike Wall
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 5832187899909
+    m_Localized: Deals 1 damage to an enemy that steps into an adjacent hex
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 5832187899910
+    m_Localized: Peasant Archer
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 5832187899911
+    m_Localized: PA
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 5832187899912
+    m_Localized: A villager with a hunting bow. Cheap, but RNG is only 2. As a spawn
+      it fights only in melee.
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 5832187899913
+    m_Localized: Light Garb
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 5832187899914
+    m_Localized: MOV +1
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 5832187899915
+    m_Localized: Ambush Shot
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 5832187899916
+    m_Localized: +1 damage when attacking without moving
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 5832187899917
+    m_Localized: Swordsman
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 5832187899918
+    m_Localized: SW
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 5832187899919
+    m_Localized: Regular infantry. Holds the line.
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 5832187899920
+    m_Localized: Chain Mail
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 5832187899921
+    m_Localized: DEF +1
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 5832187899922
+    m_Localized: Cleave
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 5832187899923
+    m_Localized: Attack again after defeating an enemy (once per turn)
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 5832187899924
+    m_Localized: Archer
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 5832187899925
+    m_Localized: AR
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 5832187899926
+    m_Localized: Regular archer. Shoots from afar with RNG 3. As a spawn it loses
+      its bow.
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 5832187899927
+    m_Localized: Longbow
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 5832187899928
+    m_Localized: RNG +1
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 5832187899929
+    m_Localized: Tempered Arrowheads
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 5832187899930
+    m_Localized: ATK +1
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 5832187899931
+    m_Localized: Knight
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 5832187899932
+    m_Localized: KN
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 5832187899933
+    m_Localized: The toughest and strongest. As a spawn, the most dangerous.
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 5832187899934
+    m_Localized: Plate Armor
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 5832187899935
+    m_Localized: DEF +1
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 5832187899936
+    m_Localized: Charge
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 5832187899937
+    m_Localized: +2 damage when attacking after moving 2 or more hexes
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 5832187899938
+    m_Localized: Hunter
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 5832187899939
+    m_Localized: HU
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 5832187899940
+    m_Localized: Vampire hunter (working name). Extra damage to vampires and spawn.
+      Costs 1 silver.
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 5832187899941
+    m_Localized: Refined Silver Shot
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 5832187899942
+    m_Localized: +2 extra damage to vampires and spawn
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 5832187899943
+    m_Localized: Light Boots
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 5832187899944
+    m_Localized: MOV +1
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 5832187899945
+    m_Localized: Skeleton
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 5832187899946
+    m_Localized: SK
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 5832187899947
+    m_Localized: Demo
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 5832187899948
+    m_Localized: Proving Ground
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 5832187899949
+    m_Localized: A battle to test every unit. Of the three breaches in the wall,
+      one is dark, one is lit by a bonfire, and one by sunlight.
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 5832187899950
+    m_Localized: Vampire Count
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 5832187899951
+    m_Localized: Chapter 1
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 5832187899952
+    m_Localized: The Ashen Mill
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 5832187899953
+    m_Localized: The mill village is raided every night. The villagers have taken
+      up spears and hunting bows. The lanes beside the bonfire are bright, but the
+      side path at the far left is dark.
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 5832187899954
+    m_Localized: Starving Vampire
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 5832187899955
+    m_Localized: Chapter 2
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 5832187899956
+    m_Localized: Waterwheel Bridge
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 5832187899957
+    m_Localized: The mill vampire's master waits across the stream. There are two
+      bridges. A bonfire lights the right one; the left one is dark.
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 5832187899958
+    m_Localized: Vampire of the Stream
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 5832187899959
+    m_Localized: Chapter 3
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 5832192094208
+    m_Localized: The Ruined Chapel
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 5832192094209
+    m_Localized: The lord has sent swordsmen. Two walls divide the chapel, and only
+      the middle aisle catches the dawn through a gap in the roof.
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 5832192094210
+    m_Localized: Blood-Soaked Priest
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 5832192094211
+    m_Localized: Chapter 4
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 5832192094212
+    m_Localized: Crossroads Cemetery
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 5832192094213
+    m_Localized: A cemetery without a single light. Two narrow paths wind between
+      the gravestones toward the center. Whoever falls here rises again.
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 5832192094214
+    m_Localized: Gravekeeper Vampire
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 5832192094215
+    m_Localized: Chapter 5
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 5832192094216
+    m_Localized: Torchlit Pass
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 5832192094217
+    m_Localized: Regular archers have joined. Torches line the mountain path. Following
+      the light is safe, but the road is long.
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 5832192094218
+    m_Localized: Noble Vampire of the Pass
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 5832192094219
+    m_Localized: Chapter 6
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 5832192094220
+    m_Localized: The Abandoned Manor
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 5832192094221
+    m_Localized: The lord's manor, taken by a vampire. The garden has two walls.
+      The outer wall has a gap at each end; the inner wall opens only at the sunlit
+      center.
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 5832192094222
+    m_Localized: Mistress of the Manor
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 5832192094223
+    m_Localized: Chapter 7
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 5832192094224
+    m_Localized: Border Watchtower
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 5832192094225
+    m_Localized: The knightly order has joined. The watchtower wall has three gaps.
+      Bonfires guard both ends, but they are far; the middle path is close but dark.
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 5832192094226
+    m_Localized: Black Knight Vampire
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 5832192094227
+    m_Localized: Chapter 8
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 5832192094228
+    m_Localized: Village Below the Castle
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 5832192094229
+    m_Localized: The village beneath the Count's castle already belongs to the night.
+      Two alleys and a square with a burning bonfire lead to the castle.
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 5832192094230
+    m_Localized: The Count's Chamberlain
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 5832192094231
+    m_Localized: Chapter 9
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 5832192094232
+    m_Localized: Gate Over the Moat
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 5832192094233
+    m_Localized: Hunters have joined with silver shot. Before the gate, the moat
+      offers only a bonfire-lit bridge and a shallow ford at the far right.
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 5832192094234
+    m_Localized: Vampire Gatekeeper
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 5832192094235
+    m_Localized: Chapter 10
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 5832192094236
+    m_Localized: The Count's Castle
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 5832192094237
+    m_Localized: Inside the Count's castle. Past the inner courtyard stands a second
+      wall, and beyond it a single bonfire burns in the great hall.
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 5832192094238
+    m_Localized: Vampire Count
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 5832192094239
+    m_Localized: VA
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 5832192094240
+    m_Localized: '{0} {1}'
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 5832192094241
+    m_Localized: '{0} Spawn'
     m_Metadata:
       m_Items:
       - rid: 7201578077006332005
@@ -464,3 +935,94 @@ MonoBehaviour:
         - id: 3991484035138
         - id: 3991484035139
         - id: 3991484035140
+        - id: 5832070459392
+        - id: 5832187899904
+        - id: 5832187899905
+        - id: 5832187899906
+        - id: 5832187899907
+        - id: 5832187899908
+        - id: 5832187899909
+        - id: 5832187899910
+        - id: 5832187899911
+        - id: 5832187899912
+        - id: 5832187899913
+        - id: 5832187899914
+        - id: 5832187899915
+        - id: 5832187899916
+        - id: 5832187899917
+        - id: 5832187899918
+        - id: 5832187899919
+        - id: 5832187899920
+        - id: 5832187899921
+        - id: 5832187899922
+        - id: 5832187899923
+        - id: 5832187899924
+        - id: 5832187899925
+        - id: 5832187899926
+        - id: 5832187899927
+        - id: 5832187899928
+        - id: 5832187899929
+        - id: 5832187899930
+        - id: 5832187899931
+        - id: 5832187899932
+        - id: 5832187899933
+        - id: 5832187899934
+        - id: 5832187899935
+        - id: 5832187899936
+        - id: 5832187899937
+        - id: 5832187899938
+        - id: 5832187899939
+        - id: 5832187899940
+        - id: 5832187899941
+        - id: 5832187899942
+        - id: 5832187899943
+        - id: 5832187899944
+        - id: 5832187899945
+        - id: 5832187899946
+        - id: 5832187899947
+        - id: 5832187899948
+        - id: 5832187899949
+        - id: 5832187899950
+        - id: 5832187899951
+        - id: 5832187899952
+        - id: 5832187899953
+        - id: 5832187899954
+        - id: 5832187899955
+        - id: 5832187899956
+        - id: 5832187899957
+        - id: 5832187899958
+        - id: 5832187899959
+        - id: 5832192094208
+        - id: 5832192094209
+        - id: 5832192094210
+        - id: 5832192094211
+        - id: 5832192094212
+        - id: 5832192094213
+        - id: 5832192094214
+        - id: 5832192094215
+        - id: 5832192094216
+        - id: 5832192094217
+        - id: 5832192094218
+        - id: 5832192094219
+        - id: 5832192094220
+        - id: 5832192094221
+        - id: 5832192094222
+        - id: 5832192094223
+        - id: 5832192094224
+        - id: 5832192094225
+        - id: 5832192094226
+        - id: 5832192094227
+        - id: 5832192094228
+        - id: 5832192094229
+        - id: 5832192094230
+        - id: 5832192094231
+        - id: 5832192094232
+        - id: 5832192094233
+        - id: 5832192094234
+        - id: 5832192094235
+        - id: 5832192094236
+        - id: 5832192094237
+        - id: 5832192094238
+        - id: 5832192094239
+        - id: 5832192094240
+        - id: 5832192094241

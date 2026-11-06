@@ -59,10 +59,10 @@ namespace VampireSpawn.Tests
                 var at = "types." + g.key + ".";
                 Assert.AreEqual(i, (int)t.Kind, at + "kind order");
                 Assert.AreEqual(g.key, t.Key, at + "key");
-                Assert.AreEqual(g.name, t.Name, at + "name");
-                Assert.AreEqual(g.glyph, t.Glyph, at + "glyph");
+                Assert.AreEqual(g.name, Loc.Text(t.Name), at + "name");
+                Assert.AreEqual(g.glyph, Loc.Text(t.Glyph), at + "glyph");
                 Assert.AreEqual(g.tier, Snake(t.Tier), at + "tier");
-                Assert.AreEqual(g.desc, t.Desc, at + "desc");
+                Assert.AreEqual(g.desc, Loc.Text(t.Desc), at + "desc");
                 Assert.AreEqual(new[] { g.pop, g.silver, g.hp, g.atk, g.def, g.mov, g.rng, g.bane, g.unlockAt },
                     new[] { t.Pop, t.Silver, t.Hp, t.Atk, t.Def, t.Mov, t.Rng, t.Bane, t.UnlockAt }, at + "pop,silver,hp,atk,def,mov,rng,bane,unlockAt");
             }
@@ -79,8 +79,8 @@ namespace VampireSpawn.Tests
                 var at = "upgrades." + g.id + ".";
                 Assert.AreEqual(g.unit, Key(u.Unit), at + "unit");
                 Assert.AreEqual(g.id, u.Id, at + "id");
-                Assert.AreEqual(g.name, u.Name, at + "name");
-                Assert.AreEqual(g.desc, u.Desc, at + "desc");
+                Assert.AreEqual(g.name, Loc.Text(u.Name), at + "name");
+                Assert.AreEqual(g.desc, Loc.Text(u.Desc), at + "desc");
                 Assert.AreEqual(g.cost, u.Cost, at + "cost");
                 Assert.AreEqual(g.inherit, u.Inherit, at + "inherit");
                 Assert.AreEqual(new[] { g.hp, g.atk, g.def, g.mov, g.rng, g.bane },
@@ -94,8 +94,8 @@ namespace VampireSpawn.Tests
         {
             var g = golden.skeleton;
             var s = GameData.Skeleton;
-            Assert.AreEqual(g.name, s.Name, "skeleton.name");
-            Assert.AreEqual(g.glyph, s.Glyph, "skeleton.glyph");
+            Assert.AreEqual(g.name, Loc.Text(s.Name), "skeleton.name");
+            Assert.AreEqual(g.glyph, Loc.Text(s.Glyph), "skeleton.glyph");
             Assert.AreEqual(new[] { g.hp, g.atk, g.def, g.mov, g.rng }, new[] { s.Hp, s.Atk, s.Def, s.Mov, s.Rng }, "skeleton.hp,atk,def,mov,rng");
         }
 
@@ -109,15 +109,15 @@ namespace VampireSpawn.Tests
                 var s = GameData.Stages[i];
                 var at = "stages." + g.id + ".";
                 Assert.AreEqual(g.id, s.Id, at + "id");
-                Assert.AreEqual(g.label, s.Label, at + "label");
-                Assert.AreEqual(g.title, s.Title, at + "title");
-                Assert.AreEqual(g.brief, s.Brief, at + "brief");
+                Assert.AreEqual(g.label, Loc.Text(s.Label), at + "label");
+                Assert.AreEqual(g.title, Loc.Text(s.Title), at + "title");
+                Assert.AreEqual(g.brief, Loc.Text(s.Brief), at + "brief");
                 Assert.AreEqual(g.units, s.Units.Select(Key).ToArray(), at + "units");
                 Assert.AreEqual(new[] { g.pop, g.silver, g.reward }, new[] { s.Pop, s.Silver, s.Reward }, at + "pop,silver,reward");
                 Assert.AreEqual(g.bonusType, Snake(s.Bonus.Type), at + "bonus.type");
                 Assert.AreEqual(new[] { g.bonusVal, g.bonusGold }, new[] { s.Bonus.Value, s.Bonus.Gold }, at + "bonus.val,gold");
                 Assert.AreEqual(g.bonusText, Loc.Text(s.Bonus.Text), at + "bonusText");
-                Assert.AreEqual(g.boss.name, s.Boss.Name, at + "boss.name");
+                Assert.AreEqual(g.boss.name, Loc.Text(s.BossName), at + "boss.name");
                 Assert.AreEqual(new[] { g.boss.hp, g.boss.atk, g.boss.def, g.boss.mov, g.boss.heal },
                     new[] { s.Boss.Hp, s.Boss.Atk, s.Boss.Def, s.Boss.Mov, s.Boss.Heal }, at + "boss.hp,atk,def,mov,heal");
                 Assert.AreEqual(g.map, s.Map, at + "map");

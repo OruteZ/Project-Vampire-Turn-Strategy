@@ -39,9 +39,8 @@ namespace VampireSpawn.Core
                 if (Types[i].Kind != kinds[i]) p.Add($"병종 {i}번은 {kinds[i]} 이어야 한다 (지금 {Types[i].Kind})");
             foreach (var t in Types)
             {
-                if (t.Hp <= 0) p.Add($"{t.Name}: 체력은 1 이상");
-                if (t.Mov < 0 || t.Rng < 1) p.Add($"{t.Name}: 이동은 0 이상, 사거리는 1 이상");
-                if (string.IsNullOrEmpty(t.Glyph)) p.Add($"{t.Name}: 글자가 비었다");
+                if (t.Hp <= 0) p.Add($"{t.Key}: 체력은 1 이상");
+                if (t.Mov < 0 || t.Rng < 1) p.Add($"{t.Key}: 이동은 0 이상, 사거리는 1 이상");
             }
             foreach (var d in Upgrades.GroupBy(u => u.Id).Where(g => g.Count() > 1)) p.Add($"강화 id {d.Key} 가 겹친다 (캠페인 저장이 id 로 강화를 기억한다)");
             if (Rules.MoonWake < 1 || Rules.MoonWake > Rules.MoonMax) p.Add("관이 열리는 달은 1 이상, 보름달 이하");
@@ -54,7 +53,7 @@ namespace VampireSpawn.Core
 
         void ValidateStage(Stage s, List<string> p)
         {
-            var at = s.Label + "(" + s.Id + ")";
+            var at = s.Id;
             if (s.Map.Length == 0) { p.Add(at + ": 지도가 비었다"); return; }
             var cols = s.Map[0].Length;
             for (var r = 0; r < s.Map.Length; r++)
@@ -87,17 +86,16 @@ namespace VampireSpawn.Core
             var o = new List<string>
             {
                 $"rules drainHeal={Rules.DrainHeal} moonMax={Rules.MoonMax} eatRange={Rules.EatRange} moonWake={Rules.MoonWake}",
-                $"skeleton {Skeleton.Name} {Skeleton.Glyph} hp={Skeleton.Hp} atk={Skeleton.Atk} def={Skeleton.Def} mov={Skeleton.Mov} rng={Skeleton.Rng}",
+                $"skeleton hp={Skeleton.Hp} atk={Skeleton.Atk} def={Skeleton.Def} mov={Skeleton.Mov} rng={Skeleton.Rng}",
             };
             foreach (var t in Types)
-                o.Add($"type {t.Key} name={t.Name} glyph={t.Glyph} tier={t.Tier} pop={t.Pop} silver={t.Silver} hp={t.Hp} atk={t.Atk} def={t.Def} mov={t.Mov} rng={t.Rng} bane={t.Bane} unlock={t.UnlockAt} desc={t.Desc}");
+                o.Add($"type {t.Key} tier={t.Tier} pop={t.Pop} silver={t.Silver} hp={t.Hp} atk={t.Atk} def={t.Def} mov={t.Mov} rng={t.Rng} bane={t.Bane} unlock={t.UnlockAt}");
             foreach (var u in Upgrades)
-                o.Add($"upgrade {u.Id} unit={u.Unit} name={u.Name} cost={u.Cost} inherit={u.Inherit} hp={u.Mod.Hp} atk={u.Mod.Atk} def={u.Mod.Def} mov={u.Mod.Mov} rng={u.Mod.Rng} bane={u.Mod.Bane} abil={u.Ability} desc={u.Desc}");
+                o.Add($"upgrade {u.Id} unit={u.Unit} cost={u.Cost} inherit={u.Inherit} hp={u.Mod.Hp} atk={u.Mod.Atk} def={u.Mod.Def} mov={u.Mod.Mov} rng={u.Mod.Rng} bane={u.Mod.Bane} abil={u.Ability}");
             foreach (var s in Stages)
             {
-                o.Add($"stage {s.Id} label={s.Label} title={s.Title} units={string.Join("+", s.Units)} pop={s.Pop} silver={s.Silver} reward={s.Reward} bonus={s.Bonus.Type}:{s.Bonus.Value}:{s.Bonus.Gold}");
-                o.Add($"stage {s.Id} boss={s.Boss.Name} hp={s.Boss.Hp} atk={s.Boss.Atk} def={s.Boss.Def} mov={s.Boss.Mov} heal={s.Boss.Heal}");
-                o.Add($"stage {s.Id} brief={s.Brief}");
+                o.Add($"stage {s.Id} units={string.Join("+", s.Units)} pop={s.Pop} silver={s.Silver} reward={s.Reward} bonus={s.Bonus.Type}:{s.Bonus.Value}:{s.Bonus.Gold}");
+                o.Add($"stage {s.Id} boss hp={s.Boss.Hp} atk={s.Boss.Atk} def={s.Boss.Def} mov={s.Boss.Mov} heal={s.Boss.Heal}");
                 for (var r = 0; r < s.Map.Length; r++) o.Add($"stage {s.Id} map{r}={s.Map[r]}");
                 o.Add($"stage {s.Id} enemies={string.Join(" ", s.Enemies.Select(e => e.Kind + "@" + e.Col + "," + e.Row))}");
                 o.Add($"stage {s.Id} sample={string.Join(" ", s.Sample.Select(e => e.Kind + "@" + e.Col + "," + e.Row))}");

@@ -303,6 +303,370 @@ MonoBehaviour:
     m_Key: over.wonLine
     m_Metadata:
       m_Items: []
+  - m_Id: 5832070459392
+    m_Key: unit.pspear.name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5832187899904
+    m_Key: unit.pspear.glyph
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5832187899905
+    m_Key: unit.pspear.desc
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5832187899906
+    m_Key: upgrade.pspear_hp.name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5832187899907
+    m_Key: upgrade.pspear_hp.desc
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5832187899908
+    m_Key: upgrade.pspear_pike.name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5832187899909
+    m_Key: upgrade.pspear_pike.desc
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5832187899910
+    m_Key: unit.parcher.name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5832187899911
+    m_Key: unit.parcher.glyph
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5832187899912
+    m_Key: unit.parcher.desc
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5832187899913
+    m_Key: upgrade.parcher_mov.name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5832187899914
+    m_Key: upgrade.parcher_mov.desc
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5832187899915
+    m_Key: upgrade.parcher_ambush.name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5832187899916
+    m_Key: upgrade.parcher_ambush.desc
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5832187899917
+    m_Key: unit.sword.name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5832187899918
+    m_Key: unit.sword.glyph
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5832187899919
+    m_Key: unit.sword.desc
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5832187899920
+    m_Key: upgrade.sword_def.name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5832187899921
+    m_Key: upgrade.sword_def.desc
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5832187899922
+    m_Key: upgrade.sword_cleave.name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5832187899923
+    m_Key: upgrade.sword_cleave.desc
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5832187899924
+    m_Key: unit.archer.name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5832187899925
+    m_Key: unit.archer.glyph
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5832187899926
+    m_Key: unit.archer.desc
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5832187899927
+    m_Key: upgrade.archer_rng.name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5832187899928
+    m_Key: upgrade.archer_rng.desc
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5832187899929
+    m_Key: upgrade.archer_atk.name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5832187899930
+    m_Key: upgrade.archer_atk.desc
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5832187899931
+    m_Key: unit.knight.name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5832187899932
+    m_Key: unit.knight.glyph
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5832187899933
+    m_Key: unit.knight.desc
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5832187899934
+    m_Key: upgrade.knight_def.name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5832187899935
+    m_Key: upgrade.knight_def.desc
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5832187899936
+    m_Key: upgrade.knight_charge.name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5832187899937
+    m_Key: upgrade.knight_charge.desc
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5832187899938
+    m_Key: unit.hunter.name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5832187899939
+    m_Key: unit.hunter.glyph
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5832187899940
+    m_Key: unit.hunter.desc
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5832187899941
+    m_Key: upgrade.hunter_bane.name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5832187899942
+    m_Key: upgrade.hunter_bane.desc
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5832187899943
+    m_Key: upgrade.hunter_mov.name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5832187899944
+    m_Key: upgrade.hunter_mov.desc
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5832187899945
+    m_Key: skeleton.name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5832187899946
+    m_Key: skeleton.glyph
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5832187899947
+    m_Key: stage.demo.label
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5832187899948
+    m_Key: stage.demo.title
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5832187899949
+    m_Key: stage.demo.brief
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5832187899950
+    m_Key: stage.demo.boss
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5832187899951
+    m_Key: stage.s1.label
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5832187899952
+    m_Key: stage.s1.title
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5832187899953
+    m_Key: stage.s1.brief
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5832187899954
+    m_Key: stage.s1.boss
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5832187899955
+    m_Key: stage.s2.label
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5832187899956
+    m_Key: stage.s2.title
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5832187899957
+    m_Key: stage.s2.brief
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5832187899958
+    m_Key: stage.s2.boss
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5832187899959
+    m_Key: stage.s3.label
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5832192094208
+    m_Key: stage.s3.title
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5832192094209
+    m_Key: stage.s3.brief
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5832192094210
+    m_Key: stage.s3.boss
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5832192094211
+    m_Key: stage.s4.label
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5832192094212
+    m_Key: stage.s4.title
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5832192094213
+    m_Key: stage.s4.brief
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5832192094214
+    m_Key: stage.s4.boss
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5832192094215
+    m_Key: stage.s5.label
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5832192094216
+    m_Key: stage.s5.title
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5832192094217
+    m_Key: stage.s5.brief
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5832192094218
+    m_Key: stage.s5.boss
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5832192094219
+    m_Key: stage.s6.label
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5832192094220
+    m_Key: stage.s6.title
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5832192094221
+    m_Key: stage.s6.brief
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5832192094222
+    m_Key: stage.s6.boss
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5832192094223
+    m_Key: stage.s7.label
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5832192094224
+    m_Key: stage.s7.title
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5832192094225
+    m_Key: stage.s7.brief
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5832192094226
+    m_Key: stage.s7.boss
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5832192094227
+    m_Key: stage.s8.label
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5832192094228
+    m_Key: stage.s8.title
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5832192094229
+    m_Key: stage.s8.brief
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5832192094230
+    m_Key: stage.s8.boss
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5832192094231
+    m_Key: stage.s9.label
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5832192094232
+    m_Key: stage.s9.title
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5832192094233
+    m_Key: stage.s9.brief
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5832192094234
+    m_Key: stage.s9.boss
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5832192094235
+    m_Key: stage.s10.label
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5832192094236
+    m_Key: stage.s10.title
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5832192094237
+    m_Key: stage.s10.brief
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5832192094238
+    m_Key: stage.s10.boss
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5832192094239
+    m_Key: vampire.glyph
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5832192094240
+    m_Key: name.numbered
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5832192094241
+    m_Key: name.spawn
+    m_Metadata:
+      m_Items: []
   m_Metadata:
     m_Items: []
   m_KeyGenerator:

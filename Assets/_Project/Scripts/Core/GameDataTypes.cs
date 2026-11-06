@@ -8,15 +8,19 @@ namespace VampireSpawn.Core
     public sealed class UnitType
     {
         public readonly UnitKind Kind;
-        public readonly string Key, Name, Glyph, Desc;
+        public readonly string Key;
         public readonly Tier Tier;
         public readonly int Pop, Silver, Hp, Atk, Def, Mov, Rng, Bane, UnlockAt;
 
-        public UnitType(UnitKind kind, string key, string name, string glyph, Tier tier, int pop, int silver,
-            int hp, int atk, int def, int mov, int rng, int bane, int unlockAt, string desc)
+        public Message Name => new Message("unit." + Key + ".name");
+        public Message Glyph => new Message("unit." + Key + ".glyph");
+        public Message Desc => new Message("unit." + Key + ".desc");
+
+        public UnitType(UnitKind kind, string key, Tier tier, int pop, int silver,
+            int hp, int atk, int def, int mov, int rng, int bane, int unlockAt)
         {
-            Kind = kind; Key = key; Name = name; Glyph = glyph; Tier = tier; Pop = pop; Silver = silver;
-            Hp = hp; Atk = atk; Def = def; Mov = mov; Rng = rng; Bane = bane; UnlockAt = unlockAt; Desc = desc;
+            Kind = kind; Key = key; Tier = tier; Pop = pop; Silver = silver;
+            Hp = hp; Atk = atk; Def = def; Mov = mov; Rng = rng; Bane = bane; UnlockAt = unlockAt;
         }
     }
 
@@ -33,38 +37,40 @@ namespace VampireSpawn.Core
     public sealed class Upgrade
     {
         public readonly UnitKind Unit;
-        public readonly string Id, Name, Desc;
+        public readonly string Id;
         public readonly int Cost;
+        public Message Name => new Message("upgrade." + Id + ".name");
+        public Message Desc => new Message("upgrade." + Id + ".desc");
         // docs/systems/progression.md 15: only hp, atk and mov carry over to a spawn.
         public bool Inherit => Ability == Ability.None && Mod.Def == 0 && Mod.Rng == 0 && Mod.Bane == 0;
         public readonly StatMod Mod;
         public readonly Ability Ability;
 
-        public Upgrade(UnitKind unit, string id, string name, string desc, int cost, StatMod mod, Ability ability)
+        public Upgrade(UnitKind unit, string id, int cost, StatMod mod, Ability ability)
         {
-            Unit = unit; Id = id; Name = name; Desc = desc; Cost = cost; Mod = mod; Ability = ability;
+            Unit = unit; Id = id; Cost = cost; Mod = mod; Ability = ability;
         }
     }
 
     public sealed class EnemyStats
     {
-        public readonly string Name, Glyph;
         public readonly int Hp, Atk, Def, Mov, Rng;
+        public Message Name => new Message("skeleton.name");
+        public Message Glyph => new Message("skeleton.glyph");
 
-        public EnemyStats(string name, string glyph, int hp, int atk, int def, int mov, int rng)
+        public EnemyStats(int hp, int atk, int def, int mov, int rng)
         {
-            Name = name; Glyph = glyph; Hp = hp; Atk = atk; Def = def; Mov = mov; Rng = rng;
+            Hp = hp; Atk = atk; Def = def; Mov = mov; Rng = rng;
         }
     }
 
     public sealed class Boss
     {
-        public readonly string Name;
         public readonly int Hp, Atk, Def, Mov, Heal;
 
-        public Boss(string name, int hp, int atk, int def, int mov, int heal)
+        public Boss(int hp, int atk, int def, int mov, int heal)
         {
-            Name = name; Hp = hp; Atk = atk; Def = def; Mov = mov; Heal = heal;
+            Hp = hp; Atk = atk; Def = def; Mov = mov; Heal = heal;
         }
     }
 
@@ -106,7 +112,11 @@ namespace VampireSpawn.Core
 
     public sealed class Stage
     {
-        public readonly string Id, Label, Title, Brief;
+        public readonly string Id;
+        public Message Label => new Message("stage." + Id + ".label");
+        public Message Title => new Message("stage." + Id + ".title");
+        public Message Brief => new Message("stage." + Id + ".brief");
+        public Message BossName => new Message("stage." + Id + ".boss");
         public readonly UnitKind[] Units;
         public readonly int Pop, Silver, Reward;
         public readonly Bonus Bonus;
@@ -115,10 +125,10 @@ namespace VampireSpawn.Core
         public readonly Placement<EnemyKind>[] Enemies;
         public readonly Placement<UnitKind>[] Sample;
 
-        public Stage(string id, string label, string title, string brief, UnitKind[] units, int pop, int silver, int reward,
+        public Stage(string id, UnitKind[] units, int pop, int silver, int reward,
             Bonus bonus, Boss boss, string[] map, Placement<EnemyKind>[] enemies, Placement<UnitKind>[] sample)
         {
-            Id = id; Label = label; Title = title; Brief = brief; Units = units; Pop = pop; Silver = silver; Reward = reward;
+            Id = id; Units = units; Pop = pop; Silver = silver; Reward = reward;
             Bonus = bonus; Boss = boss; Map = map; Enemies = enemies; Sample = sample;
         }
     }

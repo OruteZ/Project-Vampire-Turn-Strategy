@@ -190,7 +190,7 @@ namespace VampireSpawn.Game.Screens
         {
             var box = Row(parent, "Glyph", 0, 0, Panel2, TierColor(t.Tier), TextAnchor.MiddleCenter);
             Size(box, size, size);
-            var g = Text(box, t.Glyph, 1f, TierColor(t.Tier), true, true, TextAnchor.MiddleCenter);
+            var g = Text(box, Loc.Text(t.Glyph), 1f, TierColor(t.Tier), true, true, TextAnchor.MiddleCenter);
             return g;
         }
     }

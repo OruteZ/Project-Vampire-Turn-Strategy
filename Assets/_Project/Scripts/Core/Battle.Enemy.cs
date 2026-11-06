@@ -68,7 +68,7 @@ namespace VampireSpawn.Core
             corpses.Remove(c);
             var spawn = new Unit
             {
-                Id = nextId++, Role = Role.Spawn, Type = c.Type, Name = "스폰(" + c.Name + ")", Glyph = c.Glyph,
+                Id = nextId++, Role = Role.Spawn, Type = c.Type, Name = new Message("name.spawn", c.Name), Glyph = c.Glyph,
                 Pos = c.Pos, Hp = c.MaxHp, MaxHp = c.MaxHp, Atk = c.Atk, Def = 0, Mov = c.Mov, Rng = 1,
                 JustRisen = true, Origin = c.Name,
             };

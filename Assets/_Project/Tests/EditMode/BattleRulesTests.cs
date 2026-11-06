@@ -13,12 +13,12 @@ namespace VampireSpawn.Tests
         public void CommandOutsideItsPhaseIsRejectedAndChangesNothing()
         {
             var b = Demo();
-            var before = b.Snapshot();
+            var before = b.Snapshot(m => m.ToString());
             var knight = b.Allies.First(u => u.Kind == "knight");
             var skeleton = b.Enemies.First(u => u.Kind == "skeleton");
             Assert.IsFalse(b.Attack(knight.Id, skeleton.Id).Ok, "attack during deploy");
             Assert.IsFalse(b.EndTurn().Ok, "end turn during deploy");
-            Assert.AreEqual(before, b.Snapshot());
+            Assert.AreEqual(before, b.Snapshot(m => m.ToString()));
             Assert.IsTrue(b.Start().Ok);
             Assert.IsFalse(b.Start().Ok, "start twice");
         }

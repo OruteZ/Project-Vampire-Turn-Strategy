@@ -14,8 +14,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: VampireSpawn.Game::VampireSpawn.Game.Data.UnitTypeData
   kind: 0
   key: pspear
-  displayName: "\uB18D\uBBFC \uCC3D\uBCD1"
-  glyph: "\uCC3D"
   tier: 0
   pop: 1
   silver: 0
@@ -26,12 +24,8 @@ MonoBehaviour:
   rng: 1
   bane: 0
   unlockAt: 1
-  desc: "\uC1E0\uC2A4\uB791\uACFC \uCC3D\uC744 \uB4E0 \uB9C8\uC744 \uC0AC\uB78C.
-    \uC2F8\uACE0 \uB9CE\uB2E4."
   upgrades:
   - id: pspear_hp
-    displayName: "\uB204\uBE48 \uAC11\uC637"
-    desc: "\uCCB4\uB825 +2"
     cost: 30
     hp: 2
     atk: 0
@@ -41,9 +35,6 @@ MonoBehaviour:
     bane: 0
     ability: 0
   - id: pspear_pike
-    displayName: "\uCC3D\uBCBD"
-    desc: "\uC801\uC774 \uBC14\uB85C \uC606 \uCE78\uC73C\uB85C \uB4E4\uC5B4\uC624\uBA74
-      1 \uD53C\uD574"
     cost: 40
     hp: 0
     atk: 0

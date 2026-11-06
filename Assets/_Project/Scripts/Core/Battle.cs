@@ -13,9 +13,9 @@ namespace VampireSpawn.Core
         public Role Role { get; internal set; }
         // Ally type, or for a spawn the type it rose from. Null for skeletons and the vampire.
         public UnitKind? Type { get; internal set; }
-        public string Name { get; internal set; }
-        public string Glyph { get; internal set; }
-        public string Origin { get; internal set; }
+        public Message Name { get; internal set; }
+        public Message Glyph { get; internal set; }
+        public Message Origin { get; internal set; }
         public Hex Pos { get; internal set; }
         public int Hp { get; internal set; }
         public int MaxHp { get; internal set; }
@@ -45,8 +45,8 @@ namespace VampireSpawn.Core
     {
         public int Id { get; internal set; }
         public Hex Pos { get; internal set; }
-        public string Name { get; internal set; }
-        public string Glyph { get; internal set; }
+        public Message Name { get; internal set; }
+        public Message Glyph { get; internal set; }
         public UnitKind Type { get; internal set; }
         public int MaxHp { get; internal set; }
         public int Atk { get; internal set; }
@@ -154,7 +154,7 @@ namespace VampireSpawn.Core
                 var b = Stage.Boss;
                 return new Unit
                 {
-                    Id = nextId++, Role = Role.Vampire, Name = b.Name, Glyph = "흡", Pos = at,
+                    Id = nextId++, Role = Role.Vampire, Name = Stage.BossName, Glyph = new Message("vampire.glyph"), Pos = at,
                     Hp = b.Hp, MaxHp = b.Hp, Atk = b.Atk, Def = b.Def, Mov = b.Mov, Rng = 1, Heal = b.Heal, Asleep = true,
                 };
             }
@@ -261,11 +261,11 @@ namespace VampireSpawn.Core
             {
                 if (count[u.Type.Value] <= 1) continue;
                 index[u.Type.Value] = index.TryGetValue(u.Type.Value, out var n) ? n + 1 : 1;
-                u.Name = GameData.Type(u.Type.Value).Name + " " + index[u.Type.Value];
+                u.Name = new Message("name.numbered", GameData.Type(u.Type.Value).Name, index[u.Type.Value]);
             }
             StartFormation = Allies.Select(u => new Placement<UnitKind>(u.Type.Value, u.Pos.Col, u.Pos.Row)).ToArray();
             Phase = Phase.Player;
-            Say(new Message("log.start", Stage.Boss.Name), "t");
+            Say(new Message("log.start", Stage.BossName), "t");
             Emit(BattleEvent.Banner(new Message("banner.playerTurn", 1), "player"));
             return Done();
         }
@@ -416,7 +416,7 @@ namespace VampireSpawn.Core
             Won = win;
         }
 
-        public string Snapshot()
+        public string Snapshot(Func<Message, string> text)
         {
             static int B(bool v) => v ? 1 : 0;
             var won = Won.HasValue ? B(Won.Value).ToString() : "-";
@@ -431,10 +431,10 @@ namespace VampireSpawn.Core
                     : $"s{B(u.Asleep)}r{B(u.JustRisen)}w{B(u.JustWoke)}";
                 var side = u.Side == Side.Ally ? "ally" : "enemy";
                 var abil = string.Join("+", u.abil.Select(a => a.ToString().ToLowerInvariant()));
-                lines.Add($"U {u.Id}:{side}:{u.Kind}:{u.Name}:{u.Glyph}:{u.Origin}:{u.Pos}:{u.Hp}/{u.MaxHp}:{u.Atk},{u.Def},{u.Mov},{u.Rng},{u.Bane},{u.Heal}:{abil}:{flags}");
+                lines.Add($"U {u.Id}:{side}:{u.Kind}:{text(u.Name)}:{text(u.Glyph)}:{text(u.Origin)}:{u.Pos}:{u.Hp}/{u.MaxHp}:{u.Atk},{u.Def},{u.Mov},{u.Rng},{u.Bane},{u.Heal}:{abil}:{flags}");
             }
             foreach (var c in corpses)
-                lines.Add($"C {c.Id}:{GameData.Type(c.Type).Key}:{c.Name}:{c.Glyph}:{c.Pos}:{c.MaxHp},{c.Atk},{c.Def},{c.Mov}");
+                lines.Add($"C {c.Id}:{GameData.Type(c.Type).Key}:{text(c.Name)}:{text(c.Glyph)}:{c.Pos}:{c.MaxHp},{c.Atk},{c.Def},{c.Mov}");
             return string.Join("\n", lines);
         }
     }
