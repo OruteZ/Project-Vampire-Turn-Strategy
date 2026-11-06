@@ -102,6 +102,18 @@ HTML 이 바뀌면 두 명령을 차례로 돌리고, `data.json` 과 `GameData.
 - 확인 스크린샷: docs/review/battle-hud-*.png (verify-unity, 1920×1080 게임 뷰).
 - 안 한 것: 보름달 턴(적 턴 중) 게이지 상태. 적 턴 재생 중에는 모델이 이미 다음 아군 턴이라 그 순간을 알 수 없다. 버튼 호버 밝기 외의 움직임(패널 등장, 1단계 번쩍임).
 
+## 장 선택·병영 화면 달과 피 (#26)
+
+- 기획서 docs/ui/stage-select.md, docs/ui/upgrade.md 14~19 대로 `Game/Screens/CampaignScreen` 을 다시 썼다. 원정 길·장 정보·병영 세 칸. 고른 장은 `GameFlow.campSel`(없으면 `CampaignScreen.DefaultStage`: 클리어 전 열린 첫 장, 다 깼으면 마지막 장). 출정하면 그 장을 기억한다.
+- 글자·틀·버튼·무기 아이콘 그리기는 `Screens/Kit` 로 모았다(전투 HUD 와 같이 쓴다). 키트 장식 프리팹(Crest, Section_Break)은 `ArtCatalog.uiPrefabs` 에서 이름으로 찾아 `Kit.Prefab` 으로 띄운다.
+- 맥박(1.2초)·번쩍임(0.2초)은 `Screens/Fx` 컴포넌트. 산 강화 칸과 금화 숫자가 번쩍인다(`CampView.Bought`).
+- 바탕: 고른 장의 보드를 `BoardView.Show` 로 세우고 보드 카메라를 240×135 렌더 텍스처에 그려 화면 전체로 늘린다(늘리는 것이 흐림). 어둡게 60%. 화면을 떠나면 `ClearScreen` 이 카메라 대상을 풀고 보드를 지운다.
+- 단축키 ↑/↓·Enter·Esc 는 `GameFlow.CampKeys`.
+- 기준 해상도 1920×1080 (메뉴만 아직 1600×900).
+- 시험: `UiTextParityTests.CampaignScreenShowsEveryGoldenState` 가 HTML 캠페인 상태 셋마다 표 키 없음, 금화, 장 이름 열, 고른 장 브리핑, 열린 병종, 초기화 확인을 본다. 캠페인 화면 글 덩어리 비교는 뺐다.
+- 기획서와 다른 점: 장 정보 위 문장(Crest)은 악마 해골이라 마지막 장에서만 보인다 (기획서도 고침). 원정 길은 열 장이 칸 안에 들어가 스크롤을 두지 않았다.
+- 확인 스크린샷: docs/review/stage-select-*.png. 강화를 실제로 사는 두 번째 누르기는 사용자 저장을 바꾸므로 게임에서 누르지 않았다(확인 상태까지).
+
 ## 게임 데이터 에셋 (요청 001)
 
 - 규칙이 읽는 수치·문장은 `Core/DataSet` 하나에 모인다. `GameData.Current` 가 지금 쓰는 것이고, `GameData.Use(set)` 으로 바꾸며, `Use(null)` 이면 HTML 값(`PrototypeData.Create()`)으로 돌아간다. `Rules.MoonMax` 등도 이 데이터를 읽는다.

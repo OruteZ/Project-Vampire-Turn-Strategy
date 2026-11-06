@@ -30,7 +30,10 @@ namespace VampireSpawn.Tests
         static Golden Load() => golden ??= JsonUtility.FromJson<Golden>("{\"shots\":" + File.ReadAllText(Out("strings.json")) + "}");
 
         // The battle screen follows docs/ui/battle-hud.md, not the HTML layout; BattleHudShowsEveryGoldenState covers it.
-        static IEnumerable<string> ShotNames() => Load().shots.Where(s => s.screen != "battle").Select(s => s.name);
+        static IEnumerable<string> ShotNames() => Load().shots.Where(s => s.screen != "battle" && s.screen != "camp").Select(s => s.name);
+
+        // The campaign screen follows docs/ui/stage-select.md and upgrade.md; CampaignScreenShowsEveryGoldenState covers it.
+        static IEnumerable<string> CampShots() => Load().shots.Where(s => s.screen == "camp").Select(s => s.name);
 
         static IEnumerable<string> BattleShots() => Load().shots.Where(s => s.screen == "battle").Select(s => s.name);
 
@@ -80,6 +83,22 @@ namespace VampireSpawn.Tests
             }
         }
 
+        [TestCaseSource(nameof(CampShots))]
+        public void CampaignScreenShowsEveryGoldenState(string name)
+        {
+            var shot = Load().shots.First(s => s.name == name);
+            var c = Campaign.Parse(shot.camp);
+            var sel = CampaignScreen.DefaultStage(c);
+            CampaignScreen.Build(root, c, new CampView { Selected = sel, ResetArm = shot.arm }, new CampaignActions(), null);
+            var texts = root.GetComponentsInChildren<Text>(true).Select(t => t.text).ToList();
+            CollectionAssert.IsEmpty(texts.Where(t => RawKey.IsMatch(t)), name + " shows a table key instead of its text");
+            CollectionAssert.Contains(texts, c.Gold.ToString(), name + " gold");
+            foreach (var st in Campaign.Stages) CollectionAssert.Contains(texts, Loc.Text(st.Title), name + " route");
+            CollectionAssert.Contains(texts, Loc.Text(Campaign.Stages[sel].Brief), name + " stage info");
+            foreach (var t in GameData.Types.Where(t => c.UpgradesOpen(t.Kind))) CollectionAssert.Contains(texts, Loc.Text(t.Name), name + " barracks");
+            if (shot.arm) CollectionAssert.Contains(texts, Loc.T("camp.resetConfirm"), name + " reset armed");
+        }
+
         [TestCaseSource(nameof(ShotNames))]
         public void ScreenTextMatchesPrototype(string name)
         {
@@ -88,9 +107,6 @@ namespace VampireSpawn.Tests
             {
                 case "menu":
                     MenuScreen.Build(root, Campaign.Parse(shot.camp), null, null);
-                    break;
-                case "camp":
-                    CampaignScreen.Build(root, Campaign.Parse(shot.camp), shot.arm, null, new CampaignActions());
                     break;
                 case "over":
                 {

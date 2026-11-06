@@ -26,7 +26,9 @@ namespace VampireSpawn.Game.Screens
 
         bool demo, resetArm, leaveArm, rulesOpen, logOpen, finished, enemyPlaying;
         float leaveUntil, bannerUntil, buyUntil;
-        string buyArm;
+        string buyArm, bought;
+        int? campSel;
+        RenderTexture backdropTex;
         Stage stage;
         OverInfo over;
         RectTransform screen, boardArea, overRoot, hudRoot;
@@ -53,10 +55,11 @@ namespace VampireSpawn.Game.Screens
             input.EscapeFirst = CloseBattlePopup;
             campActions = new CampaignActions
             {
-                Play = i => { buyArm = null; demo = false; StartBattle(Campaign.Stages[i], null, false); },
+                Play = i => { buyArm = null; demo = false; campSel = i; StartBattle(Campaign.Stages[i], null, false); },
+                Select = i => { buyArm = null; resetArm = false; campSel = i; ShowCamp(); },
                 Buy = id =>
                 {
-                    if (buyArm == id) { buyArm = null; if (Campaign.Buy(id)) CampaignStore.Save(Campaign); }
+                    if (buyArm == id) { buyArm = null; if (Campaign.Buy(id)) { CampaignStore.Save(Campaign); bought = id; } }
                     else { buyArm = id; buyUntil = Time.unscaledTime + LeaveSeconds; }
                     ShowCamp();
                 },
@@ -135,13 +138,33 @@ namespace VampireSpawn.Game.Screens
 
         void ClearScreen(bool opaque)
         {
-            // Menu and campaign are still laid out for 1600x900; at 1920x1080 their 14 px text drops under the ui-style.md minimum.
-            scaler.referenceResolution = Current == "battle" ? new Vector2(1920f, 1080f) : new Vector2(1600f, 900f);
+            // The menu is still laid out for 1600x900; at 1920x1080 their 14 px text drops under the ui-style.md minimum.
+            scaler.referenceResolution = Current == "menu" ? new Vector2(1600f, 900f) : new Vector2(1920f, 1080f);
             Ui.Clear(screen);
             if (!screen.TryGetComponent<Image>(out var bg)) bg = screen.gameObject.AddComponent<Image>();
             bg.color = Ui.Ink;
             bg.enabled = opaque;
-            if (viewCamera != null) viewCamera.rect = new Rect(0f, 0f, 1f, 1f);
+            if (viewCamera != null)
+            {
+                viewCamera.rect = new Rect(0f, 0f, 1f, 1f);
+                viewCamera.targetTexture = null;
+            }
+            if (Current != "battle") View.board.Clear();
+        }
+
+        // ui-style.md 11-1: the stage board, blurred and darkened 60%. A tiny render target upscaled is the blur.
+        void Backdrop(Stage s)
+        {
+            if (viewCamera == null) return;
+            if (backdropTex == null) backdropTex = new RenderTexture(240, 135, 16) { filterMode = FilterMode.Bilinear };
+            View.board.Show(s);
+            viewCamera.targetTexture = backdropTex;
+            var img = Ui.Node(screen, "Backdrop").gameObject.AddComponent<RawImage>();
+            img.texture = backdropTex;
+            img.color = new Color(0.4f, 0.4f, 0.4f);
+            img.raycastTarget = false;
+            Ui.Stretch(img.rectTransform);
+            img.transform.SetAsFirstSibling();
         }
 
         public void ShowMenu()
@@ -155,7 +178,10 @@ namespace VampireSpawn.Game.Screens
         {
             Current = "camp";
             ClearScreen(true);
-            CampaignScreen.Build(screen, Campaign, resetArm, buyArm, campActions);
+            var sel = campSel ?? CampaignScreen.DefaultStage(Campaign);
+            Backdrop(Campaign.Stages[sel]);
+            CampaignScreen.Build(screen, Campaign, new CampView { Selected = sel, ResetArm = resetArm, BuyArm = buyArm, Bought = bought }, campActions, View.board.art);
+            bought = null;
         }
 
         public void StartBattle(Stage s, IEnumerable<Placement<UnitKind>> formation, bool startNow)
@@ -256,6 +282,7 @@ namespace VampireSpawn.Game.Screens
             if (buyArm != null && Time.unscaledTime > buyUntil) { buyArm = null; if (Current == "camp") ShowCamp(); }
             if (banner != null && banner.gameObject.activeSelf && Time.unscaledTime > bannerUntil) banner.gameObject.SetActive(false);
             if (Current == "battle" && Session != null) { TrackHover(); Hotkeys(); }
+            if (Current == "camp") CampKeys();
         }
 
         bool Pressed(string name, bool down)
@@ -263,6 +290,21 @@ namespace VampireSpawn.Game.Screens
             keyDown.TryGetValue(name, out var was);
             keyDown[name] = down;
             return down && !was;
+        }
+
+        void CampKeys()
+        {
+            var kb = UnityEngine.InputSystem.Keyboard.current;
+            if (kb == null) return;
+            var up = Pressed("up", kb.upArrowKey.isPressed);
+            var down = Pressed("down", kb.downArrowKey.isPressed);
+            var enter = Pressed("enter", kb.enterKey.isPressed || kb.numpadEnterKey.isPressed);
+            var esc = Pressed("esc", kb.escapeKey.isPressed);
+            var sel = campSel ?? CampaignScreen.DefaultStage(Campaign);
+            if (up && sel > 0) campActions.Select(sel - 1);
+            else if (down && sel < Campaign.Stages.Length - 1) campActions.Select(sel + 1);
+            else if (enter && Campaign.StageOpen(sel)) campActions.Play(sel);
+            else if (esc) campActions.Menu();
         }
 
         void Hotkeys()

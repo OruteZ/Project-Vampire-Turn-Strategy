@@ -87,11 +87,13 @@ namespace VampireSpawn.Game.Screens
         // Synty 9-slice borders are 180~480 px, so ppu shrinks them to a 6~10 px stroke on screen (ui-style.md 5).
         public static void Frame(RectTransform panel, Sprite frame, Sprite back, Color edge, float ppu)
         {
+            var i = 0;
             foreach (var (s, c) in new[] { (back, Alpha(Panel, 0.92f)), (frame, edge) })
             {
                 var img = Sprite(panel, s == back ? "FrameBack" : "Frame", s, c, ppu);
                 Stretch(img.rectTransform);
                 img.gameObject.AddComponent<LayoutElement>().ignoreLayout = true;
+                img.transform.SetSiblingIndex(i++);
             }
         }
 

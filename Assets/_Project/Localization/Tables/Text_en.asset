@@ -1409,10 +1409,9 @@ MonoBehaviour:
       m_Items:
       - rid: 7201578077006332005
   - m_Id: 9846568841320
-    m_Localized: To Menu
+    m_Localized: Main Menu
     m_Metadata:
-      m_Items:
-      - rid: 7201578077006332005
+      m_Items: []
   - m_Id: 9846568841321
     m_Localized: Chapters
     m_Metadata:
@@ -1449,17 +1448,16 @@ MonoBehaviour:
       m_Items:
       - rid: 7201578077006332005
   - m_Id: 9846568841327
-    m_Localized: Available
+    m_Localized: Open
     m_Metadata:
-      m_Items:
-      - rid: 7201578077006332005
+      m_Items: []
   - m_Id: 9846568841328
     m_Localized: Locked
     m_Metadata:
       m_Items:
       - rid: 7201578077006332005
   - m_Id: 9846568841329
-    m_Localized: "New \xB7 {0}"
+    m_Localized: New {0}
     m_Metadata:
       m_Items:
       - rid: 7201578077006332005
@@ -1471,8 +1469,7 @@ MonoBehaviour:
   - m_Id: 9846568841331
     m_Localized: March
     m_Metadata:
-      m_Items:
-      - rid: 7201578077006332005
+      m_Items: []
   - m_Id: 9846568841332
     m_Localized: Owned
     m_Metadata:
@@ -1591,6 +1588,79 @@ MonoBehaviour:
       m_Items: []
   - m_Id: 51181384429577
     m_Localized: "{0} \xB7 Spawn"
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 55516264722432
+    m_Localized: Expedition Route
+    m_Metadata:
+      m_Items: []
+  - m_Id: 55516336025600
+    m_Localized: The Hunt
+    m_Metadata:
+      m_Items: []
+  - m_Id: 55516336025601
+    m_Localized: Objective
+    m_Metadata:
+      m_Items: []
+  - m_Id: 55516336025602
+    m_Localized: Defeat {0}
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 55516336025603
+    m_Localized: Bonus goal
+    m_Metadata:
+      m_Items: []
+  - m_Id: 55516336025604
+    m_Localized: Reward
+    m_Metadata:
+      m_Items: []
+  - m_Id: 55516336025605
+    m_Localized: Clear {0} gold
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 55516336025606
+    m_Localized: Bonus {0} gold
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 55516336025607
+    m_Localized: claimed
+    m_Metadata:
+      m_Items: []
+  - m_Id: 55516336025608
+    m_Localized: Resources
+    m_Metadata:
+      m_Items: []
+  - m_Id: 55516336025609
+    m_Localized: Enemies
+    m_Metadata:
+      m_Items: []
+  - m_Id: 55516336025610
+    m_Localized: Units
+    m_Metadata:
+      m_Items: []
+  - m_Id: 55516336025611
+    m_Localized: March Again
+    m_Metadata:
+      m_Items: []
+  - m_Id: 55516336025612
+    m_Localized: Rewards already claimed are not paid again
+    m_Metadata:
+      m_Items: []
+  - m_Id: 55516336025613
+    m_Localized: All rewards claimed
+    m_Metadata:
+      m_Items: []
+  - m_Id: 55516336025614
+    m_Localized: Clear {0} to unlock
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 55516336025615
+    m_Localized: Not enough gold ({0}/{1})
     m_Metadata:
       m_Items:
       - rid: 7201578077006332005
@@ -1869,18 +1939,15 @@ MonoBehaviour:
         - id: 9846568841317
         - id: 9846568841318
         - id: 9846568841319
-        - id: 9846568841320
         - id: 9846568841321
         - id: 9846568841322
         - id: 9846568841323
         - id: 9846568841324
         - id: 9846568841325
         - id: 9846568841326
-        - id: 9846568841327
         - id: 9846568841328
         - id: 9846568841329
         - id: 9846568841330
-        - id: 9846568841331
         - id: 9846568841332
         - id: 9846568841333
         - id: 9846573035520
@@ -1897,3 +1964,8 @@ MonoBehaviour:
         - id: 10777347813376
         - id: 51181384429571
         - id: 51181384429577
+        - id: 55516336025602
+        - id: 55516336025605
+        - id: 55516336025606
+        - id: 55516336025614
+        - id: 55516336025615

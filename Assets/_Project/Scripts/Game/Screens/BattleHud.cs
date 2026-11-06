@@ -18,7 +18,7 @@ namespace VampireSpawn.Game.Screens
     // docs/ui/battle-hud.md in the docs/art/ui-style.md tokens. Sizes are 1920x1080 px.
     public sealed class BattleHud
     {
-        const float Edge = 24f, FramePpu = 9f, PanelW = 340f, PanelH = 190f;
+        const float Edge = 24f, FramePpu = Kit.FramePpu, PanelW = 340f, PanelH = 190f;
 
         sealed class HeadMark
         {
@@ -32,27 +32,26 @@ namespace VampireSpawn.Game.Screens
         readonly List<Graphic> pulse = new List<Graphic>(), blink = new List<Graphic>();
         readonly Dictionary<int, HeadMark> heads = new Dictionary<int, HeadMark>();
 
-        public BattleHud(ArtCatalog art) => this.art = art;
+        public BattleHud(ArtCatalog art) { this.art = art; kit = new Kit(art); }
 
         public bool HasHeads => heads.Count > 0;
 
-        Sprite S(string name) => art != null ? art.Ui(name) : null;
+        readonly Kit kit;
 
-        static Text T(Transform p, string s, float px, Color c, bool bold = false, bool display = false, TextAnchor a = TextAnchor.UpperLeft)
-        {
-            var t = Ui.Text(p, s, px / Ui.Base, c, bold, display, a);
-            t.horizontalOverflow = HorizontalWrapMode.Overflow;
-            return t;
-        }
+        Sprite S(string name) => kit.S(name);
 
-        static Text Wrap(Text t) { t.horizontalOverflow = HorizontalWrapMode.Wrap; return t; }
+        static Text T(Transform p, string s, float px, Color c, bool bold = false, bool display = false, TextAnchor a = TextAnchor.UpperLeft) => Kit.T(p, s, px, c, bold, display, a);
 
-        static readonly Dictionary<UnitKind, string> Weapon = new Dictionary<UnitKind, string>
-        {
-            [UnitKind.PSpear] = "ICON_SM_Wep_Pitchfork_01_DarkFantasy", [UnitKind.PArcher] = "ICON_SM_Wep_Crossbow_01_Arrow_01_DarkFantasy",
-            [UnitKind.Sword] = "ICON_SM_Wep_Sword_01_DarkFantasy", [UnitKind.Archer] = "ICON_SM_Wep_Crossbow_01_Arrow_01_DarkFantasy",
-            [UnitKind.Knight] = "ICON_SM_Wep_Shield_Heater_01_Dungeon", [UnitKind.Hunter] = "ICON_SM_Wep_Crossbow_01_DarkFantasy",
-        };
+        static Text Wrap(Text t) => Kit.Wrap(t);
+
+        void Frame(RectTransform rt, Color edge, float ppu = Kit.FramePpu) => kit.Frame(rt, edge, ppu);
+
+        Button Btn(Transform parent, string label, Action click, BtnKind kind, Vector2 size, bool enabled = true, string tip = null) => kit.Btn(parent, label, click, kind, size, enabled, tip);
+
+        static void Hotkey(RectTransform button, string key) => Kit.Hotkey(button, key);
+
+        static Dictionary<UnitKind, string> Weapon => Kit.Weapon;
+
 
         public void Build(RectTransform root, BattleSession s, HudState st, BattleActions a)
         {
@@ -126,44 +125,6 @@ namespace VampireSpawn.Game.Screens
             Ui.Stretch(img.rectTransform);
         }
 
-        void Frame(RectTransform rt, Color edge, float ppu = FramePpu) =>
-            Ui.Frame(rt, S("SPR_DarkFantasyMenus_Frame_Box_Medium_02"), S("SPR_DarkFantasyMenus_Frame_Box_Medium_02_Background"), edge, ppu);
-
-        enum Kind { Primary, Normal, Danger, DangerOn, Ghost }
-
-        Button Btn(Transform parent, string label, Action click, Kind kind, Vector2 size, bool enabled = true, string tip = null)
-        {
-            var rt = Ui.Node(parent, "Button " + label);
-            rt.sizeDelta = size;
-            Ui.Size(rt, size.x, size.y);
-            Image target;
-            if (kind == Kind.Ghost) target = Ui.Bg(rt, Ui.Alpha(Ui.Ink, 0f));
-            else
-            {
-                var fill = kind == Kind.Primary ? Ui.Steel : Ui.Alpha(Ui.Panel, 0.92f);
-                var edge = kind == Kind.Primary ? Ui.Bone : kind == Kind.Danger ? Ui.BloodDim : kind == Kind.DangerOn ? Ui.Blood : Ui.SteelDim;
-                target = Ui.Sprite(rt, "Fill", S("SPR_DarkFantasyMenus_Frame_Box_Medium_02_Background"), fill, FramePpu);
-                Ui.Stretch(target.rectTransform);
-                target.raycastTarget = true;
-                Ui.Stretch(Ui.Sprite(rt, "Frame", S("SPR_DarkFantasyMenus_Frame_Box_Medium_02"), edge, FramePpu).rectTransform);
-            }
-            var color = kind == Kind.Primary ? Ui.Ink : kind == Kind.Ghost ? Ui.Muted : kind is Kind.Danger or Kind.DangerOn ? Ui.Blood : Ui.Bone;
-            if (!enabled) color = Ui.Dim;
-            Ui.Stretch(T(rt, label, 17, color, kind == Kind.Primary, false, TextAnchor.MiddleCenter).rectTransform);
-            var btn = rt.gameObject.AddComponent<Button>();
-            btn.targetGraphic = target;
-            btn.interactable = enabled;
-            var colors = btn.colors;
-            colors.highlightedColor = new Color(1.1f, 1.1f, 1.1f);
-            colors.pressedColor = new Color(0.97f, 0.97f, 0.97f);
-            colors.disabledColor = new Color(1f, 1f, 1f, 0.4f);
-            colors.fadeDuration = 0.08f;
-            btn.colors = colors;
-            if (click != null) btn.onClick.AddListener(() => click());
-            if (tip != null) HoverTip.Add(rt, tip, 0f);
-            return btn;
-        }
-
         void Moon(RectTransform root, Battle b, bool hot)
         {
             const float D = 112f;
@@ -205,7 +166,7 @@ namespace VampireSpawn.Game.Screens
         {
             var label = BattleScreen.PrimaryLabel(b, st.EnemyPlaying, out var enabled);
             var tip = b.Phase == Phase.Deploy && !enabled ? Loc.T("hud.needAlly") : null;
-            var btn = Btn(root, label, a.Primary, Kind.Primary, new Vector2(200f, 56f), enabled, tip);
+            var btn = Btn(root, label, a.Primary, BtnKind.Primary, new Vector2(200f, 56f), enabled, tip);
             var rt = (RectTransform)btn.transform;
             rt.anchorMin = rt.anchorMax = rt.pivot = new Vector2(1f, 0f);
             rt.anchoredPosition = new Vector2(-Edge, Edge);
@@ -222,13 +183,6 @@ namespace VampireSpawn.Game.Screens
             Ui.Stretch(T(Ui.Place(root, "Phase", new Vector2(1f, 0f), new Vector2(-Edge, Edge + 60f), new Vector2(200f, 20f)), phase, 14, Ui.Muted, false, false, TextAnchor.LowerCenter).rectTransform);
         }
 
-        static void Hotkey(RectTransform button, string key)
-        {
-            var box = Ui.Place(button, "Key", new Vector2(1f, 0f), new Vector2(4f, -4f), new Vector2(key.Length > 1 ? 46f : 18f, 18f));
-            Ui.Bg(box, Ui.Deep, Ui.Line, false);
-            Ui.Stretch(T(box, key, 14, Ui.Muted, false, false, TextAnchor.MiddleCenter).rectTransform);
-        }
-
         void Corner(RectTransform root, HudState st, BattleActions a)
         {
             var row = Ui.Row(root, "Corner", 4, 0, null, null, TextAnchor.LowerLeft);
@@ -236,8 +190,8 @@ namespace VampireSpawn.Game.Screens
             row.anchoredPosition = new Vector2(Edge - 12f, Edge - 6f);
             row.sizeDelta = new Vector2(420f, 36f);
             row.GetComponent<HorizontalLayoutGroup>().childControlWidth = false;
-            Btn(row, "?  " + Loc.T("battle.rules"), a.ToggleRules, Kind.Ghost, new Vector2(140f, 36f));
-            Btn(row, Loc.T(st.LeaveArmed ? "battle.leaveConfirm" : "battle.leave"), a.Leave, Kind.Ghost, new Vector2(st.LeaveArmed ? 200f : 100f, 36f), !st.EnemyPlaying);
+            Btn(row, "?  " + Loc.T("battle.rules"), a.ToggleRules, BtnKind.Ghost, new Vector2(140f, 36f));
+            Btn(row, Loc.T(st.LeaveArmed ? "battle.leaveConfirm" : "battle.leave"), a.Leave, BtnKind.Ghost, new Vector2(st.LeaveArmed ? 200f : 100f, 36f), !st.EnemyPlaying);
         }
 
         void RulesPopup(RectTransform root, BattleActions a)
@@ -255,7 +209,7 @@ namespace VampireSpawn.Game.Screens
             T(p, Loc.T("battle.rules"), 32, Ui.Bone, true, true);
             foreach (var line in BattleScreen.RuleLines) Wrap(T(p, line, 17, Ui.Muted));
             var row = Ui.Row(p, "Close", 0, 0, null, null, TextAnchor.MiddleRight);
-            Btn(row, Loc.T("hud.close"), a.ToggleRules, Kind.Ghost, new Vector2(100f, 36f));
+            Btn(row, Loc.T("hud.close"), a.ToggleRules, BtnKind.Ghost, new Vector2(100f, 36f));
         }
 
         // ---------- deploy (battle-hud.md 2) ----------
@@ -298,8 +252,8 @@ namespace VampireSpawn.Game.Screens
             Wrap(T(roster, Loc.T("hud.deployHelp"), 14, Ui.Dim));
             var acts = Ui.Row(roster, "Acts", 8);
             acts.GetComponent<HorizontalLayoutGroup>().childControlWidth = false;
-            Btn(acts, Loc.T("battle.recallAll"), a.Clear, Kind.Normal, new Vector2(150f, 40f));
-            Btn(acts, Loc.T("battle.sample"), a.Sample, Kind.Normal, new Vector2(150f, 40f));
+            Btn(acts, Loc.T("battle.recallAll"), a.Clear, BtnKind.Normal, new Vector2(150f, 40f));
+            Btn(acts, Loc.T("battle.sample"), a.Sample, BtnKind.Normal, new Vector2(150f, 40f));
 
             var brief = Ui.Col(root, "Brief", 6);
             brief.anchorMin = brief.anchorMax = brief.pivot = new Vector2(1f, 1f);
@@ -322,7 +276,7 @@ namespace VampireSpawn.Game.Screens
                 if (show.Side == Side.Ally)
                 {
                     var uid = show.Id;
-                    var r = (RectTransform)Btn(p, Loc.T("unit.card.recall"), () => a.Recall?.Invoke(uid), Kind.Normal, new Vector2(90f, 32f)).transform;
+                    var r = (RectTransform)Btn(p, Loc.T("unit.card.recall"), () => a.Recall?.Invoke(uid), BtnKind.Normal, new Vector2(90f, 32f)).transform;
                     r.anchorMin = r.anchorMax = r.pivot = new Vector2(1f, 0f);
                     r.anchoredPosition = new Vector2(-16f, 12f);
                 }
@@ -741,9 +695,9 @@ namespace VampireSpawn.Game.Screens
             }
             var acts = Ui.Row(box, "Acts", 8, 0, null, null, TextAnchor.MiddleRight);
             acts.GetComponent<HorizontalLayoutGroup>().childControlWidth = false;
-            if (o.Camp) Btn(acts, Loc.T("over.toCamp"), a.ToCamp, Kind.Primary, new Vector2(150f, 48f));
-            Btn(acts, Loc.T("over.retry"), a.Retry, o.Camp ? Kind.Normal : Kind.Primary, new Vector2(200f, 48f));
-            Btn(acts, Loc.T("over.redeploy"), a.Redeploy, Kind.Normal, new Vector2(150f, 48f));
+            if (o.Camp) Btn(acts, Loc.T("over.toCamp"), a.ToCamp, BtnKind.Primary, new Vector2(150f, 48f));
+            Btn(acts, Loc.T("over.retry"), a.Retry, o.Camp ? BtnKind.Normal : BtnKind.Primary, new Vector2(200f, 48f));
+            Btn(acts, Loc.T("over.redeploy"), a.Redeploy, BtnKind.Normal, new Vector2(150f, 48f));
         }
 
         static void Pair(Transform parent, string left, string right, bool dim = false, bool strong = false)

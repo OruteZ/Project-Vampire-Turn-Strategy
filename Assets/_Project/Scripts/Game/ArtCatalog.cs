@@ -34,6 +34,11 @@ namespace VampireSpawn.Game
         [Tooltip("Synty UI 스프라이트. 이름으로 찾는다 (docs/art/ui-style.md)")]
         public Sprite[] ui;
 
+        [Tooltip("Synty UI 장식 프리팹 (Crest, Section_Break). 이름으로 찾는다")]
+        public GameObject[] uiPrefabs;
+
         public Sprite Ui(string name) => System.Array.Find(ui ?? System.Array.Empty<Sprite>(), s => s != null && s.name == name);
+
+        public GameObject UiPrefab(string name) => System.Array.Find(uiPrefabs ?? System.Array.Empty<GameObject>(), p => p != null && p.name == name);
     }
 }

@@ -1495,10 +1495,9 @@ MonoBehaviour:
       m_Items:
       - rid: 7201578077006332004
   - m_Id: 9846568841320
-    m_Localized: "\uBA54\uB274\uB85C"
+    m_Localized: "\uBA54\uC778 \uBA54\uB274"
     m_Metadata:
-      m_Items:
-      - rid: 7201578077006332004
+      m_Items: []
   - m_Id: 9846568841321
     m_Localized: "\uC7A5 \uC120\uD0DD"
     m_Metadata:
@@ -1542,17 +1541,16 @@ MonoBehaviour:
       m_Items:
       - rid: 7201578077006332004
   - m_Id: 9846568841327
-    m_Localized: "\uB3C4\uC804 \uAC00\uB2A5"
+    m_Localized: "\uC5F4\uB9BC"
     m_Metadata:
-      m_Items:
-      - rid: 7201578077006332004
+      m_Items: []
   - m_Id: 9846568841328
     m_Localized: "\uC7A0\uAE40"
     m_Metadata:
       m_Items:
       - rid: 7201578077006332004
   - m_Id: 9846568841329
-    m_Localized: "\uD574\uAE08 \xB7 {0}"
+    m_Localized: "\uC0C8 {0}"
     m_Metadata:
       m_Items:
       - rid: 7201578077006332004
@@ -1562,10 +1560,9 @@ MonoBehaviour:
       m_Items:
       - rid: 7201578077006332004
   - m_Id: 9846568841331
-    m_Localized: "\uCD9C\uC804"
+    m_Localized: "\uCD9C\uC815"
     m_Metadata:
-      m_Items:
-      - rid: 7201578077006332004
+      m_Items: []
   - m_Id: 9846568841332
     m_Localized: "\uBCF4\uC720"
     m_Metadata:
@@ -1691,6 +1688,80 @@ MonoBehaviour:
       m_Items: []
   - m_Id: 51181384429577
     m_Localized: "{0} \xB7 \uC2A4\uD3F0"
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332004
+  - m_Id: 55516264722432
+    m_Localized: "\uC6D0\uC815 \uAE38"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 55516336025600
+    m_Localized: "\uD1A0\uBC8C \uC6D0\uC815"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 55516336025601
+    m_Localized: "\uBAA9\uD45C"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 55516336025602
+    m_Localized: "{0} \uCC98\uCE58"
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332004
+  - m_Id: 55516336025603
+    m_Localized: "\uCD94\uAC00 \uBAA9\uD45C"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 55516336025604
+    m_Localized: "\uBCF4\uC0C1"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 55516336025605
+    m_Localized: "\uD074\uB9AC\uC5B4 {0} \uAE08\uD654"
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332004
+  - m_Id: 55516336025606
+    m_Localized: "\uCD94\uAC00 \uBAA9\uD45C {0} \uAE08\uD654"
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332004
+  - m_Id: 55516336025607
+    m_Localized: "\uBC1B\uC74C"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 55516336025608
+    m_Localized: "\uC790\uC6D0"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 55516336025609
+    m_Localized: "\uC801"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 55516336025610
+    m_Localized: "\uCD9C\uC804 \uBCD1\uC885"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 55516336025611
+    m_Localized: "\uB2E4\uC2DC \uCD9C\uC815"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 55516336025612
+    m_Localized: "\uBCF4\uC0C1\uC740 \uC774\uBBF8 \uBC1B\uC740 \uAC83\uC744 \uBE7C\uACE0
+      \uBC1B\uC2B5\uB2C8\uB2E4"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 55516336025613
+    m_Localized: "\uBCF4\uC0C1\uC744 \uBAA8\uB450 \uBC1B\uC558\uC2B5\uB2C8\uB2E4"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 55516336025614
+    m_Localized: "{0:josa(\uC744|\uB97C)} \uD074\uB9AC\uC5B4\uD558\uBA74 \uC5F4\uB9B0\uB2E4"
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332004
+  - m_Id: 55516336025615
+    m_Localized: "\uAE08\uD654\uAC00 \uBAA8\uC790\uB78D\uB2C8\uB2E4 ({0}/{1})"
     m_Metadata:
       m_Items:
       - rid: 7201578077006332004
@@ -1969,18 +2040,15 @@ MonoBehaviour:
         - id: 9846568841317
         - id: 9846568841318
         - id: 9846568841319
-        - id: 9846568841320
         - id: 9846568841321
         - id: 9846568841322
         - id: 9846568841323
         - id: 9846568841324
         - id: 9846568841325
         - id: 9846568841326
-        - id: 9846568841327
         - id: 9846568841328
         - id: 9846568841329
         - id: 9846568841330
-        - id: 9846568841331
         - id: 9846568841332
         - id: 9846568841333
         - id: 9846573035520
@@ -1997,3 +2065,8 @@ MonoBehaviour:
         - id: 10777347813376
         - id: 51181384429571
         - id: 51181384429577
+        - id: 55516336025602
+        - id: 55516336025605
+        - id: 55516336025606
+        - id: 55516336025614
+        - id: 55516336025615

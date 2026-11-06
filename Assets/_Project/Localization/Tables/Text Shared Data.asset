@@ -1235,6 +1235,74 @@ MonoBehaviour:
     m_Key: hud.spawnOf
     m_Metadata:
       m_Items: []
+  - m_Id: 55516264722432
+    m_Key: camp.route
+    m_Metadata:
+      m_Items: []
+  - m_Id: 55516336025600
+    m_Key: camp.expedition
+    m_Metadata:
+      m_Items: []
+  - m_Id: 55516336025601
+    m_Key: camp.objective
+    m_Metadata:
+      m_Items: []
+  - m_Id: 55516336025602
+    m_Key: camp.objectiveBoss
+    m_Metadata:
+      m_Items: []
+  - m_Id: 55516336025603
+    m_Key: camp.bonusGoal
+    m_Metadata:
+      m_Items: []
+  - m_Id: 55516336025604
+    m_Key: camp.reward
+    m_Metadata:
+      m_Items: []
+  - m_Id: 55516336025605
+    m_Key: camp.rewardClear
+    m_Metadata:
+      m_Items: []
+  - m_Id: 55516336025606
+    m_Key: camp.rewardBonus
+    m_Metadata:
+      m_Items: []
+  - m_Id: 55516336025607
+    m_Key: camp.got
+    m_Metadata:
+      m_Items: []
+  - m_Id: 55516336025608
+    m_Key: camp.resources
+    m_Metadata:
+      m_Items: []
+  - m_Id: 55516336025609
+    m_Key: camp.enemies
+    m_Metadata:
+      m_Items: []
+  - m_Id: 55516336025610
+    m_Key: camp.roster
+    m_Metadata:
+      m_Items: []
+  - m_Id: 55516336025611
+    m_Key: camp.marchAgain
+    m_Metadata:
+      m_Items: []
+  - m_Id: 55516336025612
+    m_Key: camp.replayNote
+    m_Metadata:
+      m_Items: []
+  - m_Id: 55516336025613
+    m_Key: camp.allClaimed
+    m_Metadata:
+      m_Items: []
+  - m_Id: 55516336025614
+    m_Key: camp.lockedBy
+    m_Metadata:
+      m_Items: []
+  - m_Id: 55516336025615
+    m_Key: camp.needGold
+    m_Metadata:
+      m_Items: []
   m_Metadata:
     m_Items: []
   m_KeyGenerator:

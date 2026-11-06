@@ -3,8 +3,8 @@
 ## 경로
 - 기획: docs/design/ui.md, docs/design/art.md
 - 기획서: docs/ui/ (화면별), docs/art/ui-style.md (UI 스타일: 색·글꼴·틀·버튼·배치 토큰), docs/art/ui-references.md (요소별 레퍼런스)
-- 코드: Assets/_Project/Scripts/Game/Screens/ (`Ui.cs` 색 토큰·글꼴·틀·말줄임, `BattleHud.cs` 전투 화면 전체, `HoverTip.cs` 툴팁). 구현 기록 docs/dev/unity-port.md "전투 화면 달과 피"
-- UI 스프라이트: `ArtCatalog.ui` (이름으로 찾는다). 새 스프라이트는 이 배열에 더하고 `node tools/assets/scan.mjs`
+- 코드: Assets/_Project/Scripts/Game/Screens/ (`Ui.cs` 색 토큰·글꼴·틀·말줄임, `Kit.cs` 글자·버튼·무기 아이콘·장식 프리팹, `BattleHud.cs` 전투 화면, `CampaignScreen.cs` 장 선택·병영, `HoverTip.cs` 툴팁, `Fx.cs` 맥박·번쩍임). 구현 기록 docs/dev/unity-port.md "전투 화면 달과 피"
+- UI 스프라이트: `ArtCatalog.ui`, 장식 프리팹: `ArtCatalog.uiPrefabs` (이름으로 찾는다). 새 스프라이트는 이 배열에 더하고 `node tools/assets/scan.mjs`
 - 아트: Assets/Synty/InterfaceDarkFantasyMenus, Assets/Synty/InterfaceDarkFantasyHUD, Assets/Synty/InterfaceCore (분류는 art-assets.md)
 - 검토 스크린샷: docs/review/
 
@@ -30,7 +30,7 @@
 | 보드 위에 글자 라벨을 두지 않는다 (게이지·표적 아이콘·패널이 대신) | 시험 중 | 2026-11-06 | #24 "추천대로" |
 
 ## 열린 작업
-- #24 UI 아트 테마·파이프라인: 8단계 화면별 구현 중. 전투 화면 끝 (#25, docs/review/battle-hud-*.png). 남은 화면: 장 선택·병영(docs/ui/stage-select.md, upgrade.md), 메인 메뉴(main-menu.md). 다시 만들면 기준 해상도를 1920×1080 하나로 (`GameFlow.ClearScreen`)
+- #24 UI 아트 테마·파이프라인: 8단계 화면별 구현 중. 전투 화면 (#25), 장 선택·병영 (#26, docs/review/stage-select-*.png) 끝. 남은 화면: 메인 메뉴(main-menu.md). 다시 만들면 기준 해상도를 1920×1080 하나로 (`GameFlow.ClearScreen`)
 - 전투 화면에서 안 한 것: 보름달 턴(적 턴 중) 게이지 상태(재생 중엔 모델이 이미 다음 턴), 패널 등장·1단계 번쩍임 연출
 - 병종 글자 배지(docs/ui/localization.md 14~)를 화면에서 무기 아이콘으로 바꾸기로 했다(upgrade.md 정한 세부). 배지를 쓰는 곳이 없어지면 localization.md 배지 절을 정리한다
 - #16 한글 글꼴 파일 들이기 (막힘: 내려받기 허락)

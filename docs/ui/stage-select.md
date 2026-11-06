@@ -35,7 +35,7 @@
 
 - 칸 사이 간격 16px. 세 칸은 위끝을 맞춘다.
 - 바탕: `bg.night` 위에 **고른 장**의 보드 아트를 흐리게(블러 + 어둡게 60%) 깐다 (ui-style.md 11). 고른 장이 바뀌면 0.3초에 걸쳐 바뀐다.
-- `frame.menu` 장식 `Crest` 는 장 정보 칸 위 가운데에만 하나 둔다 (`Crests/` 의 `Crest_DarkFantasyMenus_Large_01`). 원정 길·병영 칸은 장식 없이.
+- `frame.menu` 장식 `Crest` 는 마지막 장(백작의 성)을 골랐을 때만 장 정보 칸 위 가운데에 하나 둔다 (`Crests/` 의 `Crest_DarkFantasyMenus_Large_01`, `enemy`). 이 문장은 악마 해골이라 다른 장에는 두지 않는다 (ui-style.md 5-3). 원정 길·병영 칸은 장식 없이.
 
 ## 2. 원정 길
 
@@ -96,7 +96,8 @@
 | `camp.objectiveBoss` | {0} 처치 |
 | `camp.bonusGoal` | 추가 목표 |
 | `camp.reward` | 보상 |
-| `camp.rewardLine` | 클리어 {0} 금화 · 추가 목표 {1} 금화 |
+| `camp.rewardClear` | 클리어 {0} 금화 |
+| `camp.rewardBonus` | 추가 목표 {0} 금화 |
 | `camp.got` | 받음 |
 | `camp.resources` | 자원 |
 | `camp.enemies` | 적 |
@@ -104,6 +105,7 @@
 | `camp.marchAgain` | 다시 출정 |
 | `camp.replayNote` | 보상은 이미 받은 것을 빼고 받습니다 |
 | `camp.allClaimed` | 보상을 모두 받았습니다 |
+| `camp.needGold` | 금화가 모자랍니다 ({0}/{1}) (docs/ui/upgrade.md 17) |
 | `camp.lockedBy` | {0:josa(을\|를)} 클리어하면 열린다 |
 
 ## 6. 지금 화면에서 바뀌는 것
@@ -127,6 +129,8 @@
 없음.
 
 ## 구현 메모
+
+- 구현됨: 이슈 #26. 위 요구사항과 구현이 다르면 구현을 고친다.
 
 - 지금 `UiTextParityTests` 의 캠페인 화면 비교는 HTML 데모 글 덩어리 기준이다. 이 화면은 글 구성이 달라지므로(CLAUDE.md: docs/design 이 데모보다 앞선다) 이 문서 기준 시험으로 바꾼다.
 - `Crest_*`, `Section_Break` 는 키트에서 프리팹으로 들어 있다. 스프라이트로 쓸지 프리팹을 띄울지는 구현이 고른다. 모양은 같아야 한다.
