@@ -36,9 +36,10 @@
 
 1. 병종 하나의 모습은 에셋 하나(`UnitLook`, `Assets/_Project/Art/Units/<병종>.asset`)다. 담는 것: 모델 프리팹, 뼈대 종류(Sidekick / Polygon), 무기 목록(프리팹, 손, 위치, 회전), 동작 묶음.
 2. 무기를 붙이는 뼈는 뼈대 종류가 정한다: Sidekick 은 `prop_r`/`prop_l`, Polygon 은 `Hand_R`/`Hand_L`. 그래서 같은 뼈대의 다른 모델로 바꾸면 무기 위치·회전을 그대로 쓸 수 있다.
-3. Sidekick 도구로 만든 새 캐릭터로 바꾸는 법: 새 프리팹을 그 병종 `UnitLook` 의 모델 칸에 넣는다. 뼈대가 Sidekick 이면 나머지 칸은 그대로 둔다. 키가 달라도 유닛 키는 `ArtCatalog.unitHeight` 로 맞춰진다.
-4. 무기 위치가 어긋나면 그 `UnitLook` 의 위치·회전만 고친다. 코드는 바꾸지 않는다.
-5. 바꾼 뒤 `node tools/assets/scan.mjs` 로 에셋 목록을 다시 뽑는다 (Synty 에셋 참조가 바뀌므로).
+3. Sidekick 도구로 만든 캐릭터는 유료 에셋을 가공한 것이라 git 에 올리지 않는다. 대신 **레시피**(`.sk`: 부품 이름, 색, 체형 값)를 `Assets/_Project/Art/Characters/<이름>.sk` 에 커밋하고, 클론마다 다시 굽는다 (`/synty-reload`, `tools/assets/sidekick-bake.sh`). 구운 결과는 `Assets/_Generated/Resources/Characters/<이름>/` (gitignore).
+4. `UnitLook` 의 `recipe` 에 레시피 이름을 쓰면 구운 캐릭터를 이름으로 불러온다 (`Resources`). 굽기마다 GUID·fileID 가 새로 정해지므로 에셋 참조로 가리키지 않는다. `model` 칸은 레시피가 없거나 아직 굽지 않은 클론에서 쓰는 Synty 완성 프리팹이다. 그래서 굽지 않은 클론도 게임과 시험이 돈다.
+5. 무기 위치가 어긋나면 그 `UnitLook` 의 위치·회전만 고친다. 키가 달라도 유닛 키는 `ArtCatalog.unitHeight` 로 맞춰진다.
+6. `SidekickRecipeTests` 가 레시피마다 구운 것이 있고 레시피가 바뀌지 않았는지(`recipe.sha1`), 모든 `UnitLook` 에 대체 모델이 있는지 본다.
 
 ## 정한 세부 (docs/design 에 없는 것)
 

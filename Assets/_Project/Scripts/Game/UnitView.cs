@@ -29,8 +29,9 @@ namespace VampireSpawn.Game
             view.Id = id;
             view.art = art;
 
-            view.model = Instantiate(look.model, root.transform).transform;
-            view.model.name = look.model.name;
+            var prefab = look.Model;
+            view.model = Instantiate(prefab, root.transform).transform;
+            view.model.name = prefab.name;
             view.model.localPosition = Vector3.zero;
             view.model.localRotation = Quaternion.Euler(0f, yaw, 0f);
             FitHeight(view.model, art.unitHeight * art.hexSize);

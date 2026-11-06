@@ -39,7 +39,10 @@
    2. 에디터를 연다. 이미 열려 있으면 그것을 쓴다.
    3. 패키지를 하나씩 `AssetDatabase.ImportPackage` 로 임포트하고, 패키지마다 콘솔 오류를 보여 준다.
    4. `check.mjs` 를 다시 돌린다.
-   5. 에디터 안에서 `RequiredAssetsTests` 를 돌린다.
+   5. Sidekick 레시피(`Assets/_Project/Art/Characters/*.sk`)를 굽는다 (`tools/assets/sidekick-bake.sh`, 결과는 gitignore 된 `Assets/_Generated/Resources/Characters/`).
+   6. 에디터 안에서 `RequiredAssetsTests` 를 돌린다.
+
+   Claude Code 에서는 `/synty-reload` 스킬이 이 전체(임포트, 굽기, 확인)를 한다 (`.claude/skills/synty-reload/SKILL.md`). 굽지 않은 클론은 레시피를 쓰는 유닛을 `UnitLook.model` 의 대체 프리셋으로 그린다.
 
    패키지 파일이 없으면 무엇을 어디에 둘지 알려 주고 멈춘다. 처음 클론은 패키지 다섯 개 임포트에 수 분 걸린다.
 5. 전체를 확인한다:

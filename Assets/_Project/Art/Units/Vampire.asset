@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1c50f19bfd6484047b0aa7aeac3dcfae, type: 3}
   m_Name: Vampire
   m_EditorClassIdentifier: VampireSpawn.Game::VampireSpawn.Game.UnitLook
+  recipe: 
   model: {fileID: 5669538231628601157, guid: c40f7c9d822c08b43a34200e6ec68ec3, type: 3}
   rig: 1
   weapons:

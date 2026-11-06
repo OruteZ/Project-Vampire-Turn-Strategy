@@ -29,7 +29,8 @@
 
 ## 맡길 때
 - 함정: 애니메이션 팩마다 Sidekick 전용판 클립(`A_MOD_*`)이 따로 있다. Sidekick 캐릭터에는 그쪽을 쓴다. 무기 자리 뼈는 Sidekick `prop_r`/`prop_l`, Polygon 캐릭터 `Hand_R`/`Hand_L`
-- 함정: Sidekick 프리셋은 메시 하나라 모자 같은 부품만 끌 수 없다 (조립 도구가 있어야 한다)
+- 함정: Sidekick 프리셋은 메시 하나라 모자 같은 부품만 끌 수 없다. 부품을 고르려면 Sidekick 도구로 새로 만든다 (위 "모델 바꾸기")
+- 함정: 구운 캐릭터는 굽기마다 GUID·fileID 가 새로 정해진다. 에셋 참조로 가리키지 말고 `UnitLook.recipe` 이름으로 찾는다
 - 함정: 애니메이션 패키지 임포트 때 `Rig Error: Copied Avatar Rig Configuration mis-match` 경고가 수백 개 나온다. Synty 쪽 설정이라 오류가 아니다. 이 클립을 PolygonDarkFantasy 캐릭터에 쓸 때 자세가 맞는지는 P7 에서 본다.
 - 함정: SIDEKICK 패키지의 에디터 스크립트가 Synty 서버에서 Sidekick 도구를 스스로 내려받아 `Assets/DownloadCache/` 에 둔다 (gitignore 됨). 도구 데이터는 `Failed to load tool data` 로 불러오지 못했다. 완성 프리팹만 쓰고 도구는 들이지 않았다.
 - 함정: 애니메이션 패키지끼리 같은 파일이 있어 `Overriding existing asset with new GUID from package` 경고가 3건 나왔다. 그 파일을 참조할 때 GUID 가 나중 패키지 것이다.
@@ -60,7 +61,9 @@
 | 뱀파이어 | `SM_Chr_DarkLord_Male_01` (잠들면 짙은 붉은 상자 위에 눕힘) | 낫 (y −0.25) | `Art/Unit.controller` |
 | 스폰·시신 | 원래 병종 모델, 무기 없음 + 보라 고리 | | Sidekick 은 `Units/SidekickUnarmed` |
 
-### 모델 바꾸기 (Sidekick 으로 새로 만든 캐릭터)
-1. 새 프리팹을 그 병종 `Units/<병종>.asset` 의 모델 칸에 넣는다. 뼈대가 Sidekick 이면 다른 칸은 그대로 둔다 (무기 뼈 `prop_r`/`prop_l` 이 같다).
-2. 무기 위치가 어긋나면 그 에셋의 무기 위치·회전만 고친다.
-3. `node tools/assets/scan.mjs` 로 목록을 다시 뽑아 같이 커밋한다.
+### 모델 바꾸기 (Sidekick 으로 새로 만든 캐릭터, #30)
+1. Sidekick 도구에서 Save Character 로 `Assets/_Project/Art/Characters/<이름>.sk` 에 레시피를 저장한다 (영문 이름).
+2. 그 병종 `Units/<병종>.asset` 의 `recipe` 에 `<이름>` 을 쓴다. `model` 은 지금 프리셋 그대로 둔다 (굽기 전 클론의 대체 모델).
+3. `/synty-reload` 스킬 (또는 `bash tools/assets/sidekick-bake.sh`). 무기 뼈 `prop_r`/`prop_l` 이 같아 무기 위치는 그대로 쓴다.
+4. `.sk` 와 `UnitLook` 을 커밋한다. `Assets/_Generated/` 는 올리지 않는다.
+- 파이프라인 견본: `Characters/SampleKnight.sk` (어느 유닛도 쓰지 않음, 시험이 실제로 굽게 하려고 둔다. 진짜 레시피가 생기면 지운다). 구운 모습 docs/review/sidekick-bake-sample.png
