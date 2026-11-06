@@ -2,7 +2,7 @@
 
 ## 경로
 - 기획: docs/design/ui.md, docs/design/art.md
-- 기획서: docs/ui/ (화면별), docs/art/ui-style.md (UI 스타일, 4단계에서 생김), docs/art/ui-theme-candidates.md (테마 후보, 고르면 지움)
+- 기획서: docs/ui/ (화면별), docs/art/ui-style.md (UI 스타일, 4단계에서 생김), docs/art/ui-references.md (요소별 레퍼런스)
 - 코드: Assets/_Project/Scripts/Game/Screens/ (`Ui.cs` 가 글꼴·공용 요소)
 - 아트: Assets/Synty/InterfaceDarkFantasyMenus, Assets/Synty/InterfaceDarkFantasyHUD, Assets/Synty/InterfaceCore (분류는 art-assets.md)
 - 검토 스크린샷: docs/review/
@@ -24,9 +24,10 @@
 | 테마는 에이전트가 후보를 먼저 내고 사용자가 고른다 | 시험 중 | 2026-11-06 | #24 |
 | UI 바탕은 Synty Dark Fantasy UI 키트, 색·글꼴로 맞춘다 | 시험 중 | 2026-11-06 | #24 |
 | 목업은 HTML 이 아니라 Unity 에서 Synty 프리팹으로 만든다 | 시험 중 | 2026-11-06 | #24 |
+| UI 테마는 "달과 피": 아군은 달빛·쇠, 적은 피·악마 장식, 보름달 게이지가 화면 상징. 후보 A·B 는 커밋 851bfe8 docs/art/ui-theme-candidates.md | 시험 중 | 2026-11-06 | #24 "C 달과 피" |
 
 ## 열린 작업
-- #24 UI 아트 테마·파이프라인 (2단계: 사용자 테마 선택 대기)
+- #24 UI 아트 테마·파이프라인 (3단계 레퍼런스 끝, 4단계 UI 스타일 기획서 차례)
 - #16 한글 글꼴 파일 들이기 (막힘: 내려받기 허락)
 - docs/ui/battle-hud.md, docs/ui/stage-select.md 는 제목만 있다. 7단계에서 채운다
 
