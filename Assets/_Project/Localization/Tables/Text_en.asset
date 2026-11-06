@@ -1537,6 +1537,17 @@ MonoBehaviour:
     m_Metadata:
       m_Items:
       - rid: 7201578077006332005
+  - m_Id: 10777284898816
+    m_Localized: IBM Plex Sans, Segoe UI, Helvetica Neue, Arial, Malgun Gothic, Apple
+      SD Gothic Neo
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 10777347813376
+    m_Localized: Georgia, Times New Roman, Nanum Myeongjo, Batang, AppleMyungjo
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
   references:
     version: 2
     RefIds:
@@ -1837,3 +1848,5 @@ MonoBehaviour:
         - id: 9846573035527
         - id: 9846573035528
         - id: 9846573035529
+        - id: 10777284898816
+        - id: 10777347813376

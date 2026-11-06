@@ -2,6 +2,7 @@ using System;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.Localization.Settings;
 using VampireSpawn.Core;
 
 namespace VampireSpawn.Game.Screens
@@ -27,6 +28,23 @@ namespace VampireSpawn.Game.Screens
             choices.GetComponent<HorizontalLayoutGroup>().childForceExpandWidth = true;
             Choice(choices, Loc.T("menu.demo"), Loc.T("menu.demoDesc"), CampaignScreen.Resources(GameData.Stages[0]), demo);
             Choice(choices, Loc.T("menu.campaign"), Loc.T("menu.campaignDesc"), CampMeta(campaign), camp);
+
+            Languages(root);
+        }
+
+        // docs/ui/localization.md 6~8: top-right row, one button per locale, switches at once; the package saves the choice.
+        static void Languages(RectTransform root)
+        {
+            var row = Ui.Row(root, "Languages", 6);
+            row.anchorMin = row.anchorMax = row.pivot = new Vector2(1f, 1f);
+            row.anchoredPosition = new Vector2(-16f, -16f);
+            row.gameObject.AddComponent<ContentSizeFitter>().horizontalFit = ContentSizeFitter.FitMode.PreferredSize;
+            foreach (var locale in LocalizationSettings.AvailableLocales.Locales.OrderBy(l => l.SortOrder))
+            {
+                var current = locale == Loc.Current;
+                Ui.Button(row, locale.LocaleName, () => { if (locale != Loc.Current) LocalizationSettings.SelectedLocale = locale; },
+                    current ? Look.RosterOn : Look.Ghost, true);
+            }
         }
 
         static void Choice(Transform parent, string title, string desc, string meta, Action click)

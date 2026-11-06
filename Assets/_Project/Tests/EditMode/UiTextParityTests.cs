@@ -32,8 +32,9 @@ namespace VampireSpawn.Tests
 
         static readonly Regex Tag = new Regex("<[^>]+>"), Space = new Regex("\\s+");
 
+        // The language row (docs/ui/localization.md 6) is new UI with no prototype twin.
         static List<string> Blocks(Transform root) =>
-            root.GetComponentsInChildren<Text>(true).Select(t => Space.Replace(Tag.Replace(t.text, ""), "")).Where(s => s.Length > 0).OrderBy(s => s, StringComparer.Ordinal).ToList();
+            root.GetComponentsInChildren<Text>(true).Where(t => t.GetComponentsInParent<Transform>(true).All(p => p.name != "Languages")).Select(t => Space.Replace(Tag.Replace(t.text, ""), "")).Where(s => s.Length > 0).OrderBy(s => s, StringComparer.Ordinal).ToList();
 
         RectTransform root;
 
