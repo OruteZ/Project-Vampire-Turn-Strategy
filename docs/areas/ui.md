@@ -30,7 +30,7 @@
 | 보드 위에 글자 라벨을 두지 않는다 (게이지·표적 아이콘·패널이 대신) | 시험 중 | 2026-11-06 | #24 "추천대로" |
 
 ## 열린 작업
-- #24 UI 아트 테마·파이프라인 (7단계: docs/ui/battle-hud.md 끝. 남은 화면별 기획서: stage-select, main-menu·upgrade 를 스타일 기준으로 다시)
+- #24 UI 아트 테마·파이프라인 (7단계: docs/ui/battle-hud.md, docs/ui/stage-select.md 끝. 남은 것: main-menu·upgrade 를 스타일 기준으로 다시)
 - 8단계 전투 화면 구현 때 할 것 (방향 검토에서 나옴)
   - 적을 살펴볼 때 위협 칸(`Mark.Threat`)과 체크박스·안내 문구 지우기 (ui-style.md 8-4)
   - 보드 칸 표시 색을 8-2 토큰으로, 흡혈 범위 칸 따로 (`OverlayView`)
@@ -40,7 +40,6 @@
   - docs/review/ui-style-tile-2.png 다시 찍기 (호버가 잡히지 않아 피해 미리 보기가 빠졌다)
   - 패널 경고 줄, "적 페이즈", "닫기" 를 Text 표 키로
 - #16 한글 글꼴 파일 들이기 (막힘: 내려받기 허락)
-- docs/ui/stage-select.md 는 제목만 있다. 7단계에서 채운다
 
 ## 맡길 때
 - 모델: 테마·스타일·화면 기획서와 방향 검토는 opus, 목업·화면 구현은 sonnet
