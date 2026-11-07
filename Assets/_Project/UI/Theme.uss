@@ -1,0 +1,47 @@
+/* docs/art/ui-style.md 2-1 colour tokens, the same values as Ui.cs. */
+:root {
+    --ink: #12131a;
+    --panel: rgba(26, 28, 37, 0.92);
+    --line: #3a3442;
+    --bone: #ebe3d2;
+    --muted: #b9b2bf;
+    --dim: #7d7684;
+    --candle: #e3a84b;
+    --steel: #8fb0cc;
+    --steel-dim: #4a5d6e;
+}
+
+.display {
+    -unity-font-style: bold;
+}
+
+.value {
+    flex-direction: row;
+    align-items: center;
+}
+
+.value-icon {
+    width: 26px;
+    height: 26px;
+    margin-right: 5px;
+}
+
+.value-text {
+    font-size: 20px;
+    -unity-font-style: bold;
+    padding: 0;
+    margin: 0;
+}
+
+.tip {
+    position: absolute;
+    max-width: 420px;
+    padding: 8px 12px;
+    font-size: 15px;
+    color: var(--muted);
+    background-color: rgba(15, 16, 22, 0.95);
+    border-width: 1px;
+    border-color: var(--line);
+    white-space: normal;
+    display: none;
+}

@@ -29,6 +29,11 @@ namespace VampireSpawn.Editor
                 EditorGUILayout.HelpBox(last + "\n확인: Window > General > Test Runner 의 SidekickRecipeTests, RequiredAssetsTests",
                     last.Contains("FAIL") || last.Contains("MISSING") ? MessageType.Warning : MessageType.Info);
 
+            EditorGUILayout.LabelField("UI", EditorStyles.boldLabel);
+            var toolkit = PlayerPrefs.GetInt(Game.Screens.MenuToolkit.PrefKey, 0) == 1;
+            var next = GUILayout.Toggle(toolkit, new GUIContent("메인 메뉴를 UI Toolkit 시험판으로", "켜면 다음에 메뉴를 그릴 때 Assets/_Project/UI/Menu.uxml 을 쓴다 (#44, docs/dev/ui-toolkit-trial.md)"));
+            if (next != toolkit) PlayerPrefs.SetInt(Game.Screens.MenuToolkit.PrefKey, next ? 1 : 0);
+
             EditorGUILayout.LabelField("유닛 모습", EditorStyles.boldLabel);
             if (GUILayout.Button(new GUIContent("유닛 모습 한눈에", "모든 UnitLook 을 앞 대기·옆 대기·옆 공격으로 찍어 verify-artifacts/unit-lineup.png 로 연다 (docs/art/unit-visuals.md 6)")))
             {
