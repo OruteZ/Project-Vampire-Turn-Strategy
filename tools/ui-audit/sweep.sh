@@ -11,10 +11,14 @@ REPORT="$OUT/audit.txt"
 
 ev() { unity --no-banner command --project-path "$VU_PROJECT" script eval --code "$1" --json | node -e 'let s="";process.stdin.on("data",d=>s+=d).on("end",()=>{const j=JSON.parse(s);const r=j.data&&j.data.result!==undefined?j.data.result:j.result;process.stdout.write(String(r??JSON.stringify(j.errors||j)))})'; }
 
-GF='var gf=UnityEngine.Object.FindFirstObjectByType<VampireSpawn.Game.Screens.GameFlow>(); var F=System.Reflection.BindingFlags.NonPublic|System.Reflection.BindingFlags.Instance;'
+GF='var gf=UnityEngine.Object.FindFirstObjectByType<VampireSpawn.Game.Screens.GameFlow>(); var F=System.Reflection.BindingFlags.NonPublic|System.Reflection.BindingFlags.Instance; System.Action<VampireSpawn.Core.CampInput> send = x => typeof(VampireSpawn.Game.Screens.GameFlow).GetMethod("Send",F).Invoke(gf, new object[]{x});'
 declare -A SCREENS=(
   [1-menu]="$GF gf.ShowMenu(); return 1;"
-  [2-camp]="$GF gf.ShowCamp(); return 1;"
+  [2a-camp-l1]="$GF gf.ShowCamp(); return 1;"
+  [2b-camp-l2-s1]="$GF gf.ShowCamp(); send(VampireSpawn.Core.CampInput.Pick(0, 0f)); return 1;"
+  [2c-camp-l2-s8]="$GF gf.ShowCamp(); send(VampireSpawn.Core.CampInput.Pick(7, 0f)); return 1;"
+  [2d-camp-l2-s10]="$GF gf.ShowCamp(); send(VampireSpawn.Core.CampInput.Pick(9, 0f)); return 1;"
+  [2e-camp-l3]="$GF gf.ShowCamp(); send(VampireSpawn.Core.CampInput.Pick(0, 0f)); send(VampireSpawn.Core.CampInput.Of(VampireSpawn.Core.CampKey.Barracks, 0f)); return 1;"
   [3-deploy]="$GF gf.StartBattle(VampireSpawn.Core.Campaign.Stages[0], null, false); return 1;"
   [4-turn]="$GF gf.input.Run(s=>s.UseSample()); gf.input.Run(s=>s.Start()); var u=System.Linq.Enumerable.First(gf.input.Session.Battle.Allies); gf.input.Run(s=>s.Click(u.Pos)); return 1;"
   [5-rules]="$GF typeof(VampireSpawn.Game.Screens.GameFlow).GetField(\"rulesOpen\",F).SetValue(gf,true); typeof(VampireSpawn.Game.Screens.GameFlow).GetMethod(\"RenderBattle\",F).Invoke(gf,null); return 1;"

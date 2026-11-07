@@ -413,7 +413,9 @@ dx, dz 는 앵커에서 떨어진 거리, 돌림은 y 축 °(0 = 북쪽을 봄),
 
 ## 구현 메모
 
-- 아직 구현 전 (#43).
+- 1차 범위(1-1) 구현 (#43, 브랜치 stage-select): `CampaignMapView`, 배치 표 `CampaignMapLayout`. 사진 `docs/review/campaign-map-{wide,s1,s10,camp}.png`.
+- **기획서와 다른 점 (기획 에이전트에게 맡길 것):** 10절은 `CampaignMap.asset` 을 말하지만, 인계 메모(docs/dev/stage-select-handoff.md 3)의 결정대로 배치 표는 C# `CampaignMapLayout` 이고 프리팹만 `ArtCatalog.mapProps`(이름으로 찾음)에 있다. 자리 ±1.5 손맞춤을 C# 고침으로 할 수 있어서다. 목록은 도구 모음 > 지도 > 프리팹 목록 채우기, 어긋나면 `CampaignMapLayoutTests` 가 실패한다. 10절을 이 모양으로 고쳐 주길 바란다.
+- 함정: 투영 옮김은 `p[0,2] = -(2·cx − 1)` 이다(카메라 축은 NDC `-p[0,2]` 에 놓인다). `BoardView.FitCamera` 도 부호가 반대여서 함께 고쳤다.
 - 함정: `BoardView.LateUpdate` 는 `Board` 가 있으면 카메라를 계속 보드에 맞춘다. `Clear()` 뒤에도 `Board` 가 남는다. 지도가 카메라를 쓰는 동안 보드가 카메라를 잡지 않게 해야 한다.
 - 함정: 메인 메뉴 바탕은 지금처럼 보드를 저해상도 RenderTexture 로 그린다(`GameFlow.Backdrop`). 장 선택 화면으로 오면 카메라 `targetTexture` 를 비우고 화면 전체에 지도를 그린다.
 - 확인: verify-unity 로 전경·지역(1장, 10장)·야영지 시점 스크린샷을 1920×1080, 2560×1080, 1280×1024 에서 찍어 `docs/review/campaign-map-*.png` 에 둔다.

@@ -41,7 +41,7 @@
 ## 열린 작업
 - #24 UI 아트 테마·파이프라인: 8단계 화면별 구현 끝, 남은 것(보름달 턴 상태·연출·배지 절)도 #28 에서 끝. 전투 (#25), 장 선택·병영 (#26), 메인 메뉴 (#27). 스크린샷 docs/review/battle-hud-*, stage-select-*, main-menu*.png
 - #16 한글 글꼴 파일 들이기 (막힘: 내려받기 허락)
-- #43 장 선택 대개편: 기획서 끝(stage-select.md, upgrade.md, campaign-map.md, ui-style.md 15·16). 구현은 #44 를 하던 세션이 UI Toolkit + uGUI 로 이어 간다. 인계 docs/dev/stage-select-handoff.md. 후속: 병영에서 고른 병종 3D 모델을 야영지에 세우기 (upgrade.md "후속")
+- #43 장 선택 대개편: 구현됨(브랜치 stage-select, 세 레이어·3D 지도·표식). 남은 것: 가장자리 그늘, 칸·배지 움직임, 산 줄 번쩍임 (stage-select.md 구현 메모), campaign-map.md 10절을 C# 배치 표 구조로 고치기(기획 쪽), 지도 1-1 후속(줄 소품·강·곁길·야영지). 후속: 병영에서 고른 병종 3D 모델을 야영지에 세우기 (upgrade.md "후속")
 - #44 UI Toolkit 시험(메인 메뉴): 결과와 추천 docs/dev/ui-toolkit-trial.md. 화면 단위 혼합으로 결정(결정 표). 장 선택이 두 번째 UI Toolkit 화면이다
 - 다국어 표의 글꼴 첫 이름 `Nanum Myeongjo` 가 설치 이름 `NanumMyeongjo` 와 달라 `Noto Serif KR` 로 그려진다 (docs/dev/ui-toolkit-trial.md 5)
 
@@ -50,6 +50,8 @@
 - 함정: Synty 키트 글꼴(LT Museum, Markazi, Pirata One)은 라틴 문자만 있다. 한글 글자는 #16 글꼴로
 - 함정: 키트 장식은 대부분 악마 상징(해골, 오망성, 촉수)이다. 플레이어는 토벌대라서 어디에 쓸지는 테마가 정한다. 문장(Crest) 28개 중 해골이 없는 것은 Large_03(마름모)·Banner_02(천) 정도다
 - 함정: Synty 틀 스프라이트의 9-slice 테두리가 180~380px 라 그대로 쓰면 두껍다. `Image.pixelsPerUnitMultiplier` 로 줄인다 (ui-style.md 5절)
+- 함정: UIDocument 의 뿌리와 템플릿 칸은 화면 전체를 덮고 기본으로 클릭을 받는다. 그대로 두면 EventSystem 이 늘 "UI 위" 라고 해 지도·보드 클릭이 안 된다. `ToolkitKit.Document` 가 Ignore 로 둔다
+- 함정: 투영 옮김(`BoardView.FitCamera`, `CampaignMapView`)은 `p[0,2] = -(2·cx − 1)`. 부호가 반대면 화면 가운데에서 반대쪽으로 간다
 - 함정: 적 턴은 모델이 먼저 끝나고 화면이 나중에 재생된다. 재생 중 상태(보름달 턴)는 `BattleView.Played` 배너로 안다 (`GameFlow.OnPlayed`)
 - 함정: Synty 틀 스프라이트에는 붉은·녹색 기가 구워져 있다. Image 색으로 물들이면 곱해져 남는다
 - 함정: CanvasScaler 는 화면 하나(`GameFlow.BuildCanvas`)라 Expand 로 바꾸면 모든 화면이 함께 바뀐다. 장 선택만 고쳐도 sweep 은 모든 화면에 돌린다. UI Toolkit `Panel.asset` 도 같이 Expand 로 바꾼다

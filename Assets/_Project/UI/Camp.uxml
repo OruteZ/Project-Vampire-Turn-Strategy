@@ -25,7 +25,7 @@
 
         <ui:VisualElement name="info" class="panel info-panel">
             <ui:VisualElement class="panel-frame" picking-mode="Ignore" />
-            <ui:VisualElement name="info-crest" class="info-crest" picking-mode="Ignore" />
+            <ui:VisualElement name="info-crest" class="info-crest decor" picking-mode="Ignore" />
             <ui:VisualElement name="info-badge" class="info-badge" picking-mode="Ignore">
                 <ui:VisualElement class="ring-fill" picking-mode="Ignore" />
                 <ui:VisualElement class="ring" picking-mode="Ignore" />

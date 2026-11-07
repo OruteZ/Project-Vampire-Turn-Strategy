@@ -296,7 +296,10 @@ L3 병영: 오른쪽 칸이 병영 칸(560×680)으로 바뀌고 카메라가 �
 
 ## 구현 메모
 
-- 아직 구현 전 (#43). 구현은 UI Toolkit + uGUI 로 한다 (10절). 바꾸는 코드: `CampaignScreen.cs` (세 레이어, 표식), `GameFlow.cs` (`ShowCamp` 레이어 상태, `CampKeys`, 바탕을 보드 RT 대신 지도, `BuildCanvas` Expand), 새 `CampaignMapView` (campaign-map.md 10). 위 요구사항과 구현이 다르면 구현을 고친다. 인계 메모: docs/dev/stage-select-handoff.md.
+- 구현 (#43, 브랜치 stage-select): 레이어 상태 `Core/CampNav.cs`(시험 `CampNavTests`), 칸 `Assets/_Project/UI/Camp.uxml`·`.uss` + `Game/Screens/CampToolkit.cs`, 표식 `CampMarkers.cs`, 연결 `GameFlow.OpenCamp`·`Send`. UI Toolkit 공용 부품 `ToolkitKit.cs`.
+- 1차에서 빠진 것: 가장자리 그늘(2-2), 칸 나타남 0.15초·배지 커짐 0.15초 움직임(5-1, 4-2), 산 줄 0.2초 번쩍임(upgrade.md 6-4), 강화 줄이 셋 이상일 때 스크롤은 ScrollView 로 들어가 있다.
+- **기획서와 다른 점 (기획 에이전트에게 맡길 것):** 3-1 의 마지막 장 문장은 "칸 위 끝에서 40 올라감" 이지만 칸이 화면 위 24 에 있어 화면 밖으로 나간다(검사 `off-screen`). 구현은 문장 상자를 칸 위 끝에 맞췄고(빛이 12 더 올라간다), 장 이름 뒤에 깔린다. 자리를 다시 정해 주길 바란다.
+- 이전 메모: 구현은 UI Toolkit + uGUI 로 한다 (10절). 바꾸는 코드: `CampaignScreen.cs` (세 레이어, 표식), `GameFlow.cs` (`ShowCamp` 레이어 상태, `CampKeys`, 바탕을 보드 RT 대신 지도, `BuildCanvas` Expand), 새 `CampaignMapView` (campaign-map.md 10). 위 요구사항과 구현이 다르면 구현을 고친다. 인계 메모: docs/dev/stage-select-handoff.md.
 - 표식 자리: 지도가 앵커의 화면 점을 주고, UI 는 캔버스 좌표로 바꿔 `anchoredPosition` 만 바꾼다. 매 프레임 다시 짓지 않는다 (지금 `BattleHud.Tick` 의 머리 위 표시와 같은 방식).
 - `UiTextParityTests` 의 캠페인 화면 검사는 이 문서의 글 구성으로 고친다.
 - `Crest_*`, `Section_Break` 는 키트 프리팹이다. 지금처럼 `Kit.Prefab` 으로 띄운다.

@@ -59,7 +59,7 @@ namespace VampireSpawn.Editor
             return sb.ToString();
         }
 
-        // The same three checks for UI Toolkit, in panel units: off the panel, text wider than its label, outside its .card.
+        // The same three checks for UI Toolkit, in panel units: off the panel, text wider than its label, outside its .card or .panel.
         static void ToolkitReport(UnityEngine.UIElements.UIDocument doc, List<string> found)
         {
             var root = doc.rootVisualElement;
@@ -80,8 +80,10 @@ namespace VampireSpawn.Editor
                     if (label.resolvedStyle.whiteSpace == UnityEngine.UIElements.WhiteSpace.NoWrap && need.x > label.contentRect.width + 4f)
                         found.Add("text>box\ttk:" + path + "\tR" + (need.x - label.contentRect.width).ToString("0") + " \"" + Clip(label.text) + "\"");
                 }
+                // .decor is drawn to stand out of its panel (the castle crest over the stage panel); it must still stay on screen.
                 for (var p = e.parent; p != null; p = p.parent)
-                    if (p.ClassListContains("card"))
+                    if (p.ClassListContains("decor")) break;
+                    else if (p.ClassListContains("card") || p.ClassListContains("panel"))
                     {
                         if (Spill(p.worldBound, e.worldBound, Slack, Slack) is var f && f != "") found.Add("out-of-frame\ttk:" + path + "\t" + f + " frame=" + p.name);
                         break;

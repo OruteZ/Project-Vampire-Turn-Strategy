@@ -47,7 +47,8 @@
 .info-panel { height: 520px; }
 .barracks-panel { height: 680px; }
 
-.info-crest { position: absolute; left: 232px; top: -40px; width: 96px; height: 96px; }
+/* stage-select.md 3-1 says 40 above the panel, which leaves the screen (panel top is 24); its glow already reaches 12 px above the box. */
+.info-crest { position: absolute; left: 232px; top: 0; width: 96px; height: 96px; }
 .info-badge { position: absolute; left: 32px; top: 36px; width: 48px; height: 48px; justify-content: center; align-items: center; }
 .ring-fill, .ring { position: absolute; left: 0; top: 0; right: 0; bottom: 0; }
 .ring { left: -2px; top: -2px; right: -2px; bottom: -2px; }
