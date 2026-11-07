@@ -21,7 +21,7 @@
 - 메인 작업 트리(저장소 폴더)는 한 번에 한 에이전트만 쓴다. 다른 에이전트는 `git worktree add` 로 저장소 옆 폴더(예: <저장소>-<기능명>)에서 작업한다
 - 다른 작업 트리의 브랜치를 바꾸지 않는다. dev 가 메인 트리에 체크아웃돼 있으면, merge 는 메인 트리가 깨끗한지 확인한 뒤 `git -C <메인 트리> merge --no-ff` 로 한다
 - 파일 쓰기는 항상 절대경로로 한다. 상대경로를 쓰면 다른 트리에 잘못 쓰일 수 있다
-- 끝난 worktree 는 제거한다
+- 끝난 worktree 는 제거한다. 그 전에 안의 junction(`Assets/Synty`, `UPackage`)을 `cmd //c rmdir` 로 먼저 끊는다. Windows 의 `git worktree remove` 는 junction 을 따라가 메인 트리의 유료 에셋을 지운다
 - 작업이 끝나면 작업 브랜치에 dev 를 먼저 merge 하고 테스트가 통과한 뒤 dev 에도 바로 push 한다 (`git push origin HEAD:dev`, fast-forward)
 
 ## 작업 현황 (GitHub 이슈)

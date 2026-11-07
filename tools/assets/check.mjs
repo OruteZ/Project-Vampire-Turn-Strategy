@@ -14,9 +14,11 @@ const byPkg = new Map(packages.map((p) => [p.file, { ...p, missing: [], ok: 0 }]
 for (const [guid, rel, pkg] of tsv('required.tsv')) {
   const meta = path.join(ROOT, rel + '.meta');
   const found = fs.existsSync(meta) ? (fs.readFileSync(meta, 'utf8').match(/^guid: ([0-9a-f]{32})/m) || [])[1] : null;
-  const entry = byPkg.get(pkg);
-  if (found === guid) entry.ok++;
-  else entry.missing.push(found ? `${rel} (GUID ${found}, 기대 ${guid})` : rel);
+  // scan.mjs writes "A+B" for an asset shipped in both packages and counts it under each.
+  for (const entry of pkg.split('+').map((p) => byPkg.get(p))) {
+    if (found === guid) entry.ok++;
+    else entry.missing.push(found ? `${rel} (GUID ${found}, 기대 ${guid})` : rel);
+  }
 }
 
 let todo = 0;

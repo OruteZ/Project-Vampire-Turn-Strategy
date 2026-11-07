@@ -26,7 +26,7 @@ Measured on this machine with the Editor unfocused, 2026-11-05.
 ## Launch
 
 - `$V launch` uses the Editor already open for this project, or opens one with `unity open` and records that it did. It waits for `unity status` state `ready` and no compile, then enables background mode. Prints `READY <path>`.
-- First open of a fresh worktree imports Synty (about 390 MB). Before it, link the assets, because they are not in git: `cmd //c mklink //J "<worktree>\Assets\Synty" "C:\Unity Projects\Project Vampire Spawn\Assets\Synty"`.
+- First open of a fresh worktree imports Synty (about 390 MB). Before it, link the assets, because they are not in git: `cmd //c mklink //J "<worktree>\Assets\Synty" "C:\Unity Projects\Project Vampire Spawn\Assets\Synty"`. Before removing that worktree, unlink every junction (`cmd //c rmdir "<worktree>\Assets\Synty"`, same for `UPackage`): `git worktree remove` follows junctions on Windows and deletes the main tree's assets.
 - One Editor per project folder. Two agents never drive the same Editor. A second agent works in its own worktree with `VU_PROJECT`.
 
 ## Doctor
