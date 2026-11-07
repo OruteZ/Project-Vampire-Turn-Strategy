@@ -24,10 +24,12 @@ namespace VampireSpawn.Game.Screens
         public Campaign Campaign { get; private set; }
         public bool OverShown => overRoot != null && overRoot.gameObject.activeSelf;
 
-        bool demo, resetArm, leaveArm, rulesOpen, logOpen, finished, enemyPlaying, fullMoon, moonFading;
-        float leaveUntil, bannerUntil, buyUntil;
-        string buyArm, bought;
-        int? campSel;
+        bool demo, leaveArm, rulesOpen, logOpen, finished, enemyPlaying, fullMoon, moonFading;
+        float leaveUntil, bannerUntil;
+        CampNav? nav;
+        CampaignMapView map;
+        CampToolkit campUi;
+        CampMarkers markers;
         int menuSel = 1;
         UnityEngine.UIElements.UIDocument toolkitMenu;
         RenderTexture backdropTex;
@@ -41,7 +43,6 @@ namespace VampireSpawn.Game.Screens
         bool altDown;
         readonly Dictionary<string, bool> keyDown = new Dictionary<string, bool>();
         Text banner;
-        CampaignActions campActions;
         BattleActions battleActions;
 
         BattleSession Session => input.Session;
@@ -56,19 +57,6 @@ namespace VampireSpawn.Game.Screens
             View.Played += OnPlayed;
             input.PointerBlocked = () => EventSystem.current != null && EventSystem.current.IsPointerOverGameObject();
             input.EscapeFirst = CloseBattlePopup;
-            campActions = new CampaignActions
-            {
-                Play = i => { buyArm = null; demo = false; campSel = i; StartBattle(Campaign.Stages[i], null, false); },
-                Select = i => { buyArm = null; resetArm = false; campSel = i; ShowCamp(); },
-                Buy = id =>
-                {
-                    if (buyArm == id) { buyArm = null; if (Campaign.Buy(id)) { CampaignStore.Save(Campaign); bought = id; } }
-                    else { buyArm = id; buyUntil = Time.unscaledTime + LeaveSeconds; }
-                    ShowCamp();
-                },
-                Reset = () => { buyArm = null; if (resetArm) { Campaign = new Campaign(); CampaignStore.Save(Campaign); resetArm = false; } else resetArm = true; ShowCamp(); },
-                Menu = () => { resetArm = false; buyArm = null; ShowMenu(); },
-            };
             battleActions = new BattleActions
             {
                 Primary = Primary,
@@ -83,7 +71,7 @@ namespace VampireSpawn.Game.Screens
                 ToggleLog = () => { logOpen = !logOpen; RenderBattle(); },
                 Retry = () => StartBattle(stage, Session.Battle.StartFormation, true),
                 Redeploy = () => StartBattle(stage, Session.Battle.StartFormation, false),
-                ToCamp = () => { LeaveBattle(); ShowCamp(); },
+                ToCamp = () => { var back = Back(); LeaveBattle(); OpenCamp(back); },
                 CloseOver = () => overRoot.gameObject.SetActive(false),
             };
         }
@@ -144,6 +132,9 @@ namespace VampireSpawn.Game.Screens
         void ClearScreen(bool opaque)
         {
             if (toolkitMenu != null) { Destroy(toolkitMenu.gameObject); toolkitMenu = null; }
+            if (campUi != null) { Destroy(campUi.Doc.gameObject); campUi = null; }
+            markers = null;
+            if (map != null) map.Hide();
             Ui.Clear(screen);
             if (!screen.TryGetComponent<Image>(out var bg)) bg = screen.gameObject.AddComponent<Image>();
             bg.color = Ui.Ink;
@@ -200,14 +191,91 @@ namespace VampireSpawn.Game.Screens
             else if (enter) { if (menuSel == 0) MenuDemo(); else MenuCamp(); }
         }
 
-        public void ShowCamp()
+        public void ShowCamp() => OpenCamp(CampNav.FromMenu(Campaign, nav));
+
+        // docs/ui/stage-select.md: one screen, three layers over the 3D map. Opened like a battle (ClearScreen(false)) so the map shows
+        // and the pointer is not always "over UI" (stage-select-handoff.md 2-1).
+        void OpenCamp(CampNav start)
         {
             Current = "camp";
-            ClearScreen(true);
-            var sel = campSel ?? CampNav.DefaultStage(Campaign);
-            Backdrop(Campaign.Stages[sel]);
-            CampaignScreen.Build(screen, Campaign, new CampView { Selected = sel, ResetArm = resetArm, BuyArm = buyArm, Bought = bought }, campActions, View.board.art);
-            bought = null;
+            ClearScreen(false);
+            nav = start;
+            var art = View.board.art;
+            if (map == null)
+            {
+                map = new GameObject("Campaign Map View").AddComponent<CampaignMapView>();
+                map.transform.SetParent(transform, false);
+                map.art = art;
+                map.viewCamera = viewCamera;
+            }
+            map.Show(Campaign);
+            markers = CampMarkers.Build(screen, art, map, i => Send(CampInput.Pick(i, Time.unscaledTime)));
+            campUi = CampToolkit.Build(transform, art, CampIn, Send);
+            Canvas.ForceUpdateCanvases();
+            Redraw(true);
+            Fx.FadeIn(screen);
+        }
+
+        CampInput CampIn(CampKey key) => CampInput.Of(key, Time.unscaledTime);
+
+        // stage-select.md 5-3 2: the stage just played; a first clear that opened the next one shows it on the map.
+        CampNav Back()
+        {
+            var i = System.Array.FindIndex(Campaign.Stages, x => x.Id == stage?.Id);
+            return CampNav.FromBattle(Campaign, Mathf.Max(0, i), over != null && over.Won && over.Result.FirstClear, nav?.Tab ?? -1);
+        }
+
+        void Send(CampInput input)
+        {
+            if (Current != "camp" || nav == null) return;
+            var (next, act) = nav.Value.Step(Campaign, input);
+            nav = next;
+            switch (act)
+            {
+                case CampDo.Redraw: Redraw(false); break;
+                case CampDo.Buy:
+                    if (Campaign.Buy(input.Id)) CampaignStore.Save(Campaign);
+                    Redraw(false);
+                    break;
+                case CampDo.Reset:
+                    Campaign = new Campaign();
+                    CampaignStore.Save(Campaign);
+                    nav = CampNav.AfterReset();
+                    map.Show(Campaign);
+                    Redraw(true);
+                    break;
+                case CampDo.March: demo = false; StartBattle(Campaign.Stages[nav.Value.Stage], null, false); break;
+                case CampDo.Menu: ShowMenu(); break;
+            }
+        }
+
+        void Redraw(bool snap)
+        {
+            var n = nav.Value;
+            var empty = EmptyArea(n.Layer);
+            var size = screen.rect.size;
+            campUi.Fill(Campaign, n, CampIn);
+            markers.Fill(Campaign, n, empty);
+            map.Look(n.Layer, n.Stage, empty, new Vector2(48f / size.x, 48f / size.y), snap);
+        }
+
+        // stage-select.md 2-3: the screen minus the corner UI and, in L2/L3, the 560 px side panel; normalized viewport units.
+        Rect EmptyArea(CampLayer layer)
+        {
+            var size = screen.rect.size;
+            var right = layer == CampLayer.Map ? 24f : 608f;
+            return new Rect(24f / size.x, 104f / size.y, (size.x - 24f - right) / size.x, (size.y - 112f - 104f) / size.y);
+        }
+
+        bool PointerOverUi()
+        {
+            if (EventSystem.current != null && EventSystem.current.IsPointerOverGameObject()) return true;
+            var panel = campUi?.Doc.rootVisualElement.panel;
+            var mouse = UnityEngine.InputSystem.Mouse.current;
+            if (panel == null || mouse == null) return false;
+            var p = UnityEngine.UIElements.RuntimePanelUtils.ScreenToPanel(panel, new Vector2(mouse.position.x.ReadValue(), Screen.height - mouse.position.y.ReadValue()));
+            var hit = panel.Pick(p);
+            return hit != null && hit.pickingMode == UnityEngine.UIElements.PickingMode.Position && hit != campUi.Root;
         }
 
         public void StartBattle(Stage s, IEnumerable<Placement<UnitKind>> formation, bool startNow)
@@ -317,7 +385,6 @@ namespace VampireSpawn.Game.Screens
         void Update()
         {
             if (leaveArm && Time.unscaledTime > leaveUntil) { leaveArm = false; RenderBattle(); }
-            if (buyArm != null && Time.unscaledTime > buyUntil) { buyArm = null; if (Current == "camp") ShowCamp(); }
             if (banner != null && banner.gameObject.activeSelf && Time.unscaledTime > bannerUntil) banner.gameObject.SetActive(false);
             if (Current == "battle" && Session != null)
             {
@@ -336,19 +403,22 @@ namespace VampireSpawn.Game.Screens
             return down && !was;
         }
 
+        // stage-select.md 5-2 keys, the 2.5 s confirm expiry, and a click on bare map (5-1) all go through CampNav.
         void CampKeys()
         {
+            if (nav == null) return;
+            if (nav.Value.Armed != CampConfirm.None) Send(CampIn(CampKey.Tick));
             var kb = UnityEngine.InputSystem.Keyboard.current;
+            var mouse = UnityEngine.InputSystem.Mouse.current;
+            if (mouse != null && Pressed("click", mouse.leftButton.isPressed) && !PointerOverUi()) Send(CampIn(CampKey.EmptyMap));
             if (kb == null) return;
-            var up = Pressed("up", kb.upArrowKey.isPressed);
-            var down = Pressed("down", kb.downArrowKey.isPressed);
-            var enter = Pressed("enter", kb.enterKey.isPressed || kb.numpadEnterKey.isPressed);
-            var esc = Pressed("esc", kb.escapeKey.isPressed);
-            var sel = campSel ?? CampNav.DefaultStage(Campaign);
-            if (up && sel > 0) campActions.Select(sel - 1);
-            else if (down && sel < Campaign.Stages.Length - 1) campActions.Select(sel + 1);
-            else if (enter && Campaign.StageOpen(sel)) campActions.Play(sel);
-            else if (esc) campActions.Menu();
+            if (Pressed("up", kb.upArrowKey.isPressed)) Send(CampIn(CampKey.Up));
+            if (Pressed("down", kb.downArrowKey.isPressed)) Send(CampIn(CampKey.Down));
+            if (Pressed("left", kb.leftArrowKey.isPressed)) Send(CampIn(CampKey.Left));
+            if (Pressed("right", kb.rightArrowKey.isPressed)) Send(CampIn(CampKey.Right));
+            if (Pressed("enter", kb.enterKey.isPressed || kb.numpadEnterKey.isPressed)) Send(CampIn(CampKey.Enter));
+            if (Pressed("esc", kb.escapeKey.isPressed)) Send(CampIn(CampKey.Esc));
+            if (Pressed("b", kb.bKey.isPressed)) Send(CampIn(CampKey.Barracks));
         }
 
         void Hotkeys()
@@ -407,8 +477,9 @@ namespace VampireSpawn.Game.Screens
                 return;
             }
             if (enemyPlaying) return;
+            var back = Back();
             LeaveBattle();
-            if (demo) ShowMenu(); else ShowCamp();
+            if (demo) ShowMenu(); else OpenCamp(back);
         }
 
         void LeaveBattle()

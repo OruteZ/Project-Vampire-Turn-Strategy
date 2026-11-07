@@ -1770,6 +1770,18 @@ MonoBehaviour:
       \uC774\uB3D9\uB825"
     m_Metadata:
       m_Items: []
+  - m_Id: 504315915333632
+    m_Localized: "\uBCD1\uC601"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 504315978248192
+    m_Localized: "\uC0B4 \uC218 \uC788\uB294 \uAC15\uD654 {0}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 504315978248193
+    m_Localized: "\uC9C0\uB3C4\uB85C"
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds:

@@ -1307,6 +1307,18 @@ MonoBehaviour:
     m_Key: hud.altTip
     m_Metadata:
       m_Items: []
+  - m_Id: 504315915333632
+    m_Key: camp.barracksName
+    m_Metadata:
+      m_Items: []
+  - m_Id: 504315978248192
+    m_Key: camp.affordable
+    m_Metadata:
+      m_Items: []
+  - m_Id: 504315978248193
+    m_Key: camp.toMap
+    m_Metadata:
+      m_Items: []
   m_Metadata:
     m_Items: []
   m_KeyGenerator:

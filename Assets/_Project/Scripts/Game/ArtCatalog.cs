@@ -49,6 +49,7 @@ namespace VampireSpawn.Game
         [Header("UI Toolkit trial (#44)")]
         public UnityEngine.UIElements.PanelSettings panel;
         public UnityEngine.UIElements.VisualTreeAsset menuDocument;
+        [Tooltip("장 선택 (docs/ui/stage-select.md 10)")] public UnityEngine.UIElements.VisualTreeAsset campDocument;
 
         public Sprite Ui(string name) => System.Array.Find(ui ?? System.Array.Empty<Sprite>(), s => s != null && s.name == name);
 

@@ -1,0 +1,74 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements">
+    <Style src="Theme.uss" />
+    <Style src="Camp.uss" />
+    <ui:VisualElement name="camp" class="camp l-map" picking-mode="Ignore">
+        <ui:VisualElement name="head" class="head" picking-mode="Ignore">
+            <ui:VisualElement name="menu" class="btn ghost square">
+                <ui:VisualElement class="icon" picking-mode="Ignore" />
+                <ui:Label class="key map-only" text="Esc" picking-mode="Ignore" />
+            </ui:VisualElement>
+            <ui:Label name="title" class="title display" picking-mode="Ignore" />
+        </ui:VisualElement>
+        <ui:VisualElement name="reset" class="btn ghost reset map-only">
+            <ui:VisualElement class="btn-frame" picking-mode="Ignore" />
+            <ui:Label class="btn-text" picking-mode="Ignore" />
+        </ui:VisualElement>
+        <ui:VisualElement name="barracks" class="btn normal barracks-btn">
+            <ui:VisualElement class="btn-frame" picking-mode="Ignore" />
+            <ui:VisualElement name="badge" class="badge" picking-mode="Ignore">
+                <ui:Label class="badge-text" picking-mode="Ignore" />
+            </ui:VisualElement>
+            <ui:VisualElement class="icon" picking-mode="Ignore" />
+            <ui:Label class="btn-text" picking-mode="Ignore" />
+            <ui:Label class="key" text="B" picking-mode="Ignore" />
+        </ui:VisualElement>
+
+        <ui:VisualElement name="info" class="panel info-panel">
+            <ui:VisualElement class="panel-frame" picking-mode="Ignore" />
+            <ui:VisualElement name="info-crest" class="info-crest" picking-mode="Ignore" />
+            <ui:VisualElement name="info-badge" class="info-badge" picking-mode="Ignore">
+                <ui:VisualElement class="ring-fill" picking-mode="Ignore" />
+                <ui:VisualElement class="ring" picking-mode="Ignore" />
+                <ui:Label class="ring-text" picking-mode="Ignore" />
+            </ui:VisualElement>
+            <ui:Label name="info-name" class="info-name display" />
+            <ui:VisualElement name="info-close" class="btn ghost close">
+                <ui:VisualElement class="icon" picking-mode="Ignore" />
+                <ui:Label class="key" text="Esc" picking-mode="Ignore" />
+            </ui:VisualElement>
+            <ui:VisualElement name="info-break" class="break" picking-mode="Ignore" />
+            <ui:VisualElement name="info-goal" class="line goal">
+                <ui:VisualElement class="line-icon" picking-mode="Ignore" />
+                <ui:Label class="line-text" picking-mode="Ignore" />
+            </ui:VisualElement>
+            <ui:VisualElement name="info-bonus" class="line bonus">
+                <ui:VisualElement class="line-icon" picking-mode="Ignore" />
+                <ui:Label class="line-text wrap" picking-mode="Ignore" />
+            </ui:VisualElement>
+            <ui:VisualElement name="info-stats" class="stats" picking-mode="Ignore" />
+            <ui:VisualElement name="info-roster" class="roster" picking-mode="Ignore" />
+            <ui:VisualElement name="info-march" class="march" picking-mode="Ignore" />
+        </ui:VisualElement>
+
+        <ui:VisualElement name="barracks-panel" class="panel barracks-panel">
+            <ui:VisualElement class="panel-frame" picking-mode="Ignore" />
+            <ui:VisualElement class="bk-icon" picking-mode="Ignore" />
+            <ui:Label name="bk-name" class="bk-name display" />
+            <ui:VisualElement name="bk-gold" class="bk-gold" />
+            <ui:VisualElement name="bk-close" class="btn ghost close">
+                <ui:VisualElement class="icon" picking-mode="Ignore" />
+                <ui:Label class="key" text="Esc" picking-mode="Ignore" />
+            </ui:VisualElement>
+            <ui:VisualElement name="bk-tabs" class="tabs" picking-mode="Ignore" />
+            <ui:VisualElement name="bk-unit" class="bk-unit" picking-mode="Ignore">
+                <ui:VisualElement class="bk-unit-icon" picking-mode="Ignore" />
+                <ui:Label class="bk-unit-name display" picking-mode="Ignore" />
+            </ui:VisualElement>
+            <ui:VisualElement name="bk-stats" class="bk-stats" picking-mode="Ignore" />
+            <ui:VisualElement name="bk-break" class="break bk-break" picking-mode="Ignore" />
+            <ui:ScrollView name="bk-ups" class="bk-ups" vertical-scroller-visibility="Auto" horizontal-scroller-visibility="Hidden" />
+        </ui:VisualElement>
+
+        <ui:Label name="tip" class="tip" picking-mode="Ignore" />
+    </ui:VisualElement>
+</ui:UXML>

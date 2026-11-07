@@ -1668,6 +1668,18 @@ MonoBehaviour:
     m_Localized: Hold to show every enemy's movement
     m_Metadata:
       m_Items: []
+  - m_Id: 504315915333632
+    m_Localized: Barracks
+    m_Metadata:
+      m_Items: []
+  - m_Id: 504315978248192
+    m_Localized: 'Upgrades you can buy: {0}'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 504315978248193
+    m_Localized: Back to Map
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds:

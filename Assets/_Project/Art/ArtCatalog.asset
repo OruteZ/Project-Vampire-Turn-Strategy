@@ -101,12 +101,14 @@ MonoBehaviour:
   - {fileID: 21300000, guid: 23f9c8c56950d0243af817372d79e65d, type: 3}
   - {fileID: 21300000, guid: a00aa6bf8b3b90046b92d716d0a3f3be, type: 3}
   - {fileID: 21300000, guid: 114f1cb575f45104584a68ac92fe2fbc, type: 3}
+  - {fileID: 21300000, guid: 2459a755dcac837438a30dde34cc059c, type: 3}
   uiPrefabs:
   - {fileID: 4654971216602336425, guid: 8a6d5f97315c9a04f9ceb0e8317bb261, type: 3}
   - {fileID: 7476782851927854031, guid: 91a89f5b582042147a074fc07aa52830, type: 3}
   - {fileID: 4654971216602336425, guid: 66b14809b3695fa47bbbc4610a2a135f, type: 3}
   panel: {fileID: 11400000, guid: ceca47a7dc35164418fa5adf3bcfa3a8, type: 2}
   menuDocument: {fileID: 9197481963319205126, guid: 46e03175423c83e4bba6477d946c72a4, type: 3}
+  campDocument: {fileID: 9197481963319205126, guid: d3a9163a77c4a264288e1098ae44e471, type: 3}
   mapProps:
   - {fileID: 5879195395630746260, guid: 66935891f0cc76c46869337a4d1b7fd5, type: 3}
   - {fileID: 8149697748231624024, guid: 789391788bd90e142b6c6aa821540ef1, type: 3}
