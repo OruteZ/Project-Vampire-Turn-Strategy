@@ -129,11 +129,11 @@ namespace VampireSpawn.Editor
             {
                 leftScroll = s.scrollPosition;
                 Item(root.rules, "규칙 (달·흡혈)");
-                Item(root.skeleton, "적: " + (root.skeleton != null ? root.skeleton.displayName : "?"));
+                Item(root.skeleton, "적: " + (SourceText.Get("skeleton.name")));
                 EditorGUILayout.LabelField("병종", EditorStyles.boldLabel);
-                foreach (var u in root.units) Item(u, u != null ? $"{u.glyph}  {u.displayName}" : "(비었음)");
+                foreach (var u in root.units) Item(u, u != null ? $"{SourceText.Get("unit." + u.key + ".glyph")}  {SourceText.Get("unit." + u.key + ".name")}" : "(비었음)");
                 EditorGUILayout.LabelField("장", EditorStyles.boldLabel);
-                foreach (var st in root.stages) Item(st, st != null ? $"{st.label} · {st.title}" : "(비었음)");
+                foreach (var st in root.stages) Item(st, st != null ? $"{SourceText.Get("stage." + st.id + ".label")} · {SourceText.Get("stage." + st.id + ".title")}" : "(비었음)");
                 if (selected is StageData sd && GUILayout.Button("고른 장 복제"))
                 {
                     Select(DataAssetsBuilder.DuplicateStage(root, sd));
@@ -153,6 +153,7 @@ namespace VampireSpawn.Editor
             if (selected is StageData stage) MapPainter(stage);
             EditorGUI.BeginChangeCheck();
             inspector.OnInspectorGUI();
+            SourceText.Section(selected);
             if (EditorGUI.EndChangeCheck()) Refresh();
         }
 
@@ -176,7 +177,7 @@ namespace VampireSpawn.Editor
                 if (GUILayout.Toggle(brush == Brush.Enemy && enemy == EnemyKind.Skeleton, "적: 스켈레톤", EditorStyles.miniButton)) { brush = Brush.Enemy; enemy = EnemyKind.Skeleton; }
                 if (GUILayout.Toggle(brush == Brush.Enemy && enemy == EnemyKind.Vampire, "적: 뱀파이어", EditorStyles.miniButton)) { brush = Brush.Enemy; enemy = EnemyKind.Vampire; }
                 foreach (var u in root.units.Where(x => x != null))
-                    if (GUILayout.Toggle(brush == Brush.Unit && unit == u.kind, "예시 " + u.glyph, EditorStyles.miniButton)) { brush = Brush.Unit; unit = u.kind; }
+                    if (GUILayout.Toggle(brush == Brush.Unit && unit == u.kind, "예시 " + SourceText.Get("unit." + u.key + ".glyph"), EditorStyles.miniButton)) { brush = Brush.Unit; unit = u.kind; }
                 if (GUILayout.Toggle(brush == Brush.Erase, "유닛 지우기", EditorStyles.miniButton)) brush = Brush.Erase;
             }
             var rows = s.map.Count;
@@ -252,14 +253,14 @@ namespace VampireSpawn.Editor
                 if (en.col == c && en.row == r)
                 {
                     color = en.kind == EnemyKind.Vampire ? new Color(1f, 0.35f, 0.45f) : new Color(0.85f, 0.8f, 0.7f);
-                    return en.kind == EnemyKind.Vampire ? "흡" : root.skeleton != null ? root.skeleton.glyph : "골";
+                    return SourceText.Get(en.kind == EnemyKind.Vampire ? "vampire.glyph" : "skeleton.glyph");
                 }
             foreach (var a in s.sample)
                 if (a.col == c && a.row == r)
                 {
                     color = new Color(0.6f, 0.8f, 1f);
                     var t = root.units.FirstOrDefault(u => u != null && u.kind == a.kind);
-                    return t != null ? t.glyph : "?";
+                    return t != null ? SourceText.Get("unit." + t.key + ".glyph") : "?";
                 }
             return null;
         }

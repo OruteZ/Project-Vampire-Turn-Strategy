@@ -15,10 +15,11 @@ namespace VampireSpawn.Game
         public Color sunLight = new Color(0.92f, 0.86f, 0.68f);
 
         [Header("Units")]
-        [Tooltip("Indexed by UnitKind: pspear, parcher, sword, archer, knight, hunter")]
-        public GameObject[] allyModels;
-        public GameObject skeleton, vampire;
-        public RuntimeAnimatorController unitAnimator;
+        [Tooltip("UnitKind 순서: pspear, parcher, sword, archer, knight, hunter")]
+        public UnitLook[] allyLooks;
+        public UnitLook skeletonLook, vampireLook;
+        [Tooltip("Polygon 캐릭터와, 묶음이 빈 UnitLook 이 쓰는 기본 애니메이터")] public RuntimeAnimatorController unitAnimator;
+        [Tooltip("Sidekick 캐릭터가 스폰이 되었을 때 (맨손 근접)")] public RuntimeAnimatorController spawnAnimator;
         public Material flat;
         public float unitHeight = 1.5f;
         public Color peasantRing = new Color(0.72f, 0.61f, 0.45f);
@@ -29,6 +30,16 @@ namespace VampireSpawn.Game
         public Color vampireRing = new Color(0.78f, 0.19f, 0.29f);
         public Color spawnRing = new Color(0.65f, 0.31f, 0.77f);
         public Color coffin = new Color(0.25f, 0.06f, 0.11f);
-        public Color hpBack = new Color(0.06f, 0.05f, 0.07f);
+
+        [Header("UI")]
+        [Tooltip("Synty UI 스프라이트. 이름으로 찾는다 (docs/art/ui-style.md)")]
+        public Sprite[] ui;
+
+        [Tooltip("Synty UI 장식 프리팹 (Crest, Section_Break). 이름으로 찾는다")]
+        public GameObject[] uiPrefabs;
+
+        public Sprite Ui(string name) => System.Array.Find(ui ?? System.Array.Empty<Sprite>(), s => s != null && s.name == name);
+
+        public GameObject UiPrefab(string name) => System.Array.Find(uiPrefabs ?? System.Array.Empty<GameObject>(), p => p != null && p.name == name);
     }
 }

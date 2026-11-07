@@ -213,6 +213,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: VampireSpawn.Game::VampireSpawn.Game.BattleView
   board: {fileID: 105267849}
   speed: 1
+  worldBars: 1
 --- !u!114 &1136401610
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -243,6 +244,7 @@ MonoBehaviour:
   input: {fileID: 1136401610}
   data: {fileID: 11400000, guid: bf33fe393168a9246b05f058f3f0af85, type: 2}
   viewCamera: {fileID: 1321022419}
+  styleTile: 0
 --- !u!1 &1321022417
 GameObject:
   m_ObjectHideFlags: 0

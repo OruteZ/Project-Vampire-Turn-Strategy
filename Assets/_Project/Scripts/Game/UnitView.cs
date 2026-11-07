@@ -12,14 +12,15 @@ namespace VampireSpawn.Game
         static readonly int BaseColor = Shader.PropertyToID("_BaseColor");
 
         Animator animator;
-        Transform model, barFill, bar;
+        Transform model;
         MeshRenderer ring;
         Color ringColor;
         public bool Done { get; private set; }
         GameObject coffin;
         ArtCatalog art;
 
-        public static UnitView Create(ArtCatalog art, GameObject prefab, Transform parent, int id, Vector3 at, float yaw, Color ring, bool showBar)
+        // armed: false for spawns and corpses, which lost their weapons (docs/art/unit-visuals.md 1).
+        public static UnitView Create(ArtCatalog art, UnitLook look, Transform parent, int id, Vector3 at, float yaw, Color ring, bool armed)
         {
             var root = new GameObject("Unit " + id);
             root.transform.SetParent(parent, false);
@@ -28,15 +29,18 @@ namespace VampireSpawn.Game
             view.Id = id;
             view.art = art;
 
+            var prefab = look.Model;
             view.model = Instantiate(prefab, root.transform).transform;
             view.model.name = prefab.name;
             view.model.localPosition = Vector3.zero;
             view.model.localRotation = Quaternion.Euler(0f, yaw, 0f);
             FitHeight(view.model, art.unitHeight * art.hexSize);
+            if (armed) Arm(view.model, look);
             view.animator = view.model.GetComponentInChildren<Animator>();
             if (view.animator != null)
             {
-                view.animator.runtimeAnimatorController = art.unitAnimator;
+                view.animator.runtimeAnimatorController = !armed && look.rig == Rig.Sidekick && art.spawnAnimator != null ? art.spawnAnimator
+                    : look.animator != null ? look.animator : art.unitAnimator;
                 view.animator.applyRootMotion = false;
             }
 
@@ -44,15 +48,24 @@ namespace VampireSpawn.Game
             r.localPosition = Vector3.up * 0.01f;
             view.ring = r.GetComponent<MeshRenderer>();
             view.ringColor = ring * 0.55f;
-            if (showBar)
-            {
-                view.bar = new GameObject("HpBar").transform;
-                view.bar.SetParent(root.transform, false);
-                view.bar.localPosition = Vector3.up * (art.unitHeight * art.hexSize + 0.25f);
-                Quad(art, view.bar, "Back", art.hpBack, new Vector3(0.9f, 0.1f, 0.02f), PrimitiveType.Cube);
-                view.barFill = Quad(art, view.bar, "Fill", ring, new Vector3(0.86f, 0.07f, 0.03f), PrimitiveType.Cube);
-            }
             return view;
+        }
+
+        static void Arm(Transform model, UnitLook look)
+        {
+            if (look.weapons == null) return;
+            var bones = model.GetComponentsInChildren<Transform>(true);
+            foreach (var g in look.weapons)
+            {
+                if (g.prefab == null) continue;
+                var name = UnitLook.Bone(look.rig, g.hand);
+                var bone = System.Array.Find(bones, b => b.name == name);
+                if (bone == null) { Debug.LogWarning(look.name + ": 뼈 " + name + " 이 없어 " + g.prefab.name + " 를 붙이지 못했다"); continue; }
+                var w = Instantiate(g.prefab, bone, false).transform;
+                w.localPosition = g.position;
+                w.localRotation = Quaternion.Euler(g.rotation);
+                foreach (var c in w.GetComponentsInChildren<Collider>(true)) { if (Application.isPlaying) Destroy(c); else DestroyImmediate(c); }
+            }
         }
 
         static Transform Quad(ArtCatalog art, Transform parent, string name, Color color, Vector3 scale, PrimitiveType shape)
@@ -94,9 +107,6 @@ namespace VampireSpawn.Game
         public void SetHp(int hp, int max)
         {
             HpFraction = max > 0 ? Mathf.Clamp01((float)hp / max) : 0f;
-            if (barFill == null) return;
-            barFill.localScale = new Vector3(0.86f * HpFraction, barFill.localScale.y, barFill.localScale.z);
-            barFill.localPosition = new Vector3(-0.43f * (1f - HpFraction), 0f, -0.01f);
         }
 
         public void SetWalking(bool walking)
@@ -133,12 +143,6 @@ namespace VampireSpawn.Game
             model.localRotation = Quaternion.Euler(0f, model.localEulerAngles.y, 0f);
             model.localPosition = Vector3.zero;
             if (animator != null) animator.enabled = true;
-        }
-
-        void LateUpdate()
-        {
-            var cam = Camera.main;
-            if (bar != null && cam != null) bar.rotation = cam.transform.rotation;
         }
     }
 }

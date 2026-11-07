@@ -1,0 +1,1971 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e9620f8c34305754d8cc9a7e49e852d9, type: 3}
+  m_Name: Text_en
+  m_EditorClassIdentifier: Unity.Localization::UnityEngine.Localization.Tables.StringTable
+  m_LocaleId:
+    m_Code: en
+  m_SharedData: {fileID: 11400000, guid: bf1df3c361065b044a95300ef88f0a6b, type: 2}
+  m_Metadata:
+    m_Items:
+    - rid: 7201578077006332005
+  m_TableData:
+  - m_Id: 3991479840768
+    m_Localized: Deploy
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 3991479840769
+    m_Localized: Ally
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 3991479840770
+    m_Localized: Enemy
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 3991484035072
+    m_Localized: End
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 3991484035073
+    m_Localized: It is not the {0} phase.
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 3991484035074
+    m_Localized: This unit type is not available in this chapter.
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 3991484035075
+    m_Localized: You cannot deploy on this hex.
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 3991484035076
+    m_Localized: Not enough population. Drag a deployed unit out of the deployment
+      zone to recall it.
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 3991484035077
+    m_Localized: Not enough silver.
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 3991484035078
+    m_Localized: No ally to recall.
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 3991484035079
+    m_Localized: No ally to move.
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 3991484035080
+    m_Localized: Recalled {0}.
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 3991484035081
+    m_Localized: No allies deployed.
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 3991484035082
+    m_Localized: 'Battle begins. Objective: defeat {0}.'
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 3991484035083
+    m_Localized: "Turn {0} \xB7 Ally Phase"
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 3991484035084
+    m_Localized: "Turn {0} \xB7 Enemy Phase"
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 3991484035085
+    m_Localized: "\u2014 Turn {0} Ally Phase \u2014"
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 3991484035086
+    m_Localized: "\u2014 Turn {0} Enemy Phase \u2014"
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 3991484035087
+    m_Localized: This unit cannot move.
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 3991484035088
+    m_Localized: You cannot move there.
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 3991484035089
+    m_Localized: You cannot attack that.
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 3991484035090
+    m_Localized: '{0} cleaves through and may attack again.'
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 3991484035091
+    m_Localized: You cannot mercy kill that unit.
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 3991484035092
+    m_Localized: Mercy Kill
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 3991484035093
+    m_Localized: No unit to wait.
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 3991484035094
+    m_Localized: Bane
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 3991484035095
+    m_Localized: Ambush
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 3991484035096
+    m_Localized: Charge
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 3991484035097
+    m_Localized: '{0}'
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 3991484035098
+    m_Localized: '{0}, {1}'
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 3991484035099
+    m_Localized: '{0}, {1}, {2}'
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 3991484035100
+    m_Localized: -{0}
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 3991484035101
+    m_Localized: +{0}
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 3991484035102
+    m_Localized: "{0} \u2192 {1}: {2} damage"
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 3991484035103
+    m_Localized: "{0} \u2192 {1}: {2} damage ({3})"
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 3991484035104
+    m_Localized: '{0} falls.'
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 3991484035105
+    m_Localized: '{0} gives {1} a mercy kill. They rest and will not rise.'
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 3991484035106
+    m_Localized: '{0} is slain. Felled by a minion, they will not rise.'
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 3991484035107
+    m_Localized: '{0} is slain. Fallen in the light, they will not rise.'
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 3991484035108
+    m_Localized: '{0} falls. They will rise as a spawn next enemy phase!'
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 3991484035109
+    m_Localized: The full moon rises!
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 3991484035110
+    m_Localized: Moonlight opens the coffin. {0} awakens!
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 3991484035111
+    m_Localized: The Coffin Opens
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 3991484035112
+    m_Localized: '{0} rises as a vampire spawn.'
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 3991484035113
+    m_Localized: The full moon is up. With no one in reach, {0} advances, starving.
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 3991484035114
+    m_Localized: The full moon approaches. Next enemy turn, {0} will hunt {1}. Move
+      them out of range or into the light, or mercy kill them, and the drain fails.
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 3991484035115
+    m_Localized: Full Moon
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 3991484035116
+    m_Localized: Under the full moon, {0} devours {1}!
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 3991484035117
+    m_Localized: Drained
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 3991484035118
+    m_Localized: The moon sets.
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 3991484035119
+    m_Localized: the target is already gone
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 3991484035120
+    m_Localized: '{0} stands in the light'
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 3991484035121
+    m_Localized: '{0} is out of reach'
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 3991484035122
+    m_Localized: The full moon rises, but {0}. The drain fails. {1} lunges, starving.
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 3991484035123
+    m_Localized: Drain failed
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 3991484035124
+    m_Localized: "{0}'s pike wall \u2192 {1}: 1 damage"
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 3991484035125
+    m_Localized: '{0}: Click an empty hex in the deployment zone to place it. Drag
+      placed units to move or swap them.'
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 3991484035126
+    m_Localized: The enemy is acting.
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 3991484035127
+    m_Localized: The battle is over.
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 3991484035128
+    m_Localized: Click an ally to select it. Hover an enemy or a corpse to see its
+      details.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3991484035129
+    m_Localized: Click an ally in a white dashed ring to mercy kill it. Click elsewhere
+      to cancel.
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 3991484035130
+    m_Localized: This unit has finished acting.
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 3991484035131
+    m_Localized: Move to a bright hex. Click an enemy on a red hex to attack.
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 3991484035132
+    m_Localized: Click an enemy on a red hex to attack.
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 3991484035133
+    m_Localized: Full Moon Next Turn
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 3991484035134
+    m_Localized: "Full Moon \xB7 Starving"
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 3991484035135
+    m_Localized: "Target \xB7 Safe for Now"
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 3991484035136
+    m_Localized: Full Moon Target
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 3991484035137
+    m_Localized: Win within {0} turns
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 3991484035138
+    m_Localized: Allow no full-moon drain
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 3991484035139
+    m_Localized: Win after defeating every skeleton
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 3991484035140
+    m_Localized: '{1} fell on turn {0}.'
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 5832070459392
+    m_Localized: Peasant Spearman
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 5832187899904
+    m_Localized: PS
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 5832187899905
+    m_Localized: A villager with a pitchfork and spear. Cheap and plentiful.
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 5832187899906
+    m_Localized: Quilted Armor
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 5832187899907
+    m_Localized: HP +2
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 5832187899908
+    m_Localized: Pike Wall
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 5832187899909
+    m_Localized: Deals 1 damage to an enemy that steps into an adjacent hex
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 5832187899910
+    m_Localized: Peasant Archer
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 5832187899911
+    m_Localized: PA
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 5832187899912
+    m_Localized: A villager with a hunting bow. Cheap, but RNG is only 2. As a spawn
+      it fights only in melee.
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 5832187899913
+    m_Localized: Light Garb
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 5832187899914
+    m_Localized: MOV +1
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 5832187899915
+    m_Localized: Ambush Shot
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 5832187899916
+    m_Localized: +1 damage when attacking without moving
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 5832187899917
+    m_Localized: Swordsman
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 5832187899918
+    m_Localized: SW
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 5832187899919
+    m_Localized: Regular infantry. Holds the line.
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 5832187899920
+    m_Localized: Chain Mail
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 5832187899921
+    m_Localized: DEF +1
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 5832187899922
+    m_Localized: Cleave
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 5832187899923
+    m_Localized: Attack again after defeating an enemy (once per turn)
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 5832187899924
+    m_Localized: Archer
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 5832187899925
+    m_Localized: AR
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 5832187899926
+    m_Localized: Regular archer. Shoots from afar with RNG 3. As a spawn it loses
+      its bow.
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 5832187899927
+    m_Localized: Longbow
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 5832187899928
+    m_Localized: RNG +1
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 5832187899929
+    m_Localized: Tempered Arrowheads
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 5832187899930
+    m_Localized: ATK +1
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 5832187899931
+    m_Localized: Knight
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 5832187899932
+    m_Localized: KN
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 5832187899933
+    m_Localized: The toughest and strongest. As a spawn, the most dangerous.
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 5832187899934
+    m_Localized: Plate Armor
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 5832187899935
+    m_Localized: DEF +1
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 5832187899936
+    m_Localized: Charge
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 5832187899937
+    m_Localized: +2 damage when attacking after moving 2 or more hexes
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 5832187899938
+    m_Localized: Hunter
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 5832187899939
+    m_Localized: HU
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 5832187899940
+    m_Localized: Vampire hunter (working name). Extra damage to vampires and spawn.
+      Costs 1 silver.
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 5832187899941
+    m_Localized: Refined Silver Shot
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 5832187899942
+    m_Localized: +2 extra damage to vampires and spawn
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 5832187899943
+    m_Localized: Light Boots
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 5832187899944
+    m_Localized: MOV +1
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 5832187899945
+    m_Localized: Skeleton
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 5832187899946
+    m_Localized: SK
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 5832187899947
+    m_Localized: Demo
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 5832187899948
+    m_Localized: Proving Ground
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 5832187899949
+    m_Localized: A battle to test every unit. Of the three breaches in the wall,
+      one is dark, one is lit by a bonfire, and one by sunlight.
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 5832187899950
+    m_Localized: Vampire Count
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 5832187899951
+    m_Localized: Chapter 1
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 5832187899952
+    m_Localized: The Ashen Mill
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 5832187899953
+    m_Localized: The mill village is raided every night. The villagers have taken
+      up spears and hunting bows. The lanes beside the bonfire are bright, but the
+      side path at the far left is dark.
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 5832187899954
+    m_Localized: Starving Vampire
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 5832187899955
+    m_Localized: Chapter 2
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 5832187899956
+    m_Localized: Waterwheel Bridge
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 5832187899957
+    m_Localized: The mill vampire's master waits across the stream. There are two
+      bridges. A bonfire lights the right one; the left one is dark.
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 5832187899958
+    m_Localized: Vampire of the Stream
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 5832187899959
+    m_Localized: Chapter 3
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 5832192094208
+    m_Localized: The Ruined Chapel
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 5832192094209
+    m_Localized: The lord has sent swordsmen. Two walls divide the chapel, and only
+      the middle aisle catches the dawn through a gap in the roof.
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 5832192094210
+    m_Localized: Blood-Soaked Priest
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 5832192094211
+    m_Localized: Chapter 4
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 5832192094212
+    m_Localized: Crossroads Cemetery
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 5832192094213
+    m_Localized: A cemetery without a single light. Two narrow paths wind between
+      the gravestones toward the center. Whoever falls here rises again.
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 5832192094214
+    m_Localized: Gravekeeper Vampire
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 5832192094215
+    m_Localized: Chapter 5
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 5832192094216
+    m_Localized: Torchlit Pass
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 5832192094217
+    m_Localized: Regular archers have joined. Torches line the mountain path. Following
+      the light is safe, but the road is long.
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 5832192094218
+    m_Localized: Noble Vampire of the Pass
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 5832192094219
+    m_Localized: Chapter 6
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 5832192094220
+    m_Localized: The Abandoned Manor
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 5832192094221
+    m_Localized: The lord's manor, taken by a vampire. The garden has two walls.
+      The outer wall has a gap at each end; the inner wall opens only at the sunlit
+      center.
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 5832192094222
+    m_Localized: Mistress of the Manor
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 5832192094223
+    m_Localized: Chapter 7
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 5832192094224
+    m_Localized: Border Watchtower
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 5832192094225
+    m_Localized: The knightly order has joined. The watchtower wall has three gaps.
+      Bonfires guard both ends, but they are far; the middle path is close but dark.
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 5832192094226
+    m_Localized: Black Knight Vampire
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 5832192094227
+    m_Localized: Chapter 8
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 5832192094228
+    m_Localized: Village Below the Castle
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 5832192094229
+    m_Localized: The village beneath the Count's castle already belongs to the night.
+      Two alleys and a square with a burning bonfire lead to the castle.
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 5832192094230
+    m_Localized: The Count's Chamberlain
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 5832192094231
+    m_Localized: Chapter 9
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 5832192094232
+    m_Localized: Gate Over the Moat
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 5832192094233
+    m_Localized: Hunters have joined with silver shot. Before the gate, the moat
+      offers only a bonfire-lit bridge and a shallow ford at the far right.
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 5832192094234
+    m_Localized: Vampire Gatekeeper
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 5832192094235
+    m_Localized: Chapter 10
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 5832192094236
+    m_Localized: The Count's Castle
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 5832192094237
+    m_Localized: Inside the Count's castle. Past the inner courtyard stands a second
+      wall, and beyond it a single bonfire burns in the great hall.
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 5832192094238
+    m_Localized: Vampire Count
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 5832192094239
+    m_Localized: VA
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 5832192094240
+    m_Localized: '{0} {1}'
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 5832192094241
+    m_Localized: '{0} Spawn'
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 9846489149440
+    m_Localized: Demo Battle
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 9846568841216
+    m_Localized: "Campaign \xB7 {0}"
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 9846568841217
+    m_Localized: "Enemy Acting\u2026"
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 9846568841218
+    m_Localized: Begin Battle
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 9846568841219
+    m_Localized: End Turn
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 9846568841220
+    m_Localized: View Results
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 9846568841221
+    m_Localized: Threat Range
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 9846568841222
+    m_Localized: Abandon Battle?
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 9846568841223
+    m_Localized: Leave
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 9846568841224
+    m_Localized: Pop
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 9846568841225
+    m_Localized: Silver
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 9846568841226
+    m_Localized: Deployed
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 9846568841227
+    m_Localized: Coffin at {0}
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 9846568841228
+    m_Localized: Moon
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 9846568841229
+    m_Localized: Turn
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 9846568841230
+    m_Localized: Allies
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 9846568841231
+    m_Localized: Enemies
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 9846568841232
+    m_Localized: Rising
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 9846568841233
+    m_Localized: Risen
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 9846568841234
+    m_Localized: Pike Wall
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 9846568841235
+    m_Localized: Ambush Shot
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 9846568841236
+    m_Localized: Cleave
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 9846568841237
+    m_Localized: Charge
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 9846568841238
+    m_Localized: Briefing
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 9846568841239
+    m_Localized: Objective
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 9846568841240
+    m_Localized: Defeat {0}
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 9846568841241
+    m_Localized: Bonus
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 9846568841242
+    m_Localized: Resources
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 9846568841243
+    m_Localized: Enemies
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 9846568841244
+    m_Localized: Skeletons {0}, {1}
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 9846568841245
+    m_Localized: Formation
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 9846568841246
+    m_Localized: Click an empty hex to deploy. Drag a deployed unit to move it or
+      swap it with another. Drag it out of the zone to recall it.
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 9846568841247
+    m_Localized: Recall All
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 9846568841248
+    m_Localized: Sample Formation
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 9846568841249
+    m_Localized: Ally Phase
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 9846568841250
+    m_Localized: '{0} {0:plural:ally|allies} ready to act. Click an ally to give
+      orders.'
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 9846568841251
+    m_Localized: Battle Log
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 9846568841252
+    m_Localized: Corpse
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 9846568841253
+    m_Localized: '{0}''s Corpse'
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 9846568841254
+    m_Localized: Rises as spawn at the start of the next Enemy Phase. Does not act
+      on the turn it rises.
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 9846568841255
+    m_Localized: Inherits HP {0}, ATK {1}, MOV {2}, with DEF 0 and melee attacks
+      only. Before it rises, pull nearby allies back or brace for it.
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 9846568841256
+    m_Localized: Ally
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 9846568841257
+    m_Localized: Boss
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 9846568841258
+    m_Localized: Spawn
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 9846568841259
+    m_Localized: Minion
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 9846568841260
+    m_Localized: HP
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 9846568841261
+    m_Localized: ATK
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 9846568841262
+    m_Localized: DEF
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 9846568841263
+    m_Localized: MOV
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 9846568841264
+    m_Localized: RNG
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 9846568841265
+    m_Localized: Full-moon target. If it is within {0} hexes of the vampire and out
+      of the light on the next enemy turn, it is devoured and rises as spawn. Move
+      it out of range, stand it in light, or mercy-kill it to make the drain fail.
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 9846568841266
+    m_Localized: It is safe where it stands.
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 9846568841267
+    m_Localized: In light. Cannot be drained and does not rise if it falls.
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 9846568841268
+    m_Localized: In the coffin. Wakes when the Moon reaches {0} (now {1}).
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 9846568841269
+    m_Localized: The full moon rises next enemy turn. If it devours its target it
+      does not move that turn. If it misses, it attacks as usual.
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 9846568841270
+    m_Localized: Moon {0}/{1}. Fills every enemy turn and every time a unit dies.
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 9846568841271
+    m_Localized: Just risen. Does not act this Enemy Phase.
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 9846568841272
+    m_Localized: 'Skills: {0}'
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 9846568841273
+    m_Localized: Recall
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 9846568841274
+    m_Localized: Finished acting this turn.
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 9846568841275
+    m_Localized: Cancel Mercy Kill
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 9846568841276
+    m_Localized: Mercy Kill
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 9846568841277
+    m_Localized: Wait
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 9846568841278
+    m_Localized: Allies it kills do not rise.
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 9846568841279
+    m_Localized: Sleeps in its coffin until the Moon reaches {0}. Cannot be attacked
+      while asleep. Once awake it moves and attacks normally. On the enemy turn the
+      Moon reaches {1}, it does not move and devours its chosen target if it is within
+      {2} hexes and out of the light (instant kill, restores {3} HP). If there is
+      no target or it got away, the drain fails and it moves and attacks as usual.
+      Either way, the moon sets.
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 9846568841280
+    m_Localized: "Inherited HP \xB7 ATK \xB7 MOV from {0}. DEF 0, melee only. Allies
+      it kills rise as spawn."
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 9846568841281
+    m_Localized: Allies killed by the vampire or spawn leave a corpse that rises
+      as spawn at the <b>start of the next Enemy Phase</b>. Spawn do not act on the
+      turn they rise. Allies killed by skeletons do not rise.
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 9846568841282
+    m_Localized: '<b>Coffin</b>: The vampire starts in its coffin and wakes when
+      the Moon reaches {0}. It cannot be attacked while asleep.'
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 9846568841283
+    m_Localized: '<b>Moon</b>: Fills by 1 at the start of each enemy turn and by
+      1 for each unit that dies (ally or enemy). At {0} the moon is full.'
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 9846568841284
+    m_Localized: '<b>Full-moon target</b>: If the next enemy turn brings the full
+      moon, the nearest ally within {0} hexes of the vampire and out of the light
+      becomes its target at the start of the ally turn, and the target does not change.
+      If no one is in range then, there is no target, the moon stays full, and the
+      vampire advances as usual.'
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 9846568841285
+    m_Localized: '<b>Full-moon drain</b>: On the full-moon turn the vampire does
+      not move, and devours its target if it is still within {0} hexes and out of
+      the light. If the target is out of range, in light, or already dead, the drain
+      fails and the vampire moves and attacks as usual. Either way, the Moon returns
+      to 0.'
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 9846568841286
+    m_Localized: '<b>Mercy kill</b>: An ally you mercy-kill within attack range rests
+      without rising. Mercy-killing the full-moon target also makes the drain fail.'
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 9846568841287
+    m_Localized: '<b>Light</b>: Bonfire hexes, the hexes around them, and hexes in
+      sunlight. Allies in light cannot be targeted and do not rise if they fall.'
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 9846568841288
+    m_Localized: "Spawn inherit the original's HP \xB7 ATK \xB7 MOV, with DEF 0 and
+      melee attacks only. Skill upgrades are not inherited."
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 9846568841289
+    m_Localized: "Damage = ATK \u2212 DEF (minimum 1). No randomness. No counterattacks
+      or attacks of opportunity."
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 9846568841290
+    m_Localized: Rules Summary
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 9846568841291
+    m_Localized: Victory
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 9846568841292
+    m_Localized: Defeat
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 9846568841293
+    m_Localized: The company is destroyed. This land belongs to the night.
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 9846568841294
+    m_Localized: Fallen
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 9846568841295
+    m_Localized: Mercy kills
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 9846568841296
+    m_Localized: Risen
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 9846568841297
+    m_Localized: Drained
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 9846568841298
+    m_Localized: First Clear Reward
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 9846568841299
+    m_Localized: Clear Reward (Replay)
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 9846568841300
+    m_Localized: Already Claimed
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 9846568841301
+    m_Localized: "Bonus \xB7 {0}"
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 9846568841302
+    m_Localized: Failed
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 9846568841303
+    m_Localized: Achieved
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 9846568841304
+    m_Localized: Earned
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 9846568841305
+    m_Localized: '{0} "{1}" is now open.'
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 9846568841306
+    m_Localized: '{0} unlocked.'
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 9846568841307
+    m_Localized: The campaign is complete.
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 9846568841308
+    m_Localized: '{0} upgrades are now available in the Barracks.'
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 9846568841309
+    m_Localized: To Campaign
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 9846568841310
+    m_Localized: Retry Same Formation
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 9846568841311
+    m_Localized: Redeploy
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 9846568841312
+    m_Localized: "HP {0} \xB7 ATK {1} \xB7 DEF {2} \xB7 MOV {3} \xB7 RNG {4}"
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 9846568841313
+    m_Localized: Pop {0}
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 9846568841314
+    m_Localized: Silver {0}
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 9846568841315
+    m_Localized: Campaign
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 9846568841316
+    m_Localized: The Vampire Hunt
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 9846568841317
+    m_Localized: Gold
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 9846568841318
+    m_Localized: Really Reset?
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 9846568841319
+    m_Localized: Reset Progress
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 9846568841320
+    m_Localized: Main Menu
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9846568841321
+    m_Localized: Chapters
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 9846568841322
+    m_Localized: Clear a chapter to open the next one and new units. Bonus objective
+      rewards are paid once, the first time. Gold will not buy every upgrade, so
+      choose your core units and invest.
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 9846568841323
+    m_Localized: "Barracks \xB7 Upgrades"
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 9846568841324
+    m_Localized: "Upgrades apply to every unit of that type and cannot be undone.
+      A unit can be upgraded after you clear the chapter that unlocks it. Spawn inherit
+      only HP \xB7 ATK \xB7 MOV upgrades."
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 9846568841325
+    m_Localized: No unit types can be upgraded yet. Clear Chapter 1 to open peasant
+      upgrades.
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 9846568841326
+    m_Localized: Cleared
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 9846568841327
+    m_Localized: Open
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9846568841328
+    m_Localized: Locked
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 9846568841329
+    m_Localized: New {0}
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 9846568841330
+    m_Localized: Clear +{0}
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 9846568841331
+    m_Localized: March
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9846568841332
+    m_Localized: Owned
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 9846568841333
+    m_Localized: '{0} gold'
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 9846573035520
+    m_Localized: Inherited by spawn
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 9846573035521
+    m_Localized: Not inherited by spawn
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 9846573035522
+    m_Localized: Really Buy? {0} gold
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 9846573035523
+    m_Localized: Upgrade
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 9846573035524
+    m_Localized: "{0}/{1} chapters cleared \xB7 Gold {2}"
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 9846573035525
+    m_Localized: Turn-based hex tactics. Soldiers felled by the vampire rise as spawn
+      and attack their comrades. Hold the light, and send off the allies you cannot
+      save.
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 9846573035526
+    m_Localized: Demo Battle
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 9846573035527
+    m_Localized: A single battle with every unit available. No upgrades.
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 9846573035528
+    m_Localized: Campaign
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 9846573035529
+    m_Localized: From peasant levies to hunters. Each chapter unlocks new units,
+      and gold buys upgrades.
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 10777284898816
+    m_Localized: IBM Plex Sans, Segoe UI, Helvetica Neue, Arial, Malgun Gothic, Apple
+      SD Gothic Neo
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 10777347813376
+    m_Localized: Georgia, Times New Roman, Nanum Myeongjo, Batang, AppleMyungjo
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 51181313126400
+    m_Localized: "Full-moon target \xB7 drained next enemy turn"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 51181384429568
+    m_Localized: safe for now
+    m_Metadata:
+      m_Items: []
+  - m_Id: 51181384429569
+    m_Localized: "In light \xB7 cannot be targeted"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 51181384429570
+    m_Localized: "Just risen \xB7 will not act this enemy phase"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 51181384429571
+    m_Localized: "In the coffin \xB7 wakes at moon {0}"
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 51181384429572
+    m_Localized: Rises as a spawn when the next enemy phase starts
+    m_Metadata:
+      m_Items: []
+  - m_Id: 51181384429573
+    m_Localized: Enemy Phase
+    m_Metadata:
+      m_Items: []
+  - m_Id: 51181384429574
+    m_Localized: Close
+    m_Metadata:
+      m_Items: []
+  - m_Id: 51181384429575
+    m_Localized: Deploy at least one ally
+    m_Metadata:
+      m_Items: []
+  - m_Id: 51181384429576
+    m_Localized: Click an empty cell to deploy. Drag to move or swap; drag out of
+      the zone to recall.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 51181384429577
+    m_Localized: "{0} \xB7 Spawn"
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 55516264722432
+    m_Localized: Expedition Route
+    m_Metadata:
+      m_Items: []
+  - m_Id: 55516336025600
+    m_Localized: The Hunt
+    m_Metadata:
+      m_Items: []
+  - m_Id: 55516336025601
+    m_Localized: Objective
+    m_Metadata:
+      m_Items: []
+  - m_Id: 55516336025602
+    m_Localized: Defeat {0}
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 55516336025603
+    m_Localized: Bonus goal
+    m_Metadata:
+      m_Items: []
+  - m_Id: 55516336025604
+    m_Localized: Reward
+    m_Metadata:
+      m_Items: []
+  - m_Id: 55516336025605
+    m_Localized: Clear {0} gold
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 55516336025606
+    m_Localized: Bonus {0} gold
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 55516336025607
+    m_Localized: claimed
+    m_Metadata:
+      m_Items: []
+  - m_Id: 55516336025608
+    m_Localized: Resources
+    m_Metadata:
+      m_Items: []
+  - m_Id: 55516336025609
+    m_Localized: Enemies
+    m_Metadata:
+      m_Items: []
+  - m_Id: 55516336025610
+    m_Localized: Units
+    m_Metadata:
+      m_Items: []
+  - m_Id: 55516336025611
+    m_Localized: March Again
+    m_Metadata:
+      m_Items: []
+  - m_Id: 55516336025612
+    m_Localized: Rewards already claimed are not paid again
+    m_Metadata:
+      m_Items: []
+  - m_Id: 55516336025613
+    m_Localized: All rewards claimed
+    m_Metadata:
+      m_Items: []
+  - m_Id: 55516336025614
+    m_Localized: Clear {0} to unlock
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 55516336025615
+    m_Localized: Not enough gold ({0}/{1})
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  references:
+    version: 2
+    RefIds:
+    - rid: 7201578077006332005
+      type: {class: SmartFormatTag, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
+      data:
+        m_Entries: 
+        m_SharedEntries:
+        - id: 3991479840768
+        - id: 3991479840769
+        - id: 3991479840770
+        - id: 3991484035072
+        - id: 3991484035073
+        - id: 3991484035074
+        - id: 3991484035075
+        - id: 3991484035076
+        - id: 3991484035077
+        - id: 3991484035078
+        - id: 3991484035079
+        - id: 3991484035080
+        - id: 3991484035081
+        - id: 3991484035082
+        - id: 3991484035083
+        - id: 3991484035084
+        - id: 3991484035085
+        - id: 3991484035086
+        - id: 3991484035087
+        - id: 3991484035088
+        - id: 3991484035089
+        - id: 3991484035090
+        - id: 3991484035091
+        - id: 3991484035092
+        - id: 3991484035093
+        - id: 3991484035094
+        - id: 3991484035095
+        - id: 3991484035096
+        - id: 3991484035097
+        - id: 3991484035098
+        - id: 3991484035099
+        - id: 3991484035100
+        - id: 3991484035101
+        - id: 3991484035102
+        - id: 3991484035103
+        - id: 3991484035104
+        - id: 3991484035105
+        - id: 3991484035106
+        - id: 3991484035107
+        - id: 3991484035108
+        - id: 3991484035109
+        - id: 3991484035110
+        - id: 3991484035111
+        - id: 3991484035112
+        - id: 3991484035113
+        - id: 3991484035114
+        - id: 3991484035115
+        - id: 3991484035116
+        - id: 3991484035117
+        - id: 3991484035118
+        - id: 3991484035119
+        - id: 3991484035120
+        - id: 3991484035121
+        - id: 3991484035122
+        - id: 3991484035123
+        - id: 3991484035124
+        - id: 3991484035125
+        - id: 3991484035126
+        - id: 3991484035127
+        - id: 3991484035129
+        - id: 3991484035130
+        - id: 3991484035131
+        - id: 3991484035132
+        - id: 3991484035133
+        - id: 3991484035134
+        - id: 3991484035135
+        - id: 3991484035136
+        - id: 3991484035137
+        - id: 3991484035138
+        - id: 3991484035139
+        - id: 3991484035140
+        - id: 5832070459392
+        - id: 5832187899904
+        - id: 5832187899905
+        - id: 5832187899906
+        - id: 5832187899907
+        - id: 5832187899908
+        - id: 5832187899909
+        - id: 5832187899910
+        - id: 5832187899911
+        - id: 5832187899912
+        - id: 5832187899913
+        - id: 5832187899914
+        - id: 5832187899915
+        - id: 5832187899916
+        - id: 5832187899917
+        - id: 5832187899918
+        - id: 5832187899919
+        - id: 5832187899920
+        - id: 5832187899921
+        - id: 5832187899922
+        - id: 5832187899923
+        - id: 5832187899924
+        - id: 5832187899925
+        - id: 5832187899926
+        - id: 5832187899927
+        - id: 5832187899928
+        - id: 5832187899929
+        - id: 5832187899930
+        - id: 5832187899931
+        - id: 5832187899932
+        - id: 5832187899933
+        - id: 5832187899934
+        - id: 5832187899935
+        - id: 5832187899936
+        - id: 5832187899937
+        - id: 5832187899938
+        - id: 5832187899939
+        - id: 5832187899940
+        - id: 5832187899941
+        - id: 5832187899942
+        - id: 5832187899943
+        - id: 5832187899944
+        - id: 5832187899945
+        - id: 5832187899946
+        - id: 5832187899947
+        - id: 5832187899948
+        - id: 5832187899949
+        - id: 5832187899950
+        - id: 5832187899951
+        - id: 5832187899952
+        - id: 5832187899953
+        - id: 5832187899954
+        - id: 5832187899955
+        - id: 5832187899956
+        - id: 5832187899957
+        - id: 5832187899958
+        - id: 5832187899959
+        - id: 5832192094208
+        - id: 5832192094209
+        - id: 5832192094210
+        - id: 5832192094211
+        - id: 5832192094212
+        - id: 5832192094213
+        - id: 5832192094214
+        - id: 5832192094215
+        - id: 5832192094216
+        - id: 5832192094217
+        - id: 5832192094218
+        - id: 5832192094219
+        - id: 5832192094220
+        - id: 5832192094221
+        - id: 5832192094222
+        - id: 5832192094223
+        - id: 5832192094224
+        - id: 5832192094225
+        - id: 5832192094226
+        - id: 5832192094227
+        - id: 5832192094228
+        - id: 5832192094229
+        - id: 5832192094230
+        - id: 5832192094231
+        - id: 5832192094232
+        - id: 5832192094233
+        - id: 5832192094234
+        - id: 5832192094235
+        - id: 5832192094236
+        - id: 5832192094237
+        - id: 5832192094238
+        - id: 5832192094239
+        - id: 5832192094240
+        - id: 5832192094241
+        - id: 9846489149440
+        - id: 9846568841216
+        - id: 9846568841217
+        - id: 9846568841218
+        - id: 9846568841219
+        - id: 9846568841220
+        - id: 9846568841221
+        - id: 9846568841222
+        - id: 9846568841223
+        - id: 9846568841224
+        - id: 9846568841225
+        - id: 9846568841226
+        - id: 9846568841227
+        - id: 9846568841228
+        - id: 9846568841229
+        - id: 9846568841230
+        - id: 9846568841231
+        - id: 9846568841232
+        - id: 9846568841233
+        - id: 9846568841234
+        - id: 9846568841235
+        - id: 9846568841236
+        - id: 9846568841237
+        - id: 9846568841238
+        - id: 9846568841239
+        - id: 9846568841240
+        - id: 9846568841241
+        - id: 9846568841242
+        - id: 9846568841243
+        - id: 9846568841244
+        - id: 9846568841245
+        - id: 9846568841246
+        - id: 9846568841247
+        - id: 9846568841248
+        - id: 9846568841249
+        - id: 9846568841250
+        - id: 9846568841251
+        - id: 9846568841252
+        - id: 9846568841253
+        - id: 9846568841254
+        - id: 9846568841255
+        - id: 9846568841256
+        - id: 9846568841257
+        - id: 9846568841258
+        - id: 9846568841259
+        - id: 9846568841260
+        - id: 9846568841261
+        - id: 9846568841262
+        - id: 9846568841263
+        - id: 9846568841264
+        - id: 9846568841265
+        - id: 9846568841266
+        - id: 9846568841267
+        - id: 9846568841268
+        - id: 9846568841269
+        - id: 9846568841270
+        - id: 9846568841271
+        - id: 9846568841272
+        - id: 9846568841273
+        - id: 9846568841274
+        - id: 9846568841275
+        - id: 9846568841276
+        - id: 9846568841277
+        - id: 9846568841278
+        - id: 9846568841279
+        - id: 9846568841280
+        - id: 9846568841281
+        - id: 9846568841282
+        - id: 9846568841283
+        - id: 9846568841284
+        - id: 9846568841285
+        - id: 9846568841286
+        - id: 9846568841287
+        - id: 9846568841288
+        - id: 9846568841289
+        - id: 9846568841290
+        - id: 9846568841291
+        - id: 9846568841292
+        - id: 9846568841293
+        - id: 9846568841294
+        - id: 9846568841295
+        - id: 9846568841296
+        - id: 9846568841297
+        - id: 9846568841298
+        - id: 9846568841299
+        - id: 9846568841300
+        - id: 9846568841301
+        - id: 9846568841302
+        - id: 9846568841303
+        - id: 9846568841304
+        - id: 9846568841305
+        - id: 9846568841306
+        - id: 9846568841307
+        - id: 9846568841308
+        - id: 9846568841309
+        - id: 9846568841310
+        - id: 9846568841311
+        - id: 9846568841312
+        - id: 9846568841313
+        - id: 9846568841314
+        - id: 9846568841315
+        - id: 9846568841316
+        - id: 9846568841317
+        - id: 9846568841318
+        - id: 9846568841319
+        - id: 9846568841321
+        - id: 9846568841322
+        - id: 9846568841323
+        - id: 9846568841324
+        - id: 9846568841325
+        - id: 9846568841326
+        - id: 9846568841328
+        - id: 9846568841329
+        - id: 9846568841330
+        - id: 9846568841332
+        - id: 9846568841333
+        - id: 9846573035520
+        - id: 9846573035521
+        - id: 9846573035522
+        - id: 9846573035523
+        - id: 9846573035524
+        - id: 9846573035525
+        - id: 9846573035526
+        - id: 9846573035527
+        - id: 9846573035528
+        - id: 9846573035529
+        - id: 10777284898816
+        - id: 10777347813376
+        - id: 51181384429571
+        - id: 51181384429577
+        - id: 55516336025602
+        - id: 55516336025605
+        - id: 55516336025606
+        - id: 55516336025614
+        - id: 55516336025615

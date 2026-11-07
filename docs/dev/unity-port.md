@@ -90,6 +90,48 @@ HTML 이 바뀌면 두 명령을 차례로 돌리고, `data.json` 과 `GameData.
 - `node tools/golden/prototype-golden.mjs strings` 가 `tools/golden/out/strings.json` 을 만든다 (`tools/golden/strings.mjs`). 메뉴 둘, 캠페인 셋, 데모 전투 19개 상태(배치, 선택, 처치 모드, 적·뱀파이어·시신·스폰·보름달 표적 보기, 턴마다), 결과 창 여섯(데모 승·패, 1장 첫 클리어·재도전·패배, 2장 첫 클리어)과 그 뒤 캠페인 화면을 HTML 로 그려 글 덩어리를 뽑는다. `UiTextParityTests` 가 같은 상태의 Unity 화면 글(`Text`)과 덩어리 단위로 비교하고, 결과 뒤 캠페인 저장 문자열도 비교한다.
 - HTML 과 다른 점: 적 턴 동안 전투 기록과 수치는 재생이 끝난 뒤 한 번에 바뀐다(HTML 은 적 하나가 움직일 때마다 바뀐다). 달 수치 옆 달 그림, 스크롤 막대 모양, 마우스를 올렸을 때의 테두리 색은 옮기지 않았다.
 
+## 전투 화면 달과 피 (#25)
+
+- 기획서 docs/ui/battle-hud.md 대로 전투 화면 전체(배치, 아군 턴, 적 턴, 결과 창)를 `Game/Screens/BattleHud` 하나가 그린다. 옛 머리 줄·옆 칸(`BattleScreen.Header`, `SidePanel`, 카드들)은 지웠다. `BattleScreen` 에는 문장 도우미(버튼 글, 안내, 규칙 줄, 유닛 노트)만 남았다.
+- `GameFlow` 는 상태가 바뀔 때마다 `HudState`(호버한 유닛·시신, Alt, 적 행동 중, 나가기 확인, 규칙·기록 펼침)로 HUD 를 다시 만든다. 호버는 매 프레임 `BoardInput.HexAt` 으로 읽고, 바뀔 때만 다시 그린다. 단축키 1·2·Space 는 `GameFlow.Hotkeys`, Esc 는 `BoardInput.EscapeFirst` 로 창 닫기 → 처치 모드 끄기를 먼저 하고 그다음 `Session.Escape`.
+- 머리 위 표시는 화면 공간 UI 다. `BattleHud.Tick` 이 매 프레임 유닛 모델 위치로 옮기고, 체력 칸은 `UnitView.HpFraction`(맞는 연출을 따라가는 값)으로 채운다. 3D 체력 막대는 지웠다.
+- 보드 칸 표시(`OverlayView`)는 ui-style.md 8-2 색. 보드 글자(TextMesh)는 지웠고, 호버 칸 테두리(`SetHover`)를 더했다. 위협 칸(`Mark.Threat`, `ShowThreat`, `Threat()`)은 Core 에서 지웠다.
+- 보드 카메라는 여전히 보드 영역에만 그린다. 보드 카메라 지우는 색을 배경 카메라와 같은 `bg.night` 로 맞춰 경계 사각형을 없앴다 (기획서 1-2 의 "화면 전체에 그린다" 대신, 보이는 결과는 같다).
+- 기준 해상도는 전투 1920×1080, 메뉴·캠페인은 다시 만들 때까지 1600×900 (`ClearScreen`).
+- 시험: `UiTextParityTests.BattleHudShowsEveryGoldenState` 가 HTML 전투 상태 19개마다 HUD 를 만들어 표 키가 그대로 나오지 않는지, 안내·주 버튼·편성·적 패널·기록이 있는지 본다. 전투 화면 글 덩어리 비교는 뺐다(데모와 화면 구성이 다르다). `OverlayTests` 는 HTML 기준값에서 위협 칸을 빼고, 바뀐 안내 문장 하나를 새 문장으로 읽는다.
+- 확인 스크린샷: docs/review/battle-hud-*.png (verify-unity, 1920×1080 게임 뷰).
+- 보름달 턴(#28): 적 턴 재생 중에는 모델이 이미 다음 아군 턴이라, `banner.fullMoon` 배너가 재생될 때 `GameFlow.fullMoon` 을 켠다. 재생이 끝나면 한 번 `MoonFading` 으로 그려 붉은 칸·비네트가 0.4초에 사라진다 (`Fx.FadeOut`). 스크린샷 docs/review/battle-hud-fullmoon.png.
+- 움직임(#28): `BattleHud` 가 앞 번 그림의 패널 이름·1단계 값을 기억해, 새로 생긴 패널만 0.15초 올라오고(`PanelAppear`) 바뀐 값(체력·이동·달·보스 체력)만 0.2초 번쩍인다(`Fx.Flash`). 호버로 다시 그릴 때는 움직이지 않는다.
+
+## 장 선택·병영 화면 달과 피 (#26)
+
+- 기획서 docs/ui/stage-select.md, docs/ui/upgrade.md 14~19 대로 `Game/Screens/CampaignScreen` 을 다시 썼다. 원정 길·장 정보·병영 세 칸. 고른 장은 `GameFlow.campSel`(없으면 `CampaignScreen.DefaultStage`: 클리어 전 열린 첫 장, 다 깼으면 마지막 장). 출정하면 그 장을 기억한다.
+- 글자·틀·버튼·무기 아이콘 그리기는 `Screens/Kit` 로 모았다(전투 HUD 와 같이 쓴다). 키트 장식 프리팹(Crest, Section_Break)은 `ArtCatalog.uiPrefabs` 에서 이름으로 찾아 `Kit.Prefab` 으로 띄운다.
+- 맥박(1.2초)·번쩍임(0.2초)은 `Screens/Fx` 컴포넌트. 산 강화 칸과 금화 숫자가 번쩍인다(`CampView.Bought`).
+- 바탕: 고른 장의 보드를 `BoardView.Show` 로 세우고 보드 카메라를 240×135 렌더 텍스처에 그려 화면 전체로 늘린다(늘리는 것이 흐림). 어둡게 60%. 화면을 떠나면 `ClearScreen` 이 카메라 대상을 풀고 보드를 지운다.
+- 단축키 ↑/↓·Enter·Esc 는 `GameFlow.CampKeys`.
+- 기준 해상도 1920×1080 (메뉴만 아직 1600×900).
+- 시험: `UiTextParityTests.CampaignScreenShowsEveryGoldenState` 가 HTML 캠페인 상태 셋마다 표 키 없음, 금화, 장 이름 열, 고른 장 브리핑, 열린 병종, 초기화 확인을 본다. 캠페인 화면 글 덩어리 비교는 뺐다.
+- 기획서와 다른 점: 장 정보 위 문장(Crest)은 악마 해골이라 마지막 장에서만 보인다 (기획서도 고침). 원정 길은 열 장이 칸 안에 들어가 스크롤을 두지 않았다.
+- 확인 스크린샷: docs/review/stage-select-*.png. 강화를 실제로 사는 두 번째 누르기는 사용자 저장을 바꾸므로 게임에서 누르지 않았다(확인 상태까지).
+
+## 메인 메뉴 달과 피 (#27)
+
+- 기획서 docs/ui/main-menu.md 8~13 대로 `Game/Screens/MenuScreen` 을 다시 썼다. 문장 → 제목 → 소개 → 구분선 → 선택 카드 둘. 고른 카드는 `GameFlow.menuSel`(처음 캠페인), 마우스를 올리거나 ←/→ 로 바뀌고 Enter 로 들어간다(`GameFlow.MenuKeys`).
+- 문장은 `Crest_DarkFantasyMenus_Large_03`(해골 없는 마름모). 키트 문장은 거의 다 해골·악마 장식이다.
+- 바탕은 장 선택과 같은 `GameFlow.Backdrop`(1장 보드), 들어올 때 0.3초 검은 화면에서 밝아진다(`Fx.FadeIn`). 언어를 바꿔 다시 그릴 때와 카드 고르기로 다시 그릴 때는 밝아짐을 하지 않는다.
+- 언어 줄은 글자 + 고른 언어 밑줄 (localization.md 7 은 main-menu.md 12 를 가리키게 고쳤다).
+- 기준 해상도는 이제 모든 화면 1920×1080 하나. 옛 `Ui.Button`·`Look`·`Card`·`Glyph`·`TierColor` 는 쓰는 곳이 없어 지웠다.
+- 시험: 메뉴 글은 HTML 데모와 같아 `UiTextParityTests` 의 메뉴 비교를 그대로 둔다.
+- 확인 스크린샷: docs/review/main-menu*.png.
+
+## 유닛 모습 (#29)
+
+- `Game/UnitLook`(ScriptableObject): 모델, 뼈대(Sidekick/Polygon), 무기(프리팹, 손, 위치, 회전), 동작 묶음. `UnitView.Create(art, look, …, armed)` 가 모델을 세우고 키를 맞춘 뒤 손 뼈(`UnitLook.Bone`)에 무기를 붙이고 애니메이터를 건다. 스폰·시신은 `armed: false` (무기 없음, Sidekick 은 `ArtCatalog.spawnAnimator`).
+- 동작 묶음은 `Art/Unit.controller` 의 `AnimatorOverrideController` (`Art/Units/*.overrideController`). 상태·트리거 이름이 같아 `BattleView` 는 그대로다.
+- 에셋은 에디터에서 한 번 만든 손질 코드로 만들었고 코드는 남기지 않았다 (CLAUDE.md). 다시 만들 일은 없고, 바꿀 때는 에셋 칸을 고친다.
+- 확인: docs/review/unit-looks-idle.png, unit-looks-attack.png (실제 `UnitView.Create` 경로로 세운 8종), unit-battle.png (데모 전투). EditMode 163, PlayMode 4.
+
 ## 게임 데이터 에셋 (요청 001)
 
 - 규칙이 읽는 수치·문장은 `Core/DataSet` 하나에 모인다. `GameData.Current` 가 지금 쓰는 것이고, `GameData.Use(set)` 으로 바꾸며, `Use(null)` 이면 HTML 값(`PrototypeData.Create()`)으로 돌아간다. `Rules.MoonMax` 등도 이 데이터를 읽는다.

@@ -17,6 +17,17 @@ namespace VampireSpawn.Editor
                 if (GUILayout.Button("게임 데이터 편집기")) GameDataWindow.Open();
                 if (GUILayout.Button("데이터 에셋 선택")) Selection.activeObject = DataAssetsBuilder.Root();
             }
+
+            EditorGUILayout.LabelField("유료 에셋", EditorStyles.boldLabel);
+            using (new EditorGUILayout.HorizontalScope())
+            {
+                if (GUILayout.Button(new GUIContent("Synty 다시 불러오기", "빠진 Synty 패키지를 UPackage/ 에서 임포트하고 Sidekick 레시피를 굽는다 (/synty-reload)"))) SyntyReload.Run(false);
+                if (GUILayout.Button(new GUIContent("캐릭터 모두 다시 굽기", "레시피가 그대로여도 전부 다시 굽는다"))) SyntyReload.Run(true);
+            }
+            var last = SyntyReload.LastResult;
+            if (last.Length > 0)
+                EditorGUILayout.HelpBox(last + "\n확인: Window > General > Test Runner 의 SidekickRecipeTests, RequiredAssetsTests",
+                    last.Contains("FAIL") || last.Contains("MISSING") ? MessageType.Warning : MessageType.Info);
         }
     }
 }

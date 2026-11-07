@@ -4,6 +4,7 @@
     "references": [
         "VampireSpawn.Core",
         "VampireSpawn.Game",
+        "Unity.Localization",
         "UnityEngine.TestRunner",
         "UnityEditor.TestRunner",
         "UnityEngine.UI"

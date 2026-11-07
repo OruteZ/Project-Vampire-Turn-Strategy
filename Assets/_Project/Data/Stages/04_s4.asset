@@ -13,12 +13,6 @@ MonoBehaviour:
   m_Name: 04_s4
   m_EditorClassIdentifier: VampireSpawn.Game::VampireSpawn.Game.Data.StageData
   id: s4
-  label: "4\uC7A5"
-  title: "\uAC08\uB9BC\uAE38 \uBB18\uC9C0"
-  brief: "\uBE5B\uC774 \uD558\uB098\uB3C4 \uC5C6\uB294 \uBB18\uC9C0. \uBB18\uBE44
-    \uC0AC\uC774\uB85C \uB09C \uC881\uC740 \uAE38 \uB450 \uAC1C\uAC00 \uC548\uCABD\uC73C\uB85C
-    \uC774\uC5B4\uC9C4\uB2E4. \uB204\uAD6C\uB4E0 \uC4F0\uB7EC\uC9C0\uBA74 \uADF8\uB300\uB85C
-    \uC77C\uC5B4\uB09C\uB2E4."
   units: 000000000100000002000000
   pop: 8
   silver: 0
@@ -26,7 +20,6 @@ MonoBehaviour:
   bonusType: 1
   bonusValue: 0
   bonusGold: 10
-  bossName: "\uBB18\uC9C0\uAE30 \uBC40\uD30C\uC774\uC5B4"
   bossHp: 22
   bossAtk: 5
   bossDef: 1

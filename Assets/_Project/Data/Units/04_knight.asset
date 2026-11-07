@@ -14,8 +14,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: VampireSpawn.Game::VampireSpawn.Game.Data.UnitTypeData
   kind: 4
   key: knight
-  displayName: "\uAE30\uC0AC"
-  glyph: "\uAE30"
   tier: 2
   pop: 3
   silver: 0
@@ -26,12 +24,8 @@ MonoBehaviour:
   rng: 1
   bane: 0
   unlockAt: 7
-  desc: "\uAC00\uC7A5 \uB2E8\uB2E8\uD558\uACE0 \uAC15\uD558\uB2E4. \uC2A4\uD3F0\uC774
-    \uB418\uBA74 \uAC00\uC7A5 \uC704\uD5D8\uD558\uB2E4."
   upgrades:
   - id: knight_def
-    displayName: "\uD310\uAE08 \uAC11\uC637"
-    desc: "\uBC29\uC5B4 +1"
     cost: 80
     hp: 0
     atk: 0
@@ -41,9 +35,6 @@ MonoBehaviour:
     bane: 0
     ability: 0
   - id: knight_charge
-    displayName: "\uB3CC\uACA9"
-    desc: "2\uCE78 \uC774\uC0C1 \uC774\uB3D9\uD55C \uB4A4 \uACF5\uACA9\uD558\uBA74
-      \uD53C\uD574 +2"
     cost: 80
     hp: 0
     atk: 0

@@ -13,7 +13,7 @@ namespace VampireSpawn.Game
         // Sizes are the prototype's SVG units, where the hex corner radius R is 30.
         const float R = 30f;
 
-        static readonly Color Steel = Hexc(0x8fb0cc), Candle = Hexc(0xe3a84b), Blood = Hexc(0xc8304a), Bone = Hexc(0xebe3d2);
+        static readonly Color Ally = Screens.Ui.Steel, Enemy = Screens.Ui.Blood, Bone = Screens.Ui.Bone, MoonBlood = Screens.Ui.MoonBlood;
 
         struct Style
         {
@@ -24,30 +24,30 @@ namespace VampireSpawn.Game
         static Style S(Color fill, float fa, Color stroke, float sa, float radius, float width, float dash = 0f, float gap = 0f) =>
             new Style { Fill = A(fill, fa), Stroke = A(stroke, sa), Radius = radius, Width = width, Dash = dash, Gap = gap };
 
-        // Prototype CSS .ov-* rules and the radius each renderOverlay call passes.
+        // docs/art/ui-style.md 8-2. Widths are in R units; one unit is about 1 px at 1080p.
         static readonly Dictionary<Mark, Style> Styles = new Dictionary<Mark, Style>
         {
-            [Mark.Deploy] = S(Steel, 0.11f, Steel, 0.35f, R - 2.5f, 1f),
-            [Mark.Threat] = S(Blood, 0.13f, Blood, 0f, R - 1f, 0f),
-            [Mark.Move] = S(Candle, 0.2f, Candle, 0.45f, R - 2.5f, 1f),
-            [Mark.Atk] = S(Blood, 0.14f, Blood, 1f, R - 4f, 2.5f),
-            [Mark.Exec] = S(Bone, 0f, Bone, 1f, R - 4f, 2.5f, 4f, 4f),
-            [Mark.Sel] = S(Candle, 0f, Candle, 1f, R - 3f, 3f),
-            [Mark.MarkZone] = S(Blood, 0.05f, Blood, 0.45f, R - 2f, 1.2f, 3f, 4f),
-            [Mark.Target] = S(Blood, 0f, Blood, 1f, R - 1.5f, 3f, 7f, 5f),
+            [Mark.Deploy] = S(Ally, 0.08f, Ally, 1f, R - 2.5f, 2f),
+            [Mark.Move] = S(Ally, 0.08f, Ally, 1f, R - 2.5f, 2f),
+            [Mark.Atk] = S(Enemy, 0f, Enemy, 1f, R - 3f, 2f),
+            [Mark.Exec] = S(Enemy, 0f, Enemy, 1f, R - 3f, 2f, 4f, 4f),
+            [Mark.Sel] = S(Ally, 0f, Ally, 1f, R - 3f, 3f),
+            [Mark.MarkZone] = S(MoonBlood, 0.05f, MoonBlood, 1f, R - 2f, 1f),
+            [Mark.Target] = S(Enemy, 0f, Enemy, 1f, R - 1.5f, 3f),
         };
-        static readonly Style DropIn = S(Candle, 0.25f, Candle, 1f, R - 2.5f, 2.5f);
-        static readonly Style DropOut = S(Blood, 0.25f, Blood, 1f, R - 2.5f, 2.5f);
+        static readonly Style HoverCell = S(Bone, 0f, Bone, 1f, R - 1f, 2f);
+        static readonly Style DropIn = S(Ally, 0.25f, Ally, 1f, R - 2.5f, 2.5f);
+        static readonly Style DropOut = S(Enemy, 0.25f, Enemy, 1f, R - 2.5f, 2.5f);
 
         readonly List<Vector3> verts = new List<Vector3>();
         readonly List<Color> colors = new List<Color>();
         readonly List<int> tris = new List<int>();
-        readonly List<TextMesh> labels = new List<TextMesh>();
         Mesh mesh;
 
         public int MarkCount { get; private set; }
 
-        static Color Hexc(int rgb) => new Color(((rgb >> 16) & 255) / 255f, ((rgb >> 8) & 255) / 255f, (rgb & 255) / 255f);
+        BattleSession last;
+        Hex? lastDrop, hover;
         static Color A(Color c, float a) { c.a = a; return c; }
 
         float Scale => board.art.hexSize / R;
@@ -62,25 +62,25 @@ namespace VampireSpawn.Game
             GetComponent<MeshRenderer>().shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
         }
 
+        public void SetHover(Hex? h)
+        {
+            if (h == hover) return;
+            hover = h;
+            if (last != null) Show(last, lastDrop);
+        }
+
         public void Show(BattleSession session, Hex? drop = null)
         {
+            last = session;
+            lastDrop = drop;
             verts.Clear(); colors.Clear(); tris.Clear();
-            var used = 0;
             var marks = session.Overlay();
             MarkCount = marks.Count;
             foreach (var m in marks) Hexagon(Center(m.Hex), Styles[m.Mark]);
             var moon = session.Moon();
-            if (moon != null)
-            {
-                Label(used++, Center(moon.Vampire), moon.VampireLabel);
-                if (moon.Target is Hex t)
-                {
-                    Dashed(Center(moon.Vampire), Center(t), 1.6f * Scale, A(Blood, 0.75f), 3f * Scale, 5f * Scale);
-                    Label(used++, Center(t), moon.TargetLabel);
-                }
-            }
+            if (moon != null && moon.Target is Hex t) Dashed(Center(moon.Vampire), Center(t), 2f * Scale, MoonBlood, 4f * Scale, 4f * Scale);
+            if (hover is Hex hv && session.Battle.Board.InBounds(hv)) Hexagon(Center(hv), HoverCell);
             if (drop is Hex d && session.Battle.Board.InBounds(d)) Hexagon(Center(d), session.Battle.InDeploy(d) ? DropIn : DropOut);
-            for (var i = used; i < labels.Count; i++) labels[i].gameObject.SetActive(false);
             mesh.Clear();
             mesh.SetVertices(verts);
             mesh.SetColors(colors);
@@ -90,9 +90,10 @@ namespace VampireSpawn.Game
 
         public void Clear()
         {
+            last = null;
+            hover = null;
             mesh.Clear();
             MarkCount = 0;
-            foreach (var l in labels) l.gameObject.SetActive(false);
         }
 
         Vector3 Center(Hex h)
@@ -145,34 +146,6 @@ namespace VampireSpawn.Game
             verts.Add(a - side - along); verts.Add(a + side - along); verts.Add(b + side + along); verts.Add(b - side + along);
             for (var i = 0; i < 4; i++) colors.Add(color.linear);
             tris.AddRange(new[] { k, k + 1, k + 2, k, k + 2, k + 3 });
-        }
-
-        void Label(int index, Vector3 at, string text)
-        {
-            while (labels.Count <= index)
-            {
-                var go = new GameObject("MarkLabel");
-                go.transform.SetParent(transform, false);
-                var tm = go.AddComponent<TextMesh>();
-                tm.font = Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
-                go.GetComponent<MeshRenderer>().sharedMaterial = tm.font.material;
-                tm.fontSize = 48;
-                tm.characterSize = 0.07f;
-                tm.anchor = TextAnchor.MiddleCenter;
-                tm.color = Blood;
-                labels.Add(tm);
-            }
-            var l = labels[index];
-            l.gameObject.SetActive(true);
-            l.text = text;
-            l.transform.localPosition = at + Vector3.up * (board.art.unitHeight * board.art.hexSize + 0.55f);
-        }
-
-        void LateUpdate()
-        {
-            var cam = Camera.main;
-            if (cam == null) return;
-            foreach (var l in labels) if (l.gameObject.activeSelf) l.transform.rotation = cam.transform.rotation;
         }
     }
 }

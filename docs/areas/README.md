@@ -8,6 +8,8 @@
 |---|---|
 | 아트 에셋 | [art-assets.md](art-assets.md) |
 | 전투 | [battle.md](battle.md) |
+| UI | [ui.md](ui.md) |
+| 다중 언어 | [localization.md](localization.md) |
 
 ## 형식
 

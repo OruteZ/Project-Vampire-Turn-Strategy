@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem.UI;
 using UnityEngine.UI;
+using UnityEngine.Localization.Settings;
 using VampireSpawn.Core;
 using VampireSpawn.Game.Data;
 
@@ -18,20 +19,26 @@ namespace VampireSpawn.Game.Screens
 
         // Prototype timers: leave confirmation 2500 ms, phase banner 1300 ms.
         const float LeaveSeconds = 2.5f, BannerSeconds = 1.3f;
-        const float SideWidth = 340f, BarHeight = 84f, Gap = 16f;
 
         public string Current { get; private set; }
         public Campaign Campaign { get; private set; }
         public bool OverShown => overRoot != null && overRoot.gameObject.activeSelf;
 
-        bool demo, resetArm, leaveArm, rulesOpen, finished, enemyPlaying;
+        bool demo, resetArm, leaveArm, rulesOpen, logOpen, finished, enemyPlaying, fullMoon, moonFading;
         float leaveUntil, bannerUntil, buyUntil;
-        string buyArm;
+        string buyArm, bought;
+        int? campSel;
+        int menuSel = 1;
+        RenderTexture backdropTex;
         Stage stage;
         OverInfo over;
-        RectTransform screen, bar, side, boardArea, overRoot;
-        Text hint, banner;
-        ScrollRect sideScroll;
+        RectTransform screen, boardArea, overRoot, hudRoot;
+        CanvasScaler scaler;
+        BattleHud hud;
+        int? hoverId, hoverCorpse;
+        bool altDown;
+        readonly Dictionary<string, bool> keyDown = new Dictionary<string, bool>();
+        Text banner;
         CampaignActions campActions;
         BattleActions battleActions;
 
@@ -46,12 +53,14 @@ namespace VampireSpawn.Game.Screens
             input.Changed += OnBattleChanged;
             View.Played += OnPlayed;
             input.PointerBlocked = () => EventSystem.current != null && EventSystem.current.IsPointerOverGameObject();
+            input.EscapeFirst = CloseBattlePopup;
             campActions = new CampaignActions
             {
-                Play = i => { buyArm = null; demo = false; StartBattle(Campaign.Stages[i], null, false); },
+                Play = i => { buyArm = null; demo = false; campSel = i; StartBattle(Campaign.Stages[i], null, false); },
+                Select = i => { buyArm = null; resetArm = false; campSel = i; ShowCamp(); },
                 Buy = id =>
                 {
-                    if (buyArm == id) { buyArm = null; if (Campaign.Buy(id)) CampaignStore.Save(Campaign); }
+                    if (buyArm == id) { buyArm = null; if (Campaign.Buy(id)) { CampaignStore.Save(Campaign); bought = id; } }
                     else { buyArm = id; buyUntil = Time.unscaledTime + LeaveSeconds; }
                     ShowCamp();
                 },
@@ -68,7 +77,8 @@ namespace VampireSpawn.Game.Screens
                 Recall = id => input.Run(s => s.Recall(id)),
                 Exec = () => input.Act(s => s.ToggleExecute()),
                 Wait = () => input.Run(s => s.Wait()),
-                Threat = on => input.Act(s => s.ShowThreat = on),
+                ToggleRules = () => { rulesOpen = !rulesOpen; RenderBattle(); },
+                ToggleLog = () => { logOpen = !logOpen; RenderBattle(); },
                 Retry = () => StartBattle(stage, Session.Battle.StartFormation, true),
                 Redeploy = () => StartBattle(stage, Session.Battle.StartFormation, false),
                 ToCamp = () => { LeaveBattle(); ShowCamp(); },
@@ -76,7 +86,16 @@ namespace VampireSpawn.Game.Screens
             };
         }
 
-        void Start() => ShowMenu();
+        void Start()
+        {
+            LocalizationSettings.SelectedLocaleChanged += OnLocaleChanged;
+            ShowMenu();
+        }
+
+        void OnDestroy() => LocalizationSettings.SelectedLocaleChanged -= OnLocaleChanged;
+
+        // Only the main menu offers a language switch (docs/ui/localization.md 9).
+        void OnLocaleChanged(UnityEngine.Localization.Locale _) { if (Current == "menu") ShowMenu(false); }
 
         void UseData()
         {
@@ -97,15 +116,18 @@ namespace VampireSpawn.Game.Screens
             go.layer = 5;
             go.transform.SetParent(transform, false);
             go.GetComponent<Canvas>().renderMode = RenderMode.ScreenSpaceOverlay;
-            var scaler = go.GetComponent<CanvasScaler>();
+            scaler = go.GetComponent<CanvasScaler>();
             scaler.uiScaleMode = CanvasScaler.ScaleMode.ScaleWithScreenSize;
-            scaler.referenceResolution = new Vector2(1600f, 900f);
             scaler.matchWidthOrHeight = 0.5f;
+            scaler.referenceResolution = new Vector2(1920f, 1080f);
             screen = Ui.Node(go.transform, "Screen");
             Ui.Stretch(screen);
             // The board camera draws only into the board area; without a full-screen clear the overlay UI blends over stale pixels.
             if (viewCamera != null)
             {
+                // Same clear colour as the backdrop so the board area edge does not show (battle-hud.md 1-2).
+                viewCamera.clearFlags = CameraClearFlags.SolidColor;
+                viewCamera.backgroundColor = Ui.Ink;
                 var back = new GameObject("Backdrop Camera").AddComponent<Camera>();
                 back.transform.SetParent(transform, false);
                 back.depth = viewCamera.depth - 1f;
@@ -122,21 +144,63 @@ namespace VampireSpawn.Game.Screens
             if (!screen.TryGetComponent<Image>(out var bg)) bg = screen.gameObject.AddComponent<Image>();
             bg.color = Ui.Ink;
             bg.enabled = opaque;
-            if (viewCamera != null) viewCamera.rect = new Rect(0f, 0f, 1f, 1f);
+            if (viewCamera != null)
+            {
+                viewCamera.rect = new Rect(0f, 0f, 1f, 1f);
+                viewCamera.targetTexture = null;
+            }
+            if (Current != "battle") View.board.Clear();
         }
 
-        public void ShowMenu()
+        // ui-style.md 11-1: the stage board, blurred and darkened 60%. A tiny render target upscaled is the blur.
+        void Backdrop(Stage s)
+        {
+            if (viewCamera == null) return;
+            if (backdropTex == null) backdropTex = new RenderTexture(240, 135, 16) { filterMode = FilterMode.Bilinear };
+            View.board.Show(s);
+            viewCamera.targetTexture = backdropTex;
+            var img = Ui.Node(screen, "Backdrop").gameObject.AddComponent<RawImage>();
+            img.texture = backdropTex;
+            img.color = new Color(0.4f, 0.4f, 0.4f);
+            img.raycastTarget = false;
+            Ui.Stretch(img.rectTransform);
+            img.transform.SetAsFirstSibling();
+        }
+
+        public void ShowMenu() => ShowMenu(true);
+
+        void ShowMenu(bool fade)
         {
             Current = "menu";
             ClearScreen(true);
-            MenuScreen.Build(screen, Campaign, () => { demo = true; StartBattle(GameData.Stages[0], null, false); }, () => { demo = false; ShowCamp(); });
+            Backdrop(Campaign.Stages[0]);
+            MenuScreen.Build(screen, Campaign, MenuDemo, MenuCamp, View.board.art, menuSel, i => { if (menuSel != i) { menuSel = i; ShowMenu(false); } });
+            if (fade) Fx.FadeIn(screen);
+        }
+
+        void MenuDemo() { demo = true; StartBattle(GameData.Stages[0], null, false); }
+
+        void MenuCamp() { demo = false; ShowCamp(); }
+
+        void MenuKeys()
+        {
+            var kb = UnityEngine.InputSystem.Keyboard.current;
+            if (kb == null) return;
+            var left = Pressed("left", kb.leftArrowKey.isPressed);
+            var right = Pressed("right", kb.rightArrowKey.isPressed);
+            var enter = Pressed("enter", kb.enterKey.isPressed || kb.numpadEnterKey.isPressed);
+            if ((left && menuSel != 0) || (right && menuSel != 1)) { menuSel = left ? 0 : 1; ShowMenu(false); }
+            else if (enter) { if (menuSel == 0) MenuDemo(); else MenuCamp(); }
         }
 
         public void ShowCamp()
         {
             Current = "camp";
             ClearScreen(true);
-            CampaignScreen.Build(screen, Campaign, resetArm, buyArm, campActions);
+            var sel = campSel ?? CampaignScreen.DefaultStage(Campaign);
+            Backdrop(Campaign.Stages[sel]);
+            CampaignScreen.Build(screen, Campaign, new CampView { Selected = sel, ResetArm = resetArm, BuyArm = buyArm, Bought = bought }, campActions, View.board.art);
+            bought = null;
         }
 
         public void StartBattle(Stage s, IEnumerable<Placement<UnitKind>> formation, bool startNow)
@@ -145,47 +209,26 @@ namespace VampireSpawn.Game.Screens
             stage = s;
             finished = enemyPlaying = leaveArm = false;
             ClearScreen(false);
-
-            bar = Ui.Row(screen, "Bar", 24, 0, null, null, TextAnchor.LowerLeft);
-            bar.anchorMin = new Vector2(0f, 1f);
-            bar.anchorMax = Vector2.one;
-            bar.pivot = new Vector2(0.5f, 1f);
-            bar.offsetMin = new Vector2(Gap, -BarHeight);
-            bar.offsetMax = new Vector2(-Gap, -8f);
-            bar.GetComponent<HorizontalLayoutGroup>().padding = new RectOffset(0, 0, 0, 10);
-            var line = Ui.Node(screen, "BarLine");
-            Ui.Bg(line, Ui.Line, null, false);
-            line.anchorMin = new Vector2(0f, 1f);
-            line.anchorMax = Vector2.one;
-            line.offsetMin = new Vector2(Gap, -BarHeight - 1f);
-            line.offsetMax = new Vector2(-Gap, -BarHeight);
-
-            var sideView = Ui.Scroll(screen, "Side", out sideScroll);
-            var sv = (RectTransform)sideScroll.transform;
-            sv.anchorMin = new Vector2(1f, 0f);
-            sv.anchorMax = Vector2.one;
-            sv.pivot = new Vector2(1f, 0.5f);
-            sv.offsetMin = new Vector2(-Gap - SideWidth, 12f);
-            sv.offsetMax = new Vector2(-Gap, -BarHeight - 8f);
-            side = sideView;
+            rulesOpen = logOpen = false;
+            hoverId = hoverCorpse = null;
 
             boardArea = Ui.Node(screen, "BoardArea");
-            Ui.Stretch(boardArea, Gap, BarHeight + 8f, Gap * 2 + SideWidth, 40f);
-            banner = Ui.Text(boardArea, "", 1.05f, Ui.Candle, true, true, TextAnchor.UpperCenter);
+            // ui-style.md 1-3: the HUD keeps off a 360/150/360/190 px margin around the board.
+            Ui.Stretch(boardArea, 360f, 150f, 360f, 190f);
+            banner = Ui.Text(boardArea, "", 32f / Ui.Base, Ui.Steel, true, true, TextAnchor.UpperCenter);
             var br = banner.rectTransform;
             br.anchorMin = new Vector2(0f, 1f);
             br.anchorMax = Vector2.one;
-            br.offsetMin = new Vector2(0f, -48f);
-            br.offsetMax = new Vector2(0f, -18f);
-            banner.gameObject.AddComponent<Outline>().effectColor = Ui.Deep;
+            br.offsetMin = new Vector2(0f, -60f);
+            br.offsetMax = new Vector2(0f, -12f);
+            var ol = banner.gameObject.AddComponent<Outline>();
+            ol.effectColor = Ui.Ink;
+            ol.effectDistance = new Vector2(2f, -2f);
             banner.gameObject.SetActive(false);
 
-            hint = Ui.Text(screen, "", 0.85f, Ui.Muted);
-            var hr = hint.rectTransform;
-            hr.anchorMin = Vector2.zero;
-            hr.anchorMax = new Vector2(1f, 0f);
-            hr.offsetMin = new Vector2(Gap + 4f, 8f);
-            hr.offsetMax = new Vector2(-Gap * 2 - SideWidth, 34f);
+            hudRoot = Ui.Node(screen, "Hud");
+            Ui.Stretch(hudRoot);
+            hud = new BattleHud(View.board.art);
 
             overRoot = Ui.Node(screen, "OverRoot");
             Ui.Stretch(overRoot);
@@ -210,28 +253,52 @@ namespace VampireSpawn.Game.Screens
         void RenderBattle()
         {
             if (Current != "battle" || Session == null) return;
-            Ui.Clear(bar);
-            BattleScreen.Header(bar, Session, demo, enemyPlaying, leaveArm, battleActions);
-            var scroll = sideScroll.verticalNormalizedPosition;
-            Ui.Clear(side);
-            BattleScreen.SidePanel(side, Session, demo ? Enumerable.Empty<string>() : Campaign.Upgrades, rulesOpen, battleActions, open => { rulesOpen = open; RenderBattle(); });
-            sideScroll.verticalNormalizedPosition = scroll;
-            hint.text = BattleScreen.Hint(Session, enemyPlaying);
+            var b = Session.Battle;
+            Ui.Clear(hudRoot);
+            hud.Build(hudRoot, Session, new HudState
+            {
+                Hover = hoverId is int id ? b.Find(id) : null,
+                HoverCorpse = hoverCorpse is int cid ? b.Corpses.FirstOrDefault(c => c.Id == cid) : null,
+                Alt = altDown, EnemyPlaying = enemyPlaying, LeaveArmed = leaveArm, RulesOpen = rulesOpen, LogOpen = logOpen, Demo = demo,
+                FullMoon = fullMoon, MoonFading = moonFading,
+                Upgrades = demo ? Enumerable.Empty<string>() : Campaign.Upgrades,
+            }, battleActions);
+        }
+
+        // battle-hud.md 6: Esc closes a window, then leaves execute mode, and only then drops the selection.
+        bool CloseBattlePopup()
+        {
+            if (rulesOpen || logOpen)
+            {
+                rulesOpen = logOpen = false;
+                RenderBattle();
+                return true;
+            }
+            if (Session.Mode != SelectMode.Execute) return false;
+            input.Act(x => x.ToggleExecute());
+            return true;
         }
 
         void OnBattleChanged()
         {
             if (Current != "battle") return;
-            if (!View.IsBusy) enemyPlaying = false;
+            if (!View.IsBusy)
+            {
+                enemyPlaying = false;
+                if (fullMoon) { fullMoon = false; moonFading = true; }
+            }
             RenderBattle();
+            moonFading = false;
             if (!finished && Session.Battle.Phase == Phase.Over && !View.IsBusy) Finish();
         }
 
         void OnPlayed(BattleEvent e)
         {
             if (e.Kind != BattleEventKind.Banner || banner == null) return;
-            banner.text = e.Text;
-            banner.color = e.Style == "enemy" ? Ui.Blood : Ui.Candle;
+            // The model has already left the full-moon turn while it plays back, so the banner is the only cue (ui-style.md 7-2).
+            if (e.Text.Key == "banner.fullMoon") { fullMoon = true; RenderBattle(); }
+            banner.text = Loc.Text(e.Text);
+            banner.color = e.Style == "enemy" ? Ui.Blood : Ui.Steel;
             banner.gameObject.SetActive(true);
             bannerUntil = Time.unscaledTime + BannerSeconds;
         }
@@ -241,6 +308,68 @@ namespace VampireSpawn.Game.Screens
             if (leaveArm && Time.unscaledTime > leaveUntil) { leaveArm = false; RenderBattle(); }
             if (buyArm != null && Time.unscaledTime > buyUntil) { buyArm = null; if (Current == "camp") ShowCamp(); }
             if (banner != null && banner.gameObject.activeSelf && Time.unscaledTime > bannerUntil) banner.gameObject.SetActive(false);
+            if (Current == "battle" && Session != null) { TrackHover(); Hotkeys(); }
+            if (Current == "camp") CampKeys();
+            else if (Current == "menu") MenuKeys();
+        }
+
+        bool Pressed(string name, bool down)
+        {
+            keyDown.TryGetValue(name, out var was);
+            keyDown[name] = down;
+            return down && !was;
+        }
+
+        void CampKeys()
+        {
+            var kb = UnityEngine.InputSystem.Keyboard.current;
+            if (kb == null) return;
+            var up = Pressed("up", kb.upArrowKey.isPressed);
+            var down = Pressed("down", kb.downArrowKey.isPressed);
+            var enter = Pressed("enter", kb.enterKey.isPressed || kb.numpadEnterKey.isPressed);
+            var esc = Pressed("esc", kb.escapeKey.isPressed);
+            var sel = campSel ?? CampaignScreen.DefaultStage(Campaign);
+            if (up && sel > 0) campActions.Select(sel - 1);
+            else if (down && sel < Campaign.Stages.Length - 1) campActions.Select(sel + 1);
+            else if (enter && Campaign.StageOpen(sel)) campActions.Play(sel);
+            else if (esc) campActions.Menu();
+        }
+
+        void Hotkeys()
+        {
+            var kb = UnityEngine.InputSystem.Keyboard.current;
+            if (kb == null) return;
+            var one = Pressed("1", kb.digit1Key.isPressed);
+            var two = Pressed("2", kb.digit2Key.isPressed);
+            var space = Pressed("space", kb.spaceKey.isPressed);
+            if (View.IsBusy || enemyPlaying || OverShown) return;
+            var b = Session.Battle;
+            var sel = Session.SelectedUnit;
+            var canAct = b.Phase == Phase.Player && sel != null && !sel.Acted;
+            if (one && canAct) battleActions.Exec();
+            if (two && canAct) battleActions.Wait();
+            if (space && (b.Phase == Phase.Deploy ? b.Allies.Any() : b.Phase == Phase.Player)) Primary();
+        }
+
+        void TrackHover()
+        {
+            var kb = UnityEngine.InputSystem.Keyboard.current;
+            var alt = kb != null && (kb.leftAltKey.isPressed || kb.rightAltKey.isPressed);
+            var m = UnityEngine.InputSystem.Mouse.current;
+            var at = m != null && !input.PointerBlocked() ? input.HexAt(m.position.ReadValue()) : null;
+            var over = at is Hex h ? Session.Battle.UnitAt(h)?.Id : null;
+            var corpse = at is Hex hc && over == null ? Session.Battle.CorpseAt(hc)?.Id : null;
+            input.overlay.SetHover(at);
+            if (over == hoverId && corpse == hoverCorpse && alt == altDown) return;
+            hoverId = over;
+            hoverCorpse = corpse;
+            altDown = alt;
+            RenderBattle();
+        }
+
+        void LateUpdate()
+        {
+            if (hud != null && Current == "battle") hud.Tick(viewCamera != null ? viewCamera : Camera.main, View);
         }
 
         void Primary()
@@ -280,7 +409,7 @@ namespace VampireSpawn.Game.Screens
             over = OverInfo.From(Session.Battle, demo, Campaign);
             if (over.Won && !demo) CampaignStore.Save(Campaign);
             Ui.Clear(overRoot);
-            BattleScreen.Over(overRoot, over, battleActions);
+            hud.Over(overRoot, over, battleActions);
             overRoot.gameObject.SetActive(true);
         }
     }

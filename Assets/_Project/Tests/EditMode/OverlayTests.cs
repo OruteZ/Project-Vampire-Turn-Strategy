@@ -5,6 +5,7 @@ using System.Linq;
 using NUnit.Framework;
 using UnityEngine;
 using VampireSpawn.Core;
+using VampireSpawn.Game;
 
 namespace VampireSpawn.Tests
 {
@@ -34,7 +35,7 @@ namespace VampireSpawn.Tests
 
         static readonly Dictionary<Mark, string> ClassOf = new Dictionary<Mark, string>
         {
-            [Mark.Deploy] = "ov-deploy", [Mark.Threat] = "ov-threat", [Mark.Move] = "ov-move", [Mark.Atk] = "ov-atk",
+            [Mark.Deploy] = "ov-deploy", [Mark.Move] = "ov-move", [Mark.Atk] = "ov-atk",
             [Mark.Exec] = "ov-exec", [Mark.Sel] = "ov-sel", [Mark.MarkZone] = "ov-markzone", [Mark.Target] = "ov-mark",
         };
 
@@ -44,11 +45,11 @@ namespace VampireSpawn.Tests
             var moon = s.Moon();
             if (moon != null)
             {
-                o.Add("label:" + moon.VampireLabel + "@" + moon.Vampire);
+                o.Add("label:" + Loc.Text(moon.VampireLabel) + "@" + moon.Vampire);
                 if (moon.Target is Hex t)
                 {
                     o.Add("line@" + moon.Vampire + ">" + t);
-                    o.Add("label:" + moon.TargetLabel + "@" + t);
+                    o.Add("label:" + Loc.Text(moon.TargetLabel) + "@" + t);
                 }
             }
             o.Sort(string.CompareOrdinal);
@@ -64,7 +65,7 @@ namespace VampireSpawn.Tests
                 case "pick": s.Pick(GameData.Types.First(t => t.Key == parts[1]).Kind); break;
                 case "click": s.Click(ParseHex(parts[1])); break;
                 case "start": s.Start(); break;
-                case "threat": s.ShowThreat = parts[1] == "on"; break;
+                case "threat": break;
                 case "exec": s.ToggleExecute(); break;
                 case "escape": s.Escape(); break;
                 case "endTurn": s.EndTurn(); break;
@@ -80,6 +81,9 @@ namespace VampireSpawn.Tests
                 Assert.That(seen, Does.Contain(cls), cls);
         }
 
+        // docs/ui/battle-hud.md 1-4 drops threat cells, so the select hint no longer mentions them.
+        const string OldSelectHint = "아군을 눌러 선택하세요. 적이나 시신을 누르면 정보와 위협 범위를 볼 수 있습니다.";
+
         [TestCaseSource(nameof(RunIndexes))]
         public void SelectionOverlayAndHintMatchPrototype(int index)
         {
@@ -91,8 +95,8 @@ namespace VampireSpawn.Tests
                 var step = run.steps[i];
                 Apply(s, step.op);
                 var at = $"{run.stage} step {i} ({step.op})";
-                CollectionAssert.AreEqual(step.ov.OrderBy(x => x, StringComparer.Ordinal).ToList(), Describe(s), at + " overlay");
-                Assert.AreEqual(step.hint, s.Hint, at + " hint");
+                CollectionAssert.AreEqual(step.ov.Where(x => !x.StartsWith("ov-threat@")).OrderBy(x => x, StringComparer.Ordinal).ToList(), Describe(s), at + " overlay");
+                Assert.AreEqual(step.hint == OldSelectHint ? Loc.Text(new Message("hint.select")) : step.hint, Loc.Text(s.Hint), at + " hint");
                 Assert.AreEqual(step.sel, s.Selected ?? -1, at + " selected");
                 Assert.AreEqual(step.ins, s.InspectCorpse is int c ? "c" + c : s.InspectUnit?.ToString() ?? "", at + " inspect");
                 Assert.AreEqual(step.mode, s.Mode == SelectMode.Execute ? "execute" : "act", at + " mode");

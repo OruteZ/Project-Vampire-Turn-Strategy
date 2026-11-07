@@ -19,6 +19,8 @@ if [ -n "$need" ]; then
 fi
 
 bash "$V" doctor
+echo "== Sidekick 레시피 굽기 (/synty-reload)"
+bash tools/assets/sidekick-bake.sh
 echo "== 에디터 안에서 확인 (RequiredAssetsTests)"
 result=$(bash "$V" test editor RequiredAssets)
 echo "$result" | grep -oE '"Summary":\{[^}]*\}|"Message":"[^"]{1,400}'

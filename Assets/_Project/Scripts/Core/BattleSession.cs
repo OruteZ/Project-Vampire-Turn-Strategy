@@ -6,7 +6,7 @@ namespace VampireSpawn.Core
     public enum SelectMode { Act, Execute }
 
     // One per prototype overlay class: ov-deploy, ov-threat, ov-move, ov-atk, ov-exec, ov-sel, ov-markzone, ov-mark.
-    public enum Mark { Deploy, Threat, Move, Atk, Exec, Sel, MarkZone, Target }
+    public enum Mark { Deploy, Move, Atk, Exec, Sel, MarkZone, Target }
 
     public readonly struct MarkedHex
     {
@@ -18,12 +18,12 @@ namespace VampireSpawn.Core
     public sealed class MoonMark
     {
         public Hex Vampire;
-        public string VampireLabel;
+        public Message VampireLabel;
         public Hex? Target;
-        public string TargetLabel;
+        public Message TargetLabel;
     }
 
-    // The prototype's click and selection state (S.selected, S.inspect, S.mode, S.deployType, S.showThreat) and onHex.
+    // The prototype's click and selection state (S.selected, S.inspect, S.mode, S.deployType) and onHex. Threat cells are gone: docs/ui/battle-hud.md 1-4.
     public sealed class BattleSession
     {
         public readonly Battle Battle;
@@ -32,9 +32,7 @@ namespace VampireSpawn.Core
         public int? InspectCorpse { get; private set; }
         public SelectMode Mode { get; private set; }
         public UnitKind DeployType { get; private set; }
-        public bool ShowThreat { get => showThreat; set { showThreat = value; Flash = null; } }
-        bool showThreat;
-        public string Flash { get; private set; }
+        public Message Flash { get; private set; }
 
         static readonly CommandResult Nothing = CommandResult.Done(new List<BattleEvent>());
 
@@ -46,9 +44,9 @@ namespace VampireSpawn.Core
 
         public Unit SelectedUnit => Selected is int id ? Battle.Find(id) : null;
 
-        public string Hint => Flash ?? HintText();
+        public Message Hint => Flash.IsEmpty ? HintText() : Flash;
 
-        public void ClearFlash() => Flash = null;
+        public void ClearFlash() => Flash = default;
 
         void Inspect(Unit u) { InspectUnit = u?.Id; InspectCorpse = null; }
 
@@ -61,7 +59,7 @@ namespace VampireSpawn.Core
 
         public CommandResult Click(Hex h)
         {
-            Flash = null;
+            Flash = default;
             if (Battle.Phase == Phase.Enemy || Battle.Phase == Phase.Over) return Nothing;
             var u = Battle.UnitAt(h);
             var co = Battle.CorpseAt(h);
@@ -96,19 +94,19 @@ namespace VampireSpawn.Core
         public void Escape()
         {
             if (Battle.Phase != Phase.Player) return;
-            Flash = null;
+            Flash = default;
             Selected = null;
             Inspect(null);
             Mode = SelectMode.Act;
         }
 
-        public void Pick(UnitKind kind) { Flash = null; DeployType = kind; }
+        public void Pick(UnitKind kind) { Flash = default; DeployType = kind; }
 
-        public void ToggleExecute() { Flash = null; Mode = Mode == SelectMode.Execute ? SelectMode.Act : SelectMode.Execute; }
+        public void ToggleExecute() { Flash = default; Mode = Mode == SelectMode.Execute ? SelectMode.Act : SelectMode.Execute; }
 
         public CommandResult Wait()
         {
-            Flash = null;
+            Flash = default;
             var s = SelectedUnit;
             if (s == null) return Nothing;
             var r = Battle.Wait(s.Id);
@@ -119,7 +117,7 @@ namespace VampireSpawn.Core
 
         public CommandResult Start()
         {
-            Flash = null;
+            Flash = default;
             var r = Battle.Start();
             if (r.Ok) Inspect(null);
             return r;
@@ -127,7 +125,7 @@ namespace VampireSpawn.Core
 
         public CommandResult EndTurn()
         {
-            Flash = null;
+            Flash = default;
             if (Battle.Phase != Phase.Player) return Nothing;
             Selected = null;
             Inspect(null);
@@ -138,7 +136,7 @@ namespace VampireSpawn.Core
         // A drop outside the board passes null; the prototype treats it like a drop outside the deploy zone.
         public CommandResult Drop(int id, Hex? to)
         {
-            Flash = null;
+            Flash = default;
             var r = After(Battle.Relocate(id, to ?? new Hex(-1, -1)));
             if (!r.Ok) return r;
             if (Battle.Find(id) == null) { if (InspectUnit == id) InspectUnit = null; }
@@ -148,7 +146,7 @@ namespace VampireSpawn.Core
 
         public CommandResult Recall(int id)
         {
-            Flash = null;
+            Flash = default;
             var r = Battle.Recall(id);
             if (r.Ok) Inspect(null);
             return r;
@@ -156,42 +154,27 @@ namespace VampireSpawn.Core
 
         public CommandResult ClearAllies()
         {
-            Flash = null;
+            Flash = default;
             var r = Battle.ClearAllies();
             if (r.Ok) Inspect(null);
             return r;
         }
 
-        public CommandResult UseSample() { Flash = null; return Battle.UseSample(); }
+        public CommandResult UseSample() { Flash = default; return Battle.UseSample(); }
 
-        string HintText()
+        Message HintText()
         {
             switch (Battle.Phase)
             {
-                case Phase.Deploy: return GameData.Type(DeployType).Name + ": 배치 구역의 빈 칸을 눌러 배치합니다. 배치된 유닛은 끌어서 옮기거나 바꿉니다.";
-                case Phase.Enemy: return "적이 행동하고 있습니다.";
-                case Phase.Over: return "전투가 끝났습니다.";
+                case Phase.Deploy: return new Message("hint.deploy", GameData.Type(DeployType).Name);
+                case Phase.Enemy: return new Message("hint.enemyActing");
+                case Phase.Over: return new Message("hint.over");
             }
             var sel = SelectedUnit;
-            if (sel == null) return "아군을 눌러 선택하세요. 적이나 시신을 누르면 정보와 위협 범위를 볼 수 있습니다.";
-            if (Mode == SelectMode.Execute) return "흰 점선 고리의 아군을 누르면 처치합니다. 다른 곳을 누르면 취소합니다.";
-            if (sel.Acted) return "이 유닛은 행동을 마쳤습니다.";
-            return (sel.Moved ? "" : "밝은 칸으로 이동합니다. ") + "붉은 칸의 적을 누르면 공격합니다.";
-        }
-
-        public HashSet<Hex> Threat(IEnumerable<Unit> enemies)
-        {
-            var set = new HashSet<Hex>();
-            foreach (var e in enemies)
-            {
-                if (e.JustRisen || e.Asleep) continue;
-                foreach (var h in Battle.Reach(e).Keys)
-                {
-                    set.Add(h);
-                    foreach (var n in Battle.Board.Neighbors(h)) if (Battle.Board.Walkable(n)) set.Add(n);
-                }
-            }
-            return set;
+            if (sel == null) return new Message("hint.select");
+            if (Mode == SelectMode.Execute) return new Message("hint.execute");
+            if (sel.Acted) return new Message("hint.acted");
+            return new Message(sel.Moved ? "hint.attack" : "hint.moveAttack");
         }
 
         IEnumerable<Hex> Cells()
@@ -205,14 +188,6 @@ namespace VampireSpawn.Core
             var o = new List<MarkedHex>();
             var b = Battle;
             if (b.Phase == Phase.Deploy) o.AddRange(Cells().Where(b.InDeploy).Select(h => new MarkedHex(Mark.Deploy, h)));
-            if (b.Phase != Phase.Over)
-            {
-                var ins = InspectUnit is int id ? b.Find(id) : null;
-                HashSet<Hex> th = null;
-                if (ShowThreat && b.Phase != Phase.Deploy) th = Threat(b.Enemies);
-                else if (ins != null && ins.Side == Side.Enemy) th = Threat(new[] { ins });
-                if (th != null) o.AddRange(th.Select(h => new MarkedHex(Mark.Threat, h)));
-            }
             var sel = SelectedUnit;
             if (sel != null && b.Phase == Phase.Player)
             {
@@ -232,7 +207,7 @@ namespace VampireSpawn.Core
             {
                 var v = b.Vampire;
                 o.AddRange(Cells().Where(h => b.Board.Walkable(h) && Hex.Distance(v.Pos, h) <= Rules.EatRange && h != v.Pos).Select(h => new MarkedHex(Mark.MarkZone, h)));
-                if (moon.Target is Hex t) o.Add(new MarkedHex(moon.TargetLabel == "보름달 표적" ? Mark.Target : Mark.Exec, t));
+                if (moon.Target is Hex t) o.Add(new MarkedHex(moon.TargetLabel.Key == "moon.target" ? Mark.Target : Mark.Exec, t));
             }
             return o;
         }
@@ -242,13 +217,13 @@ namespace VampireSpawn.Core
             var b = Battle;
             var v = b.Vampire;
             if (v == null || !b.MoonNext() || b.Phase != Phase.Player) return null;
-            var m = new MoonMark { Vampire = v.Pos, VampireLabel = b.EatTarget.HasValue ? "다음 턴 보름달" : "보름달 · 굶주림" };
+            var m = new MoonMark { Vampire = v.Pos, VampireLabel = new Message(b.EatTarget.HasValue ? "moon.nextTurn" : "moon.starving") };
             var t = b.EatTarget is int id ? b.Find(id) : null;
             if (t != null)
             {
                 var safe = Hex.Distance(v.Pos, t.Pos) > Rules.EatRange || b.Board.Lit(t.Pos);
                 m.Target = t.Pos;
-                m.TargetLabel = safe ? "표적 · 지금은 안전" : "보름달 표적";
+                m.TargetLabel = new Message(safe ? "moon.safe" : "moon.target");
             }
             return m;
         }
