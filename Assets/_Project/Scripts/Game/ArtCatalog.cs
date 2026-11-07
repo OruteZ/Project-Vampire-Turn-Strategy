@@ -53,5 +53,11 @@ namespace VampireSpawn.Game
         public Sprite Ui(string name) => System.Array.Find(ui ?? System.Array.Empty<Sprite>(), s => s != null && s.name == name);
 
         public GameObject UiPrefab(string name) => System.Array.Find(uiPrefabs ?? System.Array.Empty<GameObject>(), p => p != null && p.name == name);
+
+        [Header("Campaign map (docs/art/campaign-map.md)")]
+        [Tooltip("CampaignMapLayout.Names 의 프리팹. 도구 모음 > 지도 > 프리팹 목록 채우기로 채운다")]
+        public GameObject[] mapProps;
+
+        public GameObject MapProp(string name) => System.Array.Find(mapProps ?? System.Array.Empty<GameObject>(), p => p != null && p.name == name);
     }
 }
