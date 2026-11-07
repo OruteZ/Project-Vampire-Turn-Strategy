@@ -8,7 +8,7 @@
 - 코드: `Assets/_Project/Scripts/Core/` (규칙, Unity 참조 없음), `Assets/_Project/Scripts/Game/` (화면·입력)
 - 테스트: `Assets/_Project/Tests/EditMode/`
 - HTML 정답 도구: `tools/golden/prototype-golden.mjs` (설명은 `docs/dev/unity-port.md`)
-- 씬: `Assets/_Project/Scenes/Main.unity` (Build Settings 0번)
+- 씬: `Assets/_Project/Scenes/Battle.unity` (컨트롤러 `BattleFlow`). 메뉴·원정은 `Menu.unity`(Build 0)·`Camp.unity`, 씬을 넘는 상태는 `App.cs` (docs/dev/scene-split.md)
 - 검증: `.claude/skills/verify-unity/`
 
 ## 결정

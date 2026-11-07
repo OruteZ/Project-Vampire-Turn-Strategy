@@ -5,16 +5,18 @@ using VampireSpawn.Core;
 
 namespace VampireSpawn.Game
 {
-    // docs/art/campaign-map.md, first pass (1-1). Fixed terrain is built once; Show(campaign) rebuilds only the progress layer.
+    // docs/art/campaign-map.md, first pass (1-1). The fixed terrain is baked into the Camp scene (Tools > 지도 > 씬에 굽기) so people can
+    // move props in Unity; regions are found by name, so markers, braziers and the camera follow a moved region. Show rebuilds only progress.
     // Look moves the shared view camera and the spotlight together so the UI markers never lag a frame behind.
     public sealed class CampaignMapView : MonoBehaviour
     {
         public ArtCatalog art;
         public Camera viewCamera;
+        [Tooltip("씬에 구운 지형 (Campaign Map). 비면 실행 중에 짓는다")] public Transform terrain;
 
         const float Pitch = 50f, MoveSeconds = 0.3f, CampDistance = 28f, WideStart = 80f, WideStep = 1.04f;
 
-        Transform terrain, progress;
+        Transform progress;
         Light spot;
         Campaign campaign;
         Shot from, to;
@@ -34,7 +36,13 @@ namespace VampireSpawn.Game
         public void Show(Campaign c)
         {
             campaign = c;
-            if (terrain == null) BuildTerrain();
+            if (terrain == null) terrain = Build(transform, art, (c, n) => new Material(art.plain) { color = c, name = n });
+            if (spot == null)
+            {
+                spot = BoardView.AddLight(transform, Vector3.zero, LightType.Spot, CampaignMapLayout.Moon, 3f, 30f);
+                spot.spotAngle = 40f;
+                spot.enabled = false;
+            }
             terrain.gameObject.SetActive(true);
             if (progress != null) Kill(progress.gameObject);
             progress = new GameObject("Progress").transform;
@@ -77,7 +85,7 @@ namespace VampireSpawn.Game
                 var r = RegionOf(stage);
                 if (r != null)
                 {
-                    var a = World(r.Anchor);
+                    var a = AnchorOf(r);
                     spot.transform.position = a + new Vector3(0f, 16f, -4f);
                     spot.transform.rotation = Quaternion.LookRotation(a - spot.transform.position);
                 }
@@ -88,7 +96,7 @@ namespace VampireSpawn.Game
         public Vector3? MarkerPoint(int stageIndex)
         {
             var r = RegionOf(stageIndex);
-            return r == null ? (Vector3?)null : World(r.Anchor, r.MarkerHeight);
+            return r == null ? (Vector3?)null : AnchorOf(r) + Vector3.up * r.MarkerHeight;
         }
 
         // Viewport point of a region's marker, or null behind the camera.
@@ -145,22 +153,22 @@ namespace VampireSpawn.Game
             if (l == CampLayer.Barracks)
             {
                 var camp = CampSpot();
-                return new Shot { Target = World(camp), Distance = CampDistance, Centre = centre };
+                return new Shot { Target = camp, Distance = CampDistance, Centre = centre };
             }
             if (l == CampLayer.Info && RegionOf(stageIndex) is MapRegion r)
-                return new Shot { Target = World(r.Anchor + new Vector2(0f, 2f)), Distance = r.ViewDistance, Centre = centre };
+                return new Shot { Target = AnchorOf(r) + Vector3.forward * 2f, Distance = r.ViewDistance, Centre = centre };
             return Wide(centre);
         }
 
         // campaign-map.md 9 wide shot: start at 80 and back off until every anchor and marker point sits inside the empty area.
         Shot Wide(Vector2 centre)
         {
-            var anchors = CampaignMapLayout.Regions.Select(r => r.Anchor).ToArray();
-            var min = new Vector2(anchors.Min(a => a.x), anchors.Min(a => a.y));
-            var max = new Vector2(anchors.Max(a => a.x), anchors.Max(a => a.y));
-            var shot = new Shot { Target = World((min + max) * 0.5f), Distance = WideStart, Centre = centre };
+            var anchors = CampaignMapLayout.Regions.Select(AnchorOf).ToArray();
+            var min = new Vector3(anchors.Min(a => a.x), anchors.Min(a => a.y), anchors.Min(a => a.z));
+            var max = new Vector3(anchors.Max(a => a.x), anchors.Max(a => a.y), anchors.Max(a => a.z));
+            var shot = new Shot { Target = (min + max) * 0.5f, Distance = WideStart, Centre = centre };
             if (viewCamera == null) return shot;
-            var points = CampaignMapLayout.Regions.SelectMany(r => new[] { World(r.Anchor), World(r.Anchor, r.MarkerHeight) }).ToArray();
+            var points = CampaignMapLayout.Regions.SelectMany(r => new[] { AnchorOf(r), AnchorOf(r) + Vector3.up * r.MarkerHeight }).ToArray();
             var inner = Rect.MinMaxRect(empty.xMin + margin.x, empty.yMin + margin.y, empty.xMax - margin.x, empty.yMax - margin.y);
             for (var i = 0; i < 60; i++)
             {
@@ -172,18 +180,26 @@ namespace VampireSpawn.Game
         }
 
         // 1-1: the camp itself is deferred, so the barracks view looks at the last cleared region (stage 1 if none).
-        Vector2 CampSpot()
+        Vector3 CampSpot()
         {
             var last = -1;
             for (var i = 0; i < Campaign.Stages.Length; i++) if (campaign != null && campaign.IsCleared(Campaign.Stages[i])) last = i;
             var r = RegionOf(Mathf.Max(0, last));
-            return r != null ? r.Anchor : CampaignMapLayout.Start;
+            return r != null ? AnchorOf(r) : World(CampaignMapLayout.Start);
         }
 
-        void BuildTerrain()
+        // A region baked into the scene may have been moved by hand; its object is the truth, the layout table the fallback.
+        Vector3 AnchorOf(MapRegion r)
         {
-            terrain = new GameObject("Campaign Map").transform;
-            terrain.SetParent(transform, false);
+            var root = terrain != null ? terrain.Find("Region " + r.Stage) : null;
+            return root != null ? root.position : World(r.Anchor);
+        }
+
+        // Builds the fixed terrain under parent. material makes the tinted materials: runtime copies here, saved assets when baking.
+        public static Transform Build(Transform parent, ArtCatalog art, System.Func<Color, string, Material> material)
+        {
+            var terrain = new GameObject("Campaign Map").transform;
+            terrain.SetParent(parent, false);
             terrain.position = CampaignMapLayout.Origin;
             var floor = GameObject.CreatePrimitive(PrimitiveType.Quad);
             Kill(floor.GetComponent<Collider>());
@@ -192,21 +208,22 @@ namespace VampireSpawn.Game
             floor.transform.localPosition = new Vector3(0f, 0f, 50f);
             floor.transform.localRotation = Quaternion.Euler(90f, 0f, 0f);
             floor.transform.localScale = new Vector3(400f, 400f, 1f);
-            floor.GetComponent<MeshRenderer>().sharedMaterial = Tinted(CampaignMapLayout.Floor, "Map Floor");
+            floor.GetComponent<MeshRenderer>().sharedMaterial = material(CampaignMapLayout.Floor, "Map Floor");
 
-            var disc = Disc(24);
             foreach (var r in CampaignMapLayout.Regions)
             {
                 var region = new GameObject("Region " + r.Stage).transform;
                 region.SetParent(terrain, false);
                 region.position = World(r.Anchor);
-                var ground = new GameObject("Ground");
+                // A flattened built-in cylinder, not a generated mesh: a mesh made at bake time would not survive saving the scene.
+                var ground = GameObject.CreatePrimitive(PrimitiveType.Cylinder);
+                Kill(ground.GetComponent<Collider>());
+                ground.name = "Ground";
                 ground.transform.SetParent(region, false);
                 ground.transform.localPosition = Vector3.up * 0.01f;
-                ground.transform.localScale = new Vector3(r.Radius, 1f, r.Radius);
-                ground.AddComponent<MeshFilter>().sharedMesh = disc;
+                ground.transform.localScale = new Vector3(r.Radius * 2f, 0.005f, r.Radius * 2f);
                 var theme = art.Theme(r.Stage);
-                ground.AddComponent<MeshRenderer>().sharedMaterial = Tinted((theme != null ? theme.ground : CampaignMapLayout.Floor) * 1.25f, "Region " + r.Stage);
+                ground.GetComponent<MeshRenderer>().sharedMaterial = material((theme != null ? theme.ground : CampaignMapLayout.Floor) * 1.25f, "Region " + r.Stage);
                 foreach (var p in r.Props)
                 {
                     var prefab = art.MapProp(p.Prefab);
@@ -216,10 +233,8 @@ namespace VampireSpawn.Game
                 foreach (var l in r.Lights)
                     BoardView.AddLight(region, World(r.Anchor + new Vector2(l.At.x, l.At.z), l.At.y), LightType.Point, l.Blood ? CampaignMapLayout.Blood : art.torchLight, l.Intensity, l.Range);
             }
-            BuildForest();
-            spot = BoardView.AddLight(terrain, Vector3.zero, LightType.Spot, CampaignMapLayout.Moon, 3f, 30f);
-            spot.spotAngle = 40f;
-            spot.enabled = false;
+            BuildForest(terrain, art);
+            return terrain;
         }
 
         void BuildProgress()
@@ -234,17 +249,17 @@ namespace VampireSpawn.Game
             for (var i = 0; i < Campaign.Stages.Length; i++)
             {
                 if (!campaign.IsCleared(Campaign.Stages[i]) || !(RegionOf(i) is MapRegion r)) continue;
-                var at = r.Anchor + r.Brazier;
+                var at = AnchorOf(r) + new Vector3(r.Brazier.x, 0f, r.Brazier.y);
                 var brazier = art.MapProp(CampaignMapLayout.Brazier);
-                if (brazier != null) BoardView.Place(brazier, progress, World(at), 0.9f, 0f);
+                if (brazier != null) BoardView.Place(brazier, progress, at, 0.9f, 0f);
                 var fire = art.MapProp(CampaignMapLayout.Fire);
-                if (fire != null) BoardView.Place(fire, progress, World(at, 0.55f), 0f, 0f);
-                BoardView.AddLight(progress, World(at, 1.5f), LightType.Point, art.torchLight, 2.2f, 10f);
+                if (fire != null) BoardView.Place(fire, progress, at + Vector3.up * 0.55f, 0f, 0f);
+                BoardView.AddLight(progress, at + Vector3.up * 1.5f, LightType.Point, art.torchLight, 2.2f, 10f);
             }
         }
 
         // 3-2: one prop in 45% of 6-unit cells, kept clear of the road, regions, camp spots and the camera edge.
-        void BuildForest()
+        static void BuildForest(Transform terrain, ArtCatalog art)
         {
             var forest = new GameObject("Forest").transform;
             forest.SetParent(terrain, false);
@@ -319,23 +334,6 @@ namespace VampireSpawn.Game
             go.transform.SetParent(progress, false);
             go.AddComponent<MeshFilter>().sharedMesh = mesh;
             go.AddComponent<MeshRenderer>().sharedMaterial = Tinted(color, name);
-        }
-
-        static Mesh Disc(int sides)
-        {
-            var verts = new Vector3[sides + 1];
-            var tris = new int[sides * 3];
-            for (var i = 0; i < sides; i++)
-            {
-                var a = Mathf.PI * 2f * i / sides;
-                verts[i + 1] = new Vector3(Mathf.Cos(a), 0f, Mathf.Sin(a));
-                tris[i * 3] = 0;
-                tris[i * 3 + 1] = 1 + (i + 1) % sides;
-                tris[i * 3 + 2] = 1 + i;
-            }
-            var mesh = new Mesh { name = "Disc", vertices = verts, triangles = tris };
-            mesh.RecalculateNormals();
-            return mesh;
         }
 
         Material Tinted(Color c, string name) => new Material(art.plain) { color = c, name = name };

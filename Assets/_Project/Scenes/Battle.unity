@@ -213,7 +213,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: VampireSpawn.Game::VampireSpawn.Game.BattleView
   board: {fileID: 105267849}
   speed: 1
-  worldBars: 1
 --- !u!114 &1136401610
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -238,13 +237,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 1136401606}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b731c6a251c42294d8a38d16a5cade3a, type: 3}
+  m_Script: {fileID: 11500000, guid: 30ac79d3d08bc6749a8e3d090aa5270d, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: VampireSpawn.Game::VampireSpawn.Game.Screens.GameFlow
+  m_EditorClassIdentifier: VampireSpawn.Game::VampireSpawn.Game.Screens.BattleFlow
   input: {fileID: 1136401610}
   data: {fileID: 11400000, guid: bf33fe393168a9246b05f058f3f0af85, type: 2}
   viewCamera: {fileID: 1321022419}
-  styleTile: 0
 --- !u!1 &1321022417
 GameObject:
   m_ObjectHideFlags: 0

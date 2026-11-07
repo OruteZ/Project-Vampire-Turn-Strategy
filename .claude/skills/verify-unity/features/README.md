@@ -6,7 +6,7 @@ This directory is the maintained source for verifying what a player can do in th
 
 - An Editor is open for the project folder being verified (`vu.sh launch`), and `vu.sh doctor` prints `OK`.
 - `VU_RUN` is set to a fresh id so evidence from different runs does not mix.
-- The scene under test is open. Today that is `Assets/Scenes/SampleScene.unity` (Build Settings 0).
+- The scene under test is open. Today that is `Assets/_Project/Scenes/Menu.unity` (Build Settings 0). Camp and Battle are their own scenes (docs/dev/scene-split.md); `App.GoCamp`/`App.GoBattle` switch to them.
 - Never drive an Editor that another agent is driving.
 
 ## Driving conventions

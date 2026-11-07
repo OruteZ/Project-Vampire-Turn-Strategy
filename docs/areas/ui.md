@@ -52,9 +52,9 @@
 - 함정: Synty 틀 스프라이트의 9-slice 테두리가 180~380px 라 그대로 쓰면 두껍다. `Image.pixelsPerUnitMultiplier` 로 줄인다 (ui-style.md 5절)
 - 함정: UIDocument 의 뿌리와 템플릿 칸은 화면 전체를 덮고 기본으로 클릭을 받는다. 그대로 두면 EventSystem 이 늘 "UI 위" 라고 해 지도·보드 클릭이 안 된다. `ToolkitKit.Document` 가 Ignore 로 둔다
 - 함정: 투영 옮김(`BoardView.FitCamera`, `CampaignMapView`)은 `p[0,2] = -(2·cx − 1)`. 부호가 반대면 화면 가운데에서 반대쪽으로 간다
-- 함정: 적 턴은 모델이 먼저 끝나고 화면이 나중에 재생된다. 재생 중 상태(보름달 턴)는 `BattleView.Played` 배너로 안다 (`GameFlow.OnPlayed`)
+- 함정: 적 턴은 모델이 먼저 끝나고 화면이 나중에 재생된다. 재생 중 상태(보름달 턴)는 `BattleView.Played` 배너로 안다 (`BattleFlow.OnPlayed`)
 - 함정: Synty 틀 스프라이트에는 붉은·녹색 기가 구워져 있다. Image 색으로 물들이면 곱해져 남는다
-- 함정: CanvasScaler 는 화면 하나(`GameFlow.BuildCanvas`)라 Expand 로 바꾸면 모든 화면이 함께 바뀐다. 장 선택만 고쳐도 sweep 은 모든 화면에 돌린다. UI Toolkit `Panel.asset` 도 같이 Expand 로 바꾼다
+- 함정: CanvasScaler 는 모든 씬이 같은 `App.Canvas` 로 짓기 때문에 Expand 로 바꾸면 모든 화면이 함께 바뀐다. 장 선택만 고쳐도 sweep 은 모든 화면에 돌린다. UI Toolkit `Panel.asset` 도 같이 Expand 로 바꾼다
 - 함정: 한 화면에서 uGUI(지역 표식)와 UI Toolkit(칸)을 함께 쓰면, 지도 클릭을 막는 판단(`PointerBlocked`)이 uGUI `IsPointerOverGameObject` 만 보면 UI Toolkit 칸 위 클릭이 지도로 샌다. UI Toolkit 패널의 `Pick` 도 같이 본다
 - 함정: `BoardView.LateUpdate` 는 `Board` 가 남아 있으면 카메라를 보드에 다시 맞춘다(`Clear()` 뒤에도 남는다). 원정 지도가 카메라를 쓰는 동안 막아야 한다 (campaign-map.md 구현 메모)
 - 함정: `FX_*`, `SM_Bld_Base_*` 프리팹은 PolygonDarkFantasy 와 PolygonGeneric 에 같은 이름이 있다. 이름으로 찾을 때 PolygonDarkFantasy 쪽을 쓴다
