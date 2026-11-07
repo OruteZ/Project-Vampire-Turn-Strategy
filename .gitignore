@@ -44,3 +44,4 @@ verify-artifacts/
 /Assets/_Generated/
 /Assets/_Generated.meta
 docs/.obsidian
+docs/_temp
