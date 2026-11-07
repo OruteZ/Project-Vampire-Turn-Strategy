@@ -30,6 +30,7 @@ namespace VampireSpawn.Game.Screens
         int? campSel;
         int menuSel = 1;
         RenderTexture backdropTex;
+        Vector2Int fittedSize;
         Stage stage;
         OverInfo over;
         RectTransform screen, boardArea, overRoot, hudRoot;
@@ -245,8 +246,10 @@ namespace VampireSpawn.Game.Screens
         {
             if (viewCamera == null) return;
             var corners = new Vector3[4];
+            Canvas.ForceUpdateCanvases();
             boardArea.GetWorldCorners(corners);
             float w = Screen.width, h = Screen.height;
+            fittedSize = new Vector2Int(Screen.width, Screen.height);
             viewCamera.rect = new Rect(corners[0].x / w, corners[0].y / h, (corners[2].x - corners[0].x) / w, (corners[2].y - corners[0].y) / h);
         }
 
@@ -308,7 +311,12 @@ namespace VampireSpawn.Game.Screens
             if (leaveArm && Time.unscaledTime > leaveUntil) { leaveArm = false; RenderBattle(); }
             if (buyArm != null && Time.unscaledTime > buyUntil) { buyArm = null; if (Current == "camp") ShowCamp(); }
             if (banner != null && banner.gameObject.activeSelf && Time.unscaledTime > bannerUntil) banner.gameObject.SetActive(false);
-            if (Current == "battle" && Session != null) { TrackHover(); Hotkeys(); }
+            if (Current == "battle" && Session != null)
+            {
+                if (Screen.width != fittedSize.x || Screen.height != fittedSize.y) FitCameraRect();
+                TrackHover();
+                Hotkeys();
+            }
             if (Current == "camp") CampKeys();
             else if (Current == "menu") MenuKeys();
         }

@@ -80,8 +80,9 @@ namespace VampireSpawn.Game.Screens
             else Fight(root, s, st, a, headLayer);
             EndTurn(root, b, st, a);
             Corner(root, st, a);
-            Ui.Stretch(T(Ui.Place(root, "Hint", new Vector2(0.5f, 0f), new Vector2(0f, Edge + 96f), new Vector2(1000f, 20f)),
-                BattleScreen.Hint(s, st.EnemyPlaying), 14, Ui.Dim, false, false, TextAnchor.MiddleCenter).rectTransform);
+            if (BattleScreen.ShowsHint(s, st.EnemyPlaying))
+                Ui.Stretch(T(Ui.Place(root, "Hint", new Vector2(0.5f, 0f), new Vector2(0f, Edge + 96f), new Vector2(1000f, 24f)),
+                    BattleScreen.Hint(s, st.EnemyPlaying), 17, Ui.Muted, false, false, TextAnchor.MiddleCenter).rectTransform);
             if (st.RulesOpen) RulesPopup(root, a);
         }
 
@@ -201,7 +202,8 @@ namespace VampireSpawn.Game.Screens
             label.anchorMin = label.anchorMax = label.pivot = new Vector2(0.5f, 1f);
             label.anchoredPosition = new Vector2(0f, -Edge - D - 6f);
             label.sizeDelta = new Vector2(300f, 44f);
-            Watch(T(label, Loc.T("battle.moon") + " " + moon + "/" + max, 20, Ui.Bone, true, false, TextAnchor.UpperCenter), "moon");
+            Watch(T(label, moon + "/" + max, 20, Ui.Bone, true, false, TextAnchor.UpperCenter), "moon");
+            HoverTip.Add(box, Loc.T("battle.moon") + " · " + Loc.T("battle.rule.moon", Rules.MoonMax), 0.4f);
             var state = hot ? Loc.T("moon.nextTurn") : v != null && v.Asleep ? Loc.T("battle.coffinAt", Rules.MoonWake) : "";
             if (state.Length > 0) T(label, state, 14, hot ? Ui.MoonBlood : Ui.Muted, hot, false, TextAnchor.UpperCenter);
         }
@@ -218,13 +220,13 @@ namespace VampireSpawn.Game.Screens
             var left = b.Phase == Phase.Player && !st.EnemyPlaying ? b.Allies.Count(u => !u.Acted) : 0;
             if (left > 0)
             {
-                var badge = Ui.Place(rt, "Badge", new Vector2(0f, 1f), new Vector2(-10f, 10f), new Vector2(28f, 28f));
-                Ui.Stretch(Ui.Sprite(badge, "Disk", S("SPR_DarkFantasyMenus_Frame_Ring_01_Background"), Ui.Ink).rectTransform);
-                Ui.Stretch(Ui.Sprite(badge, "Ring", S("SPR_DarkFantasyMenus_Frame_Ring_01"), Ui.Steel).rectTransform, -3, -3, -3, -3);
-                Ui.Stretch(T(badge, left.ToString(), 14, Ui.Bone, true, false, TextAnchor.MiddleCenter).rectTransform);
+                // ui-style.md 14-3-3: inside the button, left of the label.
+                var badge = kit.Badge(rt, left.ToString(), 28, Ui.Steel, Ui.Ink, Ui.Bone);
+                badge.anchorMin = badge.anchorMax = badge.pivot = new Vector2(0f, 0.5f);
+                badge.anchoredPosition = new Vector2(12f, 0f);
+                badge.gameObject.AddComponent<LayoutElement>().ignoreLayout = true;
+                HoverTip.Add(badge, Loc.T("battle.allyPhase"), 0.3f);
             }
-            var phase = st.EnemyPlaying || b.Phase == Phase.Enemy ? Loc.T("hud.enemyPhase") : b.Phase == Phase.Player ? Loc.T("battle.allyPhase") : "";
-            Ui.Stretch(T(Ui.Place(root, "Phase", new Vector2(1f, 0f), new Vector2(-Edge, Edge + 60f), new Vector2(200f, 20f)), phase, 14, Ui.Muted, false, false, TextAnchor.LowerCenter).rectTransform);
         }
 
         void Corner(RectTransform root, HudState st, BattleActions a)
@@ -232,10 +234,11 @@ namespace VampireSpawn.Game.Screens
             var row = Ui.Row(root, "Corner", 4, 0, null, null, TextAnchor.LowerLeft);
             row.anchorMin = row.anchorMax = row.pivot = Vector2.zero;
             row.anchoredPosition = new Vector2(Edge - 12f, Edge - 6f);
-            row.sizeDelta = new Vector2(420f, 36f);
+            row.sizeDelta = new Vector2(420f, 40f);
             row.GetComponent<HorizontalLayoutGroup>().childControlWidth = false;
-            Btn(row, "?  " + Loc.T("battle.rules"), a.ToggleRules, BtnKind.Ghost, new Vector2(140f, 36f));
-            Btn(row, Loc.T(st.LeaveArmed ? "battle.leaveConfirm" : "battle.leave"), a.Leave, BtnKind.Ghost, new Vector2(st.LeaveArmed ? 200f : 100f, 36f), !st.EnemyPlaying);
+            kit.IconBtn(row, Kit.Icon.Rules, Loc.T("battle.rules"), a.ToggleRules);
+            if (st.LeaveArmed) Btn(row, Loc.T("battle.leaveConfirm"), a.Leave, BtnKind.Danger, new Vector2(220f, 40f), !st.EnemyPlaying);
+            else kit.IconBtn(row, Kit.Icon.Leave, Loc.T("battle.leave"), a.Leave, 40f, null, !st.EnemyPlaying);
         }
 
         void RulesPopup(RectTransform root, BattleActions a)
@@ -262,19 +265,23 @@ namespace VampireSpawn.Game.Screens
         {
             var b = s.Battle;
             var stg = b.Stage;
-            var title = Ui.Col(root, "Title", 2);
+            var title = Ui.Col(root, "Title", 8);
             title.anchorMin = title.anchorMax = title.pivot = new Vector2(0f, 1f);
             title.anchoredPosition = new Vector2(Edge, -Edge);
             title.sizeDelta = new Vector2(PanelW, 110f);
-            T(title, BattleScreen.Subtitle(stg, st.Demo), 14, Ui.Muted);
-            T(title, Loc.Text(stg.Label) + " · " + Loc.Text(stg.Title), 32, stg == Campaign.Stages.LastOrDefault() ? Ui.Blood : Ui.Bone, true, true);
-            var res = Ui.Row(title, "Resources", 24, 0, null, null, TextAnchor.LowerLeft);
+            var name = Ui.Row(title, "Name", 12, 0, null, null, TextAnchor.MiddleLeft);
+            name.GetComponent<HorizontalLayoutGroup>().childForceExpandWidth = false;
+            var last = stg == Campaign.Stages.LastOrDefault();
+            var num = Array.IndexOf(Campaign.Stages, stg) + 1;
+            if (num > 0 && !st.Demo) kit.Badge(name, num.ToString(), 40, last ? Ui.Blood : Ui.Steel, Ui.Deep, Ui.Bone);
+            var tt = T(name, Loc.Text(stg.Title), 32, last ? Ui.Blood : Ui.Bone, true, true, TextAnchor.MiddleLeft);
+            Ui.Ellipsize(tt, PanelW - 56);
+            HoverTip.Add(name, BattleScreen.Subtitle(stg, st.Demo), 0.4f);
+            var res = Ui.Row(title, "Resources", 24, 0, null, null, TextAnchor.MiddleLeft);
             res.GetComponent<HorizontalLayoutGroup>().childForceExpandWidth = false;
-            res.GetComponent<HorizontalLayoutGroup>().childControlWidth = true;
-            Ui.Size(res, -1, -1, 0);
-            Stat(res, b.Used(t => t.Pop) + "/" + stg.Pop, Loc.T("battle.pop"), Ui.Candle);
-            if (stg.Silver > 0) Stat(res, b.Used(t => t.Silver) + "/" + stg.Silver, Loc.T("battle.silver"), Ui.Candle);
-            Stat(res, b.Allies.Count().ToString(), Loc.T("battle.deployed"), Ui.Bone);
+            kit.Value(res, Kit.Icon.Pop, b.Used(t => t.Pop) + "/" + stg.Pop, 22, Ui.Candle, Ui.Candle, Loc.T("battle.pop"));
+            if (stg.Silver > 0) kit.Value(res, Kit.Icon.Silver, b.Used(t => t.Silver) + "/" + stg.Silver, 22, Ui.Candle, Ui.Candle, Loc.T("battle.silver"));
+            kit.Value(res, Kit.Icon.Flag, b.Allies.Count().ToString(), 22, Ui.Steel, Ui.Bone, Loc.T("battle.deployed"));
 
             var roster = Ui.Col(root, "Roster", 8);
             roster.anchorMin = roster.anchorMax = roster.pivot = new Vector2(0f, 1f);
@@ -293,7 +300,6 @@ namespace VampireSpawn.Game.Screens
                 var kind = k;
                 RosterRow(roster, t, k, s.DeployType == k, can, st.Upgrades, () => a.Pick?.Invoke(kind));
             }
-            Wrap(T(roster, Loc.T("hud.deployHelp"), 14, Ui.Dim));
             var acts = Ui.Row(roster, "Acts", 8);
             acts.GetComponent<HorizontalLayoutGroup>().childControlWidth = false;
             Btn(acts, Loc.T("battle.recallAll"), a.Clear, BtnKind.Normal, new Vector2(150f, 40f));
@@ -306,11 +312,11 @@ namespace VampireSpawn.Game.Screens
             brief.gameObject.AddComponent<ContentSizeFitter>().verticalFit = ContentSizeFitter.FitMode.PreferredSize;
             brief.GetComponent<VerticalLayoutGroup>().padding = new RectOffset(16, 16, 16, 16);
             Frame(brief, Ui.SteelDim);
-            T(brief, Loc.T("battle.brief"), 22, Ui.Bone, true, true);
-            Wrap(T(brief, Loc.Text(stg.Brief), 17, Ui.Muted));
-            Def(brief, Loc.T("battle.objective"), Loc.T("battle.defeatBoss", stg.BossName));
-            Def(brief, Loc.T("battle.bonus"), Loc.Text(stg.Bonus.Text));
-            Def(brief, Loc.T("battle.enemy"), Loc.T("battle.enemyList", stg.Enemies.Length - 1, stg.BossName));
+            brief.GetComponent<VerticalLayoutGroup>().spacing = 10;
+            HoverTip.Add(brief, Loc.Text(stg.Brief), 0.6f);
+            Def(brief, Kit.Icon.Boss, Ui.Blood, Loc.T("battle.defeatBoss", stg.BossName), Loc.T("battle.objective"));
+            Def(brief, Kit.Icon.Star, Ui.Candle, Loc.Text(stg.Bonus.Text), Loc.T("battle.bonus"));
+            Def(brief, Kit.Icon.Skulls, Ui.Blood, Loc.T("battle.enemyList", stg.Enemies.Length - 1, stg.BossName), Loc.T("battle.enemy"));
 
             var ins = s.InspectUnit is int id ? b.Find(id) : null;
             var show = st.Hover ?? ins;
@@ -336,32 +342,26 @@ namespace VampireSpawn.Game.Screens
             Frame(rt, on ? Ui.Steel : Ui.Line, 14f);
             var icon = Ui.Sprite(rt, "Icon", S(Weapon[k]), on ? Ui.Steel : Ui.Muted);
             Ui.Size(icon, 40, 40);
-            var col = Ui.Col(rt, "Info", 2);
+            var col = Ui.Col(rt, "Info", 4);
             Ui.Size(col, -1, -1, 1);
-            var top = Ui.Row(col, "Top", 8);
+            var top = Ui.Row(col, "Top", 10);
+            top.GetComponent<HorizontalLayoutGroup>().childForceExpandWidth = false;
             Ui.Size(T(top, Loc.Text(t.Name), 17, Ui.Bone, true), -1, -1, 1);
-            T(top, CampaignScreen.Resources(t.Pop, t.Silver), 14, can ? Ui.Muted : Ui.Blood);
-            Wrap(T(col, CampaignScreen.StatLine(Battle.Preview(k, upgrades)), 14, Ui.Muted));
+            kit.Value(top, Kit.Icon.Pop, t.Pop.ToString(), 15, can ? Ui.Candle : Ui.Blood, can ? Ui.Muted : Ui.Blood, Loc.T("battle.pop"));
+            if (t.Silver > 0) kit.Value(top, Kit.Icon.Silver, t.Silver.ToString(), 15, can ? Ui.Candle : Ui.Blood, can ? Ui.Muted : Ui.Blood, Loc.T("battle.silver"));
+            kit.Stats(col, Battle.Preview(k, upgrades), 14, Ui.SteelDim, Ui.Muted).GetComponent<HorizontalLayoutGroup>().spacing = 8;
             var btn = rt.gameObject.AddComponent<Button>();
             btn.targetGraphic = rt.GetComponentInChildren<Image>();
             btn.onClick.AddListener(() => pick());
         }
 
-        static void Def(Transform parent, string term, string value)
+        void Def(Transform parent, string icon, Color iconColor, string value, string tip)
         {
             var row = Ui.Row(parent, "Def", 10, 0, null, null, TextAnchor.UpperLeft);
             row.GetComponent<HorizontalLayoutGroup>().childForceExpandWidth = false;
-            Ui.Size(T(row, term, 14, Ui.Muted), 80);
-            Ui.Size(Wrap(T(row, value, 14, Ui.Bone)), 210, -1, 1);
-        }
-
-        static void Stat(Transform row, string value, string label, Color color)
-        {
-            var col = Ui.Col(row, "Stat " + label, 0);
-            col.GetComponent<VerticalLayoutGroup>().childForceExpandWidth = false;
-            Ui.Size(col, -1, -1, 0);
-            T(col, value, 20, color, true);
-            T(col, label, 14, Ui.Muted);
+            Ui.Size(Ui.Sprite(row, "Icon", S(icon), iconColor), 24, 24);
+            Ui.Size(Wrap(T(row, value, 15, Ui.Bone)), PanelW - 32 - 34, -1, 1);
+            HoverTip.Add(row, tip, 0.3f);
         }
 
         // ---------- player / enemy turn (battle-hud.md 3, 4) ----------
@@ -376,10 +376,19 @@ namespace VampireSpawn.Game.Screens
             stats.GetComponent<HorizontalLayoutGroup>().childForceExpandWidth = false;
             stats.gameObject.AddComponent<ContentSizeFitter>().horizontalFit = ContentSizeFitter.FitMode.PreferredSize;
             var spawns = b.Enemies.Count(e => e.Role == Role.Spawn);
-            Stat(stats, b.Turn.ToString(), Loc.T("battle.turn"), Ui.Bone);
-            Stat(stats, b.Allies.Count().ToString(), Loc.T("battle.allies"), Ui.Steel);
-            Stat(stats, b.Enemies.Count(e => e.Role != Role.Spawn).ToString(), Loc.T("battle.enemies"), Ui.Blood);
-            Stat(stats, spawns + (b.Corpses.Count > 0 ? " +" + b.Corpses.Count : ""), Loc.T("unit.card.spawn"), Ui.Spawn);
+            kit.Value(stats, Kit.Icon.Turn, b.Turn.ToString(), 22, Ui.Bone, Ui.Bone, Loc.T("battle.turn"));
+            kit.Value(stats, Kit.Icon.Pop, b.Allies.Count().ToString(), 22, Ui.Steel, Ui.Steel, Loc.T("battle.allies"));
+            kit.Value(stats, Kit.Icon.Skulls, b.Enemies.Count(e => e.Role != Role.Spawn).ToString(), 22, Ui.Blood, Ui.Blood, Loc.T("battle.enemies"));
+            kit.Value(stats, Kit.Icon.Fang, spawns + (b.Corpses.Count > 0 ? " +" + b.Corpses.Count : ""), 22, Ui.Spawn, Ui.Spawn, Loc.T("unit.card.spawn"));
+            // Direction review: Alt is the only way to read enemy movement, so its key stays on screen.
+            var alt = Ui.Row(stats, "Alt", 4, 0, null, null, TextAnchor.MiddleLeft);
+            alt.GetComponent<HorizontalLayoutGroup>().childForceExpandWidth = false;
+            var key = Ui.Node(alt, "Key");
+            Ui.Size(key, 34, 22);
+            Ui.Bg(key, Ui.Alpha(Ui.Deep, 0.85f), st.Alt ? Ui.Blood : Ui.Line);
+            Ui.Stretch(T(key, "Alt", 14, st.Alt ? Ui.Bone : Ui.Muted, false, false, TextAnchor.MiddleCenter).rectTransform);
+            Ui.Size(Ui.Sprite(alt, "Icon", S(Kit.Icon.Mov), st.Alt ? Ui.Blood : Ui.Muted), 22, 22);
+            HoverTip.Add(alt, Loc.T("hud.altTip"), 0.2f);
             if (b.Vampire is Unit v && !v.Asleep) Boss(root, v);
             Log(root, b, st, a);
 
@@ -453,7 +462,7 @@ namespace VampireSpawn.Game.Screens
                 foreach (var l in b.Log) LogLine(view, l, W - 20f, true);
                 return;
             }
-            foreach (var l in b.Log.Take(3)) LogLine(col, l, W, false);
+            foreach (var l in b.Log.Take(1)) LogLine(col, l, W, false);
         }
 
         void LogLine(Transform parent, LogEntry l, float width, bool wrap)
@@ -479,8 +488,9 @@ namespace VampireSpawn.Game.Screens
             cell.GetComponent<HorizontalLayoutGroup>().childForceExpandWidth = false;
             Ui.Size(Ui.Sprite(cell, "Icon", S(icon), iconColor), 24, 24);
             var v = T(cell, value, px, valueColor, true);
+            Ui.Size(v, -1, px * 1.3f);
             if (watch != null) Watch(v, watch);
-            T(cell, label, Mathf.Max(14f, px / 2f), Ui.Muted);
+            HoverTip.Add(cell, label, 0.3f);
         }
 
         RectTransform PanelFrame(RectTransform root, string name, Vector2 anchor, Vector2 pos, Color edge)
@@ -511,8 +521,8 @@ namespace VampireSpawn.Game.Screens
             var col = PanelBody(p);
             var head = Ui.Row(col, "Head", 10, 0, null, null, TextAnchor.LowerLeft);
             head.GetComponent<HorizontalLayoutGroup>().childForceExpandWidth = false;
-            T(head, spawn ? Loc.T("hud.spawnOf", o.Origin) : Loc.Text(o.Name), 22, Ui.Bone, true, true);
-            T(head, Loc.T(o.Side == Side.Ally ? "unit.card.ally" : o.Role == Role.Vampire ? "unit.card.boss" : spawn ? "unit.card.spawn" : "unit.card.minion"), 14, side);
+            if (o.Type is UnitKind wk && Weapon.TryGetValue(wk, out var wi)) Ui.Size(Ui.Sprite(head, "Weapon", S(wi), side), 26, 26);
+            Ui.Ellipsize(T(head, spawn ? Loc.T("hud.spawnOf", o.Origin) : Loc.Text(o.Name), 22, Ui.Bone, true, true), PanelW - 80);
             var big = Ui.Row(col, "Big", 22);
             big.GetComponent<HorizontalLayoutGroup>().childForceExpandWidth = false;
             StatCell(big, "ICON_DarkFantasy_Stat_Health_01_Clean", o.Hp + "/" + o.MaxHp, Loc.T("unit.card.hp"), 34, side, o.Side == Side.Ally && o.Hp * 3 <= o.MaxHp ? Ui.Blood : Ui.Bone, "hp" + o.Id);
@@ -523,7 +533,7 @@ namespace VampireSpawn.Game.Screens
             StatCell(small, "ICON_DarkFantasy_Status_Defense_01_Clean", o.Def.ToString(), Loc.T("unit.card.def"), 20, side, Ui.Muted);
             StatCell(small, "ICON_DarkFantasy_Stat_Accuracy_01_Clean", o.Rng.ToString(), Loc.T("unit.card.rng"), 20, side, Ui.Muted);
             var (warn, wc) = Warning(b, o);
-            if (warn != null) T(col, warn, 14, wc, true);
+            if (warn != null) T(col, warn, 15, wc, true).name = "Warn";
             if (o.Side == Side.Ally && BattleScreen.Skills(o) is string sk) T(col, sk, 14, Ui.Muted);
             HoverTip.Add(p, BattleScreen.Note(o), 0.5f);
             return p;
@@ -561,7 +571,7 @@ namespace VampireSpawn.Game.Screens
             StatCell(small, "ICON_DarkFantasy_Stat_Strength_01_Clean", c.Atk.ToString(), Loc.T("unit.card.atk"), 20, Ui.Spawn, Ui.Muted);
             StatCell(small, "ICON_DarkFantasy_Status_Defense_01_Clean", "0", Loc.T("unit.card.def"), 20, Ui.Spawn, Ui.Muted);
             StatCell(small, "ICON_DarkFantasy_Stat_Accuracy_01_Clean", "1", Loc.T("unit.card.rng"), 20, Ui.Spawn, Ui.Muted);
-            T(col, Loc.T("hud.warn.corpse"), 14, Ui.Spawn, true);
+            T(col, Loc.T("hud.warn.corpse"), 15, Ui.Spawn, true).name = "Warn";
         }
 
         void Spikes(RectTransform p, Color c)
@@ -595,7 +605,7 @@ namespace VampireSpawn.Game.Screens
             foreach (var (icon, label, act, on, danger) in new[]
             {
                 ("ICON_DarkFantasy_Status_Dead_01_Clean", Loc.T(exec ? "unit.card.cancelExec" : "unit.card.exec"), a.Exec, exec, true),
-                ("ICON_DarkFantasy_Status_Defense_01_Clean", Loc.T("unit.card.wait"), a.Wait, false, false),
+                (Kit.Icon.Wait, Loc.T("unit.card.wait"), a.Wait, false, false),
             })
             {
                 var col = Ui.Col(row, "Slot " + label, 4);
@@ -613,7 +623,7 @@ namespace VampireSpawn.Game.Screens
                 btn.targetGraphic = slot.GetComponentInChildren<Image>();
                 var go = act;
                 btn.onClick.AddListener(() => go?.Invoke());
-                T(col, label, 14, Ui.Muted, false, false, TextAnchor.UpperCenter);
+                HoverTip.Add(slot, label, 0.2f);
             }
         }
 
@@ -699,60 +709,74 @@ namespace VampireSpawn.Game.Screens
             Ui.Stretch(backdrop);
             Ui.Bg(backdrop, Ui.Alpha(Ui.Ink, 0.7f));
             backdrop.gameObject.AddComponent<Button>().onClick.AddListener(() => a.CloseOver?.Invoke());
-            var box = Ui.Col(backdrop, "OverBox", 10, 32);
+            var box = Ui.Col(backdrop, "OverBox", 16, 36);
             box.anchorMin = box.anchorMax = box.pivot = new Vector2(0.5f, 0.5f);
-            box.sizeDelta = new Vector2(520f, 0f);
+            box.sizeDelta = new Vector2(640f, 0f);
+            box.GetComponent<VerticalLayoutGroup>().childAlignment = TextAnchor.UpperCenter;
             box.gameObject.AddComponent<ContentSizeFitter>().verticalFit = ContentSizeFitter.FitMode.PreferredSize;
             box.gameObject.AddComponent<Button>().transition = Selectable.Transition.None;
-            Ui.Frame(box, S("SPR_DarkFantasyMenus_Frame_Box_Medium_02"), S("SPR_DarkFantasyMenus_Frame_Box_Medium_02_Background"), o.Won ? Ui.Steel : Ui.Blood, FramePpu);
+            var edge = o.Won ? Ui.Steel : Ui.Blood;
+            Ui.Frame(box, S("SPR_DarkFantasyMenus_Frame_Box_Medium_02"), S("SPR_DarkFantasyMenus_Frame_Box_Medium_02_Background"), edge, FramePpu);
+            // ui-style.md 14-4: a big emblem carries the result, like the reference's Mission Failed screen. Large_01 is the demon skull, so only defeat wears it.
+            var emblem = Ui.Node(box, "Emblem");
+            Ui.Size(emblem, 200, 170);
+            if (kit.Prefab(emblem, o.Won ? MenuScreen.Crest : "Crest_DarkFantasyMenus_Large_01", new Vector2(0.5f, 0.5f), Vector2.zero, 150f, edge) == null)
+                Ui.Stretch(Ui.Sprite(emblem, "Icon", S(o.Won ? Kit.Icon.Trophy : Kit.Icon.Dead), edge).rectTransform, 37, 22, 37, 22);
             var st = o.Stats;
             var stg = o.Stage;
-            T(box, Loc.T(o.Won ? "over.won" : "over.lost"), 56, o.Won ? Ui.Sun : Ui.Blood, true, true);
-            Wrap(T(box, o.Won ? Loc.T("over.wonLine", o.Turn, stg.BossName) : Loc.T("over.lostLine"), 17, Ui.Muted));
-            var tally = Ui.Col(box, "Tally", 6);
-            Pair(tally, Loc.T("over.fallen"), st.Lost.ToString());
-            Pair(tally, Loc.T("over.execs"), st.Executed.ToString());
-            Pair(tally, Loc.T("over.risen"), st.Risen.ToString());
-            Pair(tally, Loc.T("over.drained"), st.Drained.ToString());
-            var ok = o.Won && o.BonusOk;
-            if (o.Won && o.Camp)
-            {
-                var r = o.Result;
-                var g1 = r.ClearGold;
-                var g2 = r.BonusGold;
-                var rew = Ui.Col(box, "Reward", 6);
-                Pair(rew, r.FirstClear ? Loc.T("over.firstClear") : Loc.T("over.replayClear"), g1 > 0 ? "+" + g1 : Loc.T("over.claimed"));
-                Pair(rew, Loc.T("over.bonus", stg.Bonus.Text), !ok ? Loc.T("over.failed") : g2 > 0 ? "+" + g2 : Loc.T("over.claimed"), !ok);
-                Pair(rew, Loc.T("over.earned"), Loc.T("camp.cost", g1 + g2), false, true);
-                var nxt = Array.IndexOf(Campaign.Stages, stg) + 1;
-                var next = nxt < Campaign.Stages.Length ? Campaign.Stages[nxt] : null;
-                if (r.FirstClear && next != null)
-                {
-                    var news = next.Units.Where(u => GameData.Type(u).UnlockAt == nxt + 1).Select(u => Loc.Text(GameData.Type(u).Name)).ToList();
-                    Wrap(T(box, Loc.T("over.nextOpen", next.Label, next.Title) + (news.Count > 0 ? " " + Loc.T("over.unitsUnlocked", string.Join(", ", news)) : ""), 14, Ui.Muted));
-                }
-                if (r.FirstClear && next == null) Wrap(T(box, Loc.T("over.campaignDone"), 14, Ui.Muted));
-                var armory = GameData.Types.Where(t => t.UnlockAt == nxt).Select(t => Loc.Text(t.Name)).ToList();
-                if (r.FirstClear && armory.Count > 0) Wrap(T(box, Loc.T("over.armoryOpen", string.Join(", ", armory)), 14, Ui.Muted));
-            }
-            else if (o.Won)
-            {
-                var rew = Ui.Col(box, "Reward", 6);
-                Pair(rew, Loc.T("over.bonus", stg.Bonus.Text), ok ? Loc.T("over.done") : Loc.T("over.failed"), !ok);
-            }
-            var acts = Ui.Row(box, "Acts", 8, 0, null, null, TextAnchor.MiddleRight);
-            acts.GetComponent<HorizontalLayoutGroup>().childControlWidth = false;
-            if (o.Camp) Btn(acts, Loc.T("over.toCamp"), a.ToCamp, BtnKind.Primary, new Vector2(150f, 48f));
-            Btn(acts, Loc.T("over.retry"), a.Retry, o.Camp ? BtnKind.Normal : BtnKind.Primary, new Vector2(200f, 48f));
-            Btn(acts, Loc.T("over.redeploy"), a.Redeploy, BtnKind.Normal, new Vector2(150f, 48f));
-        }
+            var title = T(box, Loc.T(o.Won ? "over.won" : "over.lost"), 64, o.Won ? Ui.Sun : Ui.Blood, true, true, TextAnchor.UpperCenter);
+            HoverTip.Add(title.rectTransform, o.Won ? Loc.T("over.wonLine", o.Turn, stg.BossName) : Loc.T("over.lostLine"), 0.3f);
+            title.raycastTarget = true;
 
-        static void Pair(Transform parent, string left, string right, bool dim = false, bool strong = false)
-        {
-            var row = Ui.Row(parent, "Pair", 12);
-            var color = dim ? Ui.Dim : Ui.Muted;
-            Ui.Size(Wrap(T(row, left, 17, color)), -1, -1, 1);
-            T(row, right, 20, strong ? Ui.Candle : dim ? Ui.Dim : Ui.Bone, true, false, TextAnchor.UpperRight);
+            var tally = Ui.Row(box, "Tally", 36, 0, null, null, TextAnchor.MiddleCenter);
+            tally.GetComponent<HorizontalLayoutGroup>().childForceExpandWidth = false;
+            kit.Value(tally, Kit.Icon.Dead, st.Lost.ToString(), 24, Ui.Muted, Ui.Bone, Loc.T("over.fallen"));
+            kit.Value(tally, Kit.Icon.Skulls, st.Executed.ToString(), 24, Ui.Blood, Ui.Bone, Loc.T("over.execs"));
+            kit.Value(tally, Kit.Icon.Fang, st.Risen.ToString(), 24, Ui.Spawn, Ui.Bone, Loc.T("over.risen"));
+            kit.Value(tally, Kit.Icon.Target, st.Drained.ToString(), 24, Ui.MoonBlood, Ui.Bone, Loc.T("over.drained"));
+
+            var ok = o.Won && o.BonusOk;
+            if (o.Won)
+            {
+                var rew = Ui.Row(box, "Reward", 36, 0, null, null, TextAnchor.MiddleCenter);
+                rew.GetComponent<HorizontalLayoutGroup>().childForceExpandWidth = false;
+                var bonusTip = Loc.T("over.bonus", Loc.Text(stg.Bonus.Text)) + " · " + (ok ? Loc.T("over.done") : Loc.T("over.failed"));
+                if (o.Camp)
+                {
+                    var r = o.Result;
+                    kit.Value(rew, Kit.Icon.Gold, r.ClearGold > 0 ? "+" + r.ClearGold : "0", 28, Ui.Candle, r.ClearGold > 0 ? Ui.Candle : Ui.Dim,
+                        r.FirstClear ? Loc.T("over.firstClear") : Loc.T("over.replayClear"));
+                    kit.Value(rew, Kit.Icon.Star, !ok ? "✕" : r.BonusGold > 0 ? "+" + r.BonusGold : "✓", 28, ok ? Ui.Candle : Ui.Dim, ok ? Ui.Candle : Ui.Dim, bonusTip);
+                    var nxt = Array.IndexOf(Campaign.Stages, stg) + 1;
+                    var next = nxt < Campaign.Stages.Length ? Campaign.Stages[nxt] : null;
+                    if (r.FirstClear && next != null)
+                    {
+                        var news = Ui.Row(box, "Unlocked", 10, 0, null, null, TextAnchor.MiddleCenter);
+                        news.GetComponent<HorizontalLayoutGroup>().childForceExpandWidth = false;
+                        var lockOpen = Ui.Sprite(news, "Next", S(Kit.Icon.Flag), Ui.Sun);
+                        Ui.Size(lockOpen, 28, 28);
+                        T(news, Loc.Text(next.Title), 20, Ui.Bone, true, false, TextAnchor.MiddleLeft);
+                        foreach (var u in next.Units.Where(u => GameData.Type(u).UnlockAt == nxt + 1))
+                        {
+                            var chip = Ui.Sprite(news, "New", S(Weapon[u]), Ui.Candle);
+                            Ui.Size(chip, 32, 32);
+                            HoverTip.Add(chip.rectTransform, Loc.T("camp.new", GameData.Type(u).Name), 0.2f);
+                            chip.raycastTarget = true;
+                        }
+                        HoverTip.Add(news, Loc.T("over.nextOpen", next.Label, next.Title), 0.4f);
+                    }
+                    if (r.FirstClear && next == null) HoverTip.Add(title.rectTransform, Loc.T("over.campaignDone"), 0.3f);
+                }
+                else kit.Value(rew, Kit.Icon.Star, ok ? "✓" : "✕", 28, ok ? Ui.Candle : Ui.Dim, ok ? Ui.Candle : Ui.Dim, bonusTip);
+            }
+
+            var acts = Ui.Row(box, "Acts", 10, 0, null, null, TextAnchor.MiddleCenter);
+            acts.GetComponent<HorizontalLayoutGroup>().childControlWidth = false;
+            acts.GetComponent<HorizontalLayoutGroup>().childForceExpandWidth = false;
+            var w = o.Camp ? 178f : 270f;
+            if (o.Camp) Btn(acts, Loc.T("over.toCamp"), a.ToCamp, BtnKind.Primary, new Vector2(w, 52f));
+            Btn(acts, Loc.T("over.retry"), a.Retry, o.Camp ? BtnKind.Normal : BtnKind.Primary, new Vector2(w, 52f));
+            Btn(acts, Loc.T("over.redeploy"), a.Redeploy, BtnKind.Normal, new Vector2(w, 52f));
         }
     }
 }

@@ -28,34 +28,46 @@ namespace VampireSpawn.Game.Screens
             var title = T(Ui.Place(page, "Title", new Vector2(0.5f, 1f), new Vector2(0f, -304f), new Vector2(1400f, 72f)), "PROJECT VAMPIRE SPAWN", 56, Ui.Bone, true, true, TextAnchor.MiddleCenter);
             Ui.Stretch(title.rectTransform);
             title.gameObject.AddComponent<Outline>().effectColor = Ui.Ink;
-            var tag = Kit.Wrap(T(Ui.Place(page, "Tagline", new Vector2(0.5f, 1f), new Vector2(0f, -392f), new Vector2(900f, 52f)), Loc.T("menu.tagline"), 17, Ui.Muted));
-            Ui.Stretch(tag.rectTransform);
-            var brk = Ui.Place(page, "Break", new Vector2(0.5f, 1f), new Vector2(0f, -470f), new Vector2(600f, 24f));
+            var brk = Ui.Place(page, "Break", new Vector2(0.5f, 1f), new Vector2(0f, -400f), new Vector2(600f, 24f));
             if (kit.Prefab(brk, "Component_DarkFantasyMenus_Section_Break_02", new Vector2(0.5f, 0.5f), Vector2.zero, 600f, Ui.Line) == null)
                 Ui.Bg(Ui.Place(brk, "Line", new Vector2(0.5f, 0.5f), Vector2.zero, new Vector2(600f, 1f)), Ui.Line, null, false);
 
-            Card(page, kit, new Vector2(-226f, -540f), Loc.T("menu.demo"), Loc.T("menu.demoDesc"), CampaignScreen.Resources(GameData.Stages[0]), demo, selected == 0, () => hover?.Invoke(0));
-            Card(page, kit, new Vector2(226f, -540f), Loc.T("menu.campaign"), Loc.T("menu.campaignDesc"), CampMeta(campaign), camp, selected == 1, () => hover?.Invoke(1));
+            var s0 = GameData.Stages[0];
+            var demoCard = Card(page, kit, new Vector2(-200f, -460f), Kit.Icon.Sword, Loc.T("menu.demo"), Loc.T("menu.demoDesc"), demo, selected == 0, () => hover?.Invoke(0));
+            kit.Value(demoCard, Kit.Icon.Pop, s0.Pop.ToString(), 20, Ui.Candle, Ui.Candle);
+            if (s0.Silver > 0) kit.Value(demoCard, Kit.Icon.Silver, s0.Silver.ToString(), 20, Ui.Candle, Ui.Candle);
+            var campCard = Card(page, kit, new Vector2(200f, -460f), Kit.Icon.Home, Loc.T("menu.campaign"), Loc.T("menu.campaignDesc"), camp, selected == 1, () => hover?.Invoke(1));
+            kit.Value(campCard, Kit.Icon.Flag, Campaign.Stages.Count(campaign.IsCleared) + "/" + Campaign.Stages.Length, 20, Ui.Steel, Ui.Bone);
+            kit.Value(campCard, Kit.Icon.Gold, campaign.Gold.ToString(), 20, Ui.Candle, Ui.Candle);
 
             Languages(page);
         }
 
-        static void Card(RectTransform page, Kit kit, Vector2 pos, string title, string desc, string meta, Action click, bool on, Action enter)
+        // ui-style.md 14-4: a big icon and a name; the description is the card's tooltip. Returns the row for its icon values.
+        static RectTransform Card(RectTransform page, Kit kit, Vector2 pos, string icon, string title, string desc, Action click, bool on, Action enter)
         {
-            var rt = Ui.Place(page, "Choice " + title, new Vector2(0.5f, 1f), pos, new Vector2(420f, 220f));
+            var rt = Ui.Place(page, "Choice " + title, new Vector2(0.5f, 1f), pos, new Vector2(360f, 280f));
             rt.pivot = new Vector2(0.5f, 1f);
             kit.Frame(rt, on ? Ui.Steel : Ui.SteelDim);
             var back = rt.GetComponentInChildren<Image>();
             back.raycastTarget = true;
             if (on) back.color *= 1.1f;
-            var col = Ui.Col(rt, "Body", 8, 32);
-            Ui.Stretch(col);
-            col.GetComponent<VerticalLayoutGroup>().childForceExpandHeight = false;
-            T(col, title, 32, Ui.Bone, true, true, TextAnchor.UpperLeft);
-            Kit.Wrap(T(col, desc, 17, Ui.Muted, false, false, TextAnchor.UpperLeft));
-            var m = T(Ui.Place(rt, "Meta", new Vector2(0f, 0f), new Vector2(32f, 28f), new Vector2(356f, 24f)), meta, 20, Ui.Candle, true, false, TextAnchor.LowerLeft);
-            ((RectTransform)m.transform.parent).pivot = Vector2.zero;
-            Ui.Stretch(m.rectTransform);
+            var pic = Ui.Sprite(rt, "Picture", kit.S(icon), on ? Ui.Steel : Ui.Muted);
+            var pr = pic.rectTransform;
+            pr.anchorMin = pr.anchorMax = pr.pivot = new Vector2(0.5f, 1f);
+            pr.anchoredPosition = new Vector2(0f, -36f);
+            pr.sizeDelta = new Vector2(104f, 104f);
+            var name = T(Ui.Place(rt, "Name", new Vector2(0.5f, 1f), new Vector2(0f, -156f), new Vector2(320f, 44f)), title, 32, Ui.Bone, true, true, TextAnchor.MiddleCenter);
+            ((RectTransform)name.transform.parent).pivot = new Vector2(0.5f, 1f);
+            Ui.Stretch(name.rectTransform);
+            var meta = Ui.Row(rt, "Meta", 20, 0, null, null, TextAnchor.MiddleCenter);
+            meta.anchorMin = new Vector2(0f, 0f);
+            meta.anchorMax = new Vector2(1f, 0f);
+            meta.pivot = new Vector2(0.5f, 0f);
+            meta.offsetMin = new Vector2(24f, 26f);
+            meta.offsetMax = new Vector2(-24f, 60f);
+            meta.GetComponent<HorizontalLayoutGroup>().childForceExpandWidth = false;
+            HoverTip.Add(rt, desc, 0.6f);
             var btn = rt.gameObject.AddComponent<Button>();
             btn.targetGraphic = back;
             var colors = btn.colors;
@@ -65,6 +77,7 @@ namespace VampireSpawn.Game.Screens
             btn.colors = colors;
             if (click != null) btn.onClick.AddListener(() => click());
             OnHover.Add(rt, enter);
+            return meta;
         }
 
         // docs/ui/localization.md 6~8 and main-menu.md 12: top-right row, one entry per locale, switches at once; the package saves the choice.

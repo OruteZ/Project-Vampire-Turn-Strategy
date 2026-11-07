@@ -48,6 +48,9 @@ namespace VampireSpawn.Game.Screens
             return Loc.T("battle.results");
         }
 
+        // ui-style.md 14-1-6: the guide line stays only where it is the sole feedback for a mode (placing units, execute).
+        public static bool ShowsHint(BattleSession s, bool enemyPlaying) => !enemyPlaying && (s.Battle.Phase == Phase.Deploy || s.Mode == SelectMode.Execute);
+
         public static string Hint(BattleSession s, bool enemyPlaying) => Loc.Text(enemyPlaying ? new Message("hint.enemyActing") : s.Hint);
 
         static readonly Dictionary<Ability, string> SkillKey = new Dictionary<Ability, string>
