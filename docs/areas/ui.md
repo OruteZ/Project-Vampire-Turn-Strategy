@@ -41,7 +41,7 @@
 ## 열린 작업
 - #24 UI 아트 테마·파이프라인: 8단계 화면별 구현 끝, 남은 것(보름달 턴 상태·연출·배지 절)도 #28 에서 끝. 전투 (#25), 장 선택·병영 (#26), 메인 메뉴 (#27). 스크린샷 docs/review/battle-hud-*, stage-select-*, main-menu*.png
 - #16 한글 글꼴 파일 들이기 (막힘: 내려받기 허락)
-- #43 장 선택 대개편: 구현됨(브랜치 stage-select, 세 레이어·3D 지도·표식). 남은 것: 가장자리 그늘, 칸·배지 움직임, 산 줄 번쩍임 (stage-select.md 구현 메모), campaign-map.md 10절을 C# 배치 표 구조로 고치기(기획 쪽), 지도 1-1 후속(줄 소품·강·곁길·야영지). 후속: 병영에서 고른 병종 3D 모델을 야영지에 세우기 (upgrade.md "후속")
+- #43 장 선택 대개편: 구현됨(dev 40c6c95, 세 레이어·3D 지도·표식). 남은 것은 #45: 가장자리 그늘, 칸·배지 움직임, 산 줄 번쩍임 (stage-select.md 구현 메모), campaign-map.md 10절을 C# 배치 표 구조로 고치기(기획 쪽), 지도 1-1 후속(줄 소품·강·곁길·야영지). 후속: 병영에서 고른 병종 3D 모델을 야영지에 세우기 (upgrade.md "후속")
 - #44 UI Toolkit 시험(메인 메뉴): 결과와 추천 docs/dev/ui-toolkit-trial.md. 화면 단위 혼합으로 결정(결정 표). 장 선택이 두 번째 UI Toolkit 화면이다
 - 다국어 표의 글꼴 첫 이름 `Nanum Myeongjo` 가 설치 이름 `NanumMyeongjo` 와 달라 `Noto Serif KR` 로 그려진다 (docs/dev/ui-toolkit-trial.md 5)
 

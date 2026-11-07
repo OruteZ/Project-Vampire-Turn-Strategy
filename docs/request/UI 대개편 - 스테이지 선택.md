@@ -1,9 +1,9 @@
 ---
 id: 3
 created: 2026-11-07
-status: working
+status: done
 issue: #43
-done:
+done: 20261108
 ---
 
 # 003. UI 대개편 - 스테이지 선택
