@@ -95,6 +95,8 @@ namespace VampireSpawn.Game.Screens
             box.gameObject.AddComponent<LayoutElement>().ignoreLayout = true;
             Ui.Bg(box, Ui.Alpha(Ui.Deep, 0.85f), Ui.Line, false);
             Ui.Stretch(T(box, key, 14, Ui.Muted, false, false, TextAnchor.MiddleCenter).rectTransform);
+            // Long labels (English "Begin Battle") otherwise run under the key.
+            if (button.Find("Text") is RectTransform label) label.offsetMax = new Vector2(-(box.sizeDelta.x + 10f), label.offsetMax.y);
         }
 
         // ui-style.md 9 and 14-2.

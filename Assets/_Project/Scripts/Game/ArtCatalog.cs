@@ -13,6 +13,14 @@ namespace VampireSpawn.Game
         public GameObject brazier, fire;
         public Color torchLight = new Color(0.89f, 0.66f, 0.29f);
         public Color sunLight = new Color(0.92f, 0.86f, 0.68f);
+        [Tooltip("장별 모습 (docs/art/stage-dressing.md). 장 id 가 어느 테마에도 없으면 맨 앞 테마")] public BoardTheme[] themes;
+
+        public BoardTheme Theme(string stageId)
+        {
+            if (themes == null || themes.Length == 0) return null;
+            foreach (var t in themes) if (t != null && t.stages != null && System.Array.IndexOf(t.stages, stageId) >= 0) return t;
+            return themes[0];
+        }
 
         [Header("Units")]
         [Tooltip("UnitKind 순서: pspear, parcher, sword, archer, knight, hunter")]

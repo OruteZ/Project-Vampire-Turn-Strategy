@@ -149,6 +149,7 @@ namespace VampireSpawn.Game.Screens
             {
                 viewCamera.rect = new Rect(0f, 0f, 1f, 1f);
                 viewCamera.targetTexture = null;
+                View.board.FrameInto(new Rect(0f, 0f, 1f, 1f));
             }
             if (Current != "battle") View.board.Clear();
         }
@@ -250,7 +251,9 @@ namespace VampireSpawn.Game.Screens
             boardArea.GetWorldCorners(corners);
             float w = Screen.width, h = Screen.height;
             fittedSize = new Vector2Int(Screen.width, Screen.height);
-            viewCamera.rect = new Rect(corners[0].x / w, corners[0].y / h, (corners[2].x - corners[0].x) / w, (corners[2].y - corners[0].y) / h);
+            // stage-dressing.md 1-4: the world fills the screen behind the HUD; only the board is framed into the board area.
+            viewCamera.rect = new Rect(0f, 0f, 1f, 1f);
+            View.board.FrameInto(new Rect(corners[0].x / w, corners[0].y / h, (corners[2].x - corners[0].x) / w, (corners[2].y - corners[0].y) / h));
         }
 
         void RenderBattle()

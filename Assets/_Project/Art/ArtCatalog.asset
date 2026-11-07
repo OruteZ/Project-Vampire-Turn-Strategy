@@ -27,6 +27,17 @@ MonoBehaviour:
   fire: {fileID: 5879195395630746260, guid: 66935891f0cc76c46869337a4d1b7fd5, type: 3}
   torchLight: {r: 0.89, g: 0.66, b: 0.29, a: 1}
   sunLight: {r: 0.92, g: 0.86, b: 0.68, a: 1}
+  themes:
+  - {fileID: 11400000, guid: 16061eaa20406b6429fe68ceb977aaa3, type: 2}
+  - {fileID: 11400000, guid: b7adcbdaa62d6844f8ec6a7282dab4c5, type: 2}
+  - {fileID: 11400000, guid: 31e97352abad5e5458452dbe71497d80, type: 2}
+  - {fileID: 11400000, guid: 3a5cbbbbce038564eb61ccd5dd91fe2d, type: 2}
+  - {fileID: 11400000, guid: f0dddd420dbb944468dbe8dd53c21dee, type: 2}
+  - {fileID: 11400000, guid: cdfafcc53df2f3e48a9cb448c73822fc, type: 2}
+  - {fileID: 11400000, guid: b2a4efb1a5becb241aacf28b9d232db9, type: 2}
+  - {fileID: 11400000, guid: d7b45b2cbfe05bc49842af43536ba4dd, type: 2}
+  - {fileID: 11400000, guid: c6914f234bc69094c89a597d4f57404e, type: 2}
+  - {fileID: 11400000, guid: 683de39d41503894692809cc4b1d46d7, type: 2}
   allyLooks:
   - {fileID: 11400000, guid: 7f5413a4c00440d48a8145a5224ad24a, type: 2}
   - {fileID: 11400000, guid: 9f9bd31ff4586394ea905716c8df4be9, type: 2}
