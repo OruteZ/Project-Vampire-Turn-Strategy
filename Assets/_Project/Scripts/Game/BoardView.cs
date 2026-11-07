@@ -129,6 +129,10 @@ namespace VampireSpawn.Game
                 child.transform.SetParent(null, false);
                 Kill(child);
             }
+            // Without this LateUpdate keeps fitting viewCamera to a board that is gone (stage-select-handoff.md 2-2).
+            Board = null;
+            Stage = null;
+            RenderSettings.fog = false;
         }
 
         static void Kill(Object o) { if (Application.isPlaying) Destroy(o); else DestroyImmediate(o); }

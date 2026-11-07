@@ -120,7 +120,8 @@ namespace VampireSpawn.Game.Screens
             go.GetComponent<Canvas>().renderMode = RenderMode.ScreenSpaceOverlay;
             scaler = go.GetComponent<CanvasScaler>();
             scaler.uiScaleMode = CanvasScaler.ScaleMode.ScaleWithScreenSize;
-            scaler.matchWidthOrHeight = 0.5f;
+            // ui-style.md 15-1: the canvas never shrinks below 1920x1080, only the spare axis grows. Panel.asset matches.
+            scaler.screenMatchMode = CanvasScaler.ScreenMatchMode.Expand;
             scaler.referenceResolution = new Vector2(1920f, 1080f);
             screen = Ui.Node(go.transform, "Screen");
             Ui.Stretch(screen);
