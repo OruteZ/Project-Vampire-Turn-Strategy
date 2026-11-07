@@ -35,12 +35,15 @@
 | 화면 가운데는 게임(3D), UI 는 모서리·가장자리. 가운데 UI 는 결과·확인·규칙 창 같은 특정한 순간만. 한 레이어 UI 넓이 ≤ 30% (ui-style.md 16) | 시험 중 | 2026-11-07 | #43 "게임적 요소가 항상 중앙에 보이고 … 특정한 상황 아니면 사이드에" |
 | 장 선택은 3 레이어: L1 지도(전경) → L2 장 정보(목표·출정) → L3 병영. 레이어가 바뀌면 오른쪽 칸과 카메라만 바뀌고 Esc 는 한 레이어 뒤로 (stage-select.md) | 시험 중 | 2026-11-07 | #43 요구 2 |
 | 정보는 그 레이어 결정에 필요할 때만: 가진 금화는 병영(L3)에서만, 지도·장 정보에는 병영 버튼의 "살 수 있는 강화 수" 배지만 (stage-select.md 6) | 시험 중 | 2026-11-07 | #43 "각 자원이나 정보는 각 Scene에서 필요한 경우에만" |
+| UI 는 화면 단위로 섞는다: 새로 만들거나 크게 고치는 화면은 UI Toolkit(UXML/USS), 3D 를 따라가는 표시(머리 위 체력, 지도 지역 표식)는 uGUI. 장 선택(#43)이 두 번째 UI Toolkit 화면 (stage-select.md 10) | 시험 중 | 2026-11-07 | #43 채팅 "개발을 UI Toolkit + UGUI로 하도록 하자", #44 추천 |
 | 장 선택 바탕은 Synty 프리팹을 코드가 데이터 표대로 놓아 짓는 3D 원정 지도. 장마다 지역 하나, 지역 표식은 고정 크기 UI(3D 점을 따라감), 이름은 가리킨·고른 지역만. 진행은 빛(클리어한 지역의 화로)으로 보인다 (campaign-map.md) | 시험 중 | 2026-11-07 | #43 "Synty 에셋을 사용해 3D맵을 제작 … 그 지역을 클릭하면 스테이지 정보화면으로" |
 
 ## 열린 작업
 - #24 UI 아트 테마·파이프라인: 8단계 화면별 구현 끝, 남은 것(보름달 턴 상태·연출·배지 절)도 #28 에서 끝. 전투 (#25), 장 선택·병영 (#26), 메인 메뉴 (#27). 스크린샷 docs/review/battle-hud-*, stage-select-*, main-menu*.png
 - #16 한글 글꼴 파일 들이기 (막힘: 내려받기 허락)
-- #43 장 선택 대개편: 기획서 끝(stage-select.md, upgrade.md, campaign-map.md, ui-style.md 15·16). 구현 남음: 원정 지도(`CampaignMapView`, `CampaignMap.asset`), 3 레이어, CanvasScaler Expand 와 모든 화면 재검사. 후속: 병영에서 고른 병종 3D 모델을 야영지에 세우기 (upgrade.md "후속")
+- #43 장 선택 대개편: 기획서 끝(stage-select.md, upgrade.md, campaign-map.md, ui-style.md 15·16). 구현은 #44 를 하던 세션이 UI Toolkit + uGUI 로 이어 간다. 인계 docs/dev/stage-select-handoff.md. 후속: 병영에서 고른 병종 3D 모델을 야영지에 세우기 (upgrade.md "후속")
+- #44 UI Toolkit 시험(메인 메뉴): 결과와 추천 docs/dev/ui-toolkit-trial.md. 화면 단위 혼합으로 결정(결정 표). 장 선택이 두 번째 UI Toolkit 화면이다
+- 다국어 표의 글꼴 첫 이름 `Nanum Myeongjo` 가 설치 이름 `NanumMyeongjo` 와 달라 `Noto Serif KR` 로 그려진다 (docs/dev/ui-toolkit-trial.md 5)
 
 ## 맡길 때
 - 모델: 테마·스타일·화면 기획서와 방향 검토는 opus, 목업·화면 구현은 sonnet
@@ -49,6 +52,7 @@
 - 함정: Synty 틀 스프라이트의 9-slice 테두리가 180~380px 라 그대로 쓰면 두껍다. `Image.pixelsPerUnitMultiplier` 로 줄인다 (ui-style.md 5절)
 - 함정: 적 턴은 모델이 먼저 끝나고 화면이 나중에 재생된다. 재생 중 상태(보름달 턴)는 `BattleView.Played` 배너로 안다 (`GameFlow.OnPlayed`)
 - 함정: Synty 틀 스프라이트에는 붉은·녹색 기가 구워져 있다. Image 색으로 물들이면 곱해져 남는다
-- 함정: CanvasScaler 는 화면 하나(`GameFlow.BuildCanvas`)라 Expand 로 바꾸면 모든 화면이 함께 바뀐다. 장 선택만 고쳐도 sweep 은 모든 화면에 돌린다
+- 함정: CanvasScaler 는 화면 하나(`GameFlow.BuildCanvas`)라 Expand 로 바꾸면 모든 화면이 함께 바뀐다. 장 선택만 고쳐도 sweep 은 모든 화면에 돌린다. UI Toolkit `Panel.asset` 도 같이 Expand 로 바꾼다
+- 함정: 한 화면에서 uGUI(지역 표식)와 UI Toolkit(칸)을 함께 쓰면, 지도 클릭을 막는 판단(`PointerBlocked`)이 uGUI `IsPointerOverGameObject` 만 보면 UI Toolkit 칸 위 클릭이 지도로 샌다. UI Toolkit 패널의 `Pick` 도 같이 본다
 - 함정: `BoardView.LateUpdate` 는 `Board` 가 남아 있으면 카메라를 보드에 다시 맞춘다(`Clear()` 뒤에도 남는다). 원정 지도가 카메라를 쓰는 동안 막아야 한다 (campaign-map.md 구현 메모)
 - 함정: `FX_*`, `SM_Bld_Base_*` 프리팹은 PolygonDarkFantasy 와 PolygonGeneric 에 같은 이름이 있다. 이름으로 찾을 때 PolygonDarkFantasy 쪽을 쓴다

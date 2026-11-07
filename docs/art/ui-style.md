@@ -320,7 +320,7 @@
 
 ### 15-1. 캔버스는 한 비율로만
 
-1. CanvasScaler: Scale With Screen Size, 기준 1920×1080, Screen Match Mode = **Expand**. 캔버스는 1920×1080 보다 작아지지 않고, 남는 쪽 축만 늘어난다.
+1. CanvasScaler: Scale With Screen Size, 기준 1920×1080, Screen Match Mode = **Expand**. 캔버스는 1920×1080 보다 작아지지 않고, 남는 쪽 축만 늘어난다. UI Toolkit `PanelSettings`(`Assets/_Project/UI/Panel.asset`)도 같은 값(Scale With Screen Size, 1920×1080, Expand)이다. 두 UI 가 한 화면에서 같은 px 로 맞아야 한다.
 2. 화면 전체가 한 비율로 커지고 작아진다. 칸·글·아이콘을 따로 키우지 않는다.
 3. 화면비별 캔버스 (검사 6개 화면비, docs/dev/ui-audit.md):
 
@@ -361,8 +361,8 @@
 
 ### 15-4. 지금 코드에서 바꾸는 것
 
-1. `GameFlow.BuildCanvas`: `matchWidthOrHeight = 0.5` → `screenMatchMode = Expand`.
-2. `CampaignScreen`: 원정 길·장 정보 칸(세로 stretch), 병영 칸(가로·세로 stretch), 강화 칸 flexible → docs/ui/stage-select.md, docs/ui/upgrade.md 의 고정 칸으로 다시 짠다.
+1. `GameFlow.BuildCanvas`: `matchWidthOrHeight = 0.5` → `screenMatchMode = Expand`. `Assets/_Project/UI/Panel.asset` 도 맞춤 0.5 → Expand.
+2. `CampaignScreen`: 원정 길·장 정보 칸(세로 stretch), 병영 칸(가로·세로 stretch), 강화 칸 flexible → docs/ui/stage-select.md, docs/ui/upgrade.md 의 고정 칸으로 다시 짠다. 칸·버튼은 UI Toolkit(UXML/USS)으로, 지역 표식은 uGUI 로 짓는다 (stage-select.md 10절).
 3. 다른 화면(전투, 메인 메뉴)은 이미 모서리·가운데 고정 칸이다. Expand 로 바꾼 뒤 `tools/ui-audit/sweep.sh` 를 모든 화면에 다시 돌려 확인만 한다 (battle-hud.md, main-menu.md 의 "후속").
 
 ## 16. 화면 배치 원칙 (#43)

@@ -29,6 +29,7 @@ namespace VampireSpawn.Game.Screens
         string buyArm, bought;
         int? campSel;
         int menuSel = 1;
+        UnityEngine.UIElements.UIDocument toolkitMenu;
         RenderTexture backdropTex;
         Vector2Int fittedSize;
         Stage stage;
@@ -141,6 +142,7 @@ namespace VampireSpawn.Game.Screens
 
         void ClearScreen(bool opaque)
         {
+            if (toolkitMenu != null) { Destroy(toolkitMenu.gameObject); toolkitMenu = null; }
             Ui.Clear(screen);
             if (!screen.TryGetComponent<Image>(out var bg)) bg = screen.gameObject.AddComponent<Image>();
             bg.color = Ui.Ink;
@@ -176,7 +178,9 @@ namespace VampireSpawn.Game.Screens
             Current = "menu";
             ClearScreen(true);
             Backdrop(Campaign.Stages[0]);
-            MenuScreen.Build(screen, Campaign, MenuDemo, MenuCamp, View.board.art, menuSel, i => { if (menuSel != i) { menuSel = i; ShowMenu(false); } });
+            System.Action<int> hover = i => { if (menuSel != i) { menuSel = i; ShowMenu(false); } };
+            if (MenuToolkit.On && View.board.art.panel != null) toolkitMenu = MenuToolkit.Build(transform, View.board.art, Campaign, MenuDemo, MenuCamp, menuSel, hover);
+            else MenuScreen.Build(screen, Campaign, MenuDemo, MenuCamp, View.board.art, menuSel, hover);
             if (fade) Fx.FadeIn(screen);
         }
 

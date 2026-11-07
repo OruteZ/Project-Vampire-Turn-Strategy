@@ -18,6 +18,7 @@ MonoBehaviour:
   weapons:
   - prefab: {fileID: 2534750377913445900, guid: 8875e2c829b723643b54932381e8d09f, type: 3}
     hand: 0
-    position: {x: 0, y: -0.25, z: 0}
+    hold: 2
+    position: {x: 0, y: 0, z: 0}
     rotation: {x: 0, y: 0, z: 0}
-  animator: {fileID: 0}
+  animator: {fileID: 22100000, guid: df70526b63d281b4b8a562ec70988bd3, type: 2}

@@ -40,6 +40,7 @@ namespace VampireSpawn.Editor
                 if (g is Text lt && g.transform.parent != null && g.transform.parent.Find("Key") is RectTransform key && key != g.transform && World(key).Overlaps(drawn))
                     found.Add("key-overlap\t" + path + "\t\"" + Clip(lt.text) + "\"");
             }
+            foreach (var doc in Object.FindObjectsByType<UnityEngine.UIElements.UIDocument>(FindObjectsSortMode.None)) ToolkitReport(doc, found);
             var board = Object.FindFirstObjectByType<VampireSpawn.Game.BoardView>();
             if (board != null && board.Board != null && board.viewCamera != null && board.viewCamera.targetTexture == null)
             {
@@ -56,6 +57,51 @@ namespace VampireSpawn.Editor
             sb.Append(Screen.width).Append('x').Append(Screen.height).Append(" issues=").Append(found.Count).Append('\n');
             foreach (var line in found.Distinct()) sb.Append(line).Append('\n');
             return sb.ToString();
+        }
+
+        // The same three checks for UI Toolkit, in panel units: off the panel, text wider than its label, outside its .card.
+        static void ToolkitReport(UnityEngine.UIElements.UIDocument doc, List<string> found)
+        {
+            var root = doc.rootVisualElement;
+            if (root == null || root.panel == null) return;
+            var screen = root.worldBound;
+            foreach (var e in UnityEngine.UIElements.UQueryExtensions.Query<UnityEngine.UIElements.VisualElement>(root).ToList())
+            {
+                if (e.resolvedStyle.display == UnityEngine.UIElements.DisplayStyle.None || e.resolvedStyle.visibility == UnityEngine.UIElements.Visibility.Hidden) continue;
+                if (Hidden(e) || e.worldBound.width <= 0f) continue;
+                var label = e as UnityEngine.UIElements.Label;
+                var drawn = e.resolvedStyle.backgroundImage.sprite != null || (label != null && !string.IsNullOrWhiteSpace(label.text));
+                if (!drawn) continue;
+                var path = ToolkitPath(e);
+                if (Spill(screen, e.worldBound, Slack, Slack) is var s && s != "") found.Add("off-screen\ttk:" + path + "\t" + s);
+                if (label != null)
+                {
+                    var need = label.MeasureTextSize(label.text, 0, UnityEngine.UIElements.VisualElement.MeasureMode.Undefined, 0, UnityEngine.UIElements.VisualElement.MeasureMode.Undefined);
+                    if (label.resolvedStyle.whiteSpace == UnityEngine.UIElements.WhiteSpace.NoWrap && need.x > label.contentRect.width + 4f)
+                        found.Add("text>box\ttk:" + path + "\tR" + (need.x - label.contentRect.width).ToString("0") + " \"" + Clip(label.text) + "\"");
+                }
+                for (var p = e.parent; p != null; p = p.parent)
+                    if (p.ClassListContains("card"))
+                    {
+                        if (Spill(p.worldBound, e.worldBound, Slack, Slack) is var f && f != "") found.Add("out-of-frame\ttk:" + path + "\t" + f + " frame=" + p.name);
+                        break;
+                    }
+            }
+        }
+
+        static bool Hidden(UnityEngine.UIElements.VisualElement e)
+        {
+            for (var p = e; p != null; p = p.parent)
+                if (p.resolvedStyle.display == UnityEngine.UIElements.DisplayStyle.None) return true;
+            return false;
+        }
+
+        static string ToolkitPath(UnityEngine.UIElements.VisualElement e)
+        {
+            var names = new List<string>();
+            for (var p = e; p != null && p.parent != null; p = p.parent) names.Add(string.IsNullOrEmpty(p.name) ? p.GetClasses().FirstOrDefault() ?? p.GetType().Name : p.name);
+            names.Reverse();
+            return string.Join("/", names);
         }
 
         // Text glyphs, not the RectTransform: overflowing text draws outside its rect.

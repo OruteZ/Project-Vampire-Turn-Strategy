@@ -186,10 +186,10 @@ namespace VampireSpawn.Game
                 Role.Vampire => Art.vampireLook,
                 _ => Art.allyLooks[(int)u.Type.Value],
             };
-            var yaw = u.Side == Side.Ally ? 160f : 200f;
-            var view = UnitView.Create(Art, look, layer, u.Id, Ground(at ?? u.Pos), yaw, RingColor(u), u.Role != Role.Spawn);
+            // docs/art/unit-visuals.md 4: allies face the enemy side (north, +Z), enemies face south.
+            var yaw = u.Side == Side.Ally ? 0f : 180f;
+            var view = UnitView.Create(Art, look, layer, u.Id, Ground(at ?? u.Pos), yaw, RingColor(u), u.Role != Role.Spawn, u.Asleep);
             view.SetHp(u.Hp, u.MaxHp);
-            if (u.Asleep) view.LieDown(true);
             units[u.Id] = view;
         }
 
@@ -197,7 +197,7 @@ namespace VampireSpawn.Game
         {
             var view = UnitView.Create(Art, Art.allyLooks[(int)type], layer, -id, Ground(at), 20f, Art.spawnRing * 0.6f, false);
             view.name = "Corpse " + id;
-            view.LieDown(false);
+            view.LieDown();
             corpses[id] = view;
         }
 

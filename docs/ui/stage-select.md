@@ -258,6 +258,24 @@ L3 병영: 오른쪽 칸이 병영 칸(560×680)으로 바뀌고 카메라가 �
 3. 글 예산: 화면에 문장 없음 (`UiTextParityTests.AssertNoSentences`). 이름 띠·버튼 낱말만.
 4. 스크린샷: 1920×1080 의 L1·L2·L3, 그리고 2560×1080·1280×1024 의 L2 → `docs/review/stage-select-*.png`.
 
+## 10. 어느 UI 로 짓나 (UI Toolkit + uGUI)
+
+사용자 결정(#43): "개발을 UI Toolkit + UGUI로". #44 시험(docs/dev/ui-toolkit-trial.md 6 "새로 만들거나 크게 고치는 화면부터 UI Toolkit, 보드 위에 뜨는 것은 uGUI")을 따른다.
+
+| 요소 | UI | 이유 |
+|---|---|---|
+| 머리(메뉴 버튼·"토벌 원정"), 진행 초기화, 병영 버튼 | UI Toolkit | 고정 칸. 배치 숫자를 USS 한곳에 둔다 |
+| L2 장 정보 칸, L3 병영 칸 (upgrade.md) | UI Toolkit | 같다. 레이어 전환은 칸 클래스만 바꾼다 |
+| 툴팁 | UI Toolkit (`MenuToolkit.Tip` 를 공용으로) | 런타임 UI Toolkit 은 tooltip 을 안 띄운다 (ui-toolkit-trial.md 4) |
+| 지역 표식 (4절) | uGUI | 매 프레임 3D 점을 따라간다. 전투의 머리 위 표시와 같은 방식 |
+| 가장자리 그늘, 0.3초 검은 화면 | uGUI 또는 UI Toolkit, 구현이 고른다 | 화면 전체 바탕 |
+
+1. 그리는 순서: 3D 지도 → uGUI 표식 → UI Toolkit 칸 (`PanelSettings.sortingOrder` 가 uGUI Canvas 보다 위). 표식이 칸 아래로 들어가도 4-3 의 "빈 곳 밖이면 숨김" 이 겹침을 막는다.
+2. 지도 클릭(빈 땅 → L1)은 uGUI 와 UI Toolkit 어느 쪽에도 포인터가 없을 때만 받는다.
+3. 칸 크기·자리(2-2, 3-1, upgrade.md 3)는 USS px 로 그대로 옮긴다. UI Toolkit 글자는 같은 값에서 약 10% 크다(ui-toolkit-trial.md 4). 글자 크기만 맞추고 칸 크기는 바꾸지 않는다.
+4. 이 화면의 `UiTextParityTests` 는 UI Toolkit 요소(Label)와 uGUI 표식을 함께 본다. `UiAudit.ToolkitReport` 로 6개 화면비 검사를 한다 (9절).
+5. Synty 장식 프리팹(Crest, Section_Break)은 `MenuToolkit.Prefab` 처럼 VisualElement 로 다시 쌓는다. 그림은 USS `url()` 이 아니라 C# 에서 `ArtCatalog` 이름으로 넣는다 (scan.mjs 가 참조를 보게).
+
 ## 정한 세부 (docs/design 에 없는 것)
 
 - **세 레이어, 결정 하나씩.** 근거: 사용자 요구 2 (전경 → 목표·시작 → 강화 버튼). ui.md "중요도 차등에 따라 분리되어 보이게": 장을 고를 때 강화 칸이, 강화할 때 장 정보가 필요 없다.
@@ -278,7 +296,7 @@ L3 병영: 오른쪽 칸이 병영 칸(560×680)으로 바뀌고 카메라가 �
 
 ## 구현 메모
 
-- 아직 구현 전 (#43). 바꾸는 코드: `CampaignScreen.cs` (세 레이어, 표식), `GameFlow.cs` (`ShowCamp` 레이어 상태, `CampKeys`, 바탕을 보드 RT 대신 지도, `BuildCanvas` Expand), 새 `CampaignMapView` (campaign-map.md 10). 위 요구사항과 구현이 다르면 구현을 고친다.
+- 아직 구현 전 (#43). 구현은 UI Toolkit + uGUI 로 한다 (10절). 바꾸는 코드: `CampaignScreen.cs` (세 레이어, 표식), `GameFlow.cs` (`ShowCamp` 레이어 상태, `CampKeys`, 바탕을 보드 RT 대신 지도, `BuildCanvas` Expand), 새 `CampaignMapView` (campaign-map.md 10). 위 요구사항과 구현이 다르면 구현을 고친다. 인계 메모: docs/dev/stage-select-handoff.md.
 - 표식 자리: 지도가 앵커의 화면 점을 주고, UI 는 캔버스 좌표로 바꿔 `anchoredPosition` 만 바꾼다. 매 프레임 다시 짓지 않는다 (지금 `BattleHud.Tick` 의 머리 위 표시와 같은 방식).
 - `UiTextParityTests` 의 캠페인 화면 검사는 이 문서의 글 구성으로 고친다.
 - `Crest_*`, `Section_Break` 는 키트 프리팹이다. 지금처럼 `Kit.Prefab` 으로 띄운다.

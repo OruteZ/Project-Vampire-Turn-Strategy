@@ -1,0 +1,18 @@
+## 1-menu 1920x1080
+1920x1080 issues=0
+
+## 1-menu 1280x720
+1280x720 issues=0
+
+## 1-menu 1920x1200
+1920x1200 issues=0
+
+## 1-menu 1440x1080
+1440x1080 issues=0
+
+## 1-menu 1280x1024
+1280x1024 issues=0
+
+## 1-menu 2560x1080
+2560x1080 issues=0
+
