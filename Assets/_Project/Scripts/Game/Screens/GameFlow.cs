@@ -204,7 +204,7 @@ namespace VampireSpawn.Game.Screens
         {
             Current = "camp";
             ClearScreen(true);
-            var sel = campSel ?? CampaignScreen.DefaultStage(Campaign);
+            var sel = campSel ?? CampNav.DefaultStage(Campaign);
             Backdrop(Campaign.Stages[sel]);
             CampaignScreen.Build(screen, Campaign, new CampView { Selected = sel, ResetArm = resetArm, BuyArm = buyArm, Bought = bought }, campActions, View.board.art);
             bought = null;
@@ -344,7 +344,7 @@ namespace VampireSpawn.Game.Screens
             var down = Pressed("down", kb.downArrowKey.isPressed);
             var enter = Pressed("enter", kb.enterKey.isPressed || kb.numpadEnterKey.isPressed);
             var esc = Pressed("esc", kb.escapeKey.isPressed);
-            var sel = campSel ?? CampaignScreen.DefaultStage(Campaign);
+            var sel = campSel ?? CampNav.DefaultStage(Campaign);
             if (up && sel > 0) campActions.Select(sel - 1);
             else if (down && sel < Campaign.Stages.Length - 1) campActions.Select(sel + 1);
             else if (enter && Campaign.StageOpen(sel)) campActions.Play(sel);

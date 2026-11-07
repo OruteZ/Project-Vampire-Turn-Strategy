@@ -93,7 +93,7 @@ namespace VampireSpawn.Tests
         {
             var shot = Load().shots.First(s => s.name == name);
             var c = Campaign.Parse(shot.camp);
-            var sel = CampaignScreen.DefaultStage(c);
+            var sel = CampNav.DefaultStage(c);
             CampaignScreen.Build(root, c, new CampView { Selected = sel, ResetArm = shot.arm }, new CampaignActions(), null);
             var texts = root.GetComponentsInChildren<Text>(true).Select(t => t.text).ToList();
             CollectionAssert.IsEmpty(texts.Where(t => RawKey.IsMatch(t)), name + " shows a table key instead of its text");

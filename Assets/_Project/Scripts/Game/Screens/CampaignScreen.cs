@@ -32,13 +32,6 @@ namespace VampireSpawn.Game.Screens
 
         public static string Resources(int pop, int silver) => Loc.T("camp.pop", pop) + (silver > 0 ? " · " + Loc.T("camp.silver", silver) : "");
 
-        // stage-select.md 2-8: the first open stage not yet cleared, else the last one.
-        public static int DefaultStage(Campaign c)
-        {
-            for (var i = 0; i < Campaign.Stages.Length; i++) if (c.StageOpen(i) && !c.IsCleared(Campaign.Stages[i])) return i;
-            return Campaign.Stages.Length - 1;
-        }
-
         static Text T(Transform p, string s, float px, Color c, bool bold = false, bool display = false, TextAnchor a = TextAnchor.UpperLeft) => Kit.T(p, s, px, c, bold, display, a);
 
         static bool Last(Stage s) => s == Campaign.Stages.Last();
