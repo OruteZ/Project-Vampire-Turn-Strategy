@@ -28,6 +28,14 @@ namespace VampireSpawn.Editor
             if (last.Length > 0)
                 EditorGUILayout.HelpBox(last + "\n확인: Window > General > Test Runner 의 SidekickRecipeTests, RequiredAssetsTests",
                     last.Contains("FAIL") || last.Contains("MISSING") ? MessageType.Warning : MessageType.Info);
+
+            EditorGUILayout.LabelField("유닛 모습", EditorStyles.boldLabel);
+            if (GUILayout.Button(new GUIContent("유닛 모습 한눈에", "모든 UnitLook 을 앞 대기·옆 대기·옆 공격으로 찍어 verify-artifacts/unit-lineup.png 로 연다 (docs/art/unit-visuals.md 6)")))
+            {
+                var path = System.IO.Path.GetFullPath("verify-artifacts/unit-lineup.png");
+                UnitLineup.Capture(path);
+                EditorUtility.OpenWithDefaultApp(path);
+            }
         }
     }
 }

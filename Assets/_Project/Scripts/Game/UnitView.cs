@@ -12,15 +12,20 @@ namespace VampireSpawn.Game
         static readonly int BaseColor = Shader.PropertyToID("_BaseColor");
 
         Animator animator;
+        UnitMotion motion;
         Transform model;
         MeshRenderer ring;
         Color ringColor;
         public bool Done { get; private set; }
         GameObject coffin;
         ArtCatalog art;
+        UnitLook look;
+        bool armed;
+        float yaw;
 
         // armed: false for spawns and corpses, which lost their weapons (docs/art/unit-visuals.md 1).
-        public static UnitView Create(ArtCatalog art, UnitLook look, Transform parent, int id, Vector3 at, float yaw, Color ring, bool armed)
+        // inCoffin: a sleeping vampire is only its coffin until it wakes (docs/art/unit-visuals.md 5).
+        public static UnitView Create(ArtCatalog art, UnitLook look, Transform parent, int id, Vector3 at, float yaw, Color ring, bool armed, bool inCoffin = false)
         {
             var root = new GameObject("Unit " + id);
             root.transform.SetParent(parent, false);
@@ -28,27 +33,40 @@ namespace VampireSpawn.Game
             var view = root.AddComponent<UnitView>();
             view.Id = id;
             view.art = art;
+            view.look = look;
+            view.armed = armed;
+            view.yaw = yaw;
 
-            var prefab = look.Model;
-            view.model = Instantiate(prefab, root.transform).transform;
-            view.model.name = prefab.name;
-            view.model.localPosition = Vector3.zero;
-            view.model.localRotation = Quaternion.Euler(0f, yaw, 0f);
-            FitHeight(view.model, art.unitHeight * art.hexSize);
-            if (armed) Arm(view.model, look);
-            view.animator = view.model.GetComponentInChildren<Animator>();
-            if (view.animator != null)
+            if (inCoffin)
             {
-                view.animator.runtimeAnimatorController = !armed && look.rig == Rig.Sidekick && art.spawnAnimator != null ? art.spawnAnimator
-                    : look.animator != null ? look.animator : art.unitAnimator;
-                view.animator.applyRootMotion = false;
+                view.Lying = true;
+                view.coffin = Quad(art, root.transform, "Coffin", art.coffin, new Vector3(0.8f, 0.3f, art.unitHeight * art.hexSize), PrimitiveType.Cube).gameObject;
             }
+            else view.BuildModel();
 
             var r = Quad(art, root.transform, "Ring", ring * 0.55f, new Vector3(art.hexSize * 1.05f, 0.015f, art.hexSize * 1.05f), PrimitiveType.Cylinder);
             r.localPosition = Vector3.up * 0.01f;
             view.ring = r.GetComponent<MeshRenderer>();
             view.ringColor = ring * 0.55f;
             return view;
+        }
+
+        void BuildModel()
+        {
+            var prefab = look.Model;
+            model = Instantiate(prefab, transform).transform;
+            model.name = prefab.name;
+            model.localPosition = Vector3.zero;
+            model.localRotation = Quaternion.Euler(0f, yaw, 0f);
+            FitHeight(model, art.unitHeight * art.hexSize);
+            if (armed) Arm(model, look);
+            animator = model.GetComponentInChildren<Animator>();
+            if (animator == null) return;
+            animator.runtimeAnimatorController = !armed && look.rig == Rig.Sidekick && art.spawnAnimator != null ? art.spawnAnimator
+                : look.animator != null ? look.animator : art.unitAnimator;
+            animator.applyRootMotion = true;
+            motion = animator.gameObject.AddComponent<UnitMotion>();
+            motion.model = model;
         }
 
         static void Arm(Transform model, UnitLook look)
@@ -62,10 +80,31 @@ namespace VampireSpawn.Game
                 var bone = System.Array.Find(bones, b => b.name == name);
                 if (bone == null) { Debug.LogWarning(look.name + ": 뼈 " + name + " 이 없어 " + g.prefab.name + " 를 붙이지 못했다"); continue; }
                 var w = Instantiate(g.prefab, bone, false).transform;
-                w.localPosition = g.position;
-                w.localRotation = Quaternion.Euler(g.rotation);
+                var rotation = UnitLook.Socket(look.rig, g.hand, g.hold) * Quaternion.Euler(g.rotation);
+                w.localRotation = rotation;
+                w.localPosition = g.position - rotation * GripPoint(w, g.hold);
                 foreach (var c in w.GetComponentsInChildren<Collider>(true)) { if (Application.isPlaying) Destroy(c); else DestroyImmediate(c); }
             }
+        }
+
+        // Where the hand closes, in the weapon's own space: its pivot, or a share up the shaft for poles.
+        static Vector3 GripPoint(Transform weapon, Hold hold)
+        {
+            if (hold != Hold.Pole && hold != Hold.Spear) return Vector3.zero;
+            float min = float.MaxValue, max = float.MinValue;
+            foreach (var mf in weapon.GetComponentsInChildren<MeshFilter>(true))
+            {
+                if (mf.sharedMesh == null) continue;
+                var b = mf.sharedMesh.bounds;
+                for (var i = 0; i < 8; i++)
+                {
+                    var corner = b.center + Vector3.Scale(b.extents, new Vector3((i & 1) == 0 ? -1 : 1, (i & 2) == 0 ? -1 : 1, (i & 4) == 0 ? -1 : 1));
+                    var y = weapon.InverseTransformPoint(mf.transform.TransformPoint(corner)).y;
+                    min = Mathf.Min(min, y);
+                    max = Mathf.Max(max, y);
+                }
+            }
+            return min > max ? Vector3.zero : Vector3.up * Mathf.Lerp(min, max, UnitLook.PoleGrip);
         }
 
         static Transform Quad(ArtCatalog art, Transform parent, string name, Color color, Vector3 scale, PrimitiveType shape)
@@ -111,6 +150,7 @@ namespace VampireSpawn.Game
 
         public void SetWalking(bool walking)
         {
+            if (motion != null) motion.walking = walking;
             if (animator != null && animator.runtimeAnimatorController != null) animator.SetBool(WalkParam, walking);
         }
 
@@ -121,25 +161,25 @@ namespace VampireSpawn.Game
 
         public void Face(Vector3 worldTarget)
         {
+            if (model == null) return;
             var d = worldTarget - transform.position;
             d.y = 0f;
             if (d.sqrMagnitude > 0.0001f) model.rotation = Quaternion.LookRotation(d);
         }
 
-        public void LieDown(bool inCoffin)
+        public void LieDown()
         {
             Lying = true;
             if (animator != null) animator.enabled = false;
             model.localRotation = Quaternion.Euler(-90f, model.localEulerAngles.y, 0f);
             model.localPosition = Vector3.up * 0.25f;
-            if (inCoffin && coffin == null)
-                coffin = Quad(art, transform, "Coffin", art.coffin, new Vector3(0.8f, 0.3f, art.unitHeight * art.hexSize), PrimitiveType.Cube).gameObject;
         }
 
         public void StandUp()
         {
             Lying = false;
             if (coffin != null) { if (Application.isPlaying) Destroy(coffin); else DestroyImmediate(coffin); coffin = null; }
+            if (model == null) { BuildModel(); return; }
             model.localRotation = Quaternion.Euler(0f, model.localEulerAngles.y, 0f);
             model.localPosition = Vector3.zero;
             if (animator != null) animator.enabled = true;

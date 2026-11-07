@@ -7,12 +7,16 @@ namespace VampireSpawn.Game
 
     public enum Hand { Right, Left }
 
+    // docs/art/unit-visuals.md 3-1. AsIs is 0 so grips made before holds existed keep their look.
+    public enum Hold { AsIs, Blade, Pole, Spear }
+
     [Serializable]
     public struct Grip
     {
         public GameObject prefab;
         public Hand hand;
-        public Vector3 position;
+        [Tooltip("칼날: 칼끝이 앞 아래. 창: 칼날처럼 겨누고 자루 35% 를 쥔다. 자루: 세워 들고 자루 35% 를 쥔다. 그대로: 그 뼈대용 Synty 무기 (활·석궁·방패)")] public Hold hold;
+        [Tooltip("쥐는 법 위에 더하는 미세 조정 (뼈 공간)")] public Vector3 position;
         public Vector3 rotation;
     }
 
@@ -46,5 +50,19 @@ namespace VampireSpawn.Game
         public static string Bone(Rig rig, Hand hand) => rig == Rig.Sidekick
             ? hand == Hand.Right ? "prop_r" : "prop_l"
             : hand == Hand.Right ? "Hand_R" : "Hand_L";
+
+        public const float PoleGrip = 0.35f;
+
+        // Weapon frame (blade +Y, edge +X) into the hand bone. Measured on the Sidekick prop bones: -X runs along the forearm
+        // in a thrust and down the leg at rest, -Y points forward at rest. Blades tilt 55 deg from -X toward -Y so a long
+        // Dark Fantasy sword clears the floor at rest and still leads a thrust. Polygon hand bones are the same frame, axes swapped.
+        public static Quaternion Socket(Rig rig, Hand hand, Hold hold)
+        {
+            if (hold == Hold.AsIs) return Quaternion.identity;
+            var prop = Quaternion.Euler(0f, 0f, hold == Hold.Pole ? -90f : 145f);
+            if (rig == Rig.Sidekick) return prop;
+            var fromProp = Quaternion.LookRotation(Vector3.up, hand == Hand.Right ? Vector3.forward : Vector3.back);
+            return fromProp * prop;
+        }
     }
 }

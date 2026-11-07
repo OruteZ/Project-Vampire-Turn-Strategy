@@ -25,6 +25,8 @@
 | UI 는 uGUI 로 만든다 (INTERFACE 패키지가 RectTransform 프리팹, UXML 없음) | 시험 중 | 2026-11-05 | #2 |
 | 보드 둘레를 장별 Synty 소품으로 꾸미고, 카메라가 화면 전체를 그린다 | 시험 중 | 2026-11-07 | #34 "synty 에셋을 사용해서 게임 스테이지처럼 보이도록 꾸며줘" |
 | 맵(칸 배치)은 테마에 맞춰 다시 짜지 않고 그대로 둔다 | 시험 중 | 2026-11-07 | #34 사용자 답 "Keep maps as is" |
+| 무기는 쥐는 법(`Hold`: 칼날·창·자루·그대로)으로 붙이고, 루트 모션은 모델만 움직인다(칸 자리·걷기는 코드) | 시험 중 | 2026-11-07 | #42 요청 2 "모든 유닛이 도구를 정상적으로", "Loot Motion을 키는쪽으로" |
+| 배치 때 아군은 북쪽, 적은 남쪽을 본다. 잠든 뱀파이어는 관만 보인다 | 시험 중 | 2026-11-07 | #42 요청 2 "적방향 (북쪽)", "관만 보여줄 것" |
 
 ## 열린 작업
 - 관(coffin) 프리팹이 없어 P7 은 상자로 대신했다. 맞는 소품을 찾으면 바꾼다
@@ -35,6 +37,8 @@
 - 함정: 구운 캐릭터는 굽기마다 GUID·fileID 가 새로 정해진다. 에셋 참조로 가리키지 말고 `UnitLook.recipe` 이름으로 찾는다
 - 함정: 애니메이션 패키지 임포트 때 `Rig Error: Copied Avatar Rig Configuration mis-match` 경고가 수백 개 나온다. Synty 쪽 설정이라 오류가 아니다. 이 클립을 PolygonDarkFantasy 캐릭터에 쓸 때 자세가 맞는지는 P7 에서 본다.
 - 함정: SIDEKICK 패키지의 에디터 스크립트가 Synty 서버에서 Sidekick 도구를 스스로 내려받아 `Assets/DownloadCache/` 에 둔다 (gitignore 됨). 도구 데이터는 `Failed to load tool data` 로 불러오지 못했다. 완성 프리팹만 쓰고 도구는 들이지 않았다.
+- 함정: Dark Fantasy 무기를 `prop_r` 에 회전 0 으로 붙이면 날이 몸 뒤로 간다(역수). 쥐는 법이 `AsIs` 인 칼·창이 그렇다. 새 무기는 쥐는 법을 꼭 고른다. `UnitLookTests` 가 몸 뒤로 뻗은 무기를 잡는다
+- 함정: `Animator.Update(0)` 로 에디터에서 자세를 잡을 때 화면 밖이면 컬링돼 T 자세로 남는다. `cullingMode = AlwaysAnimate` 를 먼저 준다
 - 함정: 애니메이션 패키지끼리 같은 파일이 있어 `Overriding existing asset with new GUID from package` 경고가 3건 나왔다. 그 파일을 참조할 때 GUID 가 나중 패키지 것이다.
 
 ## 보드에서 쓰는 것 (P6, `Assets/_Project/Art/ArtCatalog.asset`)
@@ -51,18 +55,18 @@
 
 ## 유닛에 쓰는 것 (#29, docs/art/unit-visuals.md)
 
-병종 하나 = `Assets/_Project/Art/Units/<병종>.asset` (`UnitLook`: 모델, 뼈대, 무기와 손·위치·회전, 동작 묶음). `ArtCatalog.allyLooks`(UnitKind 순서), `skeletonLook`, `vampireLook` 이 가리킨다.
+병종 하나 = `Assets/_Project/Art/Units/<병종>.asset` (`UnitLook`: 모델, 뼈대, 무기와 손·쥐는 법·미세 조정, 동작 묶음). 쥐는 법과 소켓은 docs/art/unit-visuals.md 3-1, 한눈에 보기는 도구 모음 "유닛 모습 한눈에"(`UnitLineup`). `ArtCatalog.allyLooks`(UnitKind 순서), `skeletonLook`, `vampireLook` 이 가리킨다.
 
 | 유닛 | 모델 | 무기 | 동작 묶음 |
 |---|---|---|---|
-| 농민 창병 | `FantasyVillagers_05` | 쇠스랑 (자루 가운데, y −0.45) | `Units/Spear.overrideController` |
+| 농민 창병 | `FantasyVillagers_05` | 쇠스랑 (창) | `Units/Spear.overrideController` |
 | 농민 궁수 | `FantasyVillagers_04` | 활 `SM_Wep_Rigged_Bow_01` 왼손 | `Units/Bow` |
-| 검사 | `FantasyKnights_05` | 검 + 방패 | `Units/SwordShield` |
+| 검사 | `FantasyKnights_05` | 검 (칼날) + 방패 | `Units/SwordShield` |
 | 궁수 | `FantasyKnights_02` | 활 왼손 | `Units/Bow` |
-| 기사 | `FantasyKnights_06` | 검 `Sword_02` + 방패 | `Units/SwordShield` |
-| 사냥꾼 | `SM_Chr_Hunter_Male_01` | 석궁 `SM_Wep_Rigged_CrossBow_01` | `Art/Unit.controller` (Polygon) |
-| 스켈레톤 | `SM_Chr_Skeleton_01` | 검 `Sword_03` | `Art/Unit.controller` |
-| 뱀파이어 | `SM_Chr_DarkLord_Male_01` (잠들면 짙은 붉은 상자 위에 눕힘) | 낫 (y −0.25) | `Art/Unit.controller` |
+| 기사 | `FantasyKnights_06` | 검 `Sword_02` (칼날) + 방패 | `Units/SwordShield` |
+| 사냥꾼 | `SM_Chr_Hunter_Male_01` | 석궁 `SM_Wep_Rigged_CrossBow_01` | `Units/Polygon.overrideController` |
+| 스켈레톤 | `SM_Chr_Skeleton_01` | 검 `Sword_03` (칼날) | `Units/Polygon` |
+| 뱀파이어 | `SM_Chr_DarkLord_Male_01` (잠든 동안은 짙은 붉은 관만, 깨면 모델) | 낫 (자루) | `Units/Polygon` |
 | 스폰·시신 | 원래 병종 모델, 무기 없음 + 보라 고리 | | Sidekick 은 `Units/SidekickUnarmed` |
 
 ### 모델 바꾸기 (Sidekick 으로 새로 만든 캐릭터, #30)
