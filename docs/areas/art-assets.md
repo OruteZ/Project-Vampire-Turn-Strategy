@@ -47,6 +47,8 @@
 | 햇빛 `S` | `Hex_Sun.mat` + 위에서 비추는 스폿라이트 |
 | 물 `~` | `Hex_Water.mat`, 한 단 낮게 |
 
+장 선택 화면의 3D 원정 지도도 같은 두 팩(PolygonDarkFantasy, PolygonGeneric)만 쓴다. 지역별 프리팹·자리는 docs/art/campaign-map.md (#43, 구현 전).
+
 장마다 모습이 따로 있다 (#34, docs/art/stage-dressing.md): `Assets/_Project/Art/Themes/<테마>.asset` (`BoardTheme`: 장 id, 바닥색, 막힌 칸 소품, 둘레 높은/낮은 소품, 안개·주변광). `ArtCatalog.themes` 가 목록. 막힌 칸은 테마 소품이 바위를 대신하고, 평지 칸은 테마 바닥색이다. 둘레는 `BoardView.Dress` 가 칸 좌표로 고른다(매번 같다)
 
 ## 유닛에 쓰는 것 (#29, docs/art/unit-visuals.md)
