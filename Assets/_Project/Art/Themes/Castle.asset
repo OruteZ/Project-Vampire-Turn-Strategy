@@ -1,0 +1,56 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f552e373fc84df64c9214c5fd2592bde, type: 3}
+  m_Name: Castle
+  m_EditorClassIdentifier: VampireSpawn.Game::VampireSpawn.Game.BoardTheme
+  stages:
+  - s10
+  ground: {r: 0.16470589, g: 0.13333334, b: 0.15686275, a: 1}
+  blockers:
+  - {fileID: 537418705699489904, guid: aa2104b844c906c4abd5b524604c8aa8, type: 3}
+  - {fileID: 8104774319747538927, guid: dbe76fd78ee88474e95604d0f3c76f0a, type: 3}
+  - {fileID: 1859599917271968658, guid: 4fb12a57fe7feea40bcc610ca6177f9a, type: 3}
+  - {fileID: 5351555939395956362, guid: 54c1d3d72815fb745b0c6926beb339c4, type: 3}
+  - {fileID: 7280052242525181053, guid: 661fcd1d838bb624788365beb2d34869, type: 3}
+  - {fileID: 2269014126392433585, guid: f4b5fdfaf0294e145a1a6235af4d2b33, type: 3}
+  - {fileID: 8886670281181178149, guid: 40474abfa40705a4d8e555f3f21e8470, type: 3}
+  - {fileID: 6177059734564178103, guid: 19fbe54e8722dca48a33cf0fa56d3c50, type: 3}
+  - {fileID: 2288179126220749721, guid: 1d9dcf87351b2894c92c0dfd35da126d, type: 3}
+  - {fileID: 8043750649845193696, guid: e996804aa979f5d4b99498d54c8083da, type: 3}
+  - {fileID: 8529816023641059780, guid: 5231a5211f217274b8e031e952aecab2, type: 3}
+  - {fileID: 1857090681118089108, guid: 4315b06852559e9409d3697f617bac70, type: 3}
+  alignBlockers: 1
+  blockerWidth: 1.8
+  border:
+  - {fileID: 7445206968353818543, guid: e770f1f993f747943be794726775929c, type: 3}
+  - {fileID: 3174054712436178628, guid: 746917ae1f81bf14daea6063675cea83, type: 3}
+  - {fileID: 5837821635380881339, guid: 1a6bdf32d4a5d514c9dfaafef6178908, type: 3}
+  - {fileID: 5347887579008938908, guid: cd544784b3e98454bb8b2913ffb6a903, type: 3}
+  - {fileID: 8254248137126167390, guid: 03613c9b98943884caf8309545403f44, type: 3}
+  - {fileID: 2181598852170481633, guid: 815ec9d42db02d04aabf7f7940aec7cd, type: 3}
+  - {fileID: 1959695863316264339, guid: 292b7e851e17d964ea997aad4166f617, type: 3}
+  - {fileID: 8920503143522950627, guid: 62f975f4e03376d4fbc66fe6de81f725, type: 3}
+  - {fileID: 212554624228950756, guid: 19d5e1c6ad8ec2444abc0369f0a1d8b4, type: 3}
+  - {fileID: 6842551923947240787, guid: e7fc83dabf27e184b8692493563d4c94, type: 3}
+  scatter:
+  - {fileID: 5769822014845734585, guid: 596492eca626c2540a7a059856cca442, type: 3}
+  - {fileID: 7120563355128543510, guid: 39df25203ca383b4e870de00d8f2e87e, type: 3}
+  - {fileID: 1542832004461625174, guid: b67d289f6529f644b92960f5d29bfe6c, type: 3}
+  - {fileID: 6765293828987882531, guid: 401d2c26cf6a6144a96f90c415a8e586, type: 3}
+  - {fileID: 7408038155955227901, guid: 2f127edb413a6f14f9fac33b7746a0b5, type: 3}
+  - {fileID: 2496272792918991240, guid: 8558b88955935ac488984ab2c8fd555c, type: 3}
+  - {fileID: 1772606809569415534, guid: d996ec05d10ea3e4d9fe5e25aee233e5, type: 3}
+  - {fileID: 1210660557923848768, guid: 818ed293b255e9d4daac6c06eee0a60e, type: 3}
+  - {fileID: 739812470018934071, guid: a1d27d7cff0b48544a185a87ec7b92b6, type: 3}
+  - {fileID: 6105126778584192411, guid: 3b42c5ac70b18e04996940e909cda93e, type: 3}
+  fog: {r: 0.0627451, g: 0.039215688, b: 0.05490196, a: 1}
+  ambient: {r: 0.22745098, g: 0.18039216, b: 0.21176471, a: 1}

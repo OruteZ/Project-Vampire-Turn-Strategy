@@ -1,0 +1,31 @@
+## 1-menu 1280x1024
+1280x1024 issues=0
+
+## 2-camp 1280x1024
+1280x1024 issues=0
+
+## 3-deploy 1280x1024
+1280x1024 issues=2
+board-cropped	BoardView	hex 0,6 edge at viewport -0.07,0.21
+board-cropped	BoardView	hex 8,6 edge at viewport 1.07,0.21
+
+## 4-turn 1280x1024
+1280x1024 issues=2
+board-cropped	BoardView	hex 0,6 edge at viewport -0.07,0.21
+board-cropped	BoardView	hex 8,6 edge at viewport 1.07,0.21
+
+## 5-rules 1280x1024
+1280x1024 issues=2
+board-cropped	BoardView	hex 0,6 edge at viewport -0.07,0.21
+board-cropped	BoardView	hex 8,6 edge at viewport 1.07,0.21
+
+## 6-log 1280x1024
+1280x1024 issues=2
+board-cropped	BoardView	hex 0,6 edge at viewport -0.07,0.21
+board-cropped	BoardView	hex 8,6 edge at viewport 1.07,0.21
+
+## 7-over 1280x1024
+1280x1024 issues=2
+board-cropped	BoardView	hex 0,6 edge at viewport -0.07,0.21
+board-cropped	BoardView	hex 8,6 edge at viewport 1.07,0.21
+

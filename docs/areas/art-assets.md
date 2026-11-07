@@ -23,6 +23,8 @@
 | 결정 | 상태 | 날짜 | 출처 |
 |---|---|---|---|
 | UI 는 uGUI 로 만든다 (INTERFACE 패키지가 RectTransform 프리팹, UXML 없음) | 시험 중 | 2026-11-05 | #2 |
+| 보드 둘레를 장별 Synty 소품으로 꾸미고, 카메라가 화면 전체를 그린다 | 시험 중 | 2026-11-07 | #34 "synty 에셋을 사용해서 게임 스테이지처럼 보이도록 꾸며줘" |
+| 맵(칸 배치)은 테마에 맞춰 다시 짜지 않고 그대로 둔다 | 시험 중 | 2026-11-07 | #34 사용자 답 "Keep maps as is" |
 
 ## 열린 작업
 - 관(coffin) 프리팹이 없어 P7 은 상자로 대신했다. 맞는 소품을 찾으면 바꾼다
@@ -44,6 +46,8 @@
 | 화톳불 `T` | `SM_Prop_Brazier_01` + `FX_Fire_01` + 점광원 |
 | 햇빛 `S` | `Hex_Sun.mat` + 위에서 비추는 스폿라이트 |
 | 물 `~` | `Hex_Water.mat`, 한 단 낮게 |
+
+장마다 모습이 따로 있다 (#34, docs/art/stage-dressing.md): `Assets/_Project/Art/Themes/<테마>.asset` (`BoardTheme`: 장 id, 바닥색, 막힌 칸 소품, 둘레 높은/낮은 소품, 안개·주변광). `ArtCatalog.themes` 가 목록. 막힌 칸은 테마 소품이 바위를 대신하고, 평지 칸은 테마 바닥색이다. 둘레는 `BoardView.Dress` 가 칸 좌표로 고른다(매번 같다)
 
 ## 유닛에 쓰는 것 (#29, docs/art/unit-visuals.md)
 

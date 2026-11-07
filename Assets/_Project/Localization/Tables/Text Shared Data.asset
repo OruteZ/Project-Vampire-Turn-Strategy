@@ -1303,6 +1303,10 @@ MonoBehaviour:
     m_Key: camp.needGold
     m_Metadata:
       m_Items: []
+  - m_Id: 262995875524608
+    m_Key: hud.altTip
+    m_Metadata:
+      m_Items: []
   m_Metadata:
     m_Items: []
   m_KeyGenerator:

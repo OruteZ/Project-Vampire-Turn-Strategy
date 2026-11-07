@@ -1664,6 +1664,10 @@ MonoBehaviour:
     m_Metadata:
       m_Items:
       - rid: 7201578077006332005
+  - m_Id: 262995875524608
+    m_Localized: Hold to show every enemy's movement
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds:

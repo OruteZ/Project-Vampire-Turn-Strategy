@@ -1,0 +1,60 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f552e373fc84df64c9214c5fd2592bde, type: 3}
+  m_Name: Chapel
+  m_EditorClassIdentifier: VampireSpawn.Game::VampireSpawn.Game.BoardTheme
+  stages:
+  - s3
+  ground: {r: 0.17254902, g: 0.16470589, b: 0.1882353, a: 1}
+  blockers:
+  - {fileID: 2288179126220749721, guid: 1d9dcf87351b2894c92c0dfd35da126d, type: 3}
+  - {fileID: 8043750649845193696, guid: e996804aa979f5d4b99498d54c8083da, type: 3}
+  - {fileID: 8529816023641059780, guid: 5231a5211f217274b8e031e952aecab2, type: 3}
+  - {fileID: 1857090681118089108, guid: 4315b06852559e9409d3697f617bac70, type: 3}
+  - {fileID: 186382720661152602, guid: 605a19abbc44dea4eb9a88b6e9daa693, type: 3}
+  - {fileID: 5474682273322265907, guid: 3a0a998444d74be44a66a13243694ee9, type: 3}
+  - {fileID: 730181114907827939, guid: 399c80c4954065746b590fe5f8fac450, type: 3}
+  - {fileID: 1162228927990975495, guid: 2d99c7c66d5f23c4a8963d692d6b9756, type: 3}
+  - {fileID: 7280052242525181053, guid: 661fcd1d838bb624788365beb2d34869, type: 3}
+  - {fileID: 2269014126392433585, guid: f4b5fdfaf0294e145a1a6235af4d2b33, type: 3}
+  - {fileID: 8886670281181178149, guid: 40474abfa40705a4d8e555f3f21e8470, type: 3}
+  - {fileID: 6177059734564178103, guid: 19fbe54e8722dca48a33cf0fa56d3c50, type: 3}
+  alignBlockers: 1
+  blockerWidth: 2
+  border:
+  - {fileID: 7508795999823985769, guid: 0e01aaa36b804a14fa7690d3d185f80c, type: 3}
+  - {fileID: 8309067255694332687, guid: a1571e2ab714f754ea3d975e25e50e7c, type: 3}
+  - {fileID: 7061149394841264337, guid: b0739101c727a8b4c83c580bd0083966, type: 3}
+  - {fileID: 2150489926169213717, guid: 25583c9ba56b3e749a0c0952914a303f, type: 3}
+  - {fileID: 8954384771802947857, guid: 13b44c153cf85eb47998e4379b49e512, type: 3}
+  - {fileID: 2069400881656398713, guid: bd7702b2232285943b914c03251d727e, type: 3}
+  - {fileID: 4189578134408584881, guid: 649cfd5a63de1c14da210383152753da, type: 3}
+  - {fileID: 7468453053722539627, guid: d46388ce1f854b24db247ac7b23e7d41, type: 3}
+  - {fileID: 1631526187575200309, guid: 5cb458dcaaf8d6d4d9b026ad394f0e71, type: 3}
+  - {fileID: 2266404328464906784, guid: 2eda3b6db64ebbf4aaa1513c37212954, type: 3}
+  - {fileID: 2335120714038996596, guid: 4c31d89239d7d674bb6863a3ed0e08a8, type: 3}
+  - {fileID: 7540987729861012149, guid: 9d8aedab0f95a304d8dcd19a44649653, type: 3}
+  - {fileID: 4079967865037193325, guid: 907f409b1714c8348b001148afdc8158, type: 3}
+  - {fileID: 2565002556105449653, guid: ac7abbcbe4a0c8b41a45ef4e329d40c0, type: 3}
+  scatter:
+  - {fileID: 5769822014845734585, guid: 596492eca626c2540a7a059856cca442, type: 3}
+  - {fileID: 7120563355128543510, guid: 39df25203ca383b4e870de00d8f2e87e, type: 3}
+  - {fileID: 1542832004461625174, guid: b67d289f6529f644b92960f5d29bfe6c, type: 3}
+  - {fileID: 6765293828987882531, guid: 401d2c26cf6a6144a96f90c415a8e586, type: 3}
+  - {fileID: 385388632142586824, guid: 5def850ecb3d2f84f8e76760c5502d3a, type: 3}
+  - {fileID: 3968608213932172036, guid: d69a479198122994a82170c7bdc8c05b, type: 3}
+  - {fileID: 7408038155955227901, guid: 2f127edb413a6f14f9fac33b7746a0b5, type: 3}
+  - {fileID: 2496272792918991240, guid: 8558b88955935ac488984ab2c8fd555c, type: 3}
+  - {fileID: 1772606809569415534, guid: d996ec05d10ea3e4d9fe5e25aee233e5, type: 3}
+  - {fileID: 1210660557923848768, guid: 818ed293b255e9d4daac6c06eee0a60e, type: 3}
+  fog: {r: 0.0627451, g: 0.05882353, b: 0.078431375, a: 1}
+  ambient: {r: 0.23529412, g: 0.22745098, b: 0.28235295, a: 1}
