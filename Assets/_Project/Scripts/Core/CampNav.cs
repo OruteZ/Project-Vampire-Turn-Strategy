@@ -110,7 +110,8 @@ namespace VampireSpawn.Core
                 case CampKey.Down:
                     if (Barracks) return Unchanged(calm, wasArmed);
                     var to = System.Math.Max(0, System.Math.Min(Last, Stage + (input.Key == CampKey.Up ? 1 : -1)));
-                    return to == Stage ? Unchanged(calm, wasArmed) : (calm.With(stage: to), CampDo.Redraw);
+                    // Info only ever shows a playable stage (#48), so stepping stops before a locked one there.
+                    return to == Stage || (Info && !c.StageOpen(to)) ? Unchanged(calm, wasArmed) : (calm.With(stage: to), CampDo.Redraw);
                 case CampKey.Left:
                 case CampKey.Right:
                     if (!Barracks) return Unchanged(calm, wasArmed);
@@ -121,8 +122,8 @@ namespace VampireSpawn.Core
                     return (calm.With(tab: input.Index), CampDo.Redraw);
                 case CampKey.Enter:
                     if (Barracks) return Unchanged(calm, wasArmed);
-                    if (!Info) return (calm.With(info: true), CampDo.Redraw);
-                    return c.StageOpen(Stage) ? (calm, CampDo.March) : Unchanged(calm, wasArmed);
+                    if (!c.StageOpen(Stage)) return Unchanged(calm, wasArmed);
+                    return Info ? (calm, CampDo.March) : (calm.With(info: true), CampDo.Redraw);
                 case CampKey.Esc:
                     if (Barracks) return (calm.With(barracks: false), CampDo.Redraw);
                     if (Info) return (calm.With(info: false), CampDo.Redraw);
@@ -134,7 +135,7 @@ namespace VampireSpawn.Core
                 case CampKey.Barracks:
                     return Barracks ? (calm.With(barracks: false), CampDo.Redraw) : (calm.With(barracks: true, tab: DefaultTab(c, Tab)), CampDo.Redraw);
                 case CampKey.PickStage:
-                    if (Barracks || input.Index < 0 || input.Index > Last) return Unchanged(calm, wasArmed);
+                    if (Barracks || input.Index < 0 || input.Index > Last || !c.StageOpen(input.Index)) return Unchanged(calm, wasArmed);
                     return (calm.With(stage: input.Index, info: true), CampDo.Redraw);
                 case CampKey.EmptyMap:
                     return Info && !Barracks ? (calm.With(info: false), CampDo.Redraw) : Unchanged(calm, wasArmed);

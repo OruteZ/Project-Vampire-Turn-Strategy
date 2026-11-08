@@ -87,7 +87,6 @@ namespace VampireSpawn.Game.Screens
         {
             var s = Campaign.Stages[i];
             var last = i == Campaign.Stages.Length - 1;
-            var open = c.StageOpen(i);
             var clear = c.IsCleared(s);
             var bonusGot = c.BonusDone.Contains(s.Id);
             var panel = root.Q("info");
@@ -133,16 +132,6 @@ namespace VampireSpawn.Game.Screens
 
             var march = panel.Q("info-march");
             march.Clear();
-            if (!open)
-            {
-                var lk = new VisualElement();
-                lk.AddToClassList("march-lock");
-                ToolkitKit.Picture(lk, art.Ui(Kit.Icon.Lock), Ui.Dim);
-                march.Add(lk);
-                SetTip(lk, Loc.T("camp.lockedBy", Loc.Text(Campaign.Stages[i - 1].Title)));
-                lk.pickingMode = PickingMode.Position;
-                return;
-            }
             var btn = NewButton(march, Loc.T(clear ? "camp.marchAgain" : "camp.march"), clear ? Kind.Normal : Kind.Primary, "Enter");
             btn.RegisterCallback<ClickEvent>(_ => send(input(CampKey.Enter)));
             if (clear) SetTip(btn, Loc.T(bonusGot ? "camp.allClaimed" : "camp.replayNote"));

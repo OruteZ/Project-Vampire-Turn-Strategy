@@ -11,9 +11,10 @@ REPORT="$OUT/audit.txt"
 
 ev() { unity --no-banner command --project-path "$VU_PROJECT" script eval --code "$1" --json | node -e 'let s="";process.stdin.on("data",d=>s+=d).on("end",()=>{const j=JSON.parse(s);const r=j.data&&j.data.result!==undefined?j.data.result:j.result;process.stdout.write(String(r??JSON.stringify(j.errors||j)))})'; }
 
-APP='var F=System.Reflection.BindingFlags.NonPublic|System.Reflection.BindingFlags.Instance; var c=VampireSpawn.Game.Screens.App.Campaign; System.Func<VampireSpawn.Core.CampInput[], VampireSpawn.Core.CampNav> camp = xs => { var n = VampireSpawn.Core.CampNav.FromMenu(c, null); foreach (var x in xs) n = n.Step(c, x).next; return n; };'
+APP='var F=System.Reflection.BindingFlags.NonPublic|System.Reflection.BindingFlags.Instance; var c=VampireSpawn.Game.Screens.App.Campaign; var all = new VampireSpawn.Core.Campaign(); foreach (var st in VampireSpawn.Core.Campaign.Stages) all.Finish(st, true, false); System.Func<VampireSpawn.Core.CampInput[], VampireSpawn.Core.CampNav> camp = xs => { var n = VampireSpawn.Core.CampNav.FromMenu(all, null); foreach (var x in xs) n = n.Step(all, x).next; return n; };'
 BF='var F=System.Reflection.BindingFlags.NonPublic|System.Reflection.BindingFlags.Instance; var bf=UnityEngine.Object.FindFirstObjectByType<VampireSpawn.Game.Screens.BattleFlow>(); var T=typeof(VampireSpawn.Game.Screens.BattleFlow);'
 PICK='VampireSpawn.Core.CampInput.Pick'
+# Camp states are stepped on a fully cleared campaign so L2 opens on any stage (#48 keeps locked stages out of L2); the screen still draws the real save.
 # Each screen is its own scene (docs/dev/scene-split.md); a step loads it and the next eval finds its flow. Battle steps run in order after 3-deploy.
 declare -A SCREENS=(
   [1-menu]="VampireSpawn.Game.Screens.App.GoMenu(); return 1;"

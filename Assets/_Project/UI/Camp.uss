@@ -75,7 +75,6 @@
 .chip-icon { width: 40px; height: 40px; -unity-background-scale-mode: scale-to-fit; }
 .march { position: absolute; left: 268px; top: 428px; width: 260px; height: 60px; }
 .march > .btn { left: 0; top: 0; width: 260px; height: 60px; }
-.march-lock { position: absolute; right: 0; bottom: 0; width: 48px; height: 48px; }
 
 .bk-icon { position: absolute; left: 32px; top: 44px; width: 32px; height: 32px; }
 .bk-name { position: absolute; left: 76px; top: 32px; width: 200px; height: 56px; font-size: 29px; color: var(--bone); -unity-text-align: middle-left; }
