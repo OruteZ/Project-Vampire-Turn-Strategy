@@ -39,6 +39,14 @@ namespace VampireSpawn.Game
         public Color spawnRing = new Color(0.65f, 0.31f, 0.77f);
         public Color coffin = new Color(0.25f, 0.06f, 0.11f);
 
+        public Color TierRing(VampireSpawn.Core.Tier tier) => tier switch
+        {
+            VampireSpawn.Core.Tier.Peasant => peasantRing,
+            VampireSpawn.Core.Tier.Knight => knightRing,
+            VampireSpawn.Core.Tier.Hunter => hunterRing,
+            _ => regularRing,
+        };
+
         [Header("UI")]
         [Tooltip("Synty UI 스프라이트. 이름으로 찾는다 (docs/art/ui-style.md)")]
         public Sprite[] ui;

@@ -68,6 +68,8 @@ namespace VampireSpawn.Game.Screens
             ui.Fill(Campaign, nav, In);
             markers.Fill(Campaign, nav, empty);
             map.Look(nav.Layer, nav.Stage, empty, new Vector2(48f / size.x, 48f / size.y), snap);
+            var tab = Mathf.Clamp(nav.Tab, 0, GameData.Types.Length - 1);
+            map.ShowUnit(nav.Layer == CampLayer.Barracks && CampNav.TabOf(Campaign, GameData.Types[tab].Kind) != TabState.Hidden ? tab : -1);
         }
 
         // stage-select.md 2-3: the screen minus the corner UI and, in L2/L3, the 560 px side panel; normalized viewport units.

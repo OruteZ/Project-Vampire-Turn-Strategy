@@ -151,6 +151,22 @@ namespace VampireSpawn.Game
 
         Transform CampSpot() => progress != null ? progress.Find("Camp") : null;
 
+        UnitView campUnit;
+        int campType = -1;
+
+        // upgrade.md 후속: the barracks tab's unit (index into GameData.Types, -1 none) stands by the campfire, facing the camera (south).
+        public void ShowUnit(int type)
+        {
+            if (type == campType) return;
+            if (campUnit != null) Kill(campUnit.gameObject);
+            campUnit = null;
+            campType = type;
+            var camp = CampSpot();
+            if (type < 0 || camp == null) return;
+            var t = GameData.Types[type];
+            campUnit = UnitView.Create(art, art.allyLooks[(int)t.Kind], camp, -1, camp.TransformPoint(CampaignMapLayout.CampUnit), 180f - camp.eulerAngles.y, art.TierRing(t.Tier), true);
+        }
+
         // A region baked into the scene may have been moved by hand; its object is the truth, the layout table the fallback.
         Vector3 AnchorOf(MapRegion r)
         {
@@ -269,6 +285,8 @@ namespace VampireSpawn.Game
                 if (fire != null) BoardView.Place(fire, progress, at + Vector3.up * 0.55f, 0f, 0f);
                 BoardView.AddLight(progress, at + Vector3.up * 1.5f, LightType.Point, art.torchLight, 2.2f, 10f);
             }
+            campUnit = null;
+            campType = -1;
             BuildCamp();
         }
 

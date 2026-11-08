@@ -190,6 +190,7 @@ namespace VampireSpawn.Game
             new MapProp("SM_Prop_Flag_Hero_02", 1.5f, 0.5f, 0, 1.2f), new MapProp("SM_Veh_Wagon_01", -2.2f, 1, 0, 3.2f),
         };
         public static readonly MapLight CampLight = new MapLight(0, 1.2f, 0, 2f, 8f);
+        public static readonly Vector3 CampUnit = new Vector3(1.2f, 0f, -1.4f);
 
         // 5-1: Catmull-Rom through these, one point per unit.
         public static readonly Vector2[] Road =
