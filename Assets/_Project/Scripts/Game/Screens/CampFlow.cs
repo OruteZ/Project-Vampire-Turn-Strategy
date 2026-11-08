@@ -40,6 +40,7 @@ namespace VampireSpawn.Game.Screens
 
         public void Send(CampInput input)
         {
+            var asked = nav.BuyArmed;
             var (next, act) = nav.Step(Campaign, input);
             nav = next;
             App.Nav = nav;
@@ -47,7 +48,7 @@ namespace VampireSpawn.Game.Screens
             {
                 case CampDo.Redraw: Redraw(false); break;
                 case CampDo.Buy:
-                    if (Campaign.Buy(input.Id)) { CampaignStore.Save(Campaign); ui.Bought = input.Id; }
+                    if (asked != null && Campaign.Buy(asked)) CampaignStore.Save(Campaign);
                     Redraw(false);
                     break;
                 case CampDo.Reset:

@@ -54,6 +54,11 @@ namespace VampireSpawn.Game.Screens
             ToolkitKit.Prefab(r.Q("info-break"), art.UiPrefab(Break), Ui.Line);
             ToolkitKit.Prefab(r.Q("bk-break"), art.UiPrefab(Break), Ui.Line);
             ToolkitKit.Picture(r.Q(className: "bk-icon"), art.Ui(Kit.Icon.Up), Ui.Steel);
+            ui.Panel(r.Q("buy-box"), Ui.Steel);
+            ui.Button(r.Q("buy-cancel"), Kind.Normal, () => send(input(CampKey.Close)));
+            ui.Button(r.Q("buy-ok"), Kind.Primary, () => send(input(CampKey.Enter)));
+            var veil = r.Q("buy-dialog");
+            veil.RegisterCallback<ClickEvent>(e => { if (e.target == veil) send(input(CampKey.Close)); });
             return ui;
         }
 
@@ -85,16 +90,26 @@ namespace VampireSpawn.Game.Screens
 
             if (nav.Layer == CampLayer.Info) Info(c, nav.Stage, input);
             if (nav.Layer == CampLayer.Barracks) Barracks(c, nav, input);
-            Bought = null;
+            BuyDialog(nav.BuyArmed);
         }
 
-        // upgrade.md 6-4: the row just bought and the gold count flash for 0.2 s (USS transition back from .flash).
-        public string Bought;
+        string asking;
 
-        static void Flash(VisualElement e)
+        // upgrade.md 6-1: the upgrade's name, the question and its price; buttons and veil are wired once in Build.
+        void BuyDialog(string id)
         {
-            e.AddToClassList("flash");
-            e.schedule.Execute(() => e.schedule.Execute(() => e.RemoveFromClassList("flash")));
+            var up = id != null ? GameData.Upgrades.FirstOrDefault(u => u.Id == id) : null;
+            root.EnableInClassList("asking", up != null);
+            if (up != null && asking != id) Enter(root.Q("buy-box"));
+            asking = up?.Id;
+            if (up == null) return;
+            root.Q<Label>("buy-name").text = Loc.Text(up.Name);
+            root.Q<Label>("buy-ask").text = Loc.T("camp.buyAsk");
+            var price = root.Q("buy-price");
+            price.Clear();
+            ToolkitKit.Value(price, art, Kit.Icon.Gold, up.Cost.ToString(), Ui.Candle, Ui.Candle);
+            root.Q("buy-cancel").Q<Label>(className: "btn-text").text = Loc.T("camp.cancel");
+            root.Q("buy-ok").Q<Label>(className: "btn-text").text = Loc.T("camp.buy");
         }
 
         VisualElement PanelOf(CampLayer layer) => layer == CampLayer.Info ? root.Q("info") : layer == CampLayer.Barracks ? root.Q("barracks-panel") : null;
@@ -182,14 +197,6 @@ namespace VampireSpawn.Game.Screens
             var gold = panel.Q("bk-gold");
             gold.Clear();
             ToolkitKit.Value(gold, art, Kit.Icon.Gold, c.Gold.ToString(), Ui.Candle, Ui.Candle, Loc.T("camp.gold"), tip);
-            if (Bought != null)
-            {
-                var amount = gold.Q<Label>(className: "value-text");
-                var bright = Ui.Candle * 1.3f;
-                bright.a = 1f;
-                amount.style.color = bright;
-                amount.schedule.Execute(() => amount.schedule.Execute(() => amount.style.color = Ui.Candle));
-            }
 
             var tabs = panel.Q("bk-tabs");
             tabs.Clear();
@@ -232,7 +239,6 @@ namespace VampireSpawn.Game.Screens
                 var row = new VisualElement();
                 row.AddToClassList("up");
                 row.EnableInClassList("owned", own);
-                if (up.Id == Bought) Flash(row);
                 SetTip(row, Loc.T(up.Inherit ? "camp.inherit" : "camp.noInherit"));
                 var head = new VisualElement { pickingMode = PickingMode.Ignore };
                 head.AddToClassList("up-name");
@@ -261,9 +267,8 @@ namespace VampireSpawn.Game.Screens
                     }
                     else
                     {
-                        var armed = nav.BuyArmed == up.Id;
                         var afford = c.Gold >= up.Cost;
-                        var b = NewButton(act, armed ? Loc.T("camp.buyConfirm", up.Cost) : Loc.T("camp.upgrade"), armed ? Kind.DangerOn : Kind.Normal, null);
+                        var b = NewButton(act, Loc.T("camp.upgrade"), Kind.Normal, null);
                         if (!afford) { b.AddToClassList("disabled"); SetTip(b, Loc.T("camp.needGold", c.Gold, up.Cost)); }
                         else { var id = up.Id; b.RegisterCallback<ClickEvent>(_ => send(CampInput.Buy(id, Time.unscaledTime))); }
                     }

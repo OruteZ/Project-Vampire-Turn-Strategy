@@ -299,7 +299,7 @@ L3 병영: 오른쪽 칸이 병영 칸(560×680)으로 바뀌고 카메라가 �
 ## 구현 메모
 
 - 구현 (#43, 브랜치 stage-select): 레이어 상태 `Core/CampNav.cs`(시험 `CampNavTests`), 칸 `Assets/_Project/UI/Camp.uxml`·`.uss` + `Game/Screens/CampToolkit.cs`, 표식 `CampMarkers.cs`, 연결 `GameFlow.OpenCamp`·`Send`. UI Toolkit 공용 부품 `ToolkitKit.cs`.
-- 1차에서 빠졌다가 #45 에서 넣은 것: 가장자리 그늘(2-2, 전투와 같은 `BattleHud.Shade`), 칸 나타남·사라짐 0.15초(USS transition, `CampToolkit.Enter/Leave`), 배지 44→56 0.15초(`CampMarkers.LateUpdate`), 산 줄·금화 0.2초 번쩍임(upgrade.md 6-4). 강화 줄이 셋 이상일 때 스크롤은 ScrollView 로 들어가 있다.
+- 1차에서 빠졌다가 #45 에서 넣은 것: 가장자리 그늘(2-2, 전투와 같은 `BattleHud.Shade`), 칸 나타남·사라짐 0.15초 감속(USS transition ease-out-cubic, `CampToolkit.Enter/Leave`, #89), 배지 44→56 0.15초(`CampMarkers.LateUpdate`) (산 줄·금화 번쩍임은 #87 사용자 결정으로 뺐다). 강화 줄이 셋 이상일 때 스크롤은 ScrollView 로 들어가 있다.
 - **기획서와 다른 점 (사용자 결정 #48):** 7절 "잠긴 장도 고를 수 있다" 와 3-3 의 잠김 행(출정 자리 자물쇠)을 따르지 않는다. 잠긴 장은 L2 가 열리지 않는다(표식 클릭·Enter 무시, L2 의 ↑/↓ 는 잠긴 장 앞에서 멈춤). L1 초점은 잠긴 장에 갈 수 있다. 7절·3-3·5-2 를 이렇게 고쳐 주길 바란다.
 - **기획서와 다른 점 (사용자 결정 #47):** 4-2 의 "초점 = 가리킴과 같다(이름 띠)" 를 따르지 않는다. L1 에서 이름 띠는 가리킨 표식만, 초점은 배지 밝기·크기만 바뀐다. 4-2 를 이렇게 고쳐 주길 바란다.
 - 이전 메모: 구현은 UI Toolkit + uGUI 로 한다 (10절). 바꾸는 코드: `CampaignScreen.cs` (세 레이어, 표식), `GameFlow.cs` (`ShowCamp` 레이어 상태, `CampKeys`, 바탕을 보드 RT 대신 지도, `BuildCanvas` Expand), 새 `CampaignMapView` (campaign-map.md 10). 위 요구사항과 구현이 다르면 구현을 고친다.

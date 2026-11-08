@@ -94,14 +94,25 @@ y 는 칸 위 끝에서, x 는 칸 왼쪽 끝에서 잰 px. 안쪽 여백 32.
 | 산 강화 | 비움 |
 | 금화가 모자람 | `btn.normal` "강화" 비활성. 툴팁 `camp.needGold` ({가진}/{가격}) |
 | 살 수 있음 | `btn.normal` "강화" (`camp.upgrade`) |
-| 확인 상태 | `btn.danger` 선택됨 "정말 살까요? N 금화" (`camp.buyConfirm`). 크기 그대로 200×40 |
 
 ### 6. 사기
 
-1. "강화" 를 누르면 그 버튼이 확인 상태가 된다. 2.5초 안에 한 번 더 누르면 산다.
-2. 2.5초가 지나거나 다른 곳을 누르면 "강화" 로 돌아간다. 한 번에 한 버튼만 확인 상태다.
+1. "강화" 를 누르면 화면 가운데에 구매 확인 창(6-1)이 뜬다. 시간 제한은 없다.
+2. 확인 창의 "구매" 또는 Enter 로 산다. "취소", Esc, 창 밖(어두운 막) 누름, 그 밖의 키는 사지 않고 창만 닫는다 (병영은 열린 채). 창이 떠 있는 동안 뒤의 칸은 누를 수 없다.
 3. 사면 금화가 바로 줄고, 줄이 "보유" 가 되고, 능력치 줄이 새 값으로 바뀐다. 저장된다.
-4. 산 줄의 테두리가 0.2초 번쩍이고 `light` 로 남는다. 머리 금화 숫자도 0.2초 번쩍인다 (ui-style.md 12). 탭의 점과 병영 버튼 배지 숫자가 새로 맞춰진다.
+4. 산 뒤 번쩍임은 없다 (사용자 결정 #87 "필요 없음"). 탭의 점과 병영 버튼 배지 숫자가 새로 맞춰진다.
+
+#### 6-1. 구매 확인 창
+
+| 요소 | 자리 | 크기 | 내용 |
+|---|---|---|---|
+| 막 | 화면 전체 | | `bg.night` 60% (ui-style.md 15-3 "팝업 뒤 어두운 막"). 누르면 취소 |
+| 창 | 화면 가운데 한 점 앵커 | 480×232 | 틀 `frame.menu` (`ally`), 바탕 `bg.panel` 92%. 나타날 때 0.15초 감속 |
+| 강화 이름 | 창 위에서 y 32, 가운데 | 416×32 | 강화 이름 `h.2` `text.1`, 한 줄 |
+| 묻는 말 | y 72, 가운데 | 416×24 | `camp.buyAsk` "구매하시겠습니까?" `body` `text.2` |
+| 가격 | y 108, 가운데 | 높이 32 | 금화 아이콘 + 가격 `num.2` `light` (아이콘 수치) |
+| 취소 | x 48, y 164 | 180×44 | `btn.normal` `camp.cancel` "취소", 단축키 칸 "Esc" |
+| 구매 | x 252, y 164 | 180×44 | `btn.primary` `camp.buy` "구매", 단축키 칸 "Enter" |
 5. 강화 초기화 버튼은 두지 않는다 (progression.md "넣지 않을 것").
 
 ### 7. 진행 초기화
@@ -110,11 +121,12 @@ y 는 칸 위 끝에서, x 는 칸 왼쪽 끝에서 잰 px. 안쪽 여백 32.
 
 ### 8. 문장
 
-새 키는 stage-select.md 8절(`camp.barracksName`, `camp.affordable`, `camp.toMap`). 쓰는 키: `camp.barracksHelp`, `camp.noUpgrades`, `camp.gold`, `camp.upgrade`, `camp.buyConfirm`, `camp.owned`, `camp.inherit`, `camp.noInherit`, `camp.needGold`, `camp.lockedBy`, 강화 이름·효과(`upgrade.<id>.*`), 병종 이름(`unit.<key>.*`). `camp.barracks`("병영 · 유닛 강화")와 `camp.statLine`·`camp.cost` 는 이 화면에서 더 쓰지 않는다.
+새 키는 stage-select.md 8절(`camp.barracksName`, `camp.affordable`, `camp.toMap`). 쓰는 키: `camp.barracksHelp`, `camp.noUpgrades`, `camp.gold`, `camp.upgrade`, `camp.buyAsk`, `camp.buy`, `camp.cancel`, `camp.owned`, `camp.inherit`, `camp.noInherit`, `camp.needGold`, `camp.lockedBy`, 강화 이름·효과(`upgrade.<id>.*`), 병종 이름(`unit.<key>.*`). `camp.barracks`("병영 · 유닛 강화")와 `camp.statLine`·`camp.cost` 는 이 화면에서 더 쓰지 않는다.
 
 ## 정한 세부 (docs/design 에 없는 것)
 
-- **확인 방식은 두 번 누르기다(6번).** 근거: 진행 초기화와 전투 나가기가 이미 같은 방식이다. 시간은 나가기와 같은 2.5초다.
+- **구매 확인은 가운데 작은 확인 창이다(6번).** 근거: 사용자 결정 #87 "정말 살까요 표기보다 '--를 구매하시겠습니까?' 하고 가운데 작은 레터박스". 금화를 쓰는 결정이라 이름·가격을 한 번 더 보인다. 가운데 UI 는 확인 창 같은 순간만이라는 ui-style.md 16 과 맞는다. 한국어 조사(을/를)가 이름마다 달라 이름은 위 줄, 묻는 말은 아래 줄로 나눈다. 진행 초기화는 그대로 두 번 누르기다.
+- **새 키:** `camp.buyAsk` 구매하시겠습니까? / Buy this upgrade?, `camp.buy` 구매 / Buy, `camp.cancel` 취소 / Cancel. `camp.buyConfirm` 은 더 쓰지 않는다.
 - **병종 탭 6개를 늘 둔다(4절).** 근거: 고정 크기 칸(ui-style.md 15)에서 탭 수가 진행에 따라 늘면 칸 모양이 바뀐다. 해금된 병종은 강화가 열리기 전에도 미리 보면 progression.md "빌드를 고민" 을 앞당긴다. 아직 해금되지 않은 병종은 자물쇠만 보인다(이름·강화 스포일러를 막는다. 방향성 검토 #43) (장 선택의 "잠긴 장도 고를 수 있다" 와 같은 생각). 지금까지는 열리지 않은 병종 카드를 숨겼다.
 - **병종을 하나씩 본다(탭).** 근거: 병종 6 × 강화 2 를 한 칸에 펼치면 칸이 화면 높이를 넘는다. 강화는 병종 단위 결정이다 (progression.md "성장은 병종 단위").
 - **카메라는 야영지.** 근거: 병영 레이어에도 가운데 게임 화면이 있어야 한다 (ui-style.md 16-1). 소녀전선 2 는 강화하는 무기를, Baldur's Gate 3 는 야영지를 3D 로 보인다.
