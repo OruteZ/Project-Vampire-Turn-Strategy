@@ -4,6 +4,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { execFileSync } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
+import { sync } from '../board/board.mjs';
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..', '..');
 const DIR = path.join(ROOT, 'docs', 'request');
@@ -48,4 +49,7 @@ for (const f of files) {
 const fresh = files.map(parse).filter((r) => r.meta.status === 'request');
 if (fresh.length) console.log(`새 요청 ${fresh.length}개: ${fresh.map((r) => r.meta.id).join(', ')}. 사용자가 맡기면 시작한다.`);
 for (const p of problems) console.log('확인 ' + p);
+if (!offline) {
+  try { sync(); } catch (e) { console.log('보드를 읽지 못했다: ' + e.message.split('\n')[0]); }
+}
 process.exit(problems.length ? 1 : 0);
