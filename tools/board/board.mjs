@@ -1,6 +1,7 @@
 // Task board (docs/guides/work-status.md): request issues with task sub-issues on the GitHub Project "Vampire Spawn 작업".
 //   node tools/board/board.mjs task <요청#> <담당 에이전트|OZ> <종류> "<제목>" ["<본문>"]   opens a task under the request
-//   node tools/board/board.mjs sync                                                         puts every 작업/요청 issue on the board, fills 담당·종류 from the body line, prints the lists
+//   node tools/board/board.mjs status <#> <미작업|작업 중|작업 완료>                          moves a task on the board
+//   node tools/board/board.mjs sync                                                    puts every 작업/요청 issue on the board, fills 담당·종류 from the body line, prints the lists
 import { execFileSync } from 'node:child_process';
 
 const OWNER = 'OruteZ', REPO = 'Project-Vampire-Turn-Strategy', PROJECT = 'Vampire Spawn 작업';
@@ -54,7 +55,11 @@ function setField(p, itemId, fieldName, value) {
     { p: p.id, i: itemId, f: f.id, o: opt.id });
 }
 
+// The project auto-adds sub-issues when their parent lands, so an issue missing from our snapshot may already be on the board.
 function addItem(p, issueNodeId) {
+  const existing = gql(`query($c:ID!){node(id:$c){... on Issue{projectItems(first:20){nodes{id project{id}}}}}}`, { c: issueNodeId })
+    .node.projectItems.nodes.find((n) => n.project.id === p.id);
+  if (existing) return existing.id;
   return gql(`mutation($p:ID!,$c:ID!){addProjectV2ItemById(input:{projectId:$p,contentId:$c}){item{id}}}`, { p: p.id, c: issueNodeId }).addProjectV2ItemById.item.id;
 }
 
@@ -74,6 +79,15 @@ function task(parent, who, kind, title, body = '') {
     setField(p, item, '종류', kind);
   }
   console.log(`#${number} ${title} (요청 #${parent}, ${who}, ${kind})${p ? '' : '  보드 없음: 다음 sync 때 올라간다'}`);
+}
+
+function setStatus(number, state) {
+  if (!STATES.includes(state)) throw new Error(`상태는 ${STATES.join('/')}`);
+  const p = project();
+  if (!p) throw new Error('보드가 없다 (gh auth refresh -s project)');
+  const id = gql(`query($o:String!,$r:String!,$n:Int!){repository(owner:$o,name:$r){issue(number:$n){id}}}`, { o: OWNER, r: REPO, n: number }).repository.issue.id;
+  setField(p, p.items.get(number)?.id || addItem(p, id), 'Status', state);
+  console.log(`#${number} → ${state}`);
 }
 
 export function sync({ quiet = false } = {}) {
@@ -110,5 +124,6 @@ if (process.argv[1] && process.argv[1].replace(/\\/g, '/').endsWith('tools/board
   const [cmd, ...a] = process.argv.slice(2);
   if (cmd === 'task') task(Number(String(a[0]).replace('#', '')), a[1], a[2], a[3], a[4]);
   else if (cmd === 'sync') sync();
-  else { console.log('node tools/board/board.mjs task <요청#> <에이전트|OZ> <종류> "<제목>" ["<본문>"] | sync'); process.exit(1); }
+  else if (cmd === 'status') setStatus(Number(String(a[0]).replace('#', '')), a[1]);
+  else { console.log('node tools/board/board.mjs task <요청#> <에이전트|OZ> <종류> "<제목>" ["<본문>"] | status <#> <상태> | sync'); process.exit(1); }
 }
