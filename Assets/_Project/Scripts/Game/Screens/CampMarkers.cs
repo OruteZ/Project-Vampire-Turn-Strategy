@@ -105,7 +105,8 @@ namespace VampireSpawn.Game.Screens
             LateUpdate();
         }
 
-        // 4-2: hover, focus (Map) and the picked stage (Info) show the name band; the picked badge grows to 56.
+        // On the map only the hovered marker shows its name; the keyboard focus just lifts its badge. Info pins the picked stage's name.
+        // The spec's 4-2 also bands the focus; the user narrowed it (docs/areas/ui.md decisions, #47).
         void Restyle()
         {
             if (markers == null) return;
@@ -113,10 +114,10 @@ namespace VampireSpawn.Game.Screens
             {
                 var m = markers[i];
                 var picked = layer == CampLayer.Info && i == focus;
-                var lit = m.Hover || (layer == CampLayer.Map && i == focus) || picked;
-                m.NameBand.gameObject.SetActive(lit);
+                var focused = layer == CampLayer.Map && i == focus;
+                m.NameBand.gameObject.SetActive(m.Hover || picked);
                 m.Badge.sizeDelta = Vector2.one * (picked ? Picked : Badge);
-                m.Ring.transform.localScale = Vector3.one * (lit && !picked ? 1.1f : 1f);
+                m.Ring.transform.localScale = Vector3.one * ((m.Hover || focused) && !picked ? 1.1f : 1f);
             }
         }
 
