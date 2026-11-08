@@ -28,9 +28,6 @@
 | 무기는 쥐는 법(`Hold`: 칼날·창·자루·그대로)으로 붙이고, 루트 모션은 모델만 움직인다(칸 자리·걷기는 코드) | 시험 중 | 2026-11-07 | #42 요청 2 "모든 유닛이 도구를 정상적으로", "Loot Motion을 키는쪽으로" |
 | 배치 때 아군은 북쪽, 적은 남쪽을 본다. 잠든 뱀파이어는 관만 보인다 | 시험 중 | 2026-11-07 | #42 요청 2 "적방향 (북쪽)", "관만 보여줄 것" |
 
-## 열린 작업
-- 관(coffin) 프리팹이 없어 P7 은 상자로 대신했다. 맞는 소품을 찾으면 바꾼다
-
 ## 맡길 때
 - 함정: 애니메이션 팩마다 Sidekick 전용판 클립(`A_MOD_*`)이 따로 있다. Sidekick 캐릭터에는 그쪽을 쓴다. 무기 자리 뼈는 Sidekick `prop_r`/`prop_l`, Polygon 캐릭터 `Hand_R`/`Hand_L`
 - 함정: Sidekick 프리셋은 메시 하나라 모자 같은 부품만 끌 수 없다. 부품을 고르려면 Sidekick 도구로 새로 만든다 (위 "모델 바꾸기")
@@ -76,4 +73,4 @@
 2. 그 병종 `Units/<병종>.asset` 의 `recipe` 에 `<이름>` 을 쓴다. `model` 은 지금 프리셋 그대로 둔다 (굽기 전 클론의 대체 모델).
 3. 도구 모음 (Tools) > **Synty 다시 불러오기**, 또는 `/synty-reload` 스킬, 또는 `bash tools/assets/sidekick-bake.sh`. 무기 뼈 `prop_r`/`prop_l` 이 같아 무기 위치는 그대로 쓴다.
 4. `.sk` 와 `UnitLook` 을 커밋한다. `Assets/_Generated/` 는 올리지 않는다.
-- 파이프라인 견본: `Characters/SampleKnight.sk` (어느 유닛도 쓰지 않음, 시험이 실제로 굽게 하려고 둔다. 진짜 레시피가 생기면 지운다). 구운 모습 docs/review/sidekick-bake-sample.png
+- 파이프라인 견본: `Characters/SampleKnight.sk` (어느 유닛도 쓰지 않음, 시험이 실제로 굽게 하려고 둔다. 진짜 레시피가 생기면 지운다).

@@ -1,6 +1,6 @@
 # UI 레퍼런스 — 달과 피
 
-출처: docs/design/ui.md, docs/design/art.md, docs/design/campaign.md, docs/design/progression.md, docs/design/combat.md, docs/design/vampire.md, docs/design/units.md (커밋 f7fc7f8). 테마 결정: docs/areas/ui.md 결정 표 "달과 피" (#24). 화면별 레이아웃 조사: #43 (docs/request/UI 대개편 - 스테이지 선택.md)
+출처: docs/design/ui.md, docs/design/art.md, docs/design/campaign.md, docs/design/progression.md, docs/design/combat.md, docs/design/vampire.md, docs/design/units.md (커밋 f7fc7f8). 테마 결정: docs/areas/ui.md 결정 표 "달과 피" (#24). 화면별 레이아웃 조사: #43 (요청 #43)
 
 > 두 부분이다. 1~4절은 화면(Scene)마다 어디에 무엇을 두는지(레이아웃)를 작품별로 본 것과 거기서 뽑은 규칙이다 (#43). 5절은 UI 요소마다 무엇을 가져오고 무엇은 가져오지 않는지다 (#24). `docs/art/ui-style.md` 가 이 문서를 바탕으로 수치·배치를 정한다.
 > 이미지는 저장소에 넣지 않는다. 링크는 실제로 열어 본 쪽만 적는다. 본 것은 우리 말로 줄여 적는다.

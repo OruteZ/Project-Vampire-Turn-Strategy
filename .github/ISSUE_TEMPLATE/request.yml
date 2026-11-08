@@ -1,0 +1,32 @@
+name: 요청
+description: 에이전트(또는 사람)에게 맡길 일. 에이전트는 채팅으로 맡겨야 시작한다.
+title: "요청: "
+labels: ["요청"]
+body:
+  - type: textarea
+    id: summary
+    attributes:
+      label: 개요
+      description: 무엇이 문제이고 무엇을 원하는지
+    validations:
+      required: true
+  - type: textarea
+    id: requirements
+    attributes:
+      label: 요구사항
+      description: 번호를 붙여 한 줄씩. 에이전트가 번호마다 태스크(하위 이슈)를 연다
+      placeholder: |
+        1. …
+        2. …
+    validations:
+      required: true
+  - type: textarea
+    id: done
+    attributes:
+      label: 완료 기준 (선택)
+      description: 무엇을 보면 끝났다고 할지. 비우면 에이전트가 정해 태스크에 적는다
+  - type: textarea
+    id: refs
+    attributes:
+      label: 참고 (선택)
+      description: 관련 파일, 스크린샷, 링크

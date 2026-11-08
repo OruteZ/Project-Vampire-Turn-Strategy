@@ -2,7 +2,7 @@
 
 > 출처: docs/design/ui.md, docs/design/combat.md, docs/design/vampire.md, docs/design/units.md, docs/design/overview.md (커밋 f7fc7f8)
 > 스타일: docs/art/ui-style.md (커밋 bc8bc27). 색·글꼴·틀·버튼·아이콘은 그 문서의 토큰 이름으로 쓴다
-> 목업: docs/review/ui-style-tile-1~4.png (#24 5단계). 목업과 이 문서가 다르면 이 문서를 따른다
+> 목업: #24 5단계 (스크린샷은 지웠다, git 이력). 목업과 이 문서가 다르면 이 문서를 따른다
 > 목적: 전투 한 판의 모든 단계(배치, 아군 턴, 적 턴, 결과)에서 화면에 무엇이 어디에 어떻게 보이고, 무엇을 누르면 무엇이 되는지 정한다.
 
 ## 1. 공통

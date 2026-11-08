@@ -55,12 +55,18 @@ function setField(p, itemId, fieldName, value) {
     { p: p.id, i: itemId, f: f.id, o: opt.id });
 }
 
-// The project auto-adds sub-issues when their parent lands, so an issue missing from our snapshot may already be on the board.
+// The project auto-adds sub-issues (asynchronously, right after addSubIssue), so the item may appear between our lookup and our add.
 function addItem(p, issueNodeId) {
-  const existing = gql(`query($c:ID!){node(id:$c){... on Issue{projectItems(first:20){nodes{id project{id}}}}}}`, { c: issueNodeId })
+  const find = () => gql(`query($c:ID!){node(id:$c){... on Issue{projectItems(first:20){nodes{id project{id}}}}}}`, { c: issueNodeId })
     .node.projectItems.nodes.find((n) => n.project.id === p.id);
+  const existing = find();
   if (existing) return existing.id;
-  return gql(`mutation($p:ID!,$c:ID!){addProjectV2ItemById(input:{projectId:$p,contentId:$c}){item{id}}}`, { p: p.id, c: issueNodeId }).addProjectV2ItemById.item.id;
+  try {
+    return gql(`mutation($p:ID!,$c:ID!){addProjectV2ItemById(input:{projectId:$p,contentId:$c}){item{id}}}`, { p: p.id, c: issueNodeId }).addProjectV2ItemById.item.id;
+  } catch (e) {
+    if (!String(e.stdout || e.message).includes('already exists')) throw e;
+    return find().id;
+  }
 }
 
 function task(parent, who, kind, title, body = '') {
@@ -118,6 +124,12 @@ export function sync({ quiet = false } = {}) {
     console.log(`${who} 할 일 ${mine.length}개`);
     for (const r of mine.sort((a, b) => STATES.indexOf(b.state) - STATES.indexOf(a.state))) console.log(`  ${r.state.padEnd(5)} #${r.n} ${r.title}`);
   }
+  const requests = gql(`query($q:String!){search(query:$q,type:ISSUE,first:50){nodes{... on Issue{number title subIssuesSummary{total completed}}}}}`,
+    { q: `repo:${OWNER}/${REPO} is:issue is:open label:요청` }).search.nodes;
+  const fresh = requests.filter((r) => r.subIssuesSummary.total === 0);
+  const finished = requests.filter((r) => r.subIssuesSummary.total > 0 && r.subIssuesSummary.completed === r.subIssuesSummary.total);
+  if (fresh.length) console.log(`새 요청 ${fresh.length}개 (태스크 없음, 맡기면 시작): ${fresh.map((r) => `#${r.number} ${r.title}`).join(', ')}`);
+  if (finished.length) console.log(`태스크가 다 닫힌 요청 (대조 뒤 닫기): ${finished.map((r) => `#${r.number}`).join(', ')}`);
 }
 
 if (process.argv[1] && process.argv[1].replace(/\\/g, '/').endsWith('tools/board/board.mjs')) {

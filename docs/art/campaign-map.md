@@ -1,6 +1,6 @@
 # 원정 지도 — 장 선택 화면의 3D 지도
 
-> 출처: docs/design/campaign.md, docs/design/art.md, docs/design/ui.md (커밋 f7fc7f8). 이슈 #43, 요청 docs/request/UI 대개편 - 스테이지 선택.md
+> 출처: docs/design/campaign.md, docs/design/art.md, docs/design/ui.md (커밋 f7fc7f8). 이슈 #43, 요청 #43
 > 사용자 원문: "Synty 에셋을 사용해 3D맵을 제작하며, 각 스테이지에 대응되는 지역이 있고 그 지역을 클릭하면 스테이지 정보화면으로 넘어가게 됨"
 > 함께 보는 기획서: docs/ui/stage-select.md (레이어·표식·조작), docs/art/stage-dressing.md (장별 테마, 바닥색), docs/art/ui-style.md 15·16
 > 레퍼런스: docs/art/ui-references.md 2-1 (파이어 엠블렘 인게이지 디오라마 지도, Desperados III 임무 지도)
@@ -413,11 +413,11 @@ dx, dz 는 앵커에서 떨어진 거리, 돌림은 y 축 °(0 = 북쪽을 봄),
 
 ## 구현 메모
 
-- 1차 범위(1-1) 구현 (#43, 브랜치 stage-select): `CampaignMapView`, 배치 표 `CampaignMapLayout`. 사진 `docs/review/campaign-map-{wide,s1,s10,camp}.png`.
-- **기획서와 다른 점 (기획 에이전트에게 맡길 것):** 10절은 `CampaignMap.asset` 을 말하지만, 인계 메모(docs/dev/stage-select-handoff.md 3)의 결정대로 배치 표는 C# `CampaignMapLayout` 이고 프리팹만 `ArtCatalog.mapProps`(이름으로 찾음)에 있다. 자리 ±1.5 손맞춤을 C# 고침으로 할 수 있어서다. 목록은 도구 모음 > 지도 > 프리팹 목록 채우기, 어긋나면 `CampaignMapLayoutTests` 가 실패한다. 10절을 이 모양으로 고쳐 주길 바란다.
+- 1차 범위(1-1) 구현 (#43, 브랜치 stage-select): `CampaignMapView`, 배치 표 `CampaignMapLayout`.
+- **기획서와 다른 점 (기획 에이전트에게 맡길 것):** 10절은 `CampaignMap.asset` 을 말하지만, #43 구현 설계의 결정대로 배치 표는 C# `CampaignMapLayout` 이고 프리팹만 `ArtCatalog.mapProps`(이름으로 찾음)에 있다. 자리 ±1.5 손맞춤을 C# 고침으로 할 수 있어서다. 목록은 도구 모음 > 지도 > 프리팹 목록 채우기, 어긋나면 `CampaignMapLayoutTests` 가 실패한다. 10절을 이 모양으로 고쳐 주길 바란다.
 - **카메라는 Cinemachine 이다 (#57, 사용자 결정).** 9절의 세 시점은 `Camp.unity` > `Campaign Map` > `Cameras` 아래 `CinemachineCamera`(`Shot Wide`, `Shot s1`…`s10`, `Shot Camp`)로 구워져 있고, `Main Camera` 의 `CinemachineBrain` 이 0.3초 EaseInOut 으로 블렌드한다. 거리·높이는 각 시점의 `CinemachineFollow` 오프셋을 Unity 에서 고치면 된다(다시 굽기는 덮어쓴다). 9절과 다른 점 (기획 에이전트에게 맡길 것): 전경 거리는 1.04 배 찾기 대신 `CinemachineGroupFraming`(지역 10개 묶음, 빈 곳 크기)이 정한다. 빈 곳 맞춤은 투영 행렬 대신 렌즈 시프트(물리 카메라)다. 9-1·9-2 를 이 모양으로 고쳐 주길 바란다.
 - 함정: 컴포저(`CinemachineRotationComposer`)의 화면 위치는 각도라서 옆으로 약 35% 덜 간다(−0.152 를 주면 0.348 대신 0.403). 빈 곳 맞춤은 렌즈 시프트로 한다. 브레인은 `LensModeOverride` 가 꺼져 있으면 이미 물리 카메라인 카메라에만 시프트를 쓴다. 그래서 `UseBrain` 이 `usePhysicalProperties` 를 켠다.
 - 함정: `BoardView.FitCamera` 의 투영 옮김은 `p[0,2] = -(2·cx − 1)` 이다(카메라 축은 NDC `-p[0,2]` 에 놓인다).
 - 함정: `BoardView.LateUpdate` 는 `Board` 가 있으면 카메라를 계속 보드에 맞춘다. `Clear()` 뒤에도 `Board` 가 남는다. 지도가 카메라를 쓰는 동안 보드가 카메라를 잡지 않게 해야 한다.
 - 함정: 메인 메뉴 바탕은 지금처럼 보드를 저해상도 RenderTexture 로 그린다(`GameFlow.Backdrop`). 장 선택 화면으로 오면 카메라 `targetTexture` 를 비우고 화면 전체에 지도를 그린다.
-- 확인: verify-unity 로 전경·지역(1장, 10장)·야영지 시점 스크린샷을 1920×1080, 2560×1080, 1280×1024 에서 찍어 `docs/review/campaign-map-*.png` 에 둔다.
+- 확인: verify-unity 로 전경·지역(1장, 10장)·야영지 시점 스크린샷을 1920×1080, 2560×1080, 1280×1024 에서 찍는다 (`verify-artifacts/`, 경로는 태스크 댓글에).

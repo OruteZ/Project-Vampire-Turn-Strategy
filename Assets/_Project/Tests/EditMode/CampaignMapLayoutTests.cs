@@ -6,7 +6,7 @@ using VampireSpawn.Game;
 
 namespace VampireSpawn.Tests
 {
-    // docs/art/campaign-map.md 4-1, 10; stage-select-handoff.md 3.
+    // docs/art/campaign-map.md 4-1, 10.
     public class CampaignMapLayoutTests
     {
         static ArtCatalog Art => AssetDatabase.LoadAssetAtPath<ArtCatalog>("Assets/_Project/Art/ArtCatalog.asset");

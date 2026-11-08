@@ -129,7 +129,7 @@ namespace VampireSpawn.Game
                 child.transform.SetParent(null, false);
                 Kill(child);
             }
-            // Without this LateUpdate keeps fitting viewCamera to a board that is gone (stage-select-handoff.md 2-2).
+            // Without this LateUpdate keeps fitting viewCamera to a board that is gone.
             Board = null;
             Stage = null;
             RenderSettings.fog = false;

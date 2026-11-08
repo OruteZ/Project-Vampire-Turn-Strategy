@@ -1,6 +1,6 @@
 # 장 선택 (캠페인 화면)
 
-> 출처: docs/design/campaign.md, docs/design/ui.md, docs/design/art.md, docs/design/overview.md (커밋 f7fc7f8). 요청 docs/request/UI 대개편 - 스테이지 선택.md (#43)
+> 출처: docs/design/campaign.md, docs/design/ui.md, docs/design/art.md, docs/design/overview.md (커밋 f7fc7f8). 요청 #43
 > 스타일: docs/art/ui-style.md (#43 판, 특히 14·15·16절). 색·글꼴·틀·버튼은 그 문서의 토큰 이름으로 쓴다
 > 함께 보는 기획서: docs/art/campaign-map.md (3D 지도), docs/ui/upgrade.md (병영 레이어), docs/ui/battle-hud.md (출정하면 가는 배치 화면)
 > 레퍼런스: docs/art/ui-references.md 2-1, 2-2 (Desperados III 임무 지도, Civilization VI 옆 칸, 파이어 엠블렘 인게이지 지도)
@@ -256,7 +256,7 @@ L3 병영: 오른쪽 칸이 병영 칸(560×680)으로 바뀌고 카메라가 �
 1. `tools/ui-audit/sweep.sh` 의 "장 선택" 화면을 L1·L2·L3 세 장면으로 나눈다. L2 는 1장, 8장(가장 긴 영어 이름), 10장(문장 달린 칸). 6개 화면비 모두 화면 밖·틀 밖·글자 넘침 0 (docs/dev/ui-audit.md).
 2. 한 레이어 UI 칸 넓이 합 ≤ 30% (ui-style.md 16-1). L2 약 16%, L3 약 21%.
 3. 글 예산: 화면에 문장 없음 (`UiTextParityTests.AssertNoSentences`). 이름 띠·버튼 낱말만.
-4. 스크린샷: 1920×1080 의 L1·L2·L3, 그리고 2560×1080·1280×1024 의 L2 → `docs/review/stage-select-*.png`.
+4. 스크린샷: 1920×1080 의 L1·L2·L3, 그리고 2560×1080·1280×1024 의 L2 (`verify-artifacts/`, 경로는 태스크 댓글에).
 
 ## 10. 어느 UI 로 짓나 (UI Toolkit + uGUI)
 
@@ -301,7 +301,7 @@ L3 병영: 오른쪽 칸이 병영 칸(560×680)으로 바뀌고 카메라가 �
 - **기획서와 다른 점 (사용자 결정 #48):** 7절 "잠긴 장도 고를 수 있다" 와 3-3 의 잠김 행(출정 자리 자물쇠)을 따르지 않는다. 잠긴 장은 L2 가 열리지 않는다(표식 클릭·Enter 무시, L2 의 ↑/↓ 는 잠긴 장 앞에서 멈춤). L1 초점은 잠긴 장에 갈 수 있다. 7절·3-3·5-2 를 이렇게 고쳐 주길 바란다.
 - **기획서와 다른 점 (사용자 결정 #47):** 4-2 의 "초점 = 가리킴과 같다(이름 띠)" 를 따르지 않는다. L1 에서 이름 띠는 가리킨 표식만, 초점은 배지 밝기·크기만 바뀐다. 4-2 를 이렇게 고쳐 주길 바란다.
 - **기획서와 다른 점 (기획 에이전트에게 맡길 것):** 3-1 의 마지막 장 문장은 "칸 위 끝에서 40 올라감" 이지만 칸이 화면 위 24 에 있어 화면 밖으로 나간다(검사 `off-screen`). 구현은 문장 상자를 칸 위 끝에 맞췄고(빛이 12 더 올라간다), 장 이름 뒤에 깔린다. 자리를 다시 정해 주길 바란다.
-- 이전 메모: 구현은 UI Toolkit + uGUI 로 한다 (10절). 바꾸는 코드: `CampaignScreen.cs` (세 레이어, 표식), `GameFlow.cs` (`ShowCamp` 레이어 상태, `CampKeys`, 바탕을 보드 RT 대신 지도, `BuildCanvas` Expand), 새 `CampaignMapView` (campaign-map.md 10). 위 요구사항과 구현이 다르면 구현을 고친다. 인계 메모: docs/dev/stage-select-handoff.md.
+- 이전 메모: 구현은 UI Toolkit + uGUI 로 한다 (10절). 바꾸는 코드: `CampaignScreen.cs` (세 레이어, 표식), `GameFlow.cs` (`ShowCamp` 레이어 상태, `CampKeys`, 바탕을 보드 RT 대신 지도, `BuildCanvas` Expand), 새 `CampaignMapView` (campaign-map.md 10). 위 요구사항과 구현이 다르면 구현을 고친다.
 - 표식 자리: 지도가 앵커의 화면 점을 주고, UI 는 캔버스 좌표로 바꿔 `anchoredPosition` 만 바꾼다. 매 프레임 다시 짓지 않는다 (지금 `BattleHud.Tick` 의 머리 위 표시와 같은 방식).
 - `UiTextParityTests` 의 캠페인 화면 검사는 이 문서의 글 구성으로 고친다.
 - `Crest_*`, `Section_Break` 는 키트 프리팹이다. 지금처럼 `Kit.Prefab` 으로 띄운다.

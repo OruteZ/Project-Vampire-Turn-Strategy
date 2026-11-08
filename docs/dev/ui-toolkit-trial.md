@@ -31,7 +31,7 @@
 | 그리는 순서 | | uGUI 배경(흐린 보드) 위에 UI Toolkit 메뉴가 바로 그려짐 (`Panel.sortingOrder` 10) |
 | 시험 | EditMode 177/177, PlayMode 4/4 (시험판 꺼짐 상태) | 같음. 다만 `UiTextParityTests` 는 uGUI 메뉴만 본다 |
 
-사진: `docs/review/ui-toolkit-menu-ugui.png`, `ui-toolkit-menu-toolkit.png`(마우스 올림·툴팁), `ui-toolkit-menu-toolkit-en-5x4.png`. 검사 기록: `docs/review/ui-audit/toolkit-menu-ko.txt`, `-en.txt`.
+사진·검사 기록은 지웠다(#66, git 이력). 당시 파일: `docs/review/ui-toolkit-menu-*.png`, `docs/review/ui-audit/toolkit-menu-ko.txt`, `-en.txt`.
 
 ## 4. 해 보고 안 것 (함정)
 

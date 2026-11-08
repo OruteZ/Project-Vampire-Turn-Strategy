@@ -1,6 +1,6 @@
 # 강화 화면 (병영)
 
-> 출처: docs/design/progression.md, docs/design/ui.md (커밋 f7fc7f8). 요청 docs/request/UI 대개편 - 스테이지 선택.md (#43)
+> 출처: docs/design/progression.md, docs/design/ui.md (커밋 f7fc7f8). 요청 #43
 > 스타일: docs/art/ui-style.md (#43 판, 14·15·16절). 함께 보는 기획서: docs/ui/stage-select.md (L3 레이어, 여는 법), docs/art/campaign-map.md (야영지)
 > 레퍼런스: docs/art/ui-references.md 2-3 (소녀전선 2 강화 화면, Baldur's Gate 3 야영지)
 > 목적: 캠페인 화면의 병영 레이어(L3)가 무엇을 보여 주고 어떻게 사게 하는지 정한다. 규칙은 docs/systems/progression.md.

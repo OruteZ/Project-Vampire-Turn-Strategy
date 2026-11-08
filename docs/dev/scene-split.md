@@ -36,4 +36,4 @@
 
 - PlayMode `BattlePlaybackTests` 는 `Battle` 씬을 읽는다.
 - `tools/ui-audit/sweep.sh` 는 장면마다 `App.Go*` 로 그 씬을 연다.
-- 인터랙션 확인은 사용자 체크리스트 `docs/checks/001_scene-split.md` (CLAUDE.md "검증 위임").
+- 인터랙션 확인은 검증 태스크 #60 (CLAUDE.md "검증 위임").

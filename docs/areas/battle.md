@@ -14,13 +14,9 @@
 ## 결정
 | 결정 | 상태 | 날짜 | 출처 |
 |---|---|---|---|
-| 게임 수치·스테이지는 데이터 에셋(Assets/_Project/Data)에 두고 기획자용 편집기로 고친다. 에셋은 데이터 기획서(docs/content)를 구현한 것이고, 기획서가 비어 있는 동안 기본값은 HTML 데모 값이다 | 시험 중 | 2026-11-05 | 이슈 #1, docs/request/GameData_ScriptableObject_Editor_Request.md (#19) |
+| 게임 수치·스테이지는 데이터 에셋(Assets/_Project/Data)에 두고 기획자용 편집기로 고친다. 에셋은 데이터 기획서(docs/content)를 구현한 것이고, 기획서가 비어 있는 동안 기본값은 HTML 데모 값이다 | 시험 중 | 2026-11-05 | 이슈 #1, 요청 #19 |
 | 에디터 작업은 전부 Unity CLI 로 한다 | 시험 중 | 2026-11-05 | CLAUDE.md |
 | UI 는 프리팹 대신 코드로 만든 uGUI, 한글 글꼴은 HTML 목록대로 OS 글꼴을 쓴다(글꼴 파일 내려받기는 사용자 허락 뒤) | 시험 중 | 2026-11-05 | 이슈 #14 |
-
-## 열린 작업
-- 위협 범위 토글이 docs/design/ui.md "위협 범위는 직접 제공하지 않는다" 와 다르다. 전투 화면 기획서(docs/ui/battle-hud.md)가 아직 없다
-- 메뉴 정식 제목 (docs/ui/main-menu.md 열린 질문)
 
 ## 맡길 때
 - 모델: 규칙 이식(P4)은 opus xhigh, 나머지 구현은 opus low (`~/.claude/rules/pstack-models.md`)

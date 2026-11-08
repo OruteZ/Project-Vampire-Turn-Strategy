@@ -1,7 +1,7 @@
 # 유닛 모습 (모델·무기·애니메이션)
 
 > 출처: docs/design/art.md, docs/design/units.md, docs/design/campaign.md (커밋 f7fc7f8)
-> 근거 자료: docs/dev/unit-models-plan.md (맞춰 보기, 후보 사진첩 docs/review/unit-candidates-0~2.png)
+> 근거 자료: docs/dev/unit-models-plan.md (맞춰 보기)
 > 목적: 병종마다 어떤 모델이 어떤 무기를 어느 손에 들고 어떤 동작을 하는지 정하고, 모델을 나중에 바꾸기 쉬운 구조를 정한다.
 
 ## 1. 병종별 모습

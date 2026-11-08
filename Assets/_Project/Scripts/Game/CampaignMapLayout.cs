@@ -49,7 +49,7 @@ namespace VampireSpawn.Game
     }
 
     // docs/art/campaign-map.md, first pass (1-1): coordinates are map-local (x east, z north). The prefabs are listed by name
-    // here and found in ArtCatalog.mapProps, which the Tools window fills from Names (stage-select-handoff.md 3).
+    // here and found in ArtCatalog.mapProps, which the Tools window fills from Names (docs/art/campaign-map.md 구현 메모).
     public static class CampaignMapLayout
     {
         public static readonly Vector3 Origin = new Vector3(0f, 0f, 500f);

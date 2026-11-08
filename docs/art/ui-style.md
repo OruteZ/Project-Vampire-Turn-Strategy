@@ -1,6 +1,6 @@
 # UI 스타일 — 달과 피
 
-> 출처: docs/design/ui.md, docs/design/art.md, docs/design/campaign.md, docs/design/combat.md, docs/design/vampire.md, docs/design/units.md, docs/design/overview.md (커밋 f7fc7f8). 테마 결정: docs/areas/ui.md 결정 표 "달과 피" (#24). 고정 크기·화면 배치: #43 (docs/request/UI 대개편 - 스테이지 선택.md)
+> 출처: docs/design/ui.md, docs/design/art.md, docs/design/campaign.md, docs/design/combat.md, docs/design/vampire.md, docs/design/units.md, docs/design/overview.md (커밋 f7fc7f8). 테마 결정: docs/areas/ui.md 결정 표 "달과 피" (#24). 고정 크기·화면 배치: #43 (요청 #43)
 > 목적: 모든 화면이 같이 쓰는 색·글꼴·틀·버튼·아이콘·배치 규칙을 정한다. 화면별 기획서(docs/ui/*.md)는 이 문서의 이름(토큰)으로 말한다.
 > 바탕 근거: docs/art/ui-references.md
 
@@ -254,7 +254,7 @@
 구현 에이전트가 이 문서만 보고 만든다. 새 씬을 만들지 않고, 데모 전투 화면을 이 스타일로 바꾼 상태를 찍는다.
 
 1. 담을 것: 보름달 게이지("다음 턴 보름달" 상태), 뱀파이어 체력 막대, 전황, 접힌 전투 기록, 아군 패널(보름달 표적이 된 아군 선택), 적 패널(스폰 호버), 행동 줄, 턴 종료, 피해 미리 보기 한 번, Alt 이동력 보기 한 번.
-2. 스크린샷 1920×1080: `docs/review/ui-style-tile-1.png`(평소), `-2.png`(피해 미리 보기), `-3.png`(Alt).
+2. 스크린샷 1920×1080: 평소, 피해 미리 보기, Alt 세 장 (`verify-artifacts/`, 경로는 태스크 댓글에).
 3. 확인할 것: 틀을 물들였을 때 스프라이트에 원래 들어 있는 붉은·녹색 기가 아군 틀에서 거슬리는지. 거슬리면 보고하고, 스타일 기획서에서 다른 틀 스프라이트로 바꾼다.
 
 ## 14. 글보다 그림 (2026-11-07 개편, #33)
