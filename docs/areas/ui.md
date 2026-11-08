@@ -3,7 +3,7 @@
 ## 경로
 - 기획: docs/design/ui.md, docs/design/art.md
 - 기획서: docs/ui/ (화면별. 장 선택 3 레이어 docs/ui/stage-select.md, 병영 docs/ui/upgrade.md), docs/art/ui-style.md (UI 스타일: 색·글꼴·틀·버튼·배치 토큰, 15 고정 크기, 16 화면 배치 원칙), docs/art/ui-references.md (화면별 레이아웃 조사·요소별 레퍼런스), docs/art/campaign-map.md (장 선택 바탕 3D 원정 지도)
-- 코드: Assets/_Project/Scripts/Game/Screens/ (`Ui.cs` 색 토큰·글꼴·틀·말줄임, `Kit.cs` 글자·버튼·무기 아이콘·장식 프리팹, `BattleHud.cs` 전투 화면, `CampaignScreen.cs` 장 선택·병영, `MenuScreen.cs` 메인 메뉴, `HoverTip.cs` 툴팁, `Fx.cs` 맥박·번쩍임, `GameFlow.cs` 캔버스·화면 전환). 원정 지도는 새 `CampaignMapView` + `Assets/_Project/Art/CampaignMap.asset` (#43, 아직 없음). 구현 기록 docs/dev/unity-port.md "전투 화면 달과 피"
+- 코드: Assets/_Project/Scripts/Game/Screens/ (`Ui.cs` 색 토큰·글꼴·틀·말줄임, `Kit.cs` 글자·버튼·무기 아이콘·장식 프리팹, `BattleHud.cs` 전투 화면, `CampFlow.cs`·`CampToolkit.cs`·`CampMarkers.cs` 장 선택·병영, `MenuScreen.cs` 메인 메뉴, `HoverTip.cs` 툴팁, `Fx.cs` 맥박·번쩍임, `App.cs` 캔버스·씬 전환). 원정 지도는 `Game/CampaignMapView.cs` + 배치 표 `Game/CampaignMapLayout.cs`, Camp 씬에 구움 (campaign-map.md 10). 구현 기록 docs/dev/unity-port.md "전투 화면 달과 피"
 - UI 스프라이트: `ArtCatalog.ui`, 장식 프리팹: `ArtCatalog.uiPrefabs` (이름으로 찾는다). 새 스프라이트는 이 배열에 더하고 `node tools/assets/scan.mjs`
 - 아트: Assets/Synty/InterfaceDarkFantasyMenus, Assets/Synty/InterfaceDarkFantasyHUD, Assets/Synty/InterfaceCore (분류는 art-assets.md)
 - 화면 검사: `tools/ui-audit/sweep.sh`, `Scripts/Editor/UiAudit.cs`, 기록 docs/dev/ui-audit.md

@@ -47,8 +47,8 @@
 .info-panel { height: 520px; }
 .barracks-panel { height: 680px; }
 
-/* stage-select.md 3-1 says 40 above the panel, which leaves the screen (panel top is 24); its glow already reaches 12 px above the box. */
-.info-crest { position: absolute; left: 232px; top: 0; width: 96px; height: 96px; }
+/* The crest prefab draws about 1.9x its box wide and 1.3x tall, so a 72 box fills the gap left of March. */
+.info-crest { position: absolute; left: 106px; top: 390px; width: 72px; height: 72px; }
 .info-badge { position: absolute; left: 32px; top: 36px; width: 48px; height: 48px; justify-content: center; align-items: center; }
 .ring-fill, .ring { position: absolute; left: 0; top: 0; right: 0; bottom: 0; }
 .ring { left: -2px; top: -2px; right: -2px; bottom: -2px; }
