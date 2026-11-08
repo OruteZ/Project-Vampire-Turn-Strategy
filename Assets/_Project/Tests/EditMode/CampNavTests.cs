@@ -32,7 +32,7 @@ namespace VampireSpawn.Tests
         [Test]
         public void FromMenuKeepsTheStagePickedEarlierThisRun()
         {
-            var c = ClearedUpTo(0);
+            var c = ClearedUpTo(6);
             var picked = CampNav.FromMenu(c, null).Step(c, CampInput.Pick(5, 0f)).next;
             var back = CampNav.FromMenu(c, picked);
             Assert.AreEqual(5, back.Stage);
@@ -52,20 +52,33 @@ namespace VampireSpawn.Tests
         }
 
         [Test]
-        public void EnterOpensInfoThenMarchesOnlyIntoAnOpenStage()
+        public void EnterOpensInfoThenMarches()
         {
             var c = ClearedUpTo(1);
             var s = Press(CampNav.FromMenu(c, null), c, CampKey.Enter);
             Assert.AreEqual(CampLayer.Info, s.Layer);
             Assert.AreEqual(CampDo.March, s.Step(c, CampInput.Of(CampKey.Enter, 0f)).act);
-            var locked = s.Step(c, CampInput.Pick(5, 0f)).next;
-            Assert.AreEqual(CampDo.None, locked.Step(c, CampInput.Of(CampKey.Enter, 0f)).act, "a locked stage shows its info but does not march");
+        }
+
+        // #48: a stage that cannot be played never opens Info, whichever way the player tries.
+        [Test]
+        public void ALockedStageNeverOpensInfo()
+        {
+            var c = ClearedUpTo(1);
+            var map = CampNav.FromMenu(c, null);
+            Assert.AreEqual(CampDo.None, map.Step(c, CampInput.Pick(5, 0f)).act, "clicking a locked marker");
+            var onLocked = Press(map, c, CampKey.Up);
+            Assert.AreEqual(2, onLocked.Stage, "the map focus may rest on a locked stage");
+            Assert.AreEqual(CampLayer.Map, Press(onLocked, c, CampKey.Enter).Layer, "Enter on a locked focus");
+            var info = map.Step(c, CampInput.Pick(1, 0f)).next;
+            Assert.AreEqual(CampLayer.Info, info.Layer);
+            Assert.AreEqual(1, Press(info, c, CampKey.Up).Stage, "up in Info stops before a locked stage");
         }
 
         [Test]
         public void EscStepsBackOneLayerAndLeavesFromTheMap()
         {
-            var c = ClearedUpTo(0);
+            var c = ClearedUpTo(3);
             var info = CampNav.FromMenu(c, null).Step(c, CampInput.Pick(3, 0f)).next;
             var barracks = Press(info, c, CampKey.Barracks);
             Assert.AreEqual(CampLayer.Barracks, barracks.Layer);
@@ -81,7 +94,7 @@ namespace VampireSpawn.Tests
         [Test]
         public void EmptyMapClosesInfoButNotBarracks()
         {
-            var c = ClearedUpTo(0);
+            var c = ClearedUpTo(2);
             var info = CampNav.FromMenu(c, null).Step(c, CampInput.Pick(2, 0f)).next;
             Assert.AreEqual(CampLayer.Map, Press(info, c, CampKey.EmptyMap).Layer);
             var barracks = Press(info, c, CampKey.Barracks);
