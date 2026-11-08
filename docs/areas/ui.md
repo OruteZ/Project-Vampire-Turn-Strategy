@@ -39,6 +39,7 @@
 | 정보는 그 레이어 결정에 필요할 때만: 가진 금화는 병영(L3)에서만, 지도·장 정보에는 병영 버튼의 "살 수 있는 강화 수" 배지만 (stage-select.md 6) | 시험 중 | 2026-11-07 | #43 "각 자원이나 정보는 각 Scene에서 필요한 경우에만" |
 | UI 는 화면 단위로 섞는다: 새로 만들거나 크게 고치는 화면은 UI Toolkit(UXML/USS), 3D 를 따라가는 표시(머리 위 체력, 지도 지역 표식)는 uGUI. 장 선택(#43)이 두 번째 UI Toolkit 화면 (stage-select.md 10) | 시험 중 | 2026-11-07 | #43 채팅 "개발을 UI Toolkit + UGUI로 하도록 하자", #44 추천 |
 | 장 선택 바탕은 Synty 프리팹을 코드가 데이터 표대로 놓아 짓는 3D 원정 지도. 장마다 지역 하나, 지역 표식은 고정 크기 UI(3D 점을 따라감), 이름은 가리킨·고른 지역만. 진행은 빛(클리어한 지역의 화로)으로 보인다 (campaign-map.md) | 시험 중 | 2026-11-07 | #43 "Synty 에셋을 사용해 3D맵을 제작 … 그 지역을 클릭하면 스테이지 정보화면으로" |
+| 원정 지도 카메라 이동은 손 코드 보간이 아니라 Cinemachine(구운 시점 + 브레인 블렌드)으로 한다. 시점은 Camp 씬에서 손으로 고친다 (campaign-map.md 구현 메모) | 시험 중 | 2026-11-08 | #57 "그 코드 밀어버리고 Cinemachine 패키지 설치해서 처리해줘" |
 
 ## 열린 작업
 - #24 UI 아트 테마·파이프라인: 8단계 화면별 구현 끝, 남은 것(보름달 턴 상태·연출·배지 절)도 #28 에서 끝. 전투 (#25), 장 선택·병영 (#26), 메인 메뉴 (#27). 스크린샷 docs/review/battle-hud-*, stage-select-*, main-menu*.png
@@ -53,7 +54,8 @@
 - 함정: 키트 장식은 대부분 악마 상징(해골, 오망성, 촉수)이다. 플레이어는 토벌대라서 어디에 쓸지는 테마가 정한다. 문장(Crest) 28개 중 해골이 없는 것은 Large_03(마름모)·Banner_02(천) 정도다
 - 함정: Synty 틀 스프라이트의 9-slice 테두리가 180~380px 라 그대로 쓰면 두껍다. `Image.pixelsPerUnitMultiplier` 로 줄인다 (ui-style.md 5절)
 - 함정: UIDocument 의 뿌리와 템플릿 칸은 화면 전체를 덮고 기본으로 클릭을 받는다. 그대로 두면 EventSystem 이 늘 "UI 위" 라고 해 지도·보드 클릭이 안 된다. `ToolkitKit.Document` 가 Ignore 로 둔다
-- 함정: 투영 옮김(`BoardView.FitCamera`, `CampaignMapView`)은 `p[0,2] = -(2·cx − 1)`. 부호가 반대면 화면 가운데에서 반대쪽으로 간다
+- 함정: 투영 옮김(`BoardView.FitCamera`)은 `p[0,2] = -(2·cx − 1)`. 부호가 반대면 화면 가운데에서 반대쪽으로 간다
+- 함정: 원정 지도 카메라는 Cinemachine 이다. 빈 곳 맞춤에 컴포저 화면 위치를 쓰면 옆으로 덜 간다. 렌즈 시프트를 쓰고, 그러려면 Unity 카메라가 물리 카메라여야 한다 (campaign-map.md 구현 메모)
 - 함정: 적 턴은 모델이 먼저 끝나고 화면이 나중에 재생된다. 재생 중 상태(보름달 턴)는 `BattleView.Played` 배너로 안다 (`BattleFlow.OnPlayed`)
 - 함정: Synty 틀 스프라이트에는 붉은·녹색 기가 구워져 있다. Image 색으로 물들이면 곱해져 남는다
 - 함정: CanvasScaler 는 모든 씬이 같은 `App.Canvas` 로 짓기 때문에 Expand 로 바꾸면 모든 화면이 함께 바뀐다. 장 선택만 고쳐도 sweep 은 모든 화면에 돌린다. UI Toolkit `Panel.asset` 도 같이 Expand 로 바꾼다

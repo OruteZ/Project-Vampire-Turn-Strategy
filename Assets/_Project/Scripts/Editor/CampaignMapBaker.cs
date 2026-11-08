@@ -6,7 +6,7 @@ using VampireSpawn.Game;
 
 namespace VampireSpawn.Editor
 {
-    // Bakes CampaignMapLayout into the Camp scene (docs/dev/scene-split.md 3). After that the scene is the map: people move props in Unity.
+    // Bakes CampaignMapLayout (terrain and its Cinemachine shots, plus the brain on the view camera) into the Camp scene (docs/dev/scene-split.md 3). After that the scene is the map: people move props in Unity.
     // Baking again replaces the whole Campaign Map object, hand edits included.
     public static class CampaignMapBaker
     {
@@ -21,6 +21,7 @@ namespace VampireSpawn.Editor
             if (map.terrain != null) Object.DestroyImmediate(map.terrain.gameObject);
             Directory.CreateDirectory(MaterialFolder);
             map.terrain = CampaignMapView.Build(map.transform, map.art, Material(map.art));
+            if (map.viewCamera != null) EditorUtility.SetDirty(CampaignMapView.UseBrain(map.viewCamera));
             EditorUtility.SetDirty(map);
             EditorSceneManager.MarkSceneDirty(scene);
             EditorSceneManager.SaveScene(scene);

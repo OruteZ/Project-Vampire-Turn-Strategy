@@ -8,6 +8,8 @@ using VampireSpawn.Core;
 namespace VampireSpawn.Game.Screens
 {
     // docs/ui/stage-select.md 4: region markers are screen UI pinned to the map's 3D points. Built once; each frame only moves them.
+    // After CinemachineBrain (LateUpdate) has placed the camera, so markers never trail it by a frame.
+    [DefaultExecutionOrder(1000)]
     public sealed class CampMarkers : MonoBehaviour
     {
         const float Hit = 96f, Badge = 44f, Picked = 56f, Band = 280f;

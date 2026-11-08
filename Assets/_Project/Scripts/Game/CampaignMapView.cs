@@ -1,33 +1,26 @@
 using System.Collections.Generic;
 using System.Linq;
+using Unity.Cinemachine;
 using UnityEngine;
 using VampireSpawn.Core;
 
 namespace VampireSpawn.Game
 {
-    // docs/art/campaign-map.md, first pass (1-1). The fixed terrain is baked into the Camp scene (Tools > 지도 > 씬에 굽기) so people can
-    // move props in Unity; regions are found by name, so markers, braziers and the camera follow a moved region. Show rebuilds only progress.
-    // Look moves the shared view camera and the spotlight together so the UI markers never lag a frame behind.
+    // docs/art/campaign-map.md, first pass (1-1). The fixed terrain and its Cinemachine shots are baked into the Camp scene
+    // (Tools > 지도 > Camp 씬에 지도 굽기) so people can move props and tune each shot in Unity. Regions are found by name, so markers,
+    // braziers and shots follow a moved region. Show rebuilds only progress; Look picks a shot and the brain blends to it.
     public sealed class CampaignMapView : MonoBehaviour
     {
         public ArtCatalog art;
         public Camera viewCamera;
-        [Tooltip("씬에 구운 지형 (Campaign Map). 비면 실행 중에 짓는다")] public Transform terrain;
+        [Tooltip("씬에 구운 지형 (Campaign Map, 그 아래 Cameras 의 Cinemachine 시점들). 비면 실행 중에 짓는다")] public Transform terrain;
 
-        const float Pitch = 50f, MoveSeconds = 0.3f, CampDistance = 28f, WideStart = 80f, WideStep = 1.04f;
+        // campaign-map.md 9: pitch 50, the scene's FOV 40, camp distance 28, 0.3 s between shots.
+        public const float Pitch = 50f, Fov = 40f, CampDistance = 28f, BlendSeconds = 0.3f, WideDistance = 80f;
 
         Transform progress;
         Light spot;
         Campaign campaign;
-        Shot from, to;
-        float moveStart = -1f;
-        CampLayer layer;
-        int stage;
-        Rect empty;
-        Vector2 margin;
-        float fittedAspect;
-
-        struct Shot { public Vector3 Target; public float Distance; public Vector2 Centre; }
 
         public bool Showing => terrain != null && terrain.gameObject.activeSelf;
 
@@ -58,31 +51,47 @@ namespace VampireSpawn.Game
                 viewCamera.backgroundColor = CampaignMapLayout.Fog;
                 viewCamera.targetTexture = null;
                 viewCamera.rect = new Rect(0f, 0f, 1f, 1f);
+                UseBrain(viewCamera);
             }
+            var camp = Shot("Shot Camp");
+            if (camp != null) camp.Follow = camp.LookAt = CampSpot();
+        }
+
+        public static CinemachineBrain UseBrain(Camera cam)
+        {
+            var brain = cam.GetComponent<CinemachineBrain>();
+            if (brain == null) brain = cam.gameObject.AddComponent<CinemachineBrain>();
+            // With LensModeOverride off the brain only writes lens shift into a camera that is already physical.
+            cam.usePhysicalProperties = true;
+            brain.DefaultBlend = new CinemachineBlendDefinition(CinemachineBlendDefinition.Styles.EaseInOut, BlendSeconds);
+            return brain;
         }
 
         public void Hide()
         {
             if (terrain != null) terrain.gameObject.SetActive(false);
-            moveStart = -1f;
             RenderSettings.fog = false;
         }
 
         // empty and margin are normalized viewport units (stage-select.md 2-3, campaign-map.md 9: markers stay 48 px inside).
+        // Only the chosen shot is enabled; it aims at its subject and a lens shift slides the picture so the subject sits at the empty
+        // area's centre. The composer's screen offset is angular and lands about 35% short sideways, so it is not used for this.
         public void Look(CampLayer layer, int stage, Rect empty, Vector2 margin, bool snap = false)
         {
-            this.layer = layer;
-            this.stage = stage;
+            var r = RegionOf(stage);
+            var chosen = layer == CampLayer.Barracks ? Shot("Shot Camp") : layer == CampLayer.Info && r != null ? Shot("Shot " + r.Stage) : Shot("Shot Wide");
+            foreach (var cam in Shots()) cam.enabled = cam == chosen;
             this.empty = empty;
-            this.margin = margin;
-            var next = ShotFor(layer, stage);
-            from = snap || moveStart < 0f ? next : Current();
-            to = next;
-            moveStart = snap ? Time.unscaledTime - MoveSeconds : Time.unscaledTime;
+            if (chosen != null)
+            {
+                Shift(chosen);
+                if (chosen.TryGetComponent<CinemachineGroupFraming>(out var framing))
+                    framing.FramingSize = Mathf.Min(empty.width - 2f * margin.x, empty.height - 2f * margin.y);
+            }
+            if (snap && viewCamera != null && viewCamera.TryGetComponent<CinemachineBrain>(out var brain)) brain.ResetState();
             if (spot != null)
             {
                 spot.enabled = layer == CampLayer.Info;
-                var r = RegionOf(stage);
                 if (r != null)
                 {
                     var a = AnchorOf(r);
@@ -90,7 +99,16 @@ namespace VampireSpawn.Game
                     spot.transform.rotation = Quaternion.LookRotation(a - spot.transform.position);
                 }
             }
-            Apply();
+        }
+
+        Rect empty = new Rect(0f, 0f, 1f, 1f);
+
+        // Sensor at the screen's aspect with a vertical gate, so the vertical FOV stays 40 and a shift of 1 is one screen width.
+        void Shift(CinemachineCamera cam)
+        {
+            var aspect = viewCamera != null ? viewCamera.aspect : 16f / 9f;
+            cam.Lens.PhysicalProperties.SensorSize = new Vector2(24f * aspect, 24f);
+            cam.Lens.PhysicalProperties.LensShift = new Vector2(0.5f - empty.center.x, 0.5f - empty.center.y);
         }
 
         public Vector3? MarkerPoint(int stageIndex)
@@ -108,84 +126,35 @@ namespace VampireSpawn.Game
             return v.z <= 0f ? (Vector2?)null : new Vector2(v.x, v.y);
         }
 
+        // Fog follows the camera's distance (campaign-map.md 8: start x0.9, end x2.2), read off its height at the fixed pitch.
         void LateUpdate()
         {
-            if (!Showing || viewCamera == null || moveStart < 0f) return;
-            if (!Mathf.Approximately(viewCamera.aspect, fittedAspect)) { to = ShotFor(layer, stage); from = to; }
-            if (Time.unscaledTime - moveStart <= MoveSeconds + Time.unscaledDeltaTime) Apply();
+            if (!Showing || viewCamera == null) return;
+            foreach (var cam in Shots())
+                if (cam.enabled && !Mathf.Approximately(cam.Lens.PhysicalProperties.SensorSize.x, 24f * viewCamera.aspect)) Shift(cam);
+            var distance = Mathf.Max(1f, (viewCamera.transform.position.y - CampaignMapLayout.Origin.y) / Mathf.Sin(Pitch * Mathf.Deg2Rad));
+            RenderSettings.fogStartDistance = distance * 0.9f;
+            RenderSettings.fogEndDistance = distance * 2.2f;
         }
 
         static MapRegion RegionOf(int stageIndex) =>
             stageIndex >= 0 && stageIndex < Campaign.Stages.Length ? CampaignMapLayout.Region(Campaign.Stages[stageIndex].Id) : null;
 
-        Shot Current()
+        IEnumerable<CinemachineCamera> Shots()
         {
-            var t = Mathf.Clamp01((Time.unscaledTime - moveStart) / MoveSeconds);
-            t = t * t * (3f - 2f * t);
-            return new Shot { Target = Vector3.Lerp(from.Target, to.Target, t), Distance = Mathf.Lerp(from.Distance, to.Distance, t), Centre = Vector2.Lerp(from.Centre, to.Centre, t) };
+            var cams = terrain != null ? terrain.Find("Cameras") : null;
+            return cams != null ? cams.GetComponentsInChildren<CinemachineCamera>(true) : Enumerable.Empty<CinemachineCamera>();
         }
 
-        void Apply()
-        {
-            var s = Current();
-            Place(s);
-            RenderSettings.fogStartDistance = s.Distance * 0.9f;
-            RenderSettings.fogEndDistance = s.Distance * 2.2f;
-        }
-
-        void Place(Shot s)
-        {
-            var rot = Quaternion.Euler(Pitch, 0f, 0f);
-            viewCamera.transform.rotation = rot;
-            viewCamera.transform.position = s.Target - rot * Vector3.forward * s.Distance;
-            // Same off-centre projection as BoardView.FitCamera: the camera axis lands on the empty area's centre.
-            viewCamera.ResetProjectionMatrix();
-            var p = viewCamera.projectionMatrix;
-            p[0, 2] = -2f * (s.Centre.x - 0.5f);
-            p[1, 2] = -2f * (s.Centre.y - 0.5f);
-            viewCamera.projectionMatrix = p;
-            fittedAspect = viewCamera.aspect;
-        }
-
-        Shot ShotFor(CampLayer l, int stageIndex)
-        {
-            var centre = empty.center;
-            if (l == CampLayer.Barracks)
-            {
-                var camp = CampSpot();
-                return new Shot { Target = camp, Distance = CampDistance, Centre = centre };
-            }
-            if (l == CampLayer.Info && RegionOf(stageIndex) is MapRegion r)
-                return new Shot { Target = AnchorOf(r) + Vector3.forward * 2f, Distance = r.ViewDistance, Centre = centre };
-            return Wide(centre);
-        }
-
-        // campaign-map.md 9 wide shot: start at 80 and back off until every anchor and marker point sits inside the empty area.
-        Shot Wide(Vector2 centre)
-        {
-            var anchors = CampaignMapLayout.Regions.Select(AnchorOf).ToArray();
-            var min = new Vector3(anchors.Min(a => a.x), anchors.Min(a => a.y), anchors.Min(a => a.z));
-            var max = new Vector3(anchors.Max(a => a.x), anchors.Max(a => a.y), anchors.Max(a => a.z));
-            var shot = new Shot { Target = (min + max) * 0.5f, Distance = WideStart, Centre = centre };
-            if (viewCamera == null) return shot;
-            var points = CampaignMapLayout.Regions.SelectMany(r => new[] { AnchorOf(r), AnchorOf(r) + Vector3.up * r.MarkerHeight }).ToArray();
-            var inner = Rect.MinMaxRect(empty.xMin + margin.x, empty.yMin + margin.y, empty.xMax - margin.x, empty.yMax - margin.y);
-            for (var i = 0; i < 60; i++)
-            {
-                Place(shot);
-                if (points.All(p => inner.Contains(viewCamera.WorldToViewportPoint(p)))) break;
-                shot.Distance *= WideStep;
-            }
-            return shot;
-        }
+        CinemachineCamera Shot(string name) => Shots().FirstOrDefault(c => c.name == name);
 
         // 1-1: the camp itself is deferred, so the barracks view looks at the last cleared region (stage 1 if none).
-        Vector3 CampSpot()
+        Transform CampSpot()
         {
             var last = -1;
             for (var i = 0; i < Campaign.Stages.Length; i++) if (campaign != null && campaign.IsCleared(Campaign.Stages[i])) last = i;
             var r = RegionOf(Mathf.Max(0, last));
-            return r != null ? AnchorOf(r) : World(CampaignMapLayout.Start);
+            return r != null && terrain != null ? terrain.Find("Region " + r.Stage) : null;
         }
 
         // A region baked into the scene may have been moved by hand; its object is the truth, the layout table the fallback.
@@ -193,6 +162,50 @@ namespace VampireSpawn.Game
         {
             var root = terrain != null ? terrain.Find("Region " + r.Stage) : null;
             return root != null ? root.position : World(r.Anchor);
+        }
+
+        // One Cinemachine shot: follows its subject at the given distance and pitch; the composer aims it (campaign-map.md 9).
+        static CinemachineCamera NewShot(Transform parent, string name, Transform subject, float distance)
+        {
+            var go = new GameObject(name);
+            go.transform.SetParent(parent, false);
+            var cam = go.AddComponent<CinemachineCamera>();
+            cam.Lens.FieldOfView = Fov;
+            cam.Lens.PhysicalProperties.GateFit = Camera.GateFitMode.Vertical;
+            cam.Lens.FarClipPlane = 1000f;
+            cam.Follow = cam.LookAt = subject;
+            var follow = go.AddComponent<CinemachineFollow>();
+            var rad = Pitch * Mathf.Deg2Rad;
+            follow.FollowOffset = new Vector3(0f, Mathf.Sin(rad) * distance, -Mathf.Cos(rad) * distance);
+            follow.TrackerSettings.BindingMode = Unity.Cinemachine.TargetTracking.BindingMode.WorldSpace;
+            follow.TrackerSettings.PositionDamping = Vector3.zero;
+            var composer = go.AddComponent<CinemachineRotationComposer>();
+            composer.Damping = Vector2.zero;
+            cam.enabled = false;
+            return cam;
+        }
+
+        static void BuildShots(Transform terrain)
+        {
+            var cams = new GameObject("Cameras").transform;
+            cams.SetParent(terrain, false);
+            var group = new GameObject("Regions").AddComponent<CinemachineTargetGroup>();
+            group.transform.SetParent(cams, false);
+            foreach (var r in CampaignMapLayout.Regions)
+            {
+                var root = terrain.Find("Region " + r.Stage);
+                if (root != null) group.AddMember(root, 1f, r.Radius);
+            }
+            var wide = NewShot(cams, "Shot Wide", group.transform, WideDistance);
+            var framing = wide.gameObject.AddComponent<CinemachineGroupFraming>();
+            framing.SizeAdjustment = CinemachineGroupFraming.SizeAdjustmentModes.DollyOnly;
+            framing.FramingMode = CinemachineGroupFraming.FramingModes.HorizontalAndVertical;
+            foreach (var r in CampaignMapLayout.Regions)
+            {
+                var root = terrain.Find("Region " + r.Stage);
+                if (root != null) NewShot(cams, "Shot " + r.Stage, root, r.ViewDistance);
+            }
+            NewShot(cams, "Shot Camp", null, CampDistance);
         }
 
         // Builds the fixed terrain under parent. material makes the tinted materials: runtime copies here, saved assets when baking.
@@ -234,6 +247,7 @@ namespace VampireSpawn.Game
                     BoardView.AddLight(region, World(r.Anchor + new Vector2(l.At.x, l.At.z), l.At.y), LightType.Point, l.Blood ? CampaignMapLayout.Blood : art.torchLight, l.Intensity, l.Range);
             }
             BuildForest(terrain, art);
+            BuildShots(terrain);
             return terrain;
         }
 
