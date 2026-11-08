@@ -58,7 +58,7 @@ MonoBehaviour:
   skeletonRing: {r: 0.71, g: 0.66, b: 0.56, a: 1}
   vampireRing: {r: 0.78, g: 0.19, b: 0.29, a: 1}
   spawnRing: {r: 0.65, g: 0.31, b: 0.77, a: 1}
-  coffin: {r: 0.25, g: 0.06, b: 0.11, a: 1}
+  coffin: {fileID: 7416434307688326560, guid: bdf4e270f5d02034ab8ecb736e89b28e, type: 3}
   ui:
   - {fileID: 21300000, guid: 5190468f75372b34c9ce4e588be76293, type: 3}
   - {fileID: 21300000, guid: e9242b3ca2c03c44e901fbfffe806b73, type: 3}

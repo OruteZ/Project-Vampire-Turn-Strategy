@@ -40,7 +40,7 @@ namespace VampireSpawn.Game
             if (inCoffin)
             {
                 view.Lying = true;
-                view.coffin = Quad(art, root.transform, "Coffin", art.coffin, new Vector3(0.8f, 0.3f, art.unitHeight * art.hexSize), PrimitiveType.Cube).gameObject;
+                view.coffin = Coffin(art, root.transform);
             }
             else view.BuildModel();
 
@@ -122,6 +122,21 @@ namespace VampireSpawn.Game
             block.SetColor(BaseColor, color);
             mr.SetPropertyBlock(block);
             return go.transform;
+        }
+
+        static GameObject Coffin(ArtCatalog art, Transform parent)
+        {
+            var c = Instantiate(art.coffin, parent, false);
+            c.name = "Coffin";
+            foreach (var col in c.GetComponentsInChildren<Collider>(true)) { if (Application.isPlaying) Destroy(col); else DestroyImmediate(col); }
+            var rs = c.GetComponentsInChildren<Renderer>();
+            if (rs.Length == 0) return c;
+            var b = rs[0].bounds;
+            foreach (var r in rs) b.Encapsulate(r.bounds);
+            if (b.size.x > b.size.z) c.transform.localRotation = Quaternion.Euler(0f, 90f, 0f);
+            var length = Mathf.Max(b.size.x, b.size.z);
+            if (length > 0.01f) c.transform.localScale *= art.unitHeight * art.hexSize / length;
+            return c;
         }
 
         static void FitHeight(Transform t, float height)

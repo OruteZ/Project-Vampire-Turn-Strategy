@@ -37,7 +37,7 @@ namespace VampireSpawn.Game
         public Color skeletonRing = new Color(0.71f, 0.66f, 0.56f);
         public Color vampireRing = new Color(0.78f, 0.19f, 0.29f);
         public Color spawnRing = new Color(0.65f, 0.31f, 0.77f);
-        public Color coffin = new Color(0.25f, 0.06f, 0.11f);
+        [Tooltip("잠든 뱀파이어의 관. 색칠 없이 그대로 (docs/art/unit-visuals.md 5)")] public GameObject coffin;
 
         [Header("UI")]
         [Tooltip("Synty UI 스프라이트. 이름으로 찾는다 (docs/art/ui-style.md)")]
