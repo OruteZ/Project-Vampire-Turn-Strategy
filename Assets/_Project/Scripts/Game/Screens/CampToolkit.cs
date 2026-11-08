@@ -57,8 +57,12 @@ namespace VampireSpawn.Game.Screens
             return ui;
         }
 
+        CampLayer? shown;
+
         public void Fill(Campaign c, CampNav nav, Func<CampKey, CampInput> input)
         {
+            if (shown.HasValue && shown != nav.Layer) { Leave(PanelOf(shown.Value)); Enter(PanelOf(nav.Layer)); }
+            shown = nav.Layer;
             root.EnableInClassList("l-map", nav.Layer == CampLayer.Map);
             root.EnableInClassList("l-info", nav.Layer == CampLayer.Info);
             root.EnableInClassList("l-barracks", nav.Layer == CampLayer.Barracks);
@@ -81,6 +85,37 @@ namespace VampireSpawn.Game.Screens
 
             if (nav.Layer == CampLayer.Info) Info(c, nav.Stage, input);
             if (nav.Layer == CampLayer.Barracks) Barracks(c, nav, input);
+            Bought = null;
+        }
+
+        // upgrade.md 6-4: the row just bought and the gold count flash for 0.2 s (USS transition back from .flash).
+        public string Bought;
+
+        static void Flash(VisualElement e)
+        {
+            e.AddToClassList("flash");
+            e.schedule.Execute(() => e.schedule.Execute(() => e.RemoveFromClassList("flash")));
+        }
+
+        VisualElement PanelOf(CampLayer layer) => layer == CampLayer.Info ? root.Q("info") : layer == CampLayer.Barracks ? root.Q("barracks-panel") : null;
+
+        // ui-style.md 12 / stage-select.md 5-1: panels fade in rising 8 px and fade out over 0.15 s (USS transition on .panel).
+        static void Enter(VisualElement p)
+        {
+            if (p == null) return;
+            p.RemoveFromClassList("leave");
+            p.SetEnabled(true);
+            p.AddToClassList("enter");
+            // Two scheduler ticks: the first frame must resolve the hidden style, or there is nothing to transition from.
+            p.schedule.Execute(() => p.schedule.Execute(() => p.RemoveFromClassList("enter")));
+        }
+
+        static void Leave(VisualElement p)
+        {
+            if (p == null) return;
+            p.SetEnabled(false);
+            p.AddToClassList("leave");
+            p.schedule.Execute(() => { p.RemoveFromClassList("leave"); p.SetEnabled(true); }).StartingIn(150);
         }
 
         void Info(Campaign c, int i, Func<CampKey, CampInput> input)
@@ -147,6 +182,14 @@ namespace VampireSpawn.Game.Screens
             var gold = panel.Q("bk-gold");
             gold.Clear();
             ToolkitKit.Value(gold, art, Kit.Icon.Gold, c.Gold.ToString(), Ui.Candle, Ui.Candle, Loc.T("camp.gold"), tip);
+            if (Bought != null)
+            {
+                var amount = gold.Q<Label>(className: "value-text");
+                var bright = Ui.Candle * 1.3f;
+                bright.a = 1f;
+                amount.style.color = bright;
+                amount.schedule.Execute(() => amount.schedule.Execute(() => amount.style.color = Ui.Candle));
+            }
 
             var tabs = panel.Q("bk-tabs");
             tabs.Clear();
@@ -189,6 +232,7 @@ namespace VampireSpawn.Game.Screens
                 var row = new VisualElement();
                 row.AddToClassList("up");
                 row.EnableInClassList("owned", own);
+                if (up.Id == Bought) Flash(row);
                 SetTip(row, Loc.T(up.Inherit ? "camp.inherit" : "camp.noInherit"));
                 var head = new VisualElement { pickingMode = PickingMode.Ignore };
                 head.AddToClassList("up-name");

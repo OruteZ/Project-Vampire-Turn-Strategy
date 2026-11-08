@@ -28,6 +28,7 @@ namespace VampireSpawn.Game.Screens
             nav = App.CampStart ?? CampNav.FromMenu(Campaign, App.Nav);
             App.CampStart = null;
             map.Show(Campaign);
+            BattleHud.Shade(screen);
             markers = CampMarkers.Build(screen, map.art, map, i => Send(CampInput.Pick(i, Time.unscaledTime)));
             ui = CampToolkit.Build(transform, map.art, In, Send);
             Canvas.ForceUpdateCanvases();
@@ -46,7 +47,7 @@ namespace VampireSpawn.Game.Screens
             {
                 case CampDo.Redraw: Redraw(false); break;
                 case CampDo.Buy:
-                    if (Campaign.Buy(input.Id)) CampaignStore.Save(Campaign);
+                    if (Campaign.Buy(input.Id)) { CampaignStore.Save(Campaign); ui.Bought = input.Id; }
                     Redraw(false);
                     break;
                 case CampDo.Reset:

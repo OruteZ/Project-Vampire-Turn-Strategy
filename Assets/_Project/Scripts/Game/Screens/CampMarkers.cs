@@ -20,6 +20,7 @@ namespace VampireSpawn.Game.Screens
             public Image Ring, Fill, Star;
             public Text Number, Name;
             public bool Hover;
+            public float Size = CampMarkers.Badge;
         }
 
         Marker[] markers;
@@ -118,7 +119,7 @@ namespace VampireSpawn.Game.Screens
                 var picked = layer == CampLayer.Info && i == focus;
                 var focused = layer == CampLayer.Map && i == focus;
                 m.NameBand.gameObject.SetActive(m.Hover || picked);
-                m.Badge.sizeDelta = Vector2.one * (picked ? Picked : Badge);
+                m.Size = picked ? Picked : Badge;
                 m.Ring.transform.localScale = Vector3.one * ((m.Hover || focused) && !picked ? 1.1f : 1f);
             }
         }
@@ -134,6 +135,9 @@ namespace VampireSpawn.Game.Screens
                 var show = p.HasValue && empty.Contains(p.Value);
                 if (m.Root.gameObject.activeSelf != show) m.Root.gameObject.SetActive(show);
                 if (show) m.Root.anchoredPosition = new Vector2(p.Value.x * size.x, p.Value.y * size.y);
+                // stage-select.md 4-2: 44 -> 56 over 0.15 s.
+                var d = Mathf.MoveTowards(m.Badge.sizeDelta.x, m.Size, (Picked - Badge) / 0.15f * Time.unscaledDeltaTime);
+                m.Badge.sizeDelta = new Vector2(d, d);
             }
             // 4-3: far markers (higher on screen) first, hovered/focused/picked on top.
             Array.Sort(order ??= BuildOrder(), (a, b) => Rank(b).CompareTo(Rank(a)));

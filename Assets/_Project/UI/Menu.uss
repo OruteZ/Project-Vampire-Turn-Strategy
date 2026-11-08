@@ -1,8 +1,16 @@
 /* docs/ui/main-menu.md. Sizes are 1920x1080 reference px (Panel.asset scales like the uGUI canvas). */
 .screen {
     flex-grow: 1;
+}
+
+/* main-menu.md 후속: one centre anchor. The block is 618 px tall and sat at y 120 on 1080, so its top is centre - 420. */
+.block {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 50%;
+    margin-top: -420px;
     align-items: center;
-    padding-top: 120px;
 }
 
 /* Vertical stops measured on the uGUI menu at 1920x1080: title centre 352, break 402, cards from 465. */
