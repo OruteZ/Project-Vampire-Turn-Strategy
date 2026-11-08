@@ -1,11 +1,16 @@
 // Task board (docs/guides/work-status.md): request issues with task sub-issues on the GitHub Project "Vampire Spawn 작업".
-//   node tools/board/board.mjs task <요청#> <담당 에이전트|OZ> <종류> "<제목>" ["<본문>"]   opens a task under the request
-//   node tools/board/board.mjs status <#> <미작업|작업 중|작업 완료>                          moves a task on the board
+//   node tools/board/board.mjs task <요청#> <담당 에이전트|OZ> <종류> "<제목>" ["<본문>"] [--after 12,13]   opens a task under the request
+//   node tools/board/board.mjs after <#> <선행#> [<선행#> …]                                 marks predecessors (GitHub "blocked by")
+//   node tools/board/board.mjs status <#> <작업 중|작업 완료|…>                                moves a task on the board
 //   node tools/board/board.mjs sync                                                    puts every 작업/요청 issue on the board, fills 담당·종류 from the body line, prints the lists
 import { execFileSync } from 'node:child_process';
 
 const OWNER = 'OruteZ', REPO = 'Project-Vampire-Turn-Strategy', PROJECT = 'Vampire Spawn 작업';
-export const WHO = ['에이전트', 'OZ'], KINDS = ['기획', '구현', '검증', '결정', '준비'], STATES = ['미작업', '작업 중', '작업 완료'];
+export const WHO = ['에이전트', 'OZ'], KINDS = ['기획', '구현', '검증', '결정', '준비'], STATES = ['미작업', '작업 가능', '작업 중', '작업 완료'];
+
+// 미작업 and 작업 가능 are not set by hand: they follow from whether any predecessor (blocked by) is still open.
+const waitingState = (openBlockers) => (openBlockers > 0 ? '미작업' : '작업 가능');
+const DERIVED = ['미작업', '작업 가능'];
 
 const gh = (args) => execFileSync('gh', args, { encoding: 'utf8', stdio: ['ignore', 'pipe', 'pipe'] });
 const gql = (query, vars = {}) => {
@@ -19,6 +24,22 @@ export function parseLine(body) {
   const who = (body.match(/담당:\s*(에이전트|OZ)/) || [])[1];
   const kind = (body.match(/종류:\s*(기획|구현|검증|결정|준비)/) || [])[1];
   return { who, kind };
+}
+
+function openBlockers() {
+  const nodes = gql(`query($q:String!){search(query:$q,type:ISSUE,first:100){nodes{... on Issue{number blockedBy(first:20){nodes{state}}}}}}`,
+    { q: `repo:${OWNER}/${REPO} is:issue is:open label:작업` }).search.nodes;
+  return new Map(nodes.map((n) => [n.number, n.blockedBy.nodes.filter((b) => b.state === 'OPEN').length]));
+}
+
+const issueId = (number) => gql(`query($o:String!,$r:String!,$n:Int!){repository(owner:$o,name:$r){issue(number:$n){id}}}`, { o: OWNER, r: REPO, n: number }).repository.issue.id;
+
+function after(number, predecessors) {
+  const id = issueId(number);
+  for (const pre of predecessors) {
+    gql(`mutation($i:ID!,$b:ID!){addBlockedBy(input:{issueId:$i,blockingIssueId:$b}){issue{number}}}`, { i: id, b: issueId(pre) });
+    console.log(`#${number} 선행 #${pre}`);
+  }
 }
 
 function issues() {
@@ -69,7 +90,7 @@ function addItem(p, issueNodeId) {
   }
 }
 
-function task(parent, who, kind, title, body = '') {
+function task(parent, who, kind, title, body = '', predecessors = []) {
   if (!WHO.includes(who)) throw new Error(`담당은 ${WHO.join('/')}`);
   if (!KINDS.includes(kind)) throw new Error(`종류는 ${KINDS.join('/')}`);
   const url = gh(['issue', 'create', '-R', `${OWNER}/${REPO}`, '--title', title, '--label', '작업', '--body', `${bodyLine(who, kind)}\n요청: #${parent}\n\n${body}`.trim()]).trim();
@@ -77,28 +98,30 @@ function task(parent, who, kind, title, body = '') {
   const ids = gql(`query($o:String!,$r:String!,$a:Int!,$b:Int!){repository(owner:$o,name:$r){a:issue(number:$a){id} b:issue(number:$b){id}}}`,
     { o: OWNER, r: REPO, a: parent, b: number }).repository;
   gql(`mutation($a:ID!,$b:ID!){addSubIssue(input:{issueId:$a,subIssueId:$b}){issue{number}}}`, { a: ids.a.id, b: ids.b.id });
+  if (predecessors.length) after(number, predecessors);
   const p = project();
   if (p) {
     const item = addItem(p, ids.b.id);
-    setField(p, item, 'Status', '미작업');
+    setField(p, item, 'Status', waitingState(openBlockers().get(number) || 0));
     setField(p, item, '담당', who);
     setField(p, item, '종류', kind);
   }
-  console.log(`#${number} ${title} (요청 #${parent}, ${who}, ${kind})${p ? '' : '  보드 없음: 다음 sync 때 올라간다'}`);
+  const pre = predecessors.length ? `, 선행 ${predecessors.map((n) => '#' + n).join(' ')}` : '';
+  console.log(`#${number} ${title} (요청 #${parent}, ${who}, ${kind}${pre})${p ? '' : '  보드 없음: 다음 sync 때 올라간다'}`);
 }
 
 function setStatus(number, state) {
   if (!STATES.includes(state)) throw new Error(`상태는 ${STATES.join('/')}`);
   const p = project();
   if (!p) throw new Error('보드가 없다 (gh auth refresh -s project)');
-  const id = gql(`query($o:String!,$r:String!,$n:Int!){repository(owner:$o,name:$r){issue(number:$n){id}}}`, { o: OWNER, r: REPO, n: number }).repository.issue.id;
-  setField(p, p.items.get(number)?.id || addItem(p, id), 'Status', state);
+  setField(p, p.items.get(number)?.id || addItem(p, issueId(number)), 'Status', state);
   console.log(`#${number} → ${state}`);
 }
 
 export function sync({ quiet = false } = {}) {
   const all = issues();
   const p = project();
+  const blockers = openBlockers();
   const rows = [];
   for (const i of all) {
     const isRequest = i.labels.some((l) => l.name === '요청');
@@ -107,14 +130,16 @@ export function sync({ quiet = false } = {}) {
     if (p) {
       let it = p.items.get(i.number);
       if (!it) { it = { id: addItem(p, i.id), values: {} }; p.items.set(i.number, it); }
-      const want = { Status: it.values.Status || (i.state === 'CLOSED' ? '작업 완료' : '미작업') };
+      const want = { Status: it.values.Status };
       if (i.state === 'CLOSED') want.Status = '작업 완료';
+      else if (isRequest) want.Status = it.values.Status || '미작업';
+      else if (!it.values.Status || DERIVED.includes(it.values.Status)) want.Status = waitingState(blockers.get(i.number) || 0);
       if (!isRequest && line.who && !it.values['담당']) want['담당'] = line.who;
       if (!isRequest && line.kind && !it.values['종류']) want['종류'] = line.kind;
       for (const [k, v] of Object.entries(want)) if (it.values[k] !== v) { setField(p, it.id, k, v); it.values[k] = v; }
       values = it.values;
     }
-    if (!isRequest && i.state === 'OPEN') rows.push({ n: i.number, title: i.title, who: values['담당'] || line.who || '담당 없음', state: values.Status || '상태 모름' });
+    if (!isRequest && i.state === 'OPEN') rows.push({ n: i.number, title: i.title, who: values['담당'] || line.who || '담당 없음', state: values.Status || '상태 모름', waits: blockers.get(i.number) || 0 });
   }
   if (quiet) return;
   if (!p) console.log('보드 없음 (gh auth refresh -s project 전이거나 Project 가 아직 없음). 이슈 본문 줄로만 보인다');
@@ -122,7 +147,7 @@ export function sync({ quiet = false } = {}) {
     const mine = rows.filter((r) => r.who === who);
     if (!mine.length) continue;
     console.log(`${who} 할 일 ${mine.length}개`);
-    for (const r of mine.sort((a, b) => STATES.indexOf(b.state) - STATES.indexOf(a.state))) console.log(`  ${r.state.padEnd(5)} #${r.n} ${r.title}`);
+    for (const r of mine.sort((a, b) => STATES.indexOf(b.state) - STATES.indexOf(a.state))) console.log(`  ${r.state.padEnd(5)} #${r.n} ${r.title}${r.waits ? `  (선행 ${r.waits}개 열림)` : ''}`);
   }
   const requests = gql(`query($q:String!){search(query:$q,type:ISSUE,first:50){nodes{... on Issue{number title subIssuesSummary{total completed}}}}}`,
     { q: `repo:${OWNER}/${REPO} is:issue is:open label:요청` }).search.nodes;
@@ -133,9 +158,14 @@ export function sync({ quiet = false } = {}) {
 }
 
 if (process.argv[1] && process.argv[1].replace(/\\/g, '/').endsWith('tools/board/board.mjs')) {
-  const [cmd, ...a] = process.argv.slice(2);
-  if (cmd === 'task') task(Number(String(a[0]).replace('#', '')), a[1], a[2], a[3], a[4]);
+  const argv = process.argv.slice(2);
+  const flag = argv.indexOf('--after');
+  const predecessors = flag < 0 ? [] : argv.splice(flag, 2)[1].split(',').map((s) => Number(s.replace('#', '')));
+  const [cmd, ...a] = argv;
+  const num = (s) => Number(String(s).replace('#', ''));
+  if (cmd === 'task') task(num(a[0]), a[1], a[2], a[3], a[4], predecessors);
+  else if (cmd === 'after') after(num(a[0]), a.slice(1).map(num));
   else if (cmd === 'sync') sync();
   else if (cmd === 'status') setStatus(Number(String(a[0]).replace('#', '')), a[1]);
-  else { console.log('node tools/board/board.mjs task <요청#> <에이전트|OZ> <종류> "<제목>" ["<본문>"] | status <#> <상태> | sync'); process.exit(1); }
+  else { console.log('node tools/board/board.mjs task <요청#> <에이전트|OZ> <종류> "<제목>" ["<본문>"] [--after 12,13] | after <#> <선행#…> | status <#> <상태> | sync'); process.exit(1); }
 }
