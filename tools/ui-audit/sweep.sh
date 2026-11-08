@@ -23,6 +23,7 @@ declare -A SCREENS=(
   [2c-camp-l2-s8]="$APP VampireSpawn.Game.Screens.App.GoCamp(camp(new[]{ $PICK(7, 0f) })); return 1;"
   [2d-camp-l2-s10]="$APP VampireSpawn.Game.Screens.App.GoCamp(camp(new[]{ $PICK(9, 0f) })); return 1;"
   [2e-camp-l3]="$APP VampireSpawn.Game.Screens.App.GoCamp(camp(new[]{ $PICK(0, 0f), VampireSpawn.Core.CampInput.Of(VampireSpawn.Core.CampKey.Barracks, 0f) })); return 1;"
+  [2f-camp-l3-buy]="$APP VampireSpawn.Game.Screens.App.GoCamp(camp(new[]{ $PICK(0, 0f), VampireSpawn.Core.CampInput.Of(VampireSpawn.Core.CampKey.Barracks, 0f), VampireSpawn.Core.CampInput.Buy(VampireSpawn.Core.GameData.Upgrades[0].Id, 0f) })); return 1;"
   [3-deploy]="VampireSpawn.Game.Screens.App.GoBattle(VampireSpawn.Core.Campaign.Stages[0], false); return 1;"
   [4-turn]="$BF bf.input.Run(s=>s.UseSample()); bf.input.Run(s=>s.Start()); var u=System.Linq.Enumerable.First(bf.input.Session.Battle.Allies); bf.input.Run(s=>s.Click(u.Pos)); return 1;"
   [5-rules]="$BF T.GetField(\"rulesOpen\",F).SetValue(bf,true); T.GetMethod(\"RenderBattle\",F).Invoke(bf,null); return 1;"

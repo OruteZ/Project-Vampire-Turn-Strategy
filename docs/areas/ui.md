@@ -3,7 +3,7 @@
 ## 경로
 - 기획: docs/design/ui.md, docs/design/art.md
 - 기획서: docs/ui/ (화면별. 장 선택 3 레이어 docs/ui/stage-select.md, 병영 docs/ui/upgrade.md), docs/art/ui-style.md (UI 스타일: 색·글꼴·틀·버튼·배치 토큰, 15 고정 크기, 16 화면 배치 원칙), docs/art/ui-references.md (화면별 레이아웃 조사·요소별 레퍼런스), docs/art/campaign-map.md (장 선택 바탕 3D 원정 지도)
-- 코드: Assets/_Project/Scripts/Game/Screens/ (`Ui.cs` 색 토큰·글꼴·틀·말줄임, `Kit.cs` 글자·버튼·무기 아이콘·장식 프리팹, `BattleHud.cs` 전투 화면, `CampaignScreen.cs` 장 선택·병영, `MenuScreen.cs` 메인 메뉴, `HoverTip.cs` 툴팁, `Fx.cs` 맥박·번쩍임, `GameFlow.cs` 캔버스·화면 전환). 원정 지도는 새 `CampaignMapView` + `Assets/_Project/Art/CampaignMap.asset` (#43, 아직 없음). 구현 기록 docs/dev/unity-port.md "전투 화면 달과 피"
+- 코드: Assets/_Project/Scripts/Game/Screens/ (`Ui.cs` 색 토큰·글꼴·틀·말줄임, `Kit.cs` 글자·버튼·무기 아이콘·장식 프리팹, `BattleHud.cs` 전투 화면, `CampFlow.cs`·`CampToolkit.cs`·`CampMarkers.cs` 장 선택·병영, `MenuScreen.cs` 메인 메뉴, `HoverTip.cs` 툴팁, `Fx.cs` 맥박·번쩍임, `App.cs` 캔버스·씬 전환). 원정 지도는 `Game/CampaignMapView.cs` + 배치 표 `Game/CampaignMapLayout.cs`, Camp 씬에 구움 (campaign-map.md 10). 구현 기록 docs/dev/unity-port.md "전투 화면 달과 피"
 - UI 스프라이트: `ArtCatalog.ui`, 장식 프리팹: `ArtCatalog.uiPrefabs` (이름으로 찾는다). 새 스프라이트는 이 배열에 더하고 `node tools/assets/scan.mjs`
 - 아트: Assets/Synty/InterfaceDarkFantasyMenus, Assets/Synty/InterfaceDarkFantasyHUD, Assets/Synty/InterfaceCore (분류는 art-assets.md)
 - 화면 검사: `tools/ui-audit/sweep.sh`, `Scripts/Editor/UiAudit.cs`, 기록 docs/dev/ui-audit.md
@@ -38,6 +38,8 @@
 | 정보는 그 레이어 결정에 필요할 때만: 가진 금화는 병영(L3)에서만, 지도·장 정보에는 병영 버튼의 "살 수 있는 강화 수" 배지만 (stage-select.md 6) | 시험 중 | 2026-11-07 | #43 "각 자원이나 정보는 각 Scene에서 필요한 경우에만" |
 | UI 는 화면 단위로 섞는다: 새로 만들거나 크게 고치는 화면은 UI Toolkit(UXML/USS), 3D 를 따라가는 표시(머리 위 체력, 지도 지역 표식)는 uGUI. 장 선택(#43)이 두 번째 UI Toolkit 화면 (stage-select.md 10) | 시험 중 | 2026-11-07 | #43 채팅 "개발을 UI Toolkit + UGUI로 하도록 하자", #44 추천 |
 | 장 선택 바탕은 Synty 프리팹을 코드가 데이터 표대로 놓아 짓는 3D 원정 지도. 장마다 지역 하나, 지역 표식은 고정 크기 UI(3D 점을 따라감), 이름은 가리킨·고른 지역만. 진행은 빛(클리어한 지역의 화로)으로 보인다 (campaign-map.md) | 시험 중 | 2026-11-07 | #43 "Synty 에셋을 사용해 3D맵을 제작 … 그 지역을 클릭하면 스테이지 정보화면으로" |
+| 병영 강화 구매 확인은 두 번 누르기 대신 화면 가운데 작은 확인 창(이름·"구매하시겠습니까?"·가격·취소/구매). 산 뒤 번쩍임은 없다 (upgrade.md 6) | 시험 중 | 2026-11-08 | #87 "번쩍임 … 필요 없음. 정말 살까요 표기보다 --를 구매하시겠습니까? 하고 가운데 작은 레터박스" |
+| 장 선택 칸 나타남·사라짐은 감속(ease-out) | 시험 중 | 2026-11-08 | #87 "UI 등장에 이징이 없음" |
 | 원정 지도 카메라 이동은 손 코드 보간이 아니라 Cinemachine(구운 시점 + 브레인 블렌드)으로 한다. 시점은 Camp 씬에서 손으로 고친다 (campaign-map.md 구현 메모) | 시험 중 | 2026-11-08 | #57 "그 코드 밀어버리고 Cinemachine 패키지 설치해서 처리해줘" |
 
 ## 맡길 때

@@ -23,20 +23,22 @@ namespace VampireSpawn.Game.Screens
             var kit = new Kit(art);
             var page = Ui.Node(root, "Menu");
             Ui.Stretch(page);
+            // main-menu.md 후속: the 1080-tall layout hangs from one centre anchor, so taller canvases (5:4) keep it in the middle.
+            var block = Ui.Place(page, "Block", new Vector2(0.5f, 0.5f), Vector2.zero, new Vector2(1920f, 1080f));
             // Crest_*_Large_01 is a demon skull; Large_03 has none, so the hunters' menu wears it (ui-style.md 5-3).
-            kit.Prefab(page, Crest, new Vector2(0.5f, 1f), new Vector2(0f, -120f), 160f, Ui.Steel);
-            var title = T(Ui.Place(page, "Title", new Vector2(0.5f, 1f), new Vector2(0f, -304f), new Vector2(1400f, 72f)), "PROJECT VAMPIRE SPAWN", 56, Ui.Bone, true, true, TextAnchor.MiddleCenter);
+            kit.Prefab(block, Crest, new Vector2(0.5f, 1f), new Vector2(0f, -120f), 160f, Ui.Steel);
+            var title = T(Ui.Place(block, "Title", new Vector2(0.5f, 1f), new Vector2(0f, -304f), new Vector2(1400f, 72f)), "PROJECT VAMPIRE SPAWN", 56, Ui.Bone, true, true, TextAnchor.MiddleCenter);
             Ui.Stretch(title.rectTransform);
             title.gameObject.AddComponent<Outline>().effectColor = Ui.Ink;
-            var brk = Ui.Place(page, "Break", new Vector2(0.5f, 1f), new Vector2(0f, -400f), new Vector2(600f, 24f));
+            var brk = Ui.Place(block, "Break", new Vector2(0.5f, 1f), new Vector2(0f, -400f), new Vector2(600f, 24f));
             if (kit.Prefab(brk, "Component_DarkFantasyMenus_Section_Break_02", new Vector2(0.5f, 0.5f), Vector2.zero, 600f, Ui.Line) == null)
                 Ui.Bg(Ui.Place(brk, "Line", new Vector2(0.5f, 0.5f), Vector2.zero, new Vector2(600f, 1f)), Ui.Line, null, false);
 
             var s0 = GameData.Stages[0];
-            var demoCard = Card(page, kit, new Vector2(-200f, -460f), Kit.Icon.Sword, Loc.T("menu.demo"), Loc.T("menu.demoDesc"), demo, selected == 0, () => hover?.Invoke(0));
+            var demoCard = Card(block, kit, new Vector2(-200f, -460f), Kit.Icon.Sword, Loc.T("menu.demo"), Loc.T("menu.demoDesc"), demo, selected == 0, () => hover?.Invoke(0));
             kit.Value(demoCard, Kit.Icon.Pop, s0.Pop.ToString(), 20, Ui.Candle, Ui.Candle);
             if (s0.Silver > 0) kit.Value(demoCard, Kit.Icon.Silver, s0.Silver.ToString(), 20, Ui.Candle, Ui.Candle);
-            var campCard = Card(page, kit, new Vector2(200f, -460f), Kit.Icon.Home, Loc.T("menu.campaign"), Loc.T("menu.campaignDesc"), camp, selected == 1, () => hover?.Invoke(1));
+            var campCard = Card(block, kit, new Vector2(200f, -460f), Kit.Icon.Home, Loc.T("menu.campaign"), Loc.T("menu.campaignDesc"), camp, selected == 1, () => hover?.Invoke(1));
             kit.Value(campCard, Kit.Icon.Flag, Campaign.Stages.Count(campaign.IsCleared) + "/" + Campaign.Stages.Length, 20, Ui.Steel, Ui.Bone);
             kit.Value(campCard, Kit.Icon.Gold, campaign.Gold.ToString(), 20, Ui.Candle, Ui.Candle);
 

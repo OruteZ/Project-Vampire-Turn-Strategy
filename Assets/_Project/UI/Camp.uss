@@ -47,8 +47,8 @@
 .info-panel { height: 520px; }
 .barracks-panel { height: 680px; }
 
-/* stage-select.md 3-1 says 40 above the panel, which leaves the screen (panel top is 24); its glow already reaches 12 px above the box. */
-.info-crest { position: absolute; left: 232px; top: 0; width: 96px; height: 96px; }
+/* The crest prefab draws about 1.9x its box wide and 1.3x tall, so a 72 box fills the gap left of March. */
+.info-crest { position: absolute; left: 106px; top: 390px; width: 72px; height: 72px; }
 .info-badge { position: absolute; left: 32px; top: 36px; width: 48px; height: 48px; justify-content: center; align-items: center; }
 .ring-fill, .ring { position: absolute; left: 0; top: 0; right: 0; bottom: 0; }
 .ring { left: -2px; top: -2px; right: -2px; bottom: -2px; }
@@ -112,3 +112,20 @@
 .up-act { position: absolute; left: 280px; top: 96px; width: 200px; height: 40px; }
 .up-act > .btn { left: 0; top: 0; width: 200px; height: 40px; }
 .up-lock { position: absolute; right: 0; top: 8px; width: 24px; height: 24px; }
+
+/* ui-style.md 12: panels show/hide in 0.15 s rising 8 px, easing out (CampToolkit.Enter/Leave, #89). */
+.panel, .dialog { transition-property: opacity, translate; transition-duration: 0.15s; transition-timing-function: ease-out-cubic; }
+.panel.enter, .panel.leave, .dialog.enter { opacity: 0; translate: 0 8px; }
+.info-panel.leave, .barracks-panel.leave { display: flex; }
+
+/* upgrade.md 6-1: the buy dialog, one centre anchor over a 60% night veil. */
+.dialog-veil { position: absolute; left: 0; top: 0; right: 0; bottom: 0; background-color: rgba(18, 19, 26, 0.6); display: none; }
+.asking .dialog-veil { display: flex; }
+.dialog { position: absolute; left: 50%; top: 50%; width: 480px; height: 232px; margin-left: -240px; margin-top: -116px; -unity-slice-scale: 0.111px; }
+.dialog-name { position: absolute; left: 32px; top: 32px; width: 416px; height: 32px; font-size: 22px; -unity-font-style: bold; color: var(--bone); -unity-text-align: middle-center; overflow: hidden; text-overflow: ellipsis; padding: 0; margin: 0; }
+.dialog-ask { position: absolute; left: 32px; top: 72px; width: 416px; height: 24px; font-size: 15px; color: var(--muted); -unity-text-align: middle-center; padding: 0; margin: 0; }
+.dialog-price { position: absolute; left: 32px; top: 108px; width: 416px; height: 32px; flex-direction: row; justify-content: center; align-items: center; }
+.dialog-price .value-icon { width: 24px; height: 24px; }
+.dialog-price .value-text { font-size: 18px; }
+.dialog-cancel { left: 48px; top: 164px; width: 180px; height: 44px; }
+.dialog-ok { left: 252px; top: 164px; width: 180px; height: 44px; }

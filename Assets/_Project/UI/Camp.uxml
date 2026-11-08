@@ -69,6 +69,25 @@
             <ui:ScrollView name="bk-ups" class="bk-ups" vertical-scroller-visibility="Auto" horizontal-scroller-visibility="Hidden" />
         </ui:VisualElement>
 
+        <ui:VisualElement name="buy-dialog" class="dialog-veil">
+            <ui:VisualElement name="buy-box" class="dialog">
+                <ui:VisualElement class="panel-frame" picking-mode="Ignore" />
+                <ui:Label name="buy-name" class="dialog-name display" picking-mode="Ignore" />
+                <ui:Label name="buy-ask" class="dialog-ask" picking-mode="Ignore" />
+                <ui:VisualElement name="buy-price" class="dialog-price" picking-mode="Ignore" />
+                <ui:VisualElement name="buy-cancel" class="btn normal dialog-cancel">
+                    <ui:VisualElement class="btn-frame" picking-mode="Ignore" />
+                    <ui:Label class="btn-text" picking-mode="Ignore" />
+                    <ui:Label class="key" text="Esc" picking-mode="Ignore" />
+                </ui:VisualElement>
+                <ui:VisualElement name="buy-ok" class="btn primary dialog-ok">
+                    <ui:VisualElement class="btn-frame" picking-mode="Ignore" />
+                    <ui:Label class="btn-text" picking-mode="Ignore" />
+                    <ui:Label class="key" text="Enter" picking-mode="Ignore" />
+                </ui:VisualElement>
+            </ui:VisualElement>
+        </ui:VisualElement>
+
         <ui:Label name="tip" class="tip" picking-mode="Ignore" />
     </ui:VisualElement>
 </ui:UXML>

@@ -232,7 +232,7 @@
 ## 11. 메뉴 화면 공통
 
 1. 바탕: 메인 메뉴는 `bg.night` 위에 첫 장 보드 아트를 흐리게(블러 + 어둡게 60%) 깐다. 장 선택·병영은 흐리지 않은 3D 원정 지도다 (docs/art/campaign-map.md). 지도가 그 화면의 게임 요소다 (16-1).
-2. 틀은 `frame.menu`. 장식은 위 가운데 `Crest` 하나만. 장 선택의 장 정보 칸은 마지막 장일 때만 문장을 단다 (docs/ui/stage-select.md).
+2. 틀은 `frame.menu`. 장식은 위 가운데 `Crest` 하나만. 장 선택의 장 정보 칸은 마지막 장일 때만 문장을 단다. 그 칸은 화면 위에 붙어 있어 문장을 칸 안 왼쪽 아래에 둔다 (docs/ui/stage-select.md 3-1).
 3. 마지막 장(백작의 성)과 관련된 카드·문장만 `enemy` 색. 나머지 메뉴는 `ally`.
 4. 강화·구매 확인은 `frame.popup` (`Panel_DarkFantasyMenus_Popup` 바탕).
 5. 장 사이 구분선은 `Component_DarkFantasyMenus_Section_Break`.

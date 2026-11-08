@@ -2,6 +2,7 @@
     <Style src="Theme.uss" />
     <Style src="Menu.uss" />
     <ui:VisualElement name="menu" class="screen" picking-mode="Ignore">
+        <ui:VisualElement name="block" class="block" picking-mode="Ignore">
         <ui:VisualElement name="crest" class="crest" picking-mode="Ignore" />
         <ui:Label name="title" class="title display" text="PROJECT VAMPIRE SPAWN" picking-mode="Ignore" />
         <ui:VisualElement name="break" class="break" picking-mode="Ignore" />
@@ -18,6 +19,7 @@
                 <ui:Label class="card-name display" picking-mode="Ignore" />
                 <ui:VisualElement class="card-meta" picking-mode="Ignore" />
             </ui:VisualElement>
+        </ui:VisualElement>
         </ui:VisualElement>
         <ui:VisualElement name="languages" class="languages" />
         <ui:Label name="tip" class="tip" picking-mode="Ignore" />

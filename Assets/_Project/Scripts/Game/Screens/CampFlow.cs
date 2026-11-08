@@ -28,6 +28,7 @@ namespace VampireSpawn.Game.Screens
             nav = App.CampStart ?? CampNav.FromMenu(Campaign, App.Nav);
             App.CampStart = null;
             map.Show(Campaign);
+            BattleHud.Shade(screen);
             markers = CampMarkers.Build(screen, map.art, map, i => Send(CampInput.Pick(i, Time.unscaledTime)));
             ui = CampToolkit.Build(transform, map.art, In, Send);
             Canvas.ForceUpdateCanvases();
@@ -39,6 +40,7 @@ namespace VampireSpawn.Game.Screens
 
         public void Send(CampInput input)
         {
+            var asked = nav.BuyArmed;
             var (next, act) = nav.Step(Campaign, input);
             nav = next;
             App.Nav = nav;
@@ -46,7 +48,7 @@ namespace VampireSpawn.Game.Screens
             {
                 case CampDo.Redraw: Redraw(false); break;
                 case CampDo.Buy:
-                    if (Campaign.Buy(input.Id)) CampaignStore.Save(Campaign);
+                    if (asked != null && Campaign.Buy(asked)) CampaignStore.Save(Campaign);
                     Redraw(false);
                     break;
                 case CampDo.Reset:
@@ -67,6 +69,8 @@ namespace VampireSpawn.Game.Screens
             ui.Fill(Campaign, nav, In);
             markers.Fill(Campaign, nav, empty);
             map.Look(nav.Layer, nav.Stage, empty, new Vector2(48f / size.x, 48f / size.y), snap);
+            var tab = Mathf.Clamp(nav.Tab, 0, GameData.Types.Length - 1);
+            map.ShowUnit(nav.Layer == CampLayer.Barracks && CampNav.TabOf(Campaign, GameData.Types[tab].Kind) != TabState.Hidden ? tab : -1);
         }
 
         // stage-select.md 2-3: the screen minus the corner UI and, in L2/L3, the 560 px side panel; normalized viewport units.

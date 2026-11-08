@@ -146,17 +146,20 @@ namespace VampireSpawn.Tests
         }
 
         [Test]
-        public void BuyingNeedsTheSameUpgradePressedTwice()
+        public void BuyingAsksInADialogThatWaitsForAnAnswer()
         {
             var c = ClearedUpTo(Stages.Length);
             var s = Press(CampNav.FromMenu(c, null), c, CampKey.Barracks);
-            var ids = GameData.Upgrades.Select(u => u.Id).Take(2).ToArray();
-            var armed = s.Step(c, CampInput.Buy(ids[0], 0f)).next;
-            Assert.AreEqual(ids[0], armed.BuyArmed);
-            var other = armed.Step(c, CampInput.Buy(ids[1], 0.5f));
-            Assert.AreEqual(ids[1], other.next.BuyArmed, "another upgrade moves the confirm, it does not buy");
-            Assert.AreEqual(CampDo.Redraw, other.act);
-            Assert.AreEqual(CampDo.Buy, armed.Step(c, CampInput.Buy(ids[0], 1f)).act);
+            var id = GameData.Upgrades[0].Id;
+            var asking = s.Step(c, CampInput.Buy(id, 0f)).next;
+            Assert.AreEqual(id, asking.BuyArmed);
+            Assert.AreEqual(CampDo.None, asking.Step(c, CampInput.Of(CampKey.Tick, 60f)).act, "the dialog does not time out");
+            Assert.AreEqual(CampDo.Buy, asking.Step(c, CampInput.Of(CampKey.Enter, 1f)).act, "Enter buys");
+            Assert.AreEqual(CampDo.Buy, asking.Step(c, CampInput.Buy(id, 1f)).act, "the dialog's Buy button buys");
+            var cancelled = asking.Step(c, CampInput.Of(CampKey.Esc, 1f));
+            Assert.AreEqual(CampDo.Redraw, cancelled.act);
+            Assert.IsNull(cancelled.next.BuyArmed);
+            Assert.AreEqual(CampLayer.Barracks, cancelled.next.Layer, "Esc closes only the dialog, not the barracks");
         }
 
         [Test]

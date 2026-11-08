@@ -95,7 +95,9 @@ namespace VampireSpawn.Core
         CampNav With(int? stage = null, bool? info = null, bool? barracks = null, int? tab = null) =>
             new CampNav(stage ?? Stage, info ?? Info, barracks ?? Barracks, tab ?? Tab);
 
-        CampNav Arm(CampConfirm kind, string id, float now) => new CampNav(Stage, Info, Barracks, Tab, kind, id, now + ConfirmSeconds);
+        // A buy confirm is a dialog (upgrade.md 6), so it waits for an answer instead of expiring.
+        CampNav Arm(CampConfirm kind, string id, float now) =>
+            new CampNav(Stage, Info, Barracks, Tab, kind, id, kind == CampConfirm.Buy ? float.PositiveInfinity : now + ConfirmSeconds);
 
         public (CampNav next, CampDo act) Step(Campaign c, CampInput input)
         {
@@ -103,6 +105,9 @@ namespace VampireSpawn.Core
                 return Armed != CampConfirm.None && input.Now > ArmedUntil ? (With(), CampDo.Redraw) : (this, CampDo.None);
             // 5-1: any other input drops a pending confirm, except the second press that completes it.
             var calm = With();
+            // upgrade.md 6: while the buy dialog is up, Enter (or its Buy button) buys and every other input only closes the dialog.
+            if (BuyArmed != null)
+                return input.Key == CampKey.Enter || input.Key == CampKey.Buy && input.Id == BuyArmed ? (calm, CampDo.Buy) : (calm, CampDo.Redraw);
             var wasArmed = Armed != CampConfirm.None;
             switch (input.Key)
             {
@@ -144,7 +149,7 @@ namespace VampireSpawn.Core
                     return ResetArmed ? (calm, CampDo.Reset) : (Arm(CampConfirm.Reset, null, input.Now), CampDo.Redraw);
                 case CampKey.Buy:
                     if (!Barracks || input.Id == null) return Unchanged(calm, wasArmed);
-                    return BuyArmed == input.Id ? (calm, CampDo.Buy) : (Arm(CampConfirm.Buy, input.Id, input.Now), CampDo.Redraw);
+                    return (Arm(CampConfirm.Buy, input.Id, input.Now), CampDo.Redraw);
             }
             return Unchanged(calm, wasArmed);
         }

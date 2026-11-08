@@ -209,13 +209,7 @@ namespace VampireSpawn.Game
                 case Role.Vampire: return Art.vampireRing;
                 case Role.Spawn: return Art.spawnRing;
             }
-            return GameData.Type(u.Type.Value).Tier switch
-            {
-                Tier.Peasant => Art.peasantRing,
-                Tier.Knight => Art.knightRing,
-                Tier.Hunter => Art.hunterRing,
-                _ => Art.regularRing,
-            };
+            return Art.TierRing(GameData.Type(u.Type.Value).Tier);
         }
 
         static void Remove(Dictionary<int, UnitView> from, int id, float after)

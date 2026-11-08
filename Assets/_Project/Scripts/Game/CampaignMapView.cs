@@ -6,7 +6,7 @@ using VampireSpawn.Core;
 
 namespace VampireSpawn.Game
 {
-    // docs/art/campaign-map.md, first pass (1-1). The fixed terrain and its Cinemachine shots are baked into the Camp scene
+    // docs/art/campaign-map.md. The fixed terrain and its Cinemachine shots are baked into the Camp scene
     // (Tools > 지도 > Camp 씬에 지도 굽기) so people can move props and tune each shot in Unity. Regions are found by name, so markers,
     // braziers and shots follow a moved region. Show rebuilds only progress; Look picks a shot and the brain blends to it.
     public sealed class CampaignMapView : MonoBehaviour
@@ -41,6 +41,7 @@ namespace VampireSpawn.Game
             progress = new GameObject("Progress").transform;
             progress.SetParent(terrain, false);
             BuildProgress();
+            if (terrain.Find("Water") == null) BuildWater();
             RenderSettings.ambientMode = UnityEngine.Rendering.AmbientMode.Flat;
             RenderSettings.ambientLight = CampaignMapLayout.Ambient;
             RenderSettings.fog = true;
@@ -148,13 +149,22 @@ namespace VampireSpawn.Game
 
         CinemachineCamera Shot(string name) => Shots().FirstOrDefault(c => c.name == name);
 
-        // 1-1: the camp itself is deferred, so the barracks view looks at the last cleared region (stage 1 if none).
-        Transform CampSpot()
+        Transform CampSpot() => progress != null ? progress.Find("Camp") : null;
+
+        UnitView campUnit;
+        int campType = -1;
+
+        // upgrade.md 후속: the barracks tab's unit (index into GameData.Types, -1 none) stands by the campfire, facing the camera (south).
+        public void ShowUnit(int type)
         {
-            var last = -1;
-            for (var i = 0; i < Campaign.Stages.Length; i++) if (campaign != null && campaign.IsCleared(Campaign.Stages[i])) last = i;
-            var r = RegionOf(Mathf.Max(0, last));
-            return r != null && terrain != null ? terrain.Find("Region " + r.Stage) : null;
+            if (type == campType) return;
+            if (campUnit != null) Kill(campUnit.gameObject);
+            campUnit = null;
+            campType = type;
+            var camp = CampSpot();
+            if (type < 0 || camp == null) return;
+            var t = GameData.Types[type];
+            campUnit = UnitView.Create(art, art.allyLooks[(int)t.Kind], camp, -1, camp.TransformPoint(CampaignMapLayout.CampUnit), 180f - camp.eulerAngles.y, art.TierRing(t.Tier), true);
         }
 
         // A region baked into the scene may have been moved by hand; its object is the truth, the layout table the fallback.
@@ -223,6 +233,7 @@ namespace VampireSpawn.Game
             floor.transform.localScale = new Vector3(400f, 400f, 1f);
             floor.GetComponent<MeshRenderer>().sharedMaterial = material(CampaignMapLayout.Floor, "Map Floor");
 
+            var roads = Roads();
             foreach (var r in CampaignMapLayout.Regions)
             {
                 var region = new GameObject("Region " + r.Stage).transform;
@@ -237,16 +248,20 @@ namespace VampireSpawn.Game
                 ground.transform.localScale = new Vector3(r.Radius * 2f, 0.005f, r.Radius * 2f);
                 var theme = art.Theme(r.Stage);
                 ground.GetComponent<MeshRenderer>().sharedMaterial = material((theme != null ? theme.ground : CampaignMapLayout.Floor) * 1.25f, "Region " + r.Stage);
+                GameObject last = null;
                 foreach (var p in r.Props)
                 {
-                    var prefab = art.MapProp(p.Prefab);
-                    if (prefab == null) { Debug.LogWarning("지도 프리팹 없음: " + p.Prefab + " (도구 모음 > 지도 > 프리팹 목록 채우기)"); continue; }
-                    BoardView.Place(prefab, region, World(r.Anchor + new Vector2(p.Dx, p.Dz), p.Lift), p.Width, p.Yaw, p.MaxHeight > 0f ? p.MaxHeight : 99f);
+                    var prefab = Prefab(art, p.Prefab);
+                    if (prefab == null) continue;
+                    var y = p.OnTop && last != null ? Top(last) - CampaignMapLayout.Origin.y : p.Lift;
+                    last = BoardView.Place(prefab, region, World(r.Anchor + new Vector2(p.Dx, p.Dz), y), p.Width, p.Yaw, p.MaxHeight > 0f ? p.MaxHeight : 99f);
                 }
+                if (r.Fill != null) BuildFill(region, art, r, roads);
                 foreach (var l in r.Lights)
                     BoardView.AddLight(region, World(r.Anchor + new Vector2(l.At.x, l.At.z), l.At.y), LightType.Point, l.Blood ? CampaignMapLayout.Blood : art.torchLight, l.Intensity, l.Range);
             }
-            BuildForest(terrain, art);
+            var lineProps = BuildLines(terrain, art, roads);
+            BuildForest(terrain, art, lineProps);
             BuildShots(terrain);
             return terrain;
         }
@@ -258,8 +273,8 @@ namespace VampireSpawn.Game
             var split = RegionOf(lastOpen) is MapRegion open ? System.Array.FindIndex(CampaignMapLayout.Road, p => (p - open.Anchor).sqrMagnitude < 0.01f) : 0;
             var lit = CampaignMapLayout.Road.Take(split + 1).ToArray();
             var dark = CampaignMapLayout.Road.Skip(split).ToArray();
-            if (lit.Length > 1) Ribbon("Road Lit", lit, CampaignMapLayout.RoadLit, 0.04f);
-            if (dark.Length > 1) Ribbon("Road Dark", dark, CampaignMapLayout.RoadDark, 0.039f);
+            if (lit.Length > 1) Ribbon(progress, "Road Lit", lit, CampaignMapLayout.RoadWidth, Tinted(CampaignMapLayout.RoadLit, "Road Lit"), 0.04f);
+            if (dark.Length > 1) Ribbon(progress, "Road Dark", dark, CampaignMapLayout.RoadWidth, Tinted(CampaignMapLayout.RoadDark, "Road Dark"), 0.039f);
             for (var i = 0; i < Campaign.Stages.Length; i++)
             {
                 if (!campaign.IsCleared(Campaign.Stages[i]) || !(RegionOf(i) is MapRegion r)) continue;
@@ -270,11 +285,15 @@ namespace VampireSpawn.Game
                 if (fire != null) BoardView.Place(fire, progress, at + Vector3.up * 0.55f, 0f, 0f);
                 BoardView.AddLight(progress, at + Vector3.up * 1.5f, LightType.Point, art.torchLight, 2.2f, 10f);
             }
+            campUnit = null;
+            campType = -1;
+            BuildCamp();
         }
 
-        // 3-2: one prop in 45% of 6-unit cells, kept clear of the road, regions, camp spots and the camera edge.
-        static void BuildForest(Transform terrain, ArtCatalog art)
+        // 3-2: one prop in 45% of 6-unit cells, kept clear of the road, regions, camp spots, water, line props and the camera edge.
+        static void BuildForest(Transform terrain, ArtCatalog art, List<Vector2> lineProps)
         {
+            var water = Water();
             var forest = new GameObject("Forest").transform;
             forest.SetParent(terrain, false);
             var road = Path(CampaignMapLayout.Road);
@@ -292,6 +311,7 @@ namespace VampireSpawn.Game
                 if (road.Any(q => (q - p).sqrMagnitude < CampaignMapLayout.ClearOfRoad * CampaignMapLayout.ClearOfRoad)) continue;
                 if (CampaignMapLayout.Regions.Any(r => (r.Anchor - p).magnitude < (r.Radius > 6f ? CampaignMapLayout.ClearOfCastle : CampaignMapLayout.ClearOfRegion))) continue;
                 if (camps.Any(c => (c - p).magnitude < CampaignMapLayout.ClearOfCamp)) continue;
+                if (Near(water, p, CampaignMapLayout.ClearOfWater) || Near(lineProps, p, CampaignMapLayout.ClearOfLine)) continue;
                 var band = CampaignMapLayout.Forest.FirstOrDefault(b => p.y >= b.MinZ && p.y < b.MaxZ);
                 if (band.Trees == null) continue;
                 var tree = h / 101 % 10 < 7;
@@ -301,6 +321,112 @@ namespace VampireSpawn.Game
                 if (prefab == null) continue;
                 BoardView.Place(prefab, forest, World(p), Mathf.Lerp(width.x, width.y, h / 10007 % 100 / 99f), h % 360);
             }
+        }
+
+        static GameObject Prefab(ArtCatalog art, string name)
+        {
+            var prefab = art.MapProp(name);
+            if (prefab == null) Debug.LogWarning("지도 프리팹 없음: " + name + " (도구 모음 > 지도 > 프리팹 목록 채우기)");
+            return prefab;
+        }
+
+        static float Top(GameObject go)
+        {
+            var rs = go.GetComponentsInChildren<Renderer>();
+            if (rs.Length == 0) return go.transform.position.y;
+            var b = rs[0].bounds;
+            foreach (var r in rs) b.Encapsulate(r.bounds);
+            return b.max.y;
+        }
+
+        static bool Near(IEnumerable<Vector2> points, Vector2 p, float d) => points.Any(q => (q - p).sqrMagnitude < d * d);
+
+        static Vector2[] Roads() => Path(CampaignMapLayout.Road).Concat(CampaignMapLayout.SideRoads.SelectMany(Path)).ToArray();
+
+        static Vector2[] Water() => Path(CampaignMapLayout.River).Concat(Path(CampaignMapLayout.Moat)).ToArray();
+
+        // 4-2 채움: hash-picked spots in the ring; a spot too near the road, water or another prop is skipped for the next one.
+        static void BuildFill(Transform region, ArtCatalog art, MapRegion r, Vector2[] roads)
+        {
+            var f = r.Fill;
+            var water = Water();
+            var taken = r.Props.Select(p => r.Anchor + new Vector2(p.Dx, p.Dz)).ToList();
+            var seed = int.Parse(r.Stage.Substring(1));
+            for (int tries = 0, placed = 0; placed < f.Count && tries < f.Count * 8; tries++)
+            {
+                var h = BoardView.Hash(seed * 100, tries + 1);
+                var angle = h % 360 * Mathf.Deg2Rad;
+                var radius = Mathf.Lerp(f.R1, f.R2, h / 360 % 100 / 99f);
+                var d = new Vector2(Mathf.Sin(angle), Mathf.Cos(angle)) * radius;
+                var p = r.Anchor + d;
+                if (d.y >= f.SouthOf || Near(roads, p, CampaignMapLayout.FillClearOfRoad) || Near(water, p, CampaignMapLayout.FillClearOfWater)
+                    || Near(taken, p, CampaignMapLayout.FillClearOfProp)) continue;
+                var (name, width) = f.Names[h / 36000 % f.Names.Length];
+                var prefab = Prefab(art, name);
+                if (prefab == null) continue;
+                BoardView.Place(prefab, region, World(p), width, h / 7 % 360);
+                taken.Add(p);
+                placed++;
+            }
+        }
+
+        // 3-1: props every spacing along each line, skipping the road; walls stand along the line and stretch to join up.
+        static List<Vector2> BuildLines(Transform terrain, ArtCatalog art, Vector2[] roads)
+        {
+            var root = new GameObject("Lines").transform;
+            root.SetParent(terrain, false);
+            var placed = new List<Vector2>();
+            foreach (var l in CampaignMapLayout.Lines)
+            {
+                var line = new GameObject(l.Name).transform;
+                line.SetParent(root, false);
+                var span = l.To - l.From;
+                var count = Mathf.FloorToInt(span.magnitude / l.Spacing) + 1;
+                var along = -Mathf.Atan2(span.y, span.x) * Mathf.Rad2Deg;
+                for (var i = 0; i < count; i++)
+                {
+                    var p = count == 1 ? l.From : l.From + span.normalized * (l.Spacing * i);
+                    if (Near(roads, p, CampaignMapLayout.LineClearOfRoad + l.Width * 0.5f)) continue;
+                    var prefab = Prefab(art, l.Prefabs[i % l.Prefabs.Length]);
+                    if (prefab == null) continue;
+                    var yaw = l.Wall ? along + i % 2 * 180f : BoardView.Hash(Mathf.RoundToInt(p.x) + 1000, Mathf.RoundToInt(p.y) + 1000) % 360;
+                    BoardView.Place(prefab, line, World(p), l.Width, yaw, l.MaxHeight, l.Wall);
+                    placed.Add(p);
+                }
+            }
+            return placed;
+        }
+
+        // 3 water and 5-2 side roads are generated meshes, which a baked scene cannot keep, so they are built when the map shows.
+        void BuildWater()
+        {
+            var water = new GameObject("Water").transform;
+            water.SetParent(terrain, false);
+            var mat = art.water != null ? art.water : Tinted(CampaignMapLayout.Fog, "Water");
+            Ribbon(water, "River", CampaignMapLayout.River, CampaignMapLayout.RiverWidth, mat, 0.02f);
+            Ribbon(water, "Moat", CampaignMapLayout.Moat, CampaignMapLayout.MoatWidth, mat, 0.02f);
+            var side = Tinted(CampaignMapLayout.SideRoad, "Side Road");
+            foreach (var road in CampaignMapLayout.SideRoads) Ribbon(water, "Side Road", road, CampaignMapLayout.SideRoadWidth, side, 0.035f);
+        }
+
+        // 7: the camp sits at the last cleared region's camp spot (the start if none), turned toward the next region.
+        void BuildCamp()
+        {
+            var last = -1;
+            for (var i = 0; i < Campaign.Stages.Length; i++) if (campaign.IsCleared(Campaign.Stages[i])) last = i;
+            var at = RegionOf(last) is MapRegion done ? done.Camp : CampaignMapLayout.Start;
+            var face = RegionOf(last + 1) is MapRegion next ? next.Anchor - at : Vector2.up;
+            var camp = new GameObject("Camp").transform;
+            camp.SetParent(progress, false);
+            camp.position = World(at);
+            camp.rotation = Quaternion.Euler(0f, Mathf.Atan2(face.x, face.y) * Mathf.Rad2Deg, 0f);
+            foreach (var p in CampaignMapLayout.CampProps)
+            {
+                var prefab = Prefab(art, p.Prefab);
+                if (prefab != null) BoardView.Place(prefab, camp, camp.TransformPoint(new Vector3(p.Dx, p.Lift, p.Dz)), p.Width, camp.eulerAngles.y + p.Yaw);
+            }
+            var l = CampaignMapLayout.CampLight;
+            BoardView.AddLight(camp, camp.TransformPoint(l.At), LightType.Point, art.torchLight, l.Intensity, l.Range);
         }
 
         // Catmull-Rom through the control points, one sample per unit (5-1).
@@ -326,12 +452,12 @@ namespace VampireSpawn.Game
             return result.ToArray();
         }
 
-        void Ribbon(string name, Vector2[] controls, Color color, float y)
+        static void Ribbon(Transform parent, string name, Vector2[] controls, float width, Material material, float y)
         {
             var path = Path(controls);
             var verts = new Vector3[path.Length * 2];
             var tris = new List<int>();
-            var half = CampaignMapLayout.RoadWidth * 0.5f;
+            var half = width * 0.5f;
             for (var i = 0; i < path.Length; i++)
             {
                 var dir = (path[Mathf.Min(path.Length - 1, i + 1)] - path[Mathf.Max(0, i - 1)]).normalized;
@@ -345,9 +471,9 @@ namespace VampireSpawn.Game
             var mesh = new Mesh { name = name, vertices = verts, triangles = tris.ToArray() };
             mesh.RecalculateNormals();
             var go = new GameObject(name);
-            go.transform.SetParent(progress, false);
+            go.transform.SetParent(parent, false);
             go.AddComponent<MeshFilter>().sharedMesh = mesh;
-            go.AddComponent<MeshRenderer>().sharedMaterial = Tinted(color, name);
+            go.AddComponent<MeshRenderer>().sharedMaterial = material;
         }
 
         Material Tinted(Color c, string name) => new Material(art.plain) { color = c, name = name };

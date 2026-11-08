@@ -344,7 +344,7 @@ MonoBehaviour:
       m_Items:
       - rid: 7201578077006332005
   - m_Id: 3991484035133
-    m_Localized: Full Moon Next Turn
+    m_Localized: Moon Next Turn
     m_Metadata:
       m_Items:
       - rid: 7201578077006332005
@@ -1678,6 +1678,18 @@ MonoBehaviour:
       m_Items: []
   - m_Id: 504315978248193
     m_Localized: Back to Map
+    m_Metadata:
+      m_Items: []
+  - m_Id: 846733042839552
+    m_Localized: Buy this upgrade?
+    m_Metadata:
+      m_Items: []
+  - m_Id: 846733109948416
+    m_Localized: Buy
+    m_Metadata:
+      m_Items: []
+  - m_Id: 846733109948417
+    m_Localized: Cancel
     m_Metadata:
       m_Items: []
   references:

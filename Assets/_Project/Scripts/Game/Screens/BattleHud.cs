@@ -66,9 +66,7 @@ namespace VampireSpawn.Game.Screens
             (lastPanels, panels) = (panels, lastPanels);
             panels.Clear();
             var b = s.Battle;
-            var shade = Ui.Sprite(root, "Shade", WideFade(), Ui.Alpha(Ui.Ink, 0.55f));
-            shade.preserveAspect = false;
-            Ui.Stretch(shade.rectTransform);
+            Shade(root);
             var hot = b.Phase == Phase.Player && b.MoonNext() && !st.FullMoon;
             if (st.FullMoon || st.MoonFading)
             {
@@ -118,6 +116,14 @@ namespace VampireSpawn.Game.Screens
         static Sprite edgeFade, wideFade;
 
         // stage-dressing.md 1-6: the world runs behind the HUD, so the outer quarter darkens to keep HUD text readable.
+        public static Image Shade(Transform root)
+        {
+            var shade = Ui.Sprite(root, "Shade", WideFade(), Ui.Alpha(Ui.Ink, 0.55f));
+            shade.preserveAspect = false;
+            Ui.Stretch(shade.rectTransform);
+            return shade;
+        }
+
         static Sprite WideFade()
         {
             if (wideFade != null) return wideFade;
