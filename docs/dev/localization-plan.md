@@ -1,5 +1,7 @@
 # 다중 언어 지원 계획
 
+> **#99 (2026-11-09) 이후:** HTML 데모(`docs/Prototype.html`), 정답 도구(`tools/golden/`), `Core/PrototypeData.cs`, HTML 비교 시험(`*ParityTests`, `OverlayTests`, `BattlePlaybackTests`)은 지웠다. 아래의 비교 방법·골든 이야기는 포팅 당시 기록이다. 지금 규칙 시험은 `Tests/EditMode/BattleRulesTests.cs`·`ExpansionRulesTests.cs` 이고 출하 데이터로 돈다.
+
 > 요청: "게임 내 모든 스크립트와 언어에 다중언어 지원기능을 추가할거야. 배포된 오픈소스나 에셋중에 가용 가능한 검증된 모듈이 있는지 살펴보고 직접 작업하는 것과 비교하여 계획 작성해서 제출해줘" (2026-11-06)
 > 결정: **Unity Localization(`com.unity.localization`)으로 한다** (사용자, 2026-11-06). 결정 전 비교는 2절과 부록에 남긴다.
 > 상태: L0~L6 구현(2026-11-06). 결과는 6절, 결정 기록은 `docs/dev/localization-decisions.tsv`.

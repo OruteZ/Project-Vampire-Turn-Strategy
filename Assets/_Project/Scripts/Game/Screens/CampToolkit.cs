@@ -105,6 +105,7 @@ namespace VampireSpawn.Game.Screens
             if (up == null) return;
             root.Q<Label>("buy-name").text = Loc.Text(up.Name);
             root.Q<Label>("buy-ask").text = Loc.T("camp.buyAsk");
+            root.Q<Label>("buy-warn").text = Loc.T("camp.buyWarn", Loc.Text(GameData.Type(up.Unit).Name));
             var price = root.Q("buy-price");
             price.Clear();
             ToolkitKit.Value(price, art, Kit.Icon.Gold, up.Cost.ToString(), Ui.Candle, Ui.Candle);
@@ -168,7 +169,7 @@ namespace VampireSpawn.Game.Screens
             ToolkitKit.Value(stats, art, Kit.Icon.Star, "+" + s.Bonus.Gold, bonusGot ? Ui.Dim : Ui.Candle, bonusGot ? Ui.Dim : Ui.Bone, Loc.T("camp.rewardBonus", s.Bonus.Gold) + (bonusGot ? " · " + Loc.T("camp.got") : ""), tip);
             ToolkitKit.Value(stats, art, Kit.Icon.Pop, s.Pop.ToString(), Ui.Candle, Ui.Candle, Loc.T("battle.pop"), tip);
             if (s.Silver > 0) ToolkitKit.Value(stats, art, Kit.Icon.Silver, s.Silver.ToString(), Ui.Candle, Ui.Candle, Loc.T("battle.silver"), tip);
-            ToolkitKit.Value(stats, art, Kit.Icon.Skulls, (s.Enemies.Length - 1).ToString(), Ui.Blood, Ui.Bone, Loc.T("battle.enemyList", s.Enemies.Length - 1, s.BossName), tip);
+            ToolkitKit.Value(stats, art, Kit.Icon.Skulls, s.Minions.Length.ToString(), Ui.Blood, Ui.Bone, Kit.EnemyList(s), tip);
 
             var roster = panel.Q("info-roster");
             roster.Clear();
@@ -176,7 +177,7 @@ namespace VampireSpawn.Game.Screens
             {
                 var t = GameData.Type(k);
                 var isNew = t.UnlockAt == i + 1;
-                var chip = Chip(roster, isNew ? Ui.Candle : Ui.SteelDim, art.Ui(Kit.Weapon[k]), isNew ? Ui.Candle : Ui.Steel);
+                var chip = Chip(roster, isNew ? Ui.Candle : Ui.SteelDim, art.Ui(art.Icon(k)), isNew ? Ui.Candle : Ui.Steel);
                 SetTip(chip, isNew ? Loc.T("camp.new", t.Name) : Loc.Text(t.Name));
             }
 
@@ -192,7 +193,7 @@ namespace VampireSpawn.Game.Screens
             var panel = root.Q("barracks-panel");
             var name = panel.Q<Label>("bk-name");
             name.text = Loc.T("camp.barracksName");
-            var anyOpen = GameData.Types.Any(t => c.UpgradesOpen(t.Kind));
+            var anyOpen = GameData.Types.Any(t => c.UpgradesOpen(t.Key));
             SetTip(name, Loc.T(anyOpen ? "camp.barracksHelp" : "camp.noUpgrades"));
             var gold = panel.Q("bk-gold");
             gold.Clear();
@@ -204,77 +205,97 @@ namespace VampireSpawn.Game.Screens
             for (var i = 0; i < types.Length; i++)
             {
                 var t = types[i];
-                var state = CampNav.TabOf(c, t.Kind);
+                var state = CampNav.TabOf(c, t.Key);
                 var chip = Chip(tabs, nav.Tab == i ? Ui.Steel : state == TabState.Open ? Ui.SteelDim : Ui.Line,
-                    art.Ui(state == TabState.Hidden ? Kit.Icon.Lock : Kit.Weapon[t.Kind]), state == TabState.Open ? Ui.Steel : Ui.Dim, state == TabState.Hidden ? 28f : 40f);
+                    art.Ui(state == TabState.Hidden ? Kit.Icon.Lock : art.Icon(t.Key)), state == TabState.Open ? Ui.Steel : Ui.Dim, state == TabState.Hidden ? 28f : 36f);
                 chip.EnableInClassList("on", nav.Tab == i);
                 var unlockAt = Mathf.Clamp(t.UnlockAt - 1, 0, Campaign.Stages.Length - 1);
                 if (state == TabState.Locked) chip.Add(Small("tab-lock", Kit.Icon.Lock, Ui.Dim));
-                if (CampNav.Affordable(c, t.Kind) > 0) { var dot = new VisualElement { pickingMode = PickingMode.Ignore }; dot.AddToClassList("tab-dot"); chip.Add(dot); }
+                if (CampNav.Affordable(c, t.Key) > 0) { var dot = new VisualElement { pickingMode = PickingMode.Ignore }; dot.AddToClassList("tab-dot"); chip.Add(dot); }
                 SetTip(chip, state == TabState.Open ? Loc.Text(t.Name) : Loc.T("camp.lockedBy", Loc.Text(Campaign.Stages[unlockAt].Title)));
                 var index = i;
                 chip.RegisterCallback<ClickEvent>(_ => send(CampInput.Tab(index, Time.unscaledTime)));
             }
 
             var sel = Mathf.Clamp(nav.Tab, 0, types.Length - 1);
-            var kind = types[sel].Kind;
+            var kind = types[sel].Key;
             var tabState = CampNav.TabOf(c, kind);
             var unit = panel.Q("bk-unit");
-            ToolkitKit.Picture(unit.Q(className: "bk-unit-icon"), art.Ui(Kit.Weapon[kind]), Ui.Steel);
+            ToolkitKit.Picture(unit.Q(className: "bk-unit-icon"), art.Ui(art.Icon(kind)), Ui.Steel);
             unit.Q<Label>().text = Loc.Text(types[sel].Name);
             var stats = panel.Q("bk-stats");
-            stats.Clear();
-            var u = Battle.Preview(kind, c.Upgrades);
-            ToolkitKit.Value(stats, art, Kit.Icon.Hp, u.Hp.ToString(), Ui.Steel, Ui.Bone, Loc.T("unit.card.hp"), tip);
-            ToolkitKit.Value(stats, art, Kit.Icon.Atk, u.Atk + (u.Bane > 0 ? "+" + u.Bane : ""), Ui.Steel, Ui.Bone, Loc.T("unit.card.atk"), tip);
-            ToolkitKit.Value(stats, art, Kit.Icon.Def, u.Def.ToString(), Ui.Steel, Ui.Bone, Loc.T("unit.card.def"), tip);
-            ToolkitKit.Value(stats, art, Kit.Icon.Mov, u.Mov.ToString(), Ui.Steel, Ui.Bone, Loc.T("unit.card.mov"), tip);
-            ToolkitKit.Value(stats, art, Kit.Icon.Rng, u.Rng.ToString(), Ui.Steel, Ui.Bone, Loc.T("unit.card.rng"), tip);
+            var now = Battle.Preview(kind, c.Upgrades);
+            Stats(stats, now, null);
+
+            var chosen = c.Chosen(kind);
+            var rule = panel.Q<Label>("bk-rule");
+            rule.text = chosen != null ? Loc.T("camp.branchChosen", Loc.Text(chosen.Name)) : Loc.T("camp.branchRule");
+            rule.EnableInClassList("chosen", chosen != null);
+            var lockedBy = Loc.T("camp.lockedBy", Loc.Text(Campaign.Stages[Mathf.Clamp(types[sel].UnlockAt - 1, 0, Campaign.Stages.Length - 1)].Title));
+            var branchLocked = chosen != null ? Loc.T("camp.branchLocked", Loc.Text(chosen.Name)) : null;
 
             var ups = panel.Q<ScrollView>("bk-ups");
             ups.Clear();
-            foreach (var up in GameData.Upgrades.Where(x => x.Unit == kind))
+            foreach (var up in GameData.Branches(kind))
             {
-                var own = c.Upgrades.Contains(up.Id);
+                var own = up.Id == chosen?.Id;
+                var shut = chosen != null && !own;
                 var row = new VisualElement();
                 row.AddToClassList("up");
                 row.EnableInClassList("owned", own);
-                SetTip(row, Loc.T(up.Inherit ? "camp.inherit" : "camp.noInherit"));
+                row.EnableInClassList("shut", shut);
+                SetTip(row, Loc.T(up.Inherit ? "camp.inherit" : "camp.noInherit") + (shut ? " · " + branchLocked : ""));
                 var head = new VisualElement { pickingMode = PickingMode.Ignore };
                 head.AddToClassList("up-name");
-                if (up.Inherit) head.Add(Small("up-fang", Kit.Icon.Fang, Ui.Spawn));
+                if (up.Inherit) head.Add(Small("up-fang", Kit.Icon.Fang, shut ? Ui.Dim : Ui.Spawn));
                 head.Add(new Label(Loc.Text(up.Name)) { pickingMode = PickingMode.Ignore });
                 row.Add(head);
                 if (own) { var check = new Label("✓") { pickingMode = PickingMode.Ignore }; check.AddToClassList("up-owned"); row.Add(check); }
                 var desc = new Label(Loc.Text(up.Desc)) { pickingMode = PickingMode.Ignore };
                 desc.AddToClassList("up-desc");
                 row.Add(desc);
-                if (!own)
-                {
-                    var price = new VisualElement { pickingMode = PickingMode.Ignore };
-                    price.AddToClassList("up-price");
-                    ToolkitKit.Value(price, art, Kit.Icon.Gold, up.Cost.ToString(), Ui.Candle, Ui.Candle);
-                    row.Add(price);
-                    var act = new VisualElement { pickingMode = PickingMode.Ignore };
-                    act.AddToClassList("up-act");
-                    row.Add(act);
-                    if (tabState != TabState.Open)
-                    {
-                        var lk = Small("up-lock", Kit.Icon.Lock, Ui.Dim);
-                        lk.pickingMode = PickingMode.Position;
-                        act.Add(lk);
-                        SetTip(lk, Loc.T("camp.lockedBy", Loc.Text(Campaign.Stages[Mathf.Clamp(types[sel].UnlockAt - 1, 0, Campaign.Stages.Length - 1)].Title)));
-                    }
-                    else
-                    {
-                        var afford = c.Gold >= up.Cost;
-                        var b = NewButton(act, Loc.T("camp.upgrade"), Kind.Normal, null);
-                        if (!afford) { b.AddToClassList("disabled"); SetTip(b, Loc.T("camp.needGold", c.Gold, up.Cost)); }
-                        else { var id = up.Id; b.RegisterCallback<ClickEvent>(_ => send(CampInput.Buy(id, Time.unscaledTime))); }
-                    }
-                }
                 ups.Add(row);
+                if (own) continue;
+                var act = new VisualElement { pickingMode = PickingMode.Ignore };
+                act.AddToClassList("up-act");
+                row.Add(act);
+                if (tabState != TabState.Open || shut)
+                {
+                    var lk = Small("up-lock", Kit.Icon.Lock, Ui.Dim);
+                    lk.pickingMode = PickingMode.Position;
+                    act.Add(lk);
+                    SetTip(lk, shut ? branchLocked : lockedBy);
+                    continue;
+                }
+                var price = new VisualElement { pickingMode = PickingMode.Ignore };
+                price.AddToClassList("up-price");
+                ToolkitKit.Value(price, art, Kit.Icon.Gold, up.Cost.ToString(), Ui.Candle, Ui.Candle);
+                row.Add(price);
+                var b = NewButton(act, Loc.T("camp.upgrade"), Kind.Normal, null);
+                if (!c.CanBuy(up)) { b.AddToClassList("disabled"); SetTip(b, Loc.T("camp.needGold", c.Gold, up.Cost)); }
+                else { var id = up.Id; b.RegisterCallback<ClickEvent>(_ => send(CampInput.Buy(id, Time.unscaledTime))); }
+                var next = Battle.Preview(kind, c.Upgrades.Append(up.Id));
+                row.RegisterCallback<PointerEnterEvent>(_ => Stats(stats, now, next));
+                row.RegisterCallback<PointerLeaveEvent>(_ => Stats(stats, now, null));
             }
+        }
+
+        // upgrade.md 3 stat row; with a hovered branch (5-5) the numbers it would change turn light.
+        void Stats(VisualElement stats, Unit u, Unit next)
+        {
+            stats.Clear();
+            void Cell(string icon, string value, string nextValue, string label)
+            {
+                var changed = nextValue != null && nextValue != value;
+                ToolkitKit.Value(stats, art, icon, changed ? nextValue : value, Ui.Steel, changed ? Ui.Candle : Ui.Bone, label, tip);
+            }
+            string Atk(Unit x) => x.Atk + (x.Bane > 0 ? "+" + x.Bane : "");
+            Cell(Kit.Icon.Hp, u.Hp.ToString(), next?.Hp.ToString(), Loc.T("unit.card.hp"));
+            Cell(Kit.Icon.Atk, Atk(u), next != null ? Atk(next) : null, Loc.T("unit.card.atk"));
+            Cell(Kit.Icon.Def, u.Def.ToString(), next?.Def.ToString(), Loc.T("unit.card.def"));
+            Cell(Kit.Icon.Mov, u.Mov.ToString(), next?.Mov.ToString(), Loc.T("unit.card.mov"));
+            Cell(Kit.Icon.Rng, u.Rng.ToString(), next?.Rng.ToString(), Loc.T("unit.card.rng"));
+            if (u.Heal > 0 || next?.Heal > 0) Cell(Kit.Icon.Heal, u.Heal.ToString(), next?.Heal.ToString(), Loc.T("skill.mend"));
         }
 
         static (Color ring, Color fill, Color ink) BadgeColors(Campaign c, int i)
@@ -295,7 +316,7 @@ namespace VampireSpawn.Game.Screens
             SetTip(line, tipText);
         }
 
-        VisualElement Chip(VisualElement parent, Color edge, Sprite icon, Color iconColor, float iconSize = 40f)
+        VisualElement Chip(VisualElement parent, Color edge, Sprite icon, Color iconColor, float iconSize = 36f)
         {
             var chip = new VisualElement();
             chip.AddToClassList("chip");

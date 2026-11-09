@@ -5,7 +5,12 @@ namespace VampireSpawn.Game
 {
     public static class CampaignStore
     {
-        public static Campaign Load() => Campaign.Parse(PlayerPrefs.GetString(Campaign.SaveKey, null));
+        public static Campaign Load()
+        {
+            var c = Campaign.Parse(PlayerPrefs.GetString(Campaign.SaveKey, null));
+            if (c.Repaired) Save(c);
+            return c;
+        }
 
         public static void Save(Campaign campaign)
         {

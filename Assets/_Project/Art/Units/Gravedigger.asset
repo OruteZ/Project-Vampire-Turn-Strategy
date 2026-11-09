@@ -1,0 +1,26 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1c50f19bfd6484047b0aa7aeac3dcfae, type: 3}
+  m_Name: Gravedigger
+  m_EditorClassIdentifier: VampireSpawn.Game::VampireSpawn.Game.UnitLook
+  key: gravedigger
+  icon: ICON_SM_Wep_Shovel_01_DarkFantasy
+  recipe: 
+  model: {fileID: 5671466155733360654, guid: c75009d75a4e3b44cbb3790162d25d8b, type: 3}
+  rig: 1
+  weapons:
+  - prefab: {fileID: 8614861932926584503, guid: 809bab15f7bbb564c8dfad01efea1fd0, type: 3}
+    hand: 0
+    hold: 2
+    position: {x: 0, y: 0, z: 0}
+    rotation: {x: 0, y: 0, z: 0}
+  animator: {fileID: 22100000, guid: df70526b63d281b4b8a562ec70988bd3, type: 2}

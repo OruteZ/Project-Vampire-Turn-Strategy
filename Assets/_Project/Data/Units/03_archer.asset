@@ -12,7 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 17bd5ddb0e5d89541abe42a0b4789540, type: 3}
   m_Name: 03_archer
   m_EditorClassIdentifier: VampireSpawn.Game::VampireSpawn.Game.Data.UnitTypeData
-  kind: 3
   key: archer
   tier: 1
   pop: 2
@@ -23,23 +22,37 @@ MonoBehaviour:
   mov: 3
   rng: 3
   bane: 0
+  heal: 0
+  skills: 
   unlockAt: 5
   upgrades:
-  - id: archer_rng
-    cost: 60
-    hp: 0
-    atk: 0
-    def: 0
-    mov: 0
-    rng: 1
-    bane: 0
-    ability: 0
   - id: archer_atk
-    cost: 60
+    cost: 70
     hp: 0
     atk: 1
     def: 0
     mov: 0
     rng: 0
     bane: 0
+    heal: 0
+    ability: 0
+  - id: archer_rng
+    cost: 70
+    hp: 0
+    atk: 0
+    def: 0
+    mov: 0
+    rng: 1
+    bane: 0
+    heal: 0
+    ability: 0
+  - id: archer_bane
+    cost: 70
+    hp: 0
+    atk: 0
+    def: 0
+    mov: 0
+    rng: 0
+    bane: 2
+    heal: 0
     ability: 0

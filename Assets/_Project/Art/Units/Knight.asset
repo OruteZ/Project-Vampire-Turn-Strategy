@@ -12,6 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1c50f19bfd6484047b0aa7aeac3dcfae, type: 3}
   m_Name: Knight
   m_EditorClassIdentifier: VampireSpawn.Game::VampireSpawn.Game.UnitLook
+  key: knight
+  icon: ICON_SM_Wep_Shield_Heater_01_Dungeon
   recipe: 
   model: {fileID: 5391934385840252624, guid: ab2e228d687302d45a7d31f6b51785ea, type: 3}
   rig: 0

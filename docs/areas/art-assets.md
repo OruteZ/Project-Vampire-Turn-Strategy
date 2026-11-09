@@ -55,7 +55,7 @@
 
 ## 유닛에 쓰는 것 (#29, docs/art/unit-visuals.md)
 
-병종 하나 = `Assets/_Project/Art/Units/<병종>.asset` (`UnitLook`: 모델, 뼈대, 무기와 손·쥐는 법·미세 조정, 동작 묶음). 쥐는 법과 소켓은 docs/art/unit-visuals.md 3-1, 한눈에 보기는 도구 모음 "유닛 모습 한눈에"(`UnitLineup`). `ArtCatalog.allyLooks`(UnitKind 순서), `skeletonLook`, `vampireLook` 이 가리킨다.
+병종 하나 = `Assets/_Project/Art/Units/<병종>.asset` (`UnitLook`: 모델, 뼈대, 무기와 손·쥐는 법·미세 조정, 동작 묶음). 쥐는 법과 소켓은 docs/art/unit-visuals.md 3-1, 한눈에 보기는 도구 모음 "유닛 모습 한눈에"(`UnitLineup`). `UnitLook.key`(병종·하수인 key)와 `icon`(무기 아이콘)이 있고, `ArtCatalog.allyLooks`·`minionLooks`(순서 상관없음, key 로 찾음), `vampireLook` 이 가리킨다.
 
 | 유닛 | 모델 | 무기 | 동작 묶음 |
 |---|---|---|---|
@@ -65,7 +65,11 @@
 | 궁수 | `FantasyKnights_02` | 활 왼손 | `Units/Bow` |
 | 기사 | `FantasyKnights_06` | 검 `Sword_02` (칼날) + 방패 | `Units/SwordShield` |
 | 사냥꾼 | `SM_Chr_Hunter_Male_01` | 석궁 `SM_Wep_Rigged_CrossBow_01` | `Units/Polygon.overrideController` |
+| 장의사 (#99) | `SM_Chr_Gravedigger_Male_01` | 삽 `SM_Wep_Shovel_01` (자루) | `Units/Polygon` |
+| 역병 의사 (#99) | `SM_Chr_PlagueDoctor_01` | 지팡이 `SM_Wep_Staff_01` (자루) | `Units/Polygon` |
 | 스켈레톤 | `SM_Chr_Skeleton_01` | 검 `Sword_03` (칼날) | `Units/Polygon` |
+| 스켈레톤 궁수 (#99) | `SM_Chr_Skeleton_Ranger_01` | 왼손 활 `SM_Wep_Rigged_Bow_01` (그대로) | `Units/Polygon` |
+| 스켈레톤 중갑병 (#99) | `SM_Chr_Skeleton_HeavyArmor_01` | 철퇴 `SM_Wep_Mace_01` (칼날), 왼손 방패 `SM_Wep_Shield_01` | `Units/Polygon` |
 | 뱀파이어 | `SM_Chr_DarkLord_Male_01` (잠든 동안은 석관 `SM_Prop_Tomb_01` 만, 깨면 모델) | 낫 (자루) | `Units/Polygon` |
 | 스폰·시신 | 원래 병종 모델, 무기 없음 + 보라 고리 | | Sidekick 은 `Units/SidekickUnarmed` |
 

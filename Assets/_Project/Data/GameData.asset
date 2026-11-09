@@ -20,7 +20,12 @@ MonoBehaviour:
   - {fileID: 11400000, guid: d1cb0ceca1bfb8742a9bfdf85bf63ff9, type: 2}
   - {fileID: 11400000, guid: 18830f3f5be950b4e9a15f60ba4ef7fd, type: 2}
   - {fileID: 11400000, guid: 3baff5c3a6fa99a41b41c2759bf954db, type: 2}
-  skeleton: {fileID: 11400000, guid: 32410ba81f461ea4c9ab6747830b4be3, type: 2}
+  - {fileID: 11400000, guid: 3b49a2ba07c43c14aa26f70462193705, type: 2}
+  - {fileID: 11400000, guid: ac053585c3985df4d92c91aa3d7cd056, type: 2}
+  minions:
+  - {fileID: 11400000, guid: 32410ba81f461ea4c9ab6747830b4be3, type: 2}
+  - {fileID: 11400000, guid: 130238ab975178744bd2236d60e7f156, type: 2}
+  - {fileID: 11400000, guid: 992892b7856a23c41b1a15c779a6826e, type: 2}
   stages:
   - {fileID: 11400000, guid: ea1955a406ea8ae46b118ae57ef88a03, type: 2}
   - {fileID: 11400000, guid: eeb14963362b39e42a225613dcd0e76a, type: 2}

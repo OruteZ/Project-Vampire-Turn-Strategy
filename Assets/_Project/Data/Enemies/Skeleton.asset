@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6091e72bcc7d94e48ba2b1704db68b59, type: 3}
   m_Name: Skeleton
   m_EditorClassIdentifier: VampireSpawn.Game::VampireSpawn.Game.Data.EnemyData
+  key: skeleton
   hp: 4
   atk: 2
   def: 0

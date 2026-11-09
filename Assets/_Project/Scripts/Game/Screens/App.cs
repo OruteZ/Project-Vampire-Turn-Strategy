@@ -21,7 +21,7 @@ namespace VampireSpawn.Game.Screens
         // The camp state picked last this run (stage-select.md 5-3 1), and the one the next camp scene opens on.
         public static CampNav? Nav, CampStart;
         public static Stage BattleStage { get; private set; }
-        public static IEnumerable<Placement<UnitKind>> Formation { get; private set; }
+        public static IEnumerable<Placement> Formation { get; private set; }
         public static bool StartNow { get; private set; }
 
         static bool ready;
@@ -59,7 +59,7 @@ namespace VampireSpawn.Game.Screens
         // Upgrades for a demo battle; only the editor's test battle passes any.
         public static IReadOnlyList<string> DemoUpgrades { get; private set; }
 
-        public static void GoBattle(Stage stage, bool demo, IEnumerable<Placement<UnitKind>> formation = null, bool startNow = false, IReadOnlyList<string> demoUpgrades = null)
+        public static void GoBattle(Stage stage, bool demo, IEnumerable<Placement> formation = null, bool startNow = false, IReadOnlyList<string> demoUpgrades = null)
         {
             BattleStage = stage;
             Demo = demo;
@@ -71,15 +71,10 @@ namespace VampireSpawn.Game.Screens
 
         static void UseData(GameDataAsset data)
         {
-            if (data == null) { GameData.Use(null); return; }
+            if (data == null) { Debug.LogError("App 에 게임 데이터 에셋이 없다"); return; }
             var problems = data.Problems();
-            if (problems.Count > 0)
-            {
-                Debug.LogError("게임 데이터에 문제가 있어 HTML 기본값으로 돈다:\n" + string.Join("\n", problems));
-                GameData.Use(null);
-                return;
-            }
-            GameData.Use(data.ToDataSet());
+            if (problems.Count > 0) Debug.LogError("게임 데이터에 문제가 있다:\n" + string.Join("\n", problems));
+            if (data.Missing().Count == 0) GameData.Use(data.ToDataSet());
         }
 
         // ui-style.md 15-1: the canvas never shrinks below 1920x1080, only the spare axis grows. Panel.asset matches.

@@ -152,7 +152,10 @@ namespace VampireSpawn.Game
                     break;
                 case BattleEventKind.CorpseLeft:
                     var corpse = CorpseType(e.UnitId);
-                    if (corpse.HasValue) AddCorpse(e.UnitId, corpse.Value, e.At);
+                    if (corpse != null) AddCorpse(e.UnitId, corpse, e.At);
+                    break;
+                case BattleEventKind.Buried:
+                    Remove(corpses, e.UnitId, 0f);
                     break;
                 case BattleEventKind.Rose:
                     Remove(corpses, e.OtherId, 0f);
@@ -174,7 +177,7 @@ namespace VampireSpawn.Game
         static int MaxHpOf(UnitView v, int hp) => v.HpFraction > 0f ? Mathf.RoundToInt(hp / v.HpFraction) : hp;
 
         // A corpse that rises in the same command is gone from Battle.Corpses by the time playback reaches it; its origin is on the spawn.
-        UnitKind? CorpseType(int corpseId)
+        string CorpseType(int corpseId)
         {
             foreach (var c in Battle.Corpses) if (c.Id == corpseId) return c.Type;
             return null;
@@ -192,9 +195,9 @@ namespace VampireSpawn.Game
         {
             var look = u.Role switch
             {
-                Role.Skeleton => Art.skeletonLook,
+                Role.Minion => Art.Look(u.Minion),
                 Role.Vampire => Art.vampireLook,
-                _ => Art.allyLooks[(int)u.Type.Value],
+                _ => Art.Look(u.Type),
             };
             // docs/art/unit-visuals.md 4: allies face the enemy side (north, +Z), enemies face south.
             var yaw = u.Side == Side.Ally ? 0f : 180f;
@@ -203,9 +206,9 @@ namespace VampireSpawn.Game
             units[u.Id] = view;
         }
 
-        void AddCorpse(int id, UnitKind type, Hex at)
+        void AddCorpse(int id, string type, Hex at)
         {
-            var view = UnitView.Create(Art, Art.allyLooks[(int)type], layer, -id, Ground(at), 20f, Art.spawnRing * 0.6f, false);
+            var view = UnitView.Create(Art, Art.Look(type), layer, -id, Ground(at), 20f, Art.spawnRing * 0.6f, false);
             view.name = "Corpse " + id;
             view.LieDown();
             corpses[id] = view;
@@ -215,11 +218,11 @@ namespace VampireSpawn.Game
         {
             switch (u.Role)
             {
-                case Role.Skeleton: return Art.skeletonRing;
+                case Role.Minion: return Art.skeletonRing;
                 case Role.Vampire: return Art.vampireRing;
                 case Role.Spawn: return Art.spawnRing;
             }
-            return Art.TierRing(GameData.Type(u.Type.Value).Tier);
+            return Art.TierRing(GameData.Type(u.Type).Tier);
         }
 
         static void Remove(Dictionary<int, UnitView> from, int id, float after)

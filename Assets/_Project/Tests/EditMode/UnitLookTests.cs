@@ -13,9 +13,11 @@ namespace VampireSpawn.Tests
     {
         static ArtCatalog Art => AssetDatabase.LoadAssetAtPath<ArtCatalog>("Assets/_Project/Art/ArtCatalog.asset");
 
-        static IEnumerable<string> Looks() => Art.allyLooks.Concat(new[] { Art.skeletonLook, Art.vampireLook }).Select(l => l.name);
+        static IEnumerable<UnitLook> All => Art.allyLooks.Concat(Art.minionLooks).Append(Art.vampireLook);
 
-        static UnitLook Look(string name) => Art.allyLooks.Concat(new[] { Art.skeletonLook, Art.vampireLook }).First(l => l.name == name);
+        static IEnumerable<string> Looks() => All.Select(l => l.name);
+
+        static UnitLook Look(string name) => All.First(l => l.name == name);
 
         [TestCaseSource(nameof(Looks))]
         public void HeldWeaponsPointTheWayTheirHoldSaysAtRest(string name)
