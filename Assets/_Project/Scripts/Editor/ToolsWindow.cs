@@ -44,6 +44,10 @@ namespace VampireSpawn.Editor
                 && EditorUtility.DisplayDialog("지도 굽기", "Camp 씬의 Campaign Map 을 배치 표로 다시 짓습니다. 손으로 옮긴 소품은 사라집니다.", "굽기", "취소"))
                 Debug.Log(CampaignMapBaker.Bake());
 
+            EditorGUILayout.LabelField("전투 보드", EditorStyles.boldLabel);
+            if (GUILayout.Button(new GUIContent("꾸미기 프리팹 굽기", "프리팹이 없는 장만 규칙대로 Assets/_Project/Art/Stages/<장 id>.prefab 을 짓는다. 있는 프리팹은 그대로 (docs/art/stage-dressing.md 4)")))
+                Debug.Log(StageDressingBaker.Bake());
+
             EditorGUILayout.LabelField("유닛 모습", EditorStyles.boldLabel);
             if (GUILayout.Button(new GUIContent("유닛 모습 한눈에", "모든 UnitLook 을 앞 대기·옆 대기·옆 공격으로 찍어 verify-artifacts/unit-lineup.png 로 연다 (docs/art/unit-visuals.md 6)")))
             {

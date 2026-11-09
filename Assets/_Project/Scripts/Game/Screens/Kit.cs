@@ -101,7 +101,7 @@ namespace VampireSpawn.Game.Screens
         {
             public const string Hp = "ICON_DarkFantasy_Stat_Health_01_Clean", Mov = "ICON_DarkFantasy_Stat_Speed_01_Clean", Atk = "ICON_DarkFantasy_Stat_Strength_01_Clean",
                 Def = "ICON_DarkFantasy_Status_Defense_01_Clean", Rng = "ICON_DarkFantasy_Stat_Accuracy_01_Clean", Fang = "ICON_DarkFantasy_Status_Vampiric_01_Clean",
-                Dead = "ICON_DarkFantasy_Status_Dead_01_Clean", BoardAtk = "ICON_DarkFantasy_Stat_Strength_01_Stroke", BoardDef = "ICON_DarkFantasy_Status_Defense_01_Stroke", Target = "ICON_DarkFantasy_Status_Targeted_01_Stroke",
+                Dead = "ICON_DarkFantasy_Status_Dead_01_Clean", BoardDef = "ICON_DarkFantasy_Status_Defense_01_Stroke", Target = "ICON_DarkFantasy_Status_Targeted_01_Stroke",
                 Gold = "ICON_DarkFantasyMenus_Currency_Coin_01_Clean", Silver = "ICON_DarkFantasy_Inventory_Currency_01_Clean", Pop = "ICON_DarkFantasy_Inventory_Helmets_01_Clean",
                 Boss = "ICON_DarkFantasy_Map_Monster_01_Clean", Star = "ICON_DarkFantasy_Map_Star_01_Clean", Skulls = "ICON_DarkFantasy_Map_Skull_01_Clean",
                 Turn = "ICON_DarkFantasy_Status_Time_01_Clean", Lock = "ICON_DarkFantasyMenus_Menu_Lock_Closed_01_Clean", Trophy = "ICON_DarkFantasyMenus_Menu_Trophy_01_Clean",

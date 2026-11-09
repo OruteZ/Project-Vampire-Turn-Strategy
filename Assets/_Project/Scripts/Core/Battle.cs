@@ -421,7 +421,7 @@ namespace VampireSpawn.Core
         {
             var (d, tags) = DamageParts(att, def);
             def.Hp -= d;
-            Emit(BattleEvent.Hit(def.Id, att.Id));
+            Emit(BattleEvent.Hit(def.Id, att.Id, d));
             Emit(BattleEvent.HpChanged(def.Id, def.Hp));
             Emit(BattleEvent.Popup(def.Id, PopupKind.Damage, new Message("popup.damage", d)));
             var line = tags.Count == 0

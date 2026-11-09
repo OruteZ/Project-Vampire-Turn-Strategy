@@ -33,7 +33,7 @@ namespace VampireSpawn.Core
         public static BattleEvent Walk(int unitId, IReadOnlyList<Hex> path) => new BattleEvent(BattleEventKind.Walk, unitId, path: path);
         public static BattleEvent Popup(int unitId, PopupKind kind, Message text) =>
             new BattleEvent(BattleEventKind.Popup, unitId, text, kind == PopupKind.Damage ? "dmg" : kind == PopupKind.Drain ? "blood" : "heal", value: (int)kind);
-        public static BattleEvent Hit(int unitId, int attackerId) => new BattleEvent(BattleEventKind.Hit, unitId, otherId: attackerId);
+        public static BattleEvent Hit(int unitId, int attackerId, int damage = 0) => new BattleEvent(BattleEventKind.Hit, unitId, otherId: attackerId, value: damage);
         public static BattleEvent Hint(Message text) => new BattleEvent(BattleEventKind.Hint, text: text);
         public static BattleEvent Died(int unitId, Hex at) => new BattleEvent(BattleEventKind.Died, unitId, at: at);
         public static BattleEvent CorpseLeft(int corpseId, Hex at) => new BattleEvent(BattleEventKind.CorpseLeft, corpseId, at: at);

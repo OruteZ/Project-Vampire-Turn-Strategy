@@ -24,8 +24,9 @@ namespace VampireSpawn.Game
             Kill = new Shot(0.5f, 0.3f), Opening = new Shot(0.7f, 0.35f), Final = new Shot(0.8f, 0.45f), Execute = new Shot(0.4f, 0.25f);
 
         // Shake amplitude is a fraction of the base camera distance; shake, stops and slow motion run in real seconds over speed, so a stop never freezes its own timer (battle-camera.md 6).
-        const float WeakShake = 0.002f, StrongShake = 0.006f, WeakShakeSeconds = 0.25f, StrongShakeSeconds = 0.4f,
-            WeakStop = 0.04f, StrongStop = 0.09f, ExecuteStop = 0.12f;
+        const float Shake = 0.006f, ShakeSeconds = 0.4f, BigStop = 0.09f, ExecuteStop = 0.12f;
+        // A big hit (battle-camera.md 6-2): ordinary damage in the data is 1-3.
+        const int BigDamage = 4;
 
         BattleView view;
         Camera cam;
@@ -40,7 +41,7 @@ namespace VampireSpawn.Game
         int rises;
         bool moonOn, riseOn, drainOn, drainNext, finished;
         float previewUntil, openingUntil, saturation, saturationVelocity, vignetteAmount, vignetteVelocity;
-        float shakeAmount, shakeSeconds, shakeStart = -1f, stopUntil, slowUntil;
+        float shakeUntil, shakeStart = -1f, stopUntil, slowUntil;
 
         Battle Battle => view.Battle;
         BoardView Board => view.board;
@@ -174,8 +175,8 @@ namespace VampireSpawn.Game
 
         void OnHit(BattleEvent e)
         {
-            var strong = drainNext || e.UnitId == vampireId || e.OtherId == vampireId;
-            Shake(strong);
+            var big = drainNext || e.Value >= BigDamage;
+            if (big) StartShake();
             drainOn = drainNext;
             drainNext = false;
             if (IsFinalBlow(e.UnitId))
@@ -187,7 +188,7 @@ namespace VampireSpawn.Game
                 slowUntil = Now + SlowSeconds / Speed;
                 return;
             }
-            Stop(strong ? StrongStop : WeakStop);
+            if (big) Stop(BigStop);
             if (!IsEnemy(e.OtherId)) return;
             riseOn = false;
             followId = null;
@@ -200,11 +201,10 @@ namespace VampireSpawn.Game
             Battle.Phase == Phase.Over && Battle.Find(targetId) == null
             && (targetId == vampireId || (allies.Count == 1 && allies.Contains(targetId)));
 
-        void Shake(bool strong)
+        void StartShake()
         {
-            shakeAmount = strong ? StrongShake : WeakShake;
-            shakeSeconds = (strong ? StrongShakeSeconds : WeakShakeSeconds) / Speed;
             shakeStart = Now;
+            shakeUntil = Now + ShakeSeconds / Speed;
         }
 
         void Stop(float seconds) => stopUntil = Mathf.Max(stopUntil, Now + seconds / Speed);
@@ -259,9 +259,9 @@ namespace VampireSpawn.Game
         Vector3 ShakeOffset()
         {
             if (shakeStart < 0f) return Vector3.zero;
+            if (Now >= shakeUntil) { shakeStart = -1f; return Vector3.zero; }
             var t = Now - shakeStart;
-            if (t >= shakeSeconds) { shakeStart = -1f; return Vector3.zero; }
-            var a = shakeAmount * (Board.BaseLook - Board.BasePosition).magnitude * (1f - t / shakeSeconds);
+            var a = Shake * (Board.BaseLook - Board.BasePosition).magnitude * (Now - shakeUntil) / (shakeStart - shakeUntil);
             return cam.transform.right * (Mathf.Sin(t * 55f) * a) + cam.transform.up * (Mathf.Sin(t * 43f + 1f) * a * 0.6f);
         }
 
