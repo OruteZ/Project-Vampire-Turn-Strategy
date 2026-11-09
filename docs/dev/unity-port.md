@@ -2,6 +2,8 @@
 
 출처 docs/Prototype.html (커밋 8205db3)
 
+> **#99 (2026-11-09) 이후:** HTML 데모(`docs/Prototype.html`), 정답 도구(`tools/golden/`), `Core/PrototypeData.cs`, HTML 비교 시험(`*ParityTests`, `OverlayTests`, `BattlePlaybackTests`)은 지웠다. 아래의 비교 방법·골든 이야기는 포팅 당시 기록이다. 지금 규칙 시험은 `Tests/EditMode/BattleRulesTests.cs`·`ExpansionRulesTests.cs` 이고 출하 데이터로 돈다.
+
 계획은 `docs/dev/unity-port-plan.md`, 분야 안내서는 `docs/areas/battle.md` 다.
 
 ## HTML 과 같은지 확인하는 방법

@@ -1,5 +1,7 @@
 # Unity 포팅 계획
 
+> **#99 (2026-11-09) 이후:** HTML 데모(`docs/Prototype.html`), 정답 도구(`tools/golden/`), `Core/PrototypeData.cs`, HTML 비교 시험(`*ParityTests`, `OverlayTests`, `BattlePlaybackTests`)은 지웠다. 아래의 비교 방법·골든 이야기는 포팅 당시 기록이다. 지금 규칙 시험은 `Tests/EditMode/BattleRulesTests.cs`·`ExpansionRulesTests.cs` 이고 출하 데이터로 돈다.
+
 `docs/Prototype.html` 의 육각 턴제 전술 게임을 Unity 6 (6000.3.27f2, URP) 로 옮긴다. 플레이어가 보는 규칙·수치·스테이지·전투 기록 문장은 HTML 과 한 글자도 다르지 않아야 한다.
 지키는 규칙은 하나다. 같은 편성과 같은 명령을 넣으면 C# 전투 상태와 기록이 HTML 과 똑같다. 이것을 node 로 HTML 을 그대로 돌린 골든 기록과 비교해서 증명한다.
 아트는 `Assets/Synty` 와 `UPackage/` 의 Synty 에셋으로 채우고, 에디터 작업은 전부 Unity CLI (`unity`) 로 한다.
