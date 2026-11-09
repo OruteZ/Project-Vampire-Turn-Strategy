@@ -14,8 +14,8 @@ namespace VampireSpawn.Game
 
         // Delays copied from the prototype's wait() calls (ms): one walk step 120, strike 380, rise batch 600, coffin opens 700, phase banner 500.
         const float StepSeconds = 0.12f, StrikeSeconds = 0.38f, RiseSeconds = 0.6f, WakeSeconds = 0.7f, BannerSeconds = 0.5f;
-        // docs/art/battle-camera.md 1-2: every playback delay is twice the prototype's so the camera can be followed; the drain strike holds longer still (5).
-        const float Pace = 2f, DrainSeconds = 0.8f;
+        // docs/art/battle-camera.md 1-2: every playback delay is twice the prototype's so the camera can be followed.
+        const float Pace = 2f;
 
         public Battle Battle { get; private set; }
         public event Action<BattleEvent> Played;
@@ -27,7 +27,6 @@ namespace VampireSpawn.Game
         Transform layer;
         bool playing;
         BattleCamera director;
-        bool drainNext;
 
         ArtCatalog Art => board.art;
 
@@ -140,15 +139,13 @@ namespace VampireSpawn.Game
                         attacker.Trigger("Attack");
                     }
                     if (target != null) target.Trigger("Hit");
-                    yield return Delay(drainNext ? StrikeSeconds + DrainSeconds : StrikeSeconds);
-                    drainNext = false;
+                    yield return Delay(StrikeSeconds);
                     break;
                 case BattleEventKind.HpChanged:
                     if (units.TryGetValue(e.UnitId, out var hurt)) hurt.SetHp(e.Value, Battle.Find(e.UnitId)?.MaxHp ?? MaxHpOf(hurt, e.Value));
                     break;
                 case BattleEventKind.Popup:
                     if (units.TryGetValue(e.UnitId, out var shown)) Popup.Spawn(shown.transform.position + Vector3.up * (Art.unitHeight * Art.hexSize + 0.6f), Loc.Text(e.Text), e.Style, speed / Pace);
-                    drainNext = e.Style == "blood";
                     break;
                 case BattleEventKind.Died:
                     if (units.TryGetValue(e.UnitId, out var dead)) { dead.Trigger("Death"); Remove(units, e.UnitId, Wait(1.2f)); }
@@ -171,6 +168,7 @@ namespace VampireSpawn.Game
                     yield return Delay(BannerSeconds);
                     break;
             }
+            if (director != null) yield return Delay(director.HoldFor(e));
         }
 
         static int MaxHpOf(UnitView v, int hp) => v.HpFraction > 0f ? Mathf.RoundToInt(hp / v.HpFraction) : hp;
