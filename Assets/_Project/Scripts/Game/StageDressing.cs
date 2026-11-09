@@ -8,6 +8,8 @@ namespace VampireSpawn.Game
     public sealed class StageDressing : MonoBehaviour
     {
         public string stageId;
+        [Tooltip("이 장의 주변광 (stage-dressing.md 4-10)")] public Color ambient = new Color(0.25f, 0.25f, 0.32f);
+        [Tooltip("이 장의 안개·배경색")] public Color fog = new Color(0.07f, 0.07f, 0.1f);
 
 #if UNITY_EDITOR
         static ArtCatalog art;

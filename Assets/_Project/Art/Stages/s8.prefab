@@ -380,6 +380,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: VampireSpawn.Game::VampireSpawn.Game.StageDressing
   stageId: s8
+  ambient: {r: 0.22745098, g: 0.21960784, b: 0.2509804, a: 1}
+  fog: {r: 0.05882353, g: 0.05490196, b: 0.07058824, a: 1}
 --- !u!1001 &114533650706533575
 PrefabInstance:
   m_ObjectHideFlags: 0

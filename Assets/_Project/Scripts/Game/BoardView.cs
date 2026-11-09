@@ -55,7 +55,6 @@ namespace VampireSpawn.Game
             Stage = stage;
             Board = new Board(stage.Map);
             if (hexMesh == null) hexMesh = BuildHexMesh(art.hexSize * 0.97f, 0.02f);
-            UseTheme(art.Theme(stage.Id));
             Dress(stage.Id);
             for (var r = 0; r < Board.Rows; r++)
                 for (var c = 0; c < Board.Cols; c++)
@@ -69,15 +68,15 @@ namespace VampireSpawn.Game
             if (Board != null && viewCamera != null && (!Mathf.Approximately(viewCamera.aspect, fittedAspect) || frame != fittedFrame)) FitCamera();
         }
 
-        void UseTheme(BoardTheme t)
+        // Scene-wide settings a prefab cannot hold, read from the stage's prefab (stage-dressing.md 4-10).
+        void Light(StageDressing d)
         {
-            if (t == null) return;
             RenderSettings.ambientMode = UnityEngine.Rendering.AmbientMode.Flat;
-            RenderSettings.ambientLight = t.ambient;
+            RenderSettings.ambientLight = d.ambient;
             RenderSettings.fog = true;
             RenderSettings.fogMode = FogMode.Linear;
-            RenderSettings.fogColor = t.fog;
-            if (viewCamera != null) viewCamera.backgroundColor = t.fog;
+            RenderSettings.fogColor = d.fog;
+            if (viewCamera != null) viewCamera.backgroundColor = d.fog;
         }
 
         // Stable per-cell number, so a stage looks the same every time (stage-dressing.md 2).
@@ -100,6 +99,7 @@ namespace VampireSpawn.Game
             var dressing = Instantiate(prefab, transform, false);
             dressing.name = "Dressing";
             Ground = dressing.GetComponentInChildren<UnityEngine.Terrain>();
+            Light(dressing.GetComponent<StageDressing>());
         }
 
         // battle-terrain.md 3: a faint draped outline on every walkable cell, tinted where light falls.
@@ -137,7 +137,9 @@ namespace VampireSpawn.Game
             var theme = art.Theme(stage.Id);
             var s = art.hexSize;
             var root = new GameObject(stage.Id);
-            root.AddComponent<StageDressing>().stageId = stage.Id;
+            var look = root.AddComponent<StageDressing>();
+            look.stageId = stage.Id;
+            if (theme != null) { look.ambient = theme.ambient; look.fog = theme.fog; }
             var props = new GameObject("Props").transform;
             // Sideways the ring runs twice as far, so 21:9 shows world past the HUD too.
             const int Ring = 4, RingX = 8;
