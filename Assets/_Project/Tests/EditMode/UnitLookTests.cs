@@ -78,6 +78,9 @@ namespace VampireSpawn.Tests
                 var across = Mathf.Abs(Vector3.Dot(thin, arm));
                 Assert.IsTrue(up > 0.8f || across < 0.6f && Mathf.Abs(Vector3.Dot(Longest(w), Vector3.up)) > 0.7f,
                     name + " " + g.prefab.name + " tilted at the shot: thin " + thin + ", arm " + arm);
+                // The mesh's bulk sits on the body side of the hand when the bow's belly faces the target (a flipped bow points it forward), and when a crossbow's stock runs back along the arm.
+                var bulk = (w.TransformPoint(MeshBounds(w).center) - w.parent.position).normalized;
+                Assert.Less(Vector3.Dot(bulk, arm), -0.5f, name + " " + g.prefab.name + " faces backwards at the shot");
             }
             finally { Object.DestroyImmediate(view.gameObject); }
         }

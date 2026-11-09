@@ -22,7 +22,7 @@ MonoBehaviour:
     hand: 1
     hold: 0
     position: {x: 0, y: 0, z: 0}
-    rotation: {x: 0, y: 90, z: 180}
+    rotation: {x: -0, y: 270, z: 180}
   animator: {fileID: 22100000, guid: 68fafa10a9b80a2479ec41c29d78525a, type: 2}
   sounds:
     attack:
