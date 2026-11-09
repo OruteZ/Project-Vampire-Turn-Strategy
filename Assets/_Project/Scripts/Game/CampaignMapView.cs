@@ -37,6 +37,7 @@ namespace VampireSpawn.Game
                 spot.enabled = false;
             }
             terrain.gameObject.SetActive(true);
+            fogDistance = 0f;
             if (progress != null) Kill(progress.gameObject);
             progress = new GameObject("Progress").transform;
             progress.SetParent(terrain, false);
@@ -134,17 +135,26 @@ namespace VampireSpawn.Game
             foreach (var cam in Shots())
                 if (cam.enabled && !Mathf.Approximately(cam.Lens.PhysicalProperties.SensorSize.x, 24f * viewCamera.aspect)) Shift(cam);
             var distance = Mathf.Max(1f, (viewCamera.transform.position.y - CampaignMapLayout.Origin.y) / Mathf.Sin(Pitch * Mathf.Deg2Rad));
+            if (Mathf.Approximately(distance, fogDistance)) return;
+            fogDistance = distance;
             RenderSettings.fogStartDistance = distance * 0.9f;
             RenderSettings.fogEndDistance = distance * 2.2f;
         }
 
+        float fogDistance;
+
         static MapRegion RegionOf(int stageIndex) =>
             stageIndex >= 0 && stageIndex < Campaign.Stages.Length ? CampaignMapLayout.Region(Campaign.Stages[stageIndex].Id) : null;
 
-        IEnumerable<CinemachineCamera> Shots()
+        CinemachineCamera[] shots;
+        Transform shotsOf;
+
+        CinemachineCamera[] Shots()
         {
+            if (shots != null && shotsOf == terrain) return shots;
+            shotsOf = terrain;
             var cams = terrain != null ? terrain.Find("Cameras") : null;
-            return cams != null ? cams.GetComponentsInChildren<CinemachineCamera>(true) : Enumerable.Empty<CinemachineCamera>();
+            return shots = cams != null ? cams.GetComponentsInChildren<CinemachineCamera>(true) : System.Array.Empty<CinemachineCamera>();
         }
 
         CinemachineCamera Shot(string name) => Shots().FirstOrDefault(c => c.name == name);

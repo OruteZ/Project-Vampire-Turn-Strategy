@@ -2,7 +2,14 @@
 
 출처 docs/Prototype.html (커밋 8205db3)
 
-계획은 `docs/dev/unity-port-plan.md`, 분야 안내서는 `docs/areas/battle.md` 다.
+분야 안내서는 `docs/areas/battle.md` 다. P1~P9 포팅 계획(체크리스트)은 끝나서 지웠다 (git 의 `docs/dev/unity-port-plan.md`, 61b16b5 까지).
+
+## 버린 방법 (포팅 계획에서 옮김)
+
+- 규칙을 손으로 옮기고 눈으로 비교: 기록 문장·아이디·적 행동 순서까지 같아야 해서 node 골든 기록으로 기계 비교한다.
+- 규칙을 MonoBehaviour·코루틴에 화면과 섞기: 재생 모드 없이 시험하려고 규칙은 Unity 를 모르는 Core 에 두고 이벤트 목록으로 화면과 나눴다.
+- 적 페이즈를 코루틴으로 한 단계씩 계산: HTML 도 그 사이 입력을 막으므로 한 번에 계산하고 재생만 나눈다.
+- `tools/golden/out` 은 커밋한다. HTML 이 바뀌어 다시 만들면 diff 를 같이 보인다. 한 줄짜리 큰 JSON 이라 `.ignore` 로 검색에서 뺐다.
 
 ## HTML 과 같은지 확인하는 방법
 

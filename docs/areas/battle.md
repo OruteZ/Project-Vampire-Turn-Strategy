@@ -3,7 +3,7 @@
 ## 경로
 - 기획 방향: `docs/design/` (combat, vampire, units, map, campaign, progression 등). 기획서: `docs/systems/`, `docs/content/`, `docs/ui/`
 - 웹 데모: `docs/Prototype.html` (포팅 출발점. docs/design 과 다르면 docs/design 을 따른다)
-- 계획: `docs/dev/unity-port-plan.md`
+- 구현 기록: `docs/dev/unity-port.md`
 - 데이터: `Assets/_Project/Data/` (편집기 사용법 `docs/guides/data-editor.md`)
 - 코드: `Assets/_Project/Scripts/Core/` (규칙, Unity 참조 없음), `Assets/_Project/Scripts/Game/` (화면·입력)
 - 테스트: `Assets/_Project/Tests/EditMode/`

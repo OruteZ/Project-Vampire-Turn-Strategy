@@ -29,8 +29,10 @@ namespace VampireSpawn.Game.Screens
         }
 
         readonly ArtCatalog art;
-        readonly List<Graphic> pulse = new List<Graphic>(), blink = new List<Graphic>();
+        readonly List<Graphic> pulse = new List<Graphic>();
+        readonly HashSet<Graphic> blink = new HashSet<Graphic>();
         readonly Dictionary<int, HeadMark> heads = new Dictionary<int, HeadMark>();
+        RectTransform headLayer, hoverLayer;
         // Values and panels of the previous build, so only real changes flash and only new panels slide in (ui-style.md 12).
         Dictionary<string, string> lastValues = new Dictionary<string, string>(), values = new Dictionary<string, string>();
         HashSet<string> lastPanels = new HashSet<string>(), panels = new HashSet<string>();
@@ -59,12 +61,8 @@ namespace VampireSpawn.Game.Screens
         public void Build(RectTransform root, BattleSession s, HudState st, BattleActions a)
         {
             pulse.Clear();
-            blink.Clear();
-            heads.Clear();
             (lastValues, values) = (values, lastValues);
             values.Clear();
-            (lastPanels, panels) = (panels, lastPanels);
-            panels.Clear();
             var b = s.Battle;
             Shade(root);
             var hot = b.Phase == Phase.Player && b.MoonNext() && !st.FullMoon;
@@ -74,17 +72,41 @@ namespace VampireSpawn.Game.Screens
                 if (st.MoonFading) Fx.FadeOut(vg, 0.4f);
             }
             else if (hot) Vignette(root, 0.08f);
-            var headLayer = Ui.Node(root, "Heads");
+            headLayer = Ui.Node(root, "Heads");
             Ui.Stretch(headLayer);
             Moon(root, b, hot, st.FullMoon, st.MoonFading);
             if (b.Phase == Phase.Deploy) Deploy(root, s, st, a);
-            else Fight(root, s, st, a, headLayer);
+            else Fight(root, s, st, a);
+            hoverLayer = Ui.Node(root, "Hover");
+            Ui.Stretch(hoverLayer);
+            Hover(s, st, a);
             EndTurn(root, b, st, a);
             Corner(root, st, a);
             if (BattleScreen.ShowsHint(s, st.EnemyPlaying))
                 Ui.Stretch(T(Ui.Place(root, "Hint", new Vector2(0.5f, 0f), new Vector2(0f, Edge + 96f), new Vector2(1000f, 24f)),
                     BattleScreen.Hint(s, st.EnemyPlaying), 17, Ui.Muted, false, false, TextAnchor.MiddleCenter).rectTransform);
             if (st.RulesOpen) RulesPopup(root, a);
+        }
+
+        // Hovering only redraws the unit panels and heads; rebuilding the whole HUD per hovered cell stalled the frame.
+        public void RebuildHover(BattleSession s, HudState st, BattleActions a)
+        {
+            if (hoverLayer == null || headLayer == null) return;
+            lastValues.Clear();
+            foreach (var kv in values) lastValues[kv.Key] = kv.Value;
+            Ui.Clear(headLayer);
+            Ui.Clear(hoverLayer);
+            Hover(s, st, a);
+        }
+
+        void Hover(BattleSession s, HudState st, BattleActions a)
+        {
+            blink.Clear();
+            heads.Clear();
+            (lastPanels, panels) = (panels, lastPanels);
+            panels.Clear();
+            if (s.Battle.Phase == Phase.Deploy) DeployHover(hoverLayer, s, st, a);
+            else FightHover(hoverLayer, s, st, a);
         }
 
         // ---------- per frame ----------
@@ -343,7 +365,11 @@ namespace VampireSpawn.Game.Screens
             Def(brief, Kit.Icon.Boss, Ui.Blood, Loc.T("battle.defeatBoss", stg.BossName), Loc.T("battle.objective"));
             Def(brief, Kit.Icon.Star, Ui.Candle, Loc.Text(stg.Bonus.Text), Loc.T("battle.bonus"));
             Def(brief, Kit.Icon.Skulls, Ui.Blood, Loc.T("battle.enemyList", stg.Enemies.Length - 1, stg.BossName), Loc.T("battle.enemy"));
+        }
 
+        void DeployHover(RectTransform root, BattleSession s, HudState st, BattleActions a)
+        {
+            var b = s.Battle;
             var ins = s.InspectUnit is int id ? b.Find(id) : null;
             var show = st.Hover ?? ins;
             if (show != null)
@@ -392,7 +418,7 @@ namespace VampireSpawn.Game.Screens
 
         // ---------- player / enemy turn (battle-hud.md 3, 4) ----------
 
-        void Fight(RectTransform root, BattleSession s, HudState st, BattleActions a, RectTransform headLayer)
+        void Fight(RectTransform root, BattleSession s, HudState st, BattleActions a)
         {
             var b = s.Battle;
             var stats = Ui.Row(root, "Stats", 28, 0, null, null, TextAnchor.UpperLeft);
@@ -417,7 +443,11 @@ namespace VampireSpawn.Game.Screens
             HoverTip.Add(alt, Loc.T("hud.altTip"), 0.2f);
             if (b.Vampire is Unit v && !v.Asleep) Boss(root, v);
             Log(root, b, st, a);
+        }
 
+        void FightHover(RectTransform root, BattleSession s, HudState st, BattleActions a)
+        {
+            var b = s.Battle;
             var sel = s.SelectedUnit;
             if (!st.EnemyPlaying)
             {
