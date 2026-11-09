@@ -16,10 +16,11 @@
 |---|---|---|---|
 | 게임 수치·스테이지는 데이터 에셋(Assets/_Project/Data)에 두고 기획자용 편집기로 고친다. 에셋은 데이터 기획서(docs/content)를 구현한 것이고, 기획서가 비어 있는 동안 기본값은 HTML 데모 값이다 | 시험 중 | 2026-11-05 | 이슈 #1, 요청 #19 |
 | 에디터 작업은 전부 Unity CLI 로 한다 | 시험 중 | 2026-11-05 | CLAUDE.md |
+| 전투 카메라 연출은 후보 A 등급(변이·연쇄 변이·적 턴 따라가기·보름달)만 먼저 넣는다. 기본 시점에서 평행 이동·당기기만 하고 기다림을 늘리지 않는다 (docs/art/battle-camera.md, 코드 `Game/BattleCamera.cs`) | 시험 중 | 2026-11-09 | #97 "A등급으로 시작" |
 | UI 는 프리팹 대신 코드로 만든 uGUI, 한글 글꼴은 HTML 목록대로 OS 글꼴을 쓴다(글꼴 파일 내려받기는 사용자 허락 뒤) | 시험 중 | 2026-11-05 | 이슈 #14 |
 
 ## 열린 작업
-- 전투 카메라 연출: 후보 보고서 docs/art/battle-camera-candidates.md, 사용자 선택 대기 (#97)
+- 전투 카메라 연출 B 등급(흔들림·처치 줌·시작 훑기 등)과 끄기 옵션: 후보 docs/art/battle-camera-candidates.md, 설정 화면이 생기면 (#97)
 
 ## 맡길 때
 - 모델: 규칙 이식(P4)은 opus xhigh, 나머지 구현은 opus low (`~/.claude/rules/pstack-models.md`)

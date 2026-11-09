@@ -24,6 +24,7 @@ namespace VampireSpawn.Game
         readonly Queue<IReadOnlyList<BattleEvent>> pending = new Queue<IReadOnlyList<BattleEvent>>();
         Transform layer;
         bool playing;
+        BattleCamera director;
 
         ArtCatalog Art => board.art;
 
@@ -41,6 +42,12 @@ namespace VampireSpawn.Game
             corpses.Clear();
             foreach (var u in battle.Units) AddUnit(u);
             foreach (var c in battle.Corpses) AddCorpse(c.Id, c.Type, c.Pos);
+            if (director == null)
+            {
+                director = gameObject.AddComponent<BattleCamera>();
+                director.Attach(this);
+            }
+            else director.Snap();
         }
 
         public void Clear()
