@@ -17,6 +17,8 @@ namespace VampireSpawn.Editor
         // battle-terrain.md 2.
         const float Width = 160f, Depth = 140f, HeightRange = 8f, Below = 2f;
         const int Splat = 256;
+        // battle-terrain.md 2-2: the river cells sit a step below the land, behind a steep bank.
+        const float RiverBed = -0.6f, BankWidth = 0.25f, WaterLevel = -0.45f;
 
         public static string Bake()
         {
@@ -74,7 +76,7 @@ namespace VampireSpawn.Editor
                     var p = new Vector2(x, z);
                     var ab = b - a;
                     var t = Mathf.Clamp01(Vector2.Dot(p - a, ab) / Mathf.Max(ab.sqrMagnitude, 1e-6f));
-                    var w = Mathf.Lerp(wa, wb, t) * (0.55f + 0.15f * Mathf.PerlinNoise(x / 4f + ox, z / 4f + oz)) * s;
+                    var w = Mathf.Lerp(wa, wb, t) * (0.72f + 0.08f * Mathf.PerlinNoise(x / 4f + ox, z / 4f + oz)) * s;
                     best = Mathf.Min(best, Vector2.Distance(p, a + ab * t) - w);
                 }
                 return best;
@@ -99,7 +101,7 @@ namespace VampireSpawn.Editor
                     if (river.Count > 0)
                     {
                         var bank = Bank(x, z);
-                        if (bank < 0.35f * s) y = Mathf.Min(y, Mathf.Lerp(-0.5f, y, Mathf.SmoothStep(0f, 1f, bank / (0.35f * s))));
+                        if (bank < BankWidth * s) y = Mathf.Min(y, Mathf.Lerp(RiverBed, y, Mathf.SmoothStep(0f, 1f, bank / (BankWidth * s))));
                     }
                     heights[i, j] = (y + Below) / HeightRange;
                 }
@@ -119,6 +121,7 @@ namespace VampireSpawn.Editor
                     {
                         float x = origin.x + j * Width / (Splat - 1), z = origin.z + i * Depth / (Splat - 1);
                         var patch = layers.Length > 1 ? Mathf.SmoothStep(0f, 1f, (Mathf.PerlinNoise(x / 5f + ox + 50f, z / 5f + oz + 50f) - (1f - theme.patchShare)) / 0.08f + 0.5f) : 0f;
+                        if (river.Count > 0 && layers.Length > 1 && Bank(x, z) < 0.25f * s) patch = 1f;
                         alpha[i, j, 0] = 1f - patch;
                         if (layers.Length > 1) alpha[i, j, 1] = patch;
                     }
@@ -142,7 +145,7 @@ namespace VampireSpawn.Editor
                 Object.DestroyImmediate(water.GetComponent<Collider>());
                 water.name = "Water";
                 water.transform.SetParent(root.transform, false);
-                water.transform.localPosition = origin + new Vector3(Width * 0.5f, Below - 0.14f, Depth * 0.5f);
+                water.transform.localPosition = origin + new Vector3(Width * 0.5f, Below + WaterLevel, Depth * 0.5f);
                 water.transform.localRotation = Quaternion.Euler(90f, 0f, 0f);
                 water.transform.localScale = new Vector3(Width, Depth, 1f);
                 water.GetComponent<MeshRenderer>().sharedMaterial = art.water;
