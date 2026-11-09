@@ -13,11 +13,11 @@
 | 검사 | Sidekick `FantasyKnights_05` | Sidekick | 검 `SM_Wep_Sword_01` | 방패 `SM_Wep_Shield_01` | 검·방패 |
 | 궁수 | Sidekick `FantasyKnights_02` | Sidekick | | 활 `SM_Wep_Rigged_Bow_01` | 활 |
 | 기사 | Sidekick `FantasyKnights_06` | Sidekick | 검 `SM_Wep_Sword_02` | 방패 `SM_Wep_Shield_01` | 검·방패 |
-| 사냥꾼 | PolygonDarkFantasy `SM_Chr_Hunter_Male_01` | Polygon | 석궁 `SM_Wep_Rigged_CrossBow_01` | | Polygon 기본 |
+| 사냥꾼 | PolygonDarkFantasy `SM_Chr_Hunter_Male_01` | Polygon | 석궁 `SM_Wep_Rigged_CrossBow_01` | | Polygon 활 (#99) |
 | 장의사 (#99) | PolygonDarkFantasy `SM_Chr_Gravedigger_Male_01` | Polygon | 삽 `SM_Wep_Shovel_01` | | Polygon 기본 |
 | 역병 의사 (#99) | PolygonDarkFantasy `SM_Chr_PlagueDoctor_01` | Polygon | 지팡이 `SM_Wep_Staff_01` | | Polygon 기본 |
 | 스켈레톤 | `SM_Chr_Skeleton_01` | Polygon | 검 `SM_Wep_Sword_03` | | Polygon 기본 |
-| 스켈레톤 궁수 (#99) | `SM_Chr_Skeleton_Ranger_01` | Polygon | | 활 `SM_Wep_Rigged_Bow_01` | Polygon 기본 |
+| 스켈레톤 궁수 (#99) | `SM_Chr_Skeleton_Ranger_01` | Polygon | | 활 `SM_Wep_Rigged_Bow_01` | Polygon 활 |
 | 스켈레톤 중갑병 (#99) | `SM_Chr_Skeleton_HeavyArmor_01` | Polygon | 철퇴 `SM_Wep_Mace_01` | 방패 `SM_Wep_Shield_01` | Polygon 기본 |
 | 뱀파이어 | `SM_Chr_DarkLord_Male_01` | Polygon | 낫 `SM_Wep_Scythe_01` | | Polygon 기본 |
 | 스폰 | 원래 병종 모델 | 원래 것 | 없음 | 없음 | 맨손 근접 (units.md "원거리 공격을 할 수 없다") |
@@ -31,6 +31,7 @@
 | 창 | `A_MOD_BL_Idle_Standing_Masc` | `A_MOD_BL_Walk_F_Masc` | `A_MOD_SWD_Attack_HeavyStab01_ReturnToIdle_Neut` | `A_MOD_SWD_Hit_F_React_Neut` | `A_MOD_SWD_Death_B_Neut` |
 | 검·방패 | 같음 | 같음 | `A_MOD_SWD_Attack_LightCombo01A_ReturnToIdle_Neut` | 같음 | 같음 |
 | 활 | `A_MOD_BOW_Stand_Idle_BowDown_Neut` | `A_MOD_BL_Walk_F_Masc` | `A_MOD_BOW_Stand_Shoot_ToBowDown_Neut` | `A_MOD_BOW_Hit_Head_F_React_Masc` | `A_MOD_BOW_Death_Stomach_F_Masc` |
+| Polygon 활 (#99, 원거리 Polygon 유닛) | `A_POLY_BOW_Stand_Idle_BowDown_Neut` | Polygon 기본 | `A_POLY_BOW_Stand_Shoot_ToBowDown_Neut` | `A_POLY_BOW_Hit_Head_F_React_Masc` | `A_POLY_BOW_Death_Stomach_F_Masc` |
 | Sidekick 맨손 (스폰) | 창과 같음 | 같음 | `A_MOD_SWD_Attack_LightCombo01A_ReturnToIdle_Neut` | 같음 | 같음 |
 | Polygon 기본 | 지금 `Unit.controller` 그대로 (Polygon 판 클립) | | | | |
 
