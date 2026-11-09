@@ -11,7 +11,17 @@ report=$(node tools/assets/check.mjs "$PKG_DIR" || true)
 echo "$report"
 need=$(echo "$report" | awk '$1=="필요"{print $2}')
 if [ -n "$need" ]; then
-  for f in $need; do [ -f "$PKG_DIR/$f" ] || { echo "없음: $PKG_DIR/$f  (Synty 구매 계정에서 같은 판을 내려받아 이 폴더에 둔다)"; missing=1; }; done
+  absent=$(for f in $need; do [ -f "$PKG_DIR/$f" ] || echo "$f"; done)
+  # 팀원 전용 회사 드라이브 받기 도구. install-skill 이 exe 위치를 스킬 파일에 적어 둔다.
+  NR="${NESTRESOURCES:-$(sed -n 's/^실행 명령: `"\(.*\)"`$/\1/p' ~/.claude/skills/nestresources/SKILL.md 2>/dev/null || true)}"
+  if [ -n "$absent" ] && [ -n "$NR" ] && [ -f "$NR" ]; then
+    ids=$("$NR" find --json --no-update | node -e 'const w=new Set(process.argv.slice(1));console.log(JSON.parse(require("fs").readFileSync(0,"utf8")).filter(p=>p.files.some(f=>w.has(f.name))).map(p=>p.id).join(" "))' $absent)
+    echo "== NestResources 로 받기: $ids"
+    "$NR" pull $ids --to "$PKG_DIR" --kinds unity ${NESTRESOURCES_YES:+--yes} || true
+    # pull 은 <폴더>/<id>/<파일> 에 둔다. check.mjs·임포트는 <폴더>/<파일> 을 본다.
+    for id in $ids; do [ -d "$PKG_DIR/$id" ] && mv "$PKG_DIR/$id"/*.unitypackage "$PKG_DIR/" && rmdir "$PKG_DIR/$id"; done
+  fi
+  for f in $need; do [ -f "$PKG_DIR/$f" ] || { echo "없음: $PKG_DIR/$f  (팀원은 NestResources 스킬을 깔면 저절로 받는다. 아니면 Synty 구매 계정에서 같은 판을 받아 이 폴더에 둔다)"; missing=1; }; done
   [ -z "${missing:-}" ] || exit 1
   bash "$V" launch
   for f in $need; do echo "== 임포트 $f"; bash tools/import-unitypackage.sh "$PKG_DIR/$f"; done

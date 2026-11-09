@@ -12,7 +12,7 @@ Synty assets are paid and never go into git (CLAUDE.md). Characters made with th
 
 | Path | In git | Made by |
 |---|---|---|
-| `UPackage/*.unitypackage` | no | the user, from their Synty account |
+| `UPackage/*.unitypackage` | no | `setup.sh` via NestResources (company drive, teammates only), else the user from their Synty account |
 | `Assets/Synty/` | no | step 2 (import) |
 | `Assets/_Project/Art/Characters/*.sk` | **yes** | the user, Sidekick tool "Save Character" |
 | `Assets/_Generated/Resources/Characters/<Name>/` | no | step 3 (bake): prefab, mesh, material, colour texture, `recipe.sha1` |
@@ -25,7 +25,7 @@ Synty assets are paid and never go into git (CLAUDE.md). Characters made with th
 Run from the repo root (or the worktree) in Git Bash. Follow CLAUDE.md for the Editor: Unity CLI only, never close a user's Editor.
 
 1. **Editor.** `bash .claude/skills/verify-unity/scripts/vu.sh launch` (a worktree sets `VU_PROJECT=<worktree>` and junctions `Assets/Synty` and `UPackage` from the main tree first, per the verify-unity skill). Then `vu.sh stop` so play mode is off.
-2. **Import what is missing.** `bash tools/assets/setup.sh`. It imports only packages that hold a required asset (`node tools/assets/check.mjs` decides), bakes recipes, and runs `RequiredAssetsTests`. If the user added a package that no asset references yet, import it directly: `bash tools/import-unitypackage.sh UPackage/<file>.unitypackage`, then list its folder in `docs/areas/art-assets.md`.
+2. **Import what is missing.** `bash tools/assets/setup.sh`. It imports only packages that hold a required asset (`node tools/assets/check.mjs` decides), bakes recipes, and runs `RequiredAssetsTests`. A missing package file is pulled with NestResources when the tool is installed; it asks first, so show the user the pack ids and size, get a yes, then rerun with `NESTRESOURCES_YES=1`. Never pull `.unitypackage` files into `Assets/Synty`. If the user added a package that no asset references yet, import it directly: `bash tools/import-unitypackage.sh UPackage/<file>.unitypackage`, then list its folder in `docs/areas/art-assets.md`.
 3. **Bake recipes.** `bash tools/assets/sidekick-bake.sh` bakes every recipe whose `recipe.sha1` is stale or missing. `bash tools/assets/sidekick-bake.sh <Name>` bakes one. `SIDEKICK_BAKE_FORCE=1` rebakes all. A line with `FAIL` or `MISSING <part>` means the recipe names a part this Synty install lacks: report the part names and which Sidekick pack they come from.
 4. **Refresh the asset list** if any Synty reference changed: `node tools/assets/scan.mjs`, and commit `tools/assets/*.tsv` with the change.
 5. **Prove it.**

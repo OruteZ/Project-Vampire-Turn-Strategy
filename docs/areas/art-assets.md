@@ -30,7 +30,7 @@
 | 관은 석관 `SM_Prop_Tomb_01`, 색칠 없이 | 시험 중 | 2026-11-08 | #82 "A, 색칠없이" |
 
 ## 맡길 때
-- 유료 에셋(`Assets/Synty/`, `UPackage/`)은 git 에 올리지 않는다(공개 저장소, 라이선스, .gitignore). 새 클론은 docs/guides/asset-setup.md 대로 `bash tools/assets/setup.sh`. Synty 참조를 더하거나 빼면 `node tools/assets/scan.mjs` 로 목록을 다시 뽑아 같이 커밋한다
+- 유료 에셋(`Assets/Synty/`, `UPackage/`)은 git 에 올리지 않는다(공개 저장소, 라이선스, .gitignore). 새 클론은 docs/guides/asset-setup.md 대로 `bash tools/assets/setup.sh`. 팀원의 패키지 받기는 NestResources(회사 드라이브)가 맡고 `setup.sh` 가 부른다. 이 프로젝트에선 nestresources 스킬의 기본 폴더(`Assets/Synty`)가 아니라 `UPackage/` 로 받는다(`.unitypackage` 는 Assets 밖에). Synty 참조를 더하거나 빼면 `node tools/assets/scan.mjs` 로 목록을 다시 뽑아 같이 커밋한다
 - 새 3D 에셋은 애니메이션에 거슬릴 부분(관절, 턱, 눈, 회전부, 튀어나오는 부분 등)을 무조건 별도 파츠로 나누고, 파츠 분해표에 분리 이유(어떤 애니메이션 때문인지)·피벗·미러·재사용 여부를 적는다
 - 생성 API 키는 환경변수(OPENAI_API_KEY, MESHY_API_KEY)에서 읽는다. 프록시가 키를 넣는 환경(클라우드)에선 헤더 없이 보낸다. 프로세스에 키가 없으면(세션 재시작 전) 실행 직전 사용자 범위 환경변수에서 읽어 넣는다(값은 출력하지 않는다)
 - 생성 API 가 모델 이름을 거부하면(예: "does not exist") 쓸 수 있는 모델을 확인해 보고한 뒤 바꾼다
