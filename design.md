@@ -11,5 +11,5 @@
 | [docs/art/](docs/art/) | 에이전트 | 아트 방향 기획서 |
 | [docs/audio/](docs/audio/) | 에이전트 | 사운드 기획서 (준비할 사운드 목록, 나는 순간) |
 | [docs/areas/](docs/areas/) | 에이전트 | 분야별 안내서: 코드·문서·아트 경로, 지금 유효한 사용자 결정 |
-| [docs/guides/](docs/guides/) | 에이전트 | 작업 규칙 세부 형식 (이슈 등) |
+| [docs/guides/](docs/guides/) | 에이전트 | 사람이 읽는 사용 안내 (유료 에셋 받기, 게임 데이터 편집기). 에이전트 작업 규칙은 .claude/skills |
 | [docs/dev/](docs/dev/) | 에이전트 | 구현 기록: 코드 구조, 포팅 기록, 검증 방법. 기획서가 아니다 |
