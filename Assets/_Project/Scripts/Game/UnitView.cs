@@ -83,9 +83,19 @@ namespace VampireSpawn.Game
                 var w = Instantiate(g.prefab, bone, false).transform;
                 var rotation = UnitLook.Socket(look.rig, g.hand, g.hold) * Quaternion.Euler(g.rotation);
                 w.localRotation = rotation;
-                w.localPosition = g.position - rotation * GripPoint(w, g.hold);
+                w.localPosition = Palm(look.rig, bone) + g.position - rotation * GripPoint(w, g.hold);
                 foreach (var c in w.GetComponentsInChildren<Collider>(true)) { if (Application.isPlaying) Destroy(c); else DestroyImmediate(c); }
             }
+        }
+
+        // Polygon Hand_L/Hand_R sit at the wrist joint, so a weapon on the bone origin is held by the wrist; Sidekick prop bones already sit in the palm.
+        public const float PalmShare = 0.6f;
+
+        public static Vector3 Palm(Rig rig, Transform hand)
+        {
+            if (rig != Rig.Polygon) return Vector3.zero;
+            foreach (Transform c in hand) if (c.name.StartsWith("Finger_01")) return c.localPosition * PalmShare;
+            return Vector3.zero;
         }
 
         // Where the hand closes, in the weapon's own space: its pivot, or a share up the shaft for poles.

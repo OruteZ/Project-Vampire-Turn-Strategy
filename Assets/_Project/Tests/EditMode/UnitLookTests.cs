@@ -52,6 +52,26 @@ namespace VampireSpawn.Tests
             finally { Object.DestroyImmediate(view.gameObject); }
         }
 
+        static IEnumerable<string> PolygonArmed() => All.Where(l => l.rig == Rig.Polygon && l.weapons != null && l.weapons.Any(g => g.prefab != null)).Select(l => l.name);
+
+        // Polygon hand bones sit at the wrist; UnitView moves the grip toward the knuckles (Finger_01). A model without that bone would hold by the wrist again.
+        [TestCaseSource(nameof(PolygonArmed))]
+        public void PolygonWeaponsSitInThePalmNotTheWrist(string name)
+        {
+            var look = Look(name);
+            var view = UnitView.Create(Art, look, null, 0, new Vector3(0f, -500f, 0f), 0f, Color.gray, true);
+            try
+            {
+                var bones = view.GetComponentsInChildren<Transform>(true);
+                foreach (var g in look.weapons.Where(g => g.prefab != null))
+                {
+                    var hand = bones.First(b => b.name == UnitLook.Bone(look.rig, g.hand));
+                    Assert.Greater(UnitView.Palm(look.rig, hand).sqrMagnitude, 0f, name + " " + hand.name + " has no Finger_01 to find the palm by");
+                }
+            }
+            finally { Object.DestroyImmediate(view.gameObject); }
+        }
+
         static bool Shoots(UnitLook look) => look.animator != null && look.animator.name.Contains("Bow");
 
         static IEnumerable<string> Shooters() => All.Where(Shoots).Select(l => l.name);
@@ -78,8 +98,8 @@ namespace VampireSpawn.Tests
                 var across = Mathf.Abs(Vector3.Dot(thin, arm));
                 Assert.IsTrue(up > 0.8f || across < 0.6f && Mathf.Abs(Vector3.Dot(Longest(w), Vector3.up)) > 0.7f,
                     name + " " + g.prefab.name + " tilted at the shot: thin " + thin + ", arm " + arm);
-                // The mesh's bulk sits on the body side of the hand when the bow's belly faces the target (a flipped bow points it forward), and when a crossbow's stock runs back along the arm.
-                var bulk = (w.TransformPoint(MeshBounds(w).center) - w.parent.position).normalized;
+                // The mesh's bulk sits on the body side of the grip when the bow's belly faces the target (a flipped bow points it forward), and when a crossbow's stock runs back along the arm.
+                var bulk = (w.TransformPoint(MeshBounds(w).center) - w.parent.TransformPoint(UnitView.Palm(look.rig, w.parent))).normalized;
                 Assert.Less(Vector3.Dot(bulk, arm), -0.5f, name + " " + g.prefab.name + " faces backwards at the shot");
             }
             finally { Object.DestroyImmediate(view.gameObject); }
