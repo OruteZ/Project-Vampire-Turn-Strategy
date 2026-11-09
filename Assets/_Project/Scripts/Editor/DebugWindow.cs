@@ -12,8 +12,11 @@ namespace VampireSpawn.Editor
     {
         const string PendingKey = "pvs-debug-test-pending";
 
-        [SerializeField] int gold = 1000, clearedCount, testStage;
-        [SerializeField] bool withBonus, deployAnywhere = true, testUpgrades = true;
+        [SerializeField] int gold = 1000, clearedCount, testStage, testBranch = 1;
+        [SerializeField] bool withBonus, deployAnywhere = true;
+
+        static readonly string[] BranchChoices = { "없음", "1번 갈래", "2번 갈래", "3번 갈래", "지금 저장" };
+        const int SavedChoice = 4;
 
         public static void Open() => GetWindow<DebugWindow>("디버그");
 
@@ -62,7 +65,9 @@ namespace VampireSpawn.Editor
             EditorGUILayout.LabelField("강화", EditorStyles.boldLabel);
             using (new EditorGUILayout.HorizontalScope())
             {
-                if (GUILayout.Button(new GUIContent("모두 받기", "은화를 쓰지 않고 모든 강화를 산 것으로 한다"))) Apply(DebugCheats.With(c, ups: DebugCheats.AllUpgrades));
+                EditorGUILayout.LabelField(new GUIContent("갈래 받기", "은화를 쓰지 않고 모든 병종이 그 번호의 갈래를 고른 것으로 한다"), GUILayout.Width(60));
+                for (var n = 1; n <= 3; n++)
+                    if (GUILayout.Button(n.ToString())) Apply(DebugCheats.With(c, ups: DebugCheats.Branch(n)));
                 if (GUILayout.Button("비우기")) Apply(DebugCheats.With(c, ups: new string[0]));
             }
 
@@ -70,7 +75,7 @@ namespace VampireSpawn.Editor
             var all = GameData.Stages;
             testStage = EditorGUILayout.Popup("장 (지형·적)", Mathf.Min(testStage, all.Length - 1), all.Select(s => s.Id).ToArray());
             deployAnywhere = EditorGUILayout.Toggle(new GUIContent("빈 평지 어디나 배치", "끄면 그 장의 배치 구역만"), deployAnywhere);
-            testUpgrades = EditorGUILayout.Toggle(new GUIContent("모든 강화 적용", "끄면 강화 없이"), testUpgrades);
+            testBranch = EditorGUILayout.Popup(new GUIContent("강화", "모든 병종이 고른 번호의 갈래를 가진 채 싸운다"), testBranch, BranchChoices);
             EditorGUILayout.HelpBox("모든 병종, 인원·은 " + DebugCheats.NoCap + ". 데모로 돌아 저장하지 않는다. 다시 하기·다시 배치는 같은 설정으로.", MessageType.None);
             if (GUILayout.Button(EditorApplication.isPlaying ? "테스트 전투 시작" : "플레이하고 테스트 전투 시작"))
             {
@@ -91,7 +96,8 @@ namespace VampireSpawn.Editor
         {
             var all = GameData.Stages;
             var from = all[Mathf.Clamp(testStage, 0, all.Length - 1)];
-            App.GoBattle(DebugCheats.TestStage(from, deployAnywhere), demo: true, demoUpgrades: testUpgrades ? DebugCheats.AllUpgrades : null);
+            var ups = testBranch == SavedChoice ? App.Campaign.Upgrades.ToArray() : testBranch == 0 ? null : DebugCheats.Branch(testBranch);
+            App.GoBattle(DebugCheats.TestStage(from, deployAnywhere), demo: true, demoUpgrades: ups);
         }
     }
 }

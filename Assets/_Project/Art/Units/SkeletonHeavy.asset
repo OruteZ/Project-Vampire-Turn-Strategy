@@ -1,0 +1,31 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1c50f19bfd6484047b0aa7aeac3dcfae, type: 3}
+  m_Name: SkeletonHeavy
+  m_EditorClassIdentifier: VampireSpawn.Game::VampireSpawn.Game.UnitLook
+  key: skeletonHeavy
+  icon: 
+  recipe: 
+  model: {fileID: 4376708952660885327, guid: 7472f1051c156254781f50ed411e09f1, type: 3}
+  rig: 1
+  weapons:
+  - prefab: {fileID: 2797347839979338593, guid: 2ab782ce5a2101749a03ed59a147efe8, type: 3}
+    hand: 0
+    hold: 1
+    position: {x: 0, y: 0, z: 0}
+    rotation: {x: 0, y: 0, z: 0}
+  - prefab: {fileID: 3229576258451355779, guid: 537edb1167f673c47b19bede0932c400, type: 3}
+    hand: 1
+    hold: 0
+    position: {x: 0, y: 0, z: 0}
+    rotation: {x: 0, y: 0, z: 0}
+  animator: {fileID: 22100000, guid: df70526b63d281b4b8a562ec70988bd3, type: 2}

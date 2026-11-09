@@ -5,14 +5,16 @@ using System.Linq;
 namespace VampireSpawn.Core
 {
     public enum Phase { Deploy, Player, Enemy, Over }
-    public enum Role { Ally, Skeleton, Vampire, Spawn }
+    public enum Role { Ally, Minion, Vampire, Spawn }
 
     public sealed class Unit
     {
         public int Id { get; internal set; }
         public Role Role { get; internal set; }
-        // Ally type, or for a spawn the type it rose from. Null for skeletons and the vampire.
-        public UnitKind? Type { get; internal set; }
+        // Ally type key, or for a spawn the type it rose from. Null for minions and the vampire.
+        public string Type { get; internal set; }
+        // Minion type key; null for everything else.
+        public string Minion { get; internal set; }
         public Message Name { get; internal set; }
         public Message Glyph { get; internal set; }
         public Message Origin { get; internal set; }
@@ -28,7 +30,8 @@ namespace VampireSpawn.Core
         public int MovedDist { get; internal set; }
         public bool Moved { get; internal set; }
         public bool Acted { get; internal set; }
-        public bool Cleaved { get; internal set; }
+        // The one extra action of Cleave or Twice was used this turn.
+        public bool ActedAgain { get; internal set; }
         public bool Asleep { get; internal set; }
         public bool JustRisen { get; internal set; }
         public bool JustWoke { get; internal set; }
@@ -36,7 +39,7 @@ namespace VampireSpawn.Core
         public IReadOnlyList<Ability> Abil => abil;
 
         public Side Side => Role == Role.Ally ? Side.Ally : Side.Enemy;
-        public string Kind => Role == Role.Ally ? GameData.Type(Type.Value).Key : Role.ToString().ToLowerInvariant();
+        public string Kind => Role == Role.Ally ? Type : Role == Role.Minion ? Minion : Role.ToString().ToLowerInvariant();
         public bool IsUndead => Role == Role.Vampire || Role == Role.Spawn;
         public bool Has(Ability a) => abil.Contains(a);
     }
@@ -47,7 +50,7 @@ namespace VampireSpawn.Core
         public Hex Pos { get; internal set; }
         public Message Name { get; internal set; }
         public Message Glyph { get; internal set; }
-        public UnitKind Type { get; internal set; }
+        public string Type { get; internal set; }
         public int MaxHp { get; internal set; }
         public int Atk { get; internal set; }
         public int Def { get; internal set; }
@@ -81,7 +84,7 @@ namespace VampireSpawn.Core
         public int Moon { get; private set; }
         public int? EatTarget { get; private set; }
         public bool? Won { get; private set; }
-        public IReadOnlyList<Placement<UnitKind>> StartFormation { get; private set; } = Array.Empty<Placement<UnitKind>>();
+        public IReadOnlyList<Placement> StartFormation { get; private set; } = Array.Empty<Placement>();
 
         readonly List<Unit> units = new List<Unit>();
         readonly List<Corpse> corpses = new List<Corpse>();
@@ -95,7 +98,7 @@ namespace VampireSpawn.Core
         // Ids start at 1 per battle. The prototype's uid never resets across battles; ids are never shown, so only order matters.
         int nextId = 1;
 
-        public Battle(Stage stage, IEnumerable<string> ownedUpgrades = null, IEnumerable<Placement<UnitKind>> formation = null)
+        public Battle(Stage stage, IEnumerable<string> ownedUpgrades = null, IEnumerable<Placement> formation = null)
         {
             Stage = stage;
             Board = new Board(stage.Map);
@@ -114,8 +117,8 @@ namespace VampireSpawn.Core
         public Unit UnitAt(Hex h) => units.FirstOrDefault(u => u.Pos == h);
         public Corpse CorpseAt(Hex h) => corpses.FirstOrDefault(c => c.Pos == h);
         public Unit Find(int id) => units.FirstOrDefault(u => u.Id == id);
-        public int Used(Func<UnitType, int> cost) => Allies.Sum(u => cost(GameData.Type(u.Type.Value)));
-        public bool BonusMet => Stage.Bonus.IsMet(Turn, Stats.Drained, units.Any(u => u.Role == Role.Skeleton));
+        public int Used(Func<UnitType, int> cost) => Allies.Sum(u => cost(GameData.Type(u.Type)));
+        public bool BonusMet => Stage.Bonus.IsMet(Turn, Stats.Drained, units.Any(u => u.Role == Role.Minion));
 
         public Occupant OccupantAt(Hex h)
         {
@@ -129,27 +132,28 @@ namespace VampireSpawn.Core
 
         public bool InDeploy(Hex h) => Board.InBounds(h) && Board.At(h) == Terrain.Deploy;
 
-        Unit MakeAlly(UnitKind kind, Hex at)
+        Unit MakeAlly(string kind, Hex at)
         {
             var t = GameData.Type(kind);
             var u = new Unit
             {
                 Id = nextId++, Role = Role.Ally, Type = kind, Name = t.Name, Glyph = t.Glyph, Pos = at,
-                Hp = t.Hp, MaxHp = t.Hp, Atk = t.Atk, Def = t.Def, Mov = t.Mov, Rng = t.Rng, Bane = t.Bane,
+                Hp = t.Hp, MaxHp = t.Hp, Atk = t.Atk, Def = t.Def, Mov = t.Mov, Rng = t.Rng, Bane = t.Bane, Heal = t.Heal,
             };
-            foreach (var up in GameData.Upgrades)
+            u.abil.AddRange(t.Skills);
+            foreach (var up in GameData.Branches(kind))
             {
-                if (up.Unit != kind || !upgrades.Contains(up.Id)) continue;
+                if (!upgrades.Contains(up.Id)) continue;
                 u.Hp += up.Mod.Hp; u.MaxHp += up.Mod.Hp; u.Atk += up.Mod.Atk; u.Def += up.Mod.Def;
-                u.Mov += up.Mod.Mov; u.Rng += up.Mod.Rng; u.Bane += up.Mod.Bane;
+                u.Mov += up.Mod.Mov; u.Rng += up.Mod.Rng; u.Bane += up.Mod.Bane; u.Heal += up.Mod.Heal;
                 if (up.Ability != Ability.None) u.abil.Add(up.Ability);
             }
             return u;
         }
 
-        Unit MakeEnemy(EnemyKind kind, Hex at)
+        Unit MakeEnemy(string kind, Hex at)
         {
-            if (kind == EnemyKind.Vampire)
+            if (kind == EnemyType.Vampire)
             {
                 var b = Stage.Boss;
                 return new Unit
@@ -158,16 +162,16 @@ namespace VampireSpawn.Core
                     Hp = b.Hp, MaxHp = b.Hp, Atk = b.Atk, Def = b.Def, Mov = b.Mov, Rng = 1, Heal = b.Heal, Asleep = true,
                 };
             }
-            var s = GameData.Skeleton;
+            var s = GameData.Minion(kind);
             return new Unit
             {
-                Id = nextId++, Role = Role.Skeleton, Name = s.Name, Glyph = s.Glyph, Pos = at,
-                Hp = s.Hp, MaxHp = s.Hp, Atk = s.Atk, Def = s.Def, Mov = s.Mov, Rng = 1,
+                Id = nextId++, Role = Role.Minion, Minion = kind, Name = s.Name, Glyph = s.Glyph, Pos = at,
+                Hp = s.Hp, MaxHp = s.Hp, Atk = s.Atk, Def = s.Def, Mov = s.Mov, Rng = s.Rng,
             };
         }
 
-        // Prototype unitStats: base type plus every owned upgrade, used by the roster and armory lines.
-        public static Unit Preview(UnitKind kind, IEnumerable<string> ownedUpgrades) =>
+        // Base type plus every owned upgrade, used by the roster and armory lines.
+        public static Unit Preview(string kind, IEnumerable<string> ownedUpgrades) =>
             new Battle(GameData.Stages[0], ownedUpgrades).MakeAlly(kind, default);
 
         void TrimToCaps()
@@ -196,7 +200,7 @@ namespace VampireSpawn.Core
 
         CommandResult Done() => CommandResult.Done(events);
 
-        public CommandResult Place(UnitKind kind, Hex at)
+        public CommandResult Place(string kind, Hex at)
         {
             if (!Begin(Phase.Deploy, out var no)) return no;
             if (!Stage.Units.Contains(kind)) return CommandResult.Rejected(new Message("reason.typeNotAllowed"));
@@ -255,15 +259,15 @@ namespace VampireSpawn.Core
         {
             if (!Begin(Phase.Deploy, out var no)) return no;
             if (!Allies.Any()) return CommandResult.Rejected(new Message("reason.noAllies"));
-            var count = Allies.GroupBy(u => u.Type.Value).ToDictionary(g => g.Key, g => g.Count());
-            var index = new Dictionary<UnitKind, int>();
+            var count = Allies.GroupBy(u => u.Type).ToDictionary(g => g.Key, g => g.Count());
+            var index = new Dictionary<string, int>();
             foreach (var u in Allies)
             {
-                if (count[u.Type.Value] <= 1) continue;
-                index[u.Type.Value] = index.TryGetValue(u.Type.Value, out var n) ? n + 1 : 1;
-                u.Name = new Message("name.numbered", GameData.Type(u.Type.Value).Name, index[u.Type.Value]);
+                if (count[u.Type] <= 1) continue;
+                index[u.Type] = index.TryGetValue(u.Type, out var n) ? n + 1 : 1;
+                u.Name = new Message("name.numbered", GameData.Type(u.Type).Name, index[u.Type]);
             }
-            StartFormation = Allies.Select(u => new Placement<UnitKind>(u.Type.Value, u.Pos.Col, u.Pos.Row)).ToArray();
+            StartFormation = Allies.Select(u => new Placement(u.Type, u.Pos.Col, u.Pos.Row)).ToArray();
             Phase = Phase.Player;
             Say(new Message("log.start", Stage.BossName), "t");
             Emit(BattleEvent.Banner(new Message("banner.playerTurn", 1), "player"));
@@ -299,9 +303,9 @@ namespace VampireSpawn.Core
                 return CommandResult.Rejected(new Message("reason.cannotAttack"));
             ApplyHit(u, t);
             u.Acted = u.Moved = true;
-            if (!units.Contains(t) && u.Has(Ability.Cleave) && !u.Cleaved && Vampire != null)
+            if (!units.Contains(t) && u.Has(Ability.Cleave) && !u.ActedAgain && Vampire != null)
             {
-                u.Cleaved = true;
+                u.ActedAgain = true;
                 u.Acted = false;
                 Say(new Message("log.cleave", u.Name), "h");
             }
@@ -320,6 +324,56 @@ namespace VampireSpawn.Core
             Kill(t, u, DeathCause.Execute);
             u.Acted = u.Moved = true;
             CheckEnd();
+            return Done();
+        }
+
+        public bool CanBury(Unit u, Corpse c) => u != null && c != null && u.Side == Side.Ally && !u.Acted && u.Has(Ability.Bury) && Hex.Distance(u.Pos, c.Pos) == 1;
+
+        // docs/content/units.md 4-3.
+        public CommandResult Bury(int id, int corpseId)
+        {
+            if (!Begin(Phase.Player, out var no)) return no;
+            var u = Ready(id);
+            var c = corpses.FirstOrDefault(x => x.Id == corpseId);
+            if (!CanBury(u, c)) return CommandResult.Rejected(new Message("reason.cannotBury"));
+            corpses.Remove(c);
+            Emit(BattleEvent.Buried(c.Id, c.Pos));
+            Emit(BattleEvent.Popup(u.Id, new Message("popup.bury"), "heal"));
+            Say(new Message("log.bury", u.Name, c.Name), "h");
+            u.Acted = u.Moved = true;
+            if (u.Has(Ability.Rite) && Moon > 0)
+            {
+                Moon--;
+                Emit(BattleEvent.MoonChanged(Moon));
+                Say(new Message("log.rite", Moon, Rules.MoonMax), "h");
+                if (!MoonNext()) EatTarget = null;
+            }
+            if (u.Has(Ability.Twice) && !u.ActedAgain)
+            {
+                u.ActedAgain = true;
+                u.Acted = false;
+                Say(new Message("log.buryAgain", u.Name), "h");
+            }
+            return Done();
+        }
+
+        public bool CanMend(Unit u, Unit t) => u != null && t != null && u != t && u.Side == Side.Ally && t.Side == Side.Ally && !u.Acted
+            && u.Has(Ability.Mend) && t.Hp < t.MaxHp && Hex.Distance(u.Pos, t.Pos) <= Rules.MendRange;
+
+        public int MendAmount(Unit u, Unit t) => Math.Min(u.Heal, t.MaxHp - t.Hp);
+
+        public CommandResult Mend(int id, int targetId)
+        {
+            if (!Begin(Phase.Player, out var no)) return no;
+            var u = Ready(id);
+            var t = Find(targetId);
+            if (!CanMend(u, t)) return CommandResult.Rejected(new Message("reason.cannotMend"));
+            var heal = MendAmount(u, t);
+            t.Hp += heal;
+            Emit(BattleEvent.HpChanged(t.Id, t.Hp));
+            Emit(BattleEvent.Popup(t.Id, new Message("popup.heal", heal), "heal"));
+            Say(new Message("log.mend", u.Name, t.Name, heal), "h");
+            u.Acted = u.Moved = true;
             return Done();
         }
 
@@ -353,8 +407,13 @@ namespace VampireSpawn.Core
             if (att.Bane > 0 && def.IsUndead) { d += att.Bane; tags.Add(new Message("tag.bane")); }
             if (att.Has(Ability.Ambush) && !att.Moved) { d += 1; tags.Add(new Message("tag.ambush")); }
             if (att.Has(Ability.Charge) && att.MovedDist >= 2) { d += 2; tags.Add(new Message("tag.charge")); }
-            return (Math.Max(1, d - def.Def), tags);
+            var armor = def.Def;
+            if (InFormation(def)) { armor += 1; tags.Add(new Message("tag.formation")); }
+            return (Math.Max(1, d - armor), tags);
         }
+
+        bool InFormation(Unit u) => u.Has(Ability.Formation)
+            && units.Any(o => o != u && o.Role == Role.Ally && o.Type == u.Type && Hex.Distance(o.Pos, u.Pos) == 1);
 
         public int Damage(Unit att, Unit def) => DamageParts(att, def).damage;
 
@@ -395,7 +454,7 @@ namespace VampireSpawn.Core
             if (Board.Lit(u.Pos)) { Say(new Message("log.diedInLight", u.Name), "h"); return; }
             var corpse = new Corpse
             {
-                Id = nextId++, Pos = u.Pos, Name = u.Name, Type = u.Type.Value, Glyph = u.Glyph,
+                Id = nextId++, Pos = u.Pos, Name = u.Name, Type = u.Type, Glyph = u.Glyph,
                 MaxHp = u.MaxHp, Atk = u.Atk, Def = u.Def, Mov = u.Mov,
             };
             corpses.Add(corpse);
@@ -427,14 +486,14 @@ namespace VampireSpawn.Core
             foreach (var u in units)
             {
                 var flags = u.Side == Side.Ally
-                    ? $"m{B(u.Moved)}a{B(u.Acted)}d{u.MovedDist}c{B(u.Cleaved)}"
+                    ? $"m{B(u.Moved)}a{B(u.Acted)}d{u.MovedDist}c{B(u.ActedAgain)}"
                     : $"s{B(u.Asleep)}r{B(u.JustRisen)}w{B(u.JustWoke)}";
                 var side = u.Side == Side.Ally ? "ally" : "enemy";
                 var abil = string.Join("+", u.abil.Select(a => a.ToString().ToLowerInvariant()));
                 lines.Add($"U {u.Id}:{side}:{u.Kind}:{text(u.Name)}:{text(u.Glyph)}:{text(u.Origin)}:{u.Pos}:{u.Hp}/{u.MaxHp}:{u.Atk},{u.Def},{u.Mov},{u.Rng},{u.Bane},{u.Heal}:{abil}:{flags}");
             }
             foreach (var c in corpses)
-                lines.Add($"C {c.Id}:{GameData.Type(c.Type).Key}:{text(c.Name)}:{text(c.Glyph)}:{c.Pos}:{c.MaxHp},{c.Atk},{c.Def},{c.Mov}");
+                lines.Add($"C {c.Id}:{c.Type}:{text(c.Name)}:{text(c.Glyph)}:{c.Pos}:{c.MaxHp},{c.Atk},{c.Def},{c.Mov}");
             return string.Join("\n", lines);
         }
     }

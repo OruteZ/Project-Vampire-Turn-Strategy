@@ -176,7 +176,7 @@ namespace VampireSpawn.Game.Screens
             {
                 var t = GameData.Type(k);
                 var isNew = t.UnlockAt == i + 1;
-                var chip = Chip(roster, isNew ? Ui.Candle : Ui.SteelDim, art.Ui(Kit.Weapon[k]), isNew ? Ui.Candle : Ui.Steel);
+                var chip = Chip(roster, isNew ? Ui.Candle : Ui.SteelDim, art.Ui(art.Icon(k)), isNew ? Ui.Candle : Ui.Steel);
                 SetTip(chip, isNew ? Loc.T("camp.new", t.Name) : Loc.Text(t.Name));
             }
 
@@ -192,7 +192,7 @@ namespace VampireSpawn.Game.Screens
             var panel = root.Q("barracks-panel");
             var name = panel.Q<Label>("bk-name");
             name.text = Loc.T("camp.barracksName");
-            var anyOpen = GameData.Types.Any(t => c.UpgradesOpen(t.Kind));
+            var anyOpen = GameData.Types.Any(t => c.UpgradesOpen(t.Key));
             SetTip(name, Loc.T(anyOpen ? "camp.barracksHelp" : "camp.noUpgrades"));
             var gold = panel.Q("bk-gold");
             gold.Clear();
@@ -204,23 +204,23 @@ namespace VampireSpawn.Game.Screens
             for (var i = 0; i < types.Length; i++)
             {
                 var t = types[i];
-                var state = CampNav.TabOf(c, t.Kind);
+                var state = CampNav.TabOf(c, t.Key);
                 var chip = Chip(tabs, nav.Tab == i ? Ui.Steel : state == TabState.Open ? Ui.SteelDim : Ui.Line,
-                    art.Ui(state == TabState.Hidden ? Kit.Icon.Lock : Kit.Weapon[t.Kind]), state == TabState.Open ? Ui.Steel : Ui.Dim, state == TabState.Hidden ? 28f : 40f);
+                    art.Ui(state == TabState.Hidden ? Kit.Icon.Lock : art.Icon(t.Key)), state == TabState.Open ? Ui.Steel : Ui.Dim, state == TabState.Hidden ? 28f : 40f);
                 chip.EnableInClassList("on", nav.Tab == i);
                 var unlockAt = Mathf.Clamp(t.UnlockAt - 1, 0, Campaign.Stages.Length - 1);
                 if (state == TabState.Locked) chip.Add(Small("tab-lock", Kit.Icon.Lock, Ui.Dim));
-                if (CampNav.Affordable(c, t.Kind) > 0) { var dot = new VisualElement { pickingMode = PickingMode.Ignore }; dot.AddToClassList("tab-dot"); chip.Add(dot); }
+                if (CampNav.Affordable(c, t.Key) > 0) { var dot = new VisualElement { pickingMode = PickingMode.Ignore }; dot.AddToClassList("tab-dot"); chip.Add(dot); }
                 SetTip(chip, state == TabState.Open ? Loc.Text(t.Name) : Loc.T("camp.lockedBy", Loc.Text(Campaign.Stages[unlockAt].Title)));
                 var index = i;
                 chip.RegisterCallback<ClickEvent>(_ => send(CampInput.Tab(index, Time.unscaledTime)));
             }
 
             var sel = Mathf.Clamp(nav.Tab, 0, types.Length - 1);
-            var kind = types[sel].Kind;
+            var kind = types[sel].Key;
             var tabState = CampNav.TabOf(c, kind);
             var unit = panel.Q("bk-unit");
-            ToolkitKit.Picture(unit.Q(className: "bk-unit-icon"), art.Ui(Kit.Weapon[kind]), Ui.Steel);
+            ToolkitKit.Picture(unit.Q(className: "bk-unit-icon"), art.Ui(art.Icon(kind)), Ui.Steel);
             unit.Q<Label>().text = Loc.Text(types[sel].Name);
             var stats = panel.Q("bk-stats");
             stats.Clear();

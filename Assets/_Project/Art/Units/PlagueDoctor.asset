@@ -1,0 +1,26 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1c50f19bfd6484047b0aa7aeac3dcfae, type: 3}
+  m_Name: PlagueDoctor
+  m_EditorClassIdentifier: VampireSpawn.Game::VampireSpawn.Game.UnitLook
+  key: doctor
+  icon: ICON_SM_Wep_Staff_01_DarkFantasy
+  recipe: 
+  model: {fileID: 6711451649947656021, guid: 6f84430900ee9f246aa877a58c0085a0, type: 3}
+  rig: 1
+  weapons:
+  - prefab: {fileID: 2757144403252637568, guid: 35eccc3f6c3e3644daf869cc547870a9, type: 3}
+    hand: 0
+    hold: 2
+    position: {x: 0, y: 0, z: 0}
+    rotation: {x: 0, y: 0, z: 0}
+  animator: {fileID: 22100000, guid: df70526b63d281b4b8a562ec70988bd3, type: 2}

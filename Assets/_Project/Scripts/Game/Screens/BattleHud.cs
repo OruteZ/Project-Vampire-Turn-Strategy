@@ -53,7 +53,7 @@ namespace VampireSpawn.Game.Screens
 
         static void Hotkey(RectTransform button, string key) => Kit.Hotkey(button, key);
 
-        static Dictionary<UnitKind, string> Weapon => Kit.Weapon;
+        string Weapon(string key) => kit.Weapon(key);
 
 
         public void Build(RectTransform root, BattleSession s, HudState st, BattleActions a)
@@ -359,14 +359,14 @@ namespace VampireSpawn.Game.Screens
             }
         }
 
-        void RosterRow(Transform parent, UnitType t, UnitKind k, bool on, bool can, IEnumerable<string> upgrades, Action pick)
+        void RosterRow(Transform parent, UnitType t, string k, bool on, bool can, IEnumerable<string> upgrades, Action pick)
         {
             var rt = Ui.Row(parent, "Roster " + t.Key, 10, 0, null, null, TextAnchor.MiddleLeft);
             Ui.Size(rt).minHeight = 64;
             rt.GetComponent<HorizontalLayoutGroup>().padding = new RectOffset(10, 10, 6, 6);
             rt.GetComponent<HorizontalLayoutGroup>().childForceExpandWidth = false;
             Frame(rt, on ? Ui.Steel : Ui.Line, 14f);
-            var icon = Ui.Sprite(rt, "Icon", S(Weapon[k]), on ? Ui.Steel : Ui.Muted);
+            var icon = Ui.Sprite(rt, "Icon", S(Weapon(k)), on ? Ui.Steel : Ui.Muted);
             Ui.Size(icon, 40, 40);
             var col = Ui.Col(rt, "Info", 4);
             Ui.Size(col, -1, -1, 1);
@@ -547,7 +547,7 @@ namespace VampireSpawn.Game.Screens
             var col = PanelBody(p);
             var head = Ui.Row(col, "Head", 10, 0, null, null, TextAnchor.LowerLeft);
             head.GetComponent<HorizontalLayoutGroup>().childForceExpandWidth = false;
-            if (o.Type is UnitKind wk && Weapon.TryGetValue(wk, out var wi)) Ui.Size(Ui.Sprite(head, "Weapon", S(wi), side), 26, 26);
+            if (o.Type != null && Weapon(o.Type) is string wi) Ui.Size(Ui.Sprite(head, "Weapon", S(wi), side), 26, 26);
             Ui.Ellipsize(T(head, spawn ? Loc.T("hud.spawnOf", o.Origin) : Loc.Text(o.Name), 22, Ui.Bone, true, true), PanelW - 80);
             var big = Ui.Row(col, "Big", 22);
             big.GetComponent<HorizontalLayoutGroup>().childForceExpandWidth = false;
@@ -798,7 +798,7 @@ namespace VampireSpawn.Game.Screens
                         T(news, Loc.Text(next.Title), 20, Ui.Bone, true, false, TextAnchor.MiddleLeft);
                         foreach (var u in next.Units.Where(u => GameData.Type(u).UnlockAt == nxt + 1))
                         {
-                            var chip = Ui.Sprite(news, "New", S(Weapon[u]), Ui.Candle);
+                            var chip = Ui.Sprite(news, "New", S(Weapon(u)), Ui.Candle);
                             Ui.Size(chip, 32, 32);
                             HoverTip.Add(chip.rectTransform, Loc.T("camp.new", GameData.Type(u).Name), 0.2f);
                             chip.raycastTarget = true;

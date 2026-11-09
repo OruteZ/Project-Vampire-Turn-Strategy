@@ -16,7 +16,7 @@ namespace VampireSpawn.Editor
         public static string Capture(string path)
         {
             var art = AssetDatabase.LoadAssetAtPath<ArtCatalog>("Assets/_Project/Art/ArtCatalog.asset");
-            var looks = art.allyLooks.Concat(new[] { art.skeletonLook, art.vampireLook }).ToArray();
+            var looks = art.allyLooks.Concat(art.minionLooks).Append(art.vampireLook).ToArray();
             // Far below the scene so the open board does not show up in the shot.
             var origin = new Vector3(0f, -500f, 0f);
             var root = new GameObject("UnitLineup") { hideFlags = HideFlags.DontSave };

@@ -7,8 +7,8 @@ namespace VampireSpawn.Game.Screens
 {
     public sealed class BattleActions
     {
-        public Action Primary, Leave, Clear, Sample, Exec, Wait, Retry, Redeploy, ToCamp, CloseOver, ToggleRules, ToggleLog;
-        public Action<UnitKind> Pick;
+        public Action Primary, Leave, Clear, Sample, Exec, Mend, Wait, Retry, Redeploy, ToCamp, CloseOver, ToggleRules, ToggleLog;
+        public Action<string> Pick;
         public Action<int> Recall;
     }
 
@@ -49,23 +49,20 @@ namespace VampireSpawn.Game.Screens
         }
 
         // ui-style.md 14-1-6: the guide line stays only where it is the sole feedback for a mode (placing units, execute).
-        public static bool ShowsHint(BattleSession s, bool enemyPlaying) => !enemyPlaying && (s.Battle.Phase == Phase.Deploy || s.Mode == SelectMode.Execute);
+        public static bool ShowsHint(BattleSession s, bool enemyPlaying) => !enemyPlaying && (s.Battle.Phase == Phase.Deploy || s.Mode != SelectMode.Act);
 
         public static string Hint(BattleSession s, bool enemyPlaying) => Loc.Text(enemyPlaying ? new Message("hint.enemyActing") : s.Hint);
 
-        static readonly Dictionary<Ability, string> SkillKey = new Dictionary<Ability, string>
-        {
-            [Ability.Pike] = "skill.pike", [Ability.Ambush] = "skill.ambush", [Ability.Cleave] = "skill.cleave", [Ability.Charge] = "skill.charge",
-        };
+        public static string SkillName(Ability a) => Loc.T("skill." + char.ToLowerInvariant(a.ToString()[0]) + a.ToString().Substring(1));
 
-        public static string Skills(Unit o) => o.Abil.Count == 0 ? null : Loc.T("unit.card.skills", string.Join(", ", o.Abil.Select(x => Loc.T(SkillKey[x]))));
+        public static string Skills(Unit o) => o.Abil.Count == 0 ? null : Loc.T("unit.card.skills", string.Join(", ", o.Abil.Select(SkillName)));
 
         public static string Note(Unit o)
         {
             switch (o.Role)
             {
-                case Role.Ally: return Loc.Text(GameData.Type(o.Type.Value).Desc);
-                case Role.Skeleton: return Loc.T("unit.card.skeletonNote");
+                case Role.Ally: return Loc.Text(GameData.Type(o.Type).Desc);
+                case Role.Minion: return Loc.Text(GameData.Minion(o.Minion).Note);
                 case Role.Vampire: return Loc.T("unit.card.vampireNote", Rules.MoonWake, Rules.MoonMax, Rules.EatRange, o.Heal);
             }
             return Loc.T("unit.card.spawnNote", o.Origin);

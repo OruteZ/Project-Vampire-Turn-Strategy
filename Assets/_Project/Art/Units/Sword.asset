@@ -12,6 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1c50f19bfd6484047b0aa7aeac3dcfae, type: 3}
   m_Name: Sword
   m_EditorClassIdentifier: VampireSpawn.Game::VampireSpawn.Game.UnitLook
+  key: sword
+  icon: ICON_SM_Wep_Sword_01_DarkFantasy
   recipe: 
   model: {fileID: 5533246882707064096, guid: a28e6ae6d2fd4ef4cabedbe5dc94cde6, type: 3}
   rig: 0

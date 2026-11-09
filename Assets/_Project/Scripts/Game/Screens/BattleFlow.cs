@@ -71,7 +71,7 @@ namespace VampireSpawn.Game.Screens
             Fx.FadeIn(screen);
         }
 
-        public void StartBattle(Stage s, IEnumerable<Placement<UnitKind>> formation, bool startNow)
+        public void StartBattle(Stage s, IEnumerable<Placement> formation, bool startNow)
         {
             stage = s;
             finished = enemyPlaying = leaveArm = rulesOpen = logOpen = false;

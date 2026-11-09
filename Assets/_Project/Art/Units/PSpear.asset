@@ -12,6 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1c50f19bfd6484047b0aa7aeac3dcfae, type: 3}
   m_Name: PSpear
   m_EditorClassIdentifier: VampireSpawn.Game::VampireSpawn.Game.UnitLook
+  key: pspear
+  icon: ICON_SM_Wep_Pitchfork_01_DarkFantasy
   recipe: 
   model: {fileID: 6762366608581900436, guid: 4a4b2dc9b995e1f4c9ec89d0b192508e, type: 3}
   rig: 0

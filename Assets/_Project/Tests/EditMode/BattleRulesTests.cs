@@ -29,18 +29,18 @@ namespace VampireSpawn.Tests
             var b = new Battle(GameData.Stages.First(s => s.Id == "s7"), new[] { "knight_def" });
             var knight = b.Allies.First(u => u.Kind == "knight");
             var skeleton = b.Enemies.First(u => u.Kind == "skeleton");
-            Assert.AreEqual(3, knight.Def, "knight 2 + plate armour 1");
-            Assert.AreEqual(1, b.Damage(skeleton, knight), "skeleton attack 2 against defence 3 still deals 1");
+            Assert.AreEqual(4, knight.Def, "knight 2 + plate armour 2");
+            Assert.AreEqual(1, b.Damage(skeleton, knight), "skeleton attack 2 against defence 4 still deals 1");
         }
 
         [Test]
-        public void PlacingPastThePopulationCapIsRejectedWithThePrototypeText()
+        public void PlacingPastThePopulationCapIsRejected()
         {
             var b = Demo();
             var free = Enumerable.Range(0, b.Board.Rows).SelectMany(r => Enumerable.Range(0, b.Board.Cols).Select(c => new Hex(c, r)))
                 .First(h => b.InDeploy(h) && b.UnitAt(h) == null);
             Assert.AreEqual(10, b.Used(t => t.Pop), "sample formation fills the demo's population of 10");
-            var result = b.Place(UnitKind.PSpear, free);
+            var result = b.Place("pspear", free);
             Assert.IsFalse(result.Ok);
             Assert.AreEqual("인구가 부족합니다. 배치한 유닛을 구역 밖으로 끌어내 회수하세요.", Loc.Text(result.Reason));
             Assert.IsNull(b.UnitAt(free));

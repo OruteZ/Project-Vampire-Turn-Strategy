@@ -164,7 +164,7 @@ namespace VampireSpawn.Game
             var camp = CampSpot();
             if (type < 0 || camp == null) return;
             var t = GameData.Types[type];
-            campUnit = UnitView.Create(art, art.allyLooks[(int)t.Kind], camp, -1, camp.TransformPoint(CampaignMapLayout.CampUnit), 180f - camp.eulerAngles.y, art.TierRing(t.Tier), true);
+            campUnit = UnitView.Create(art, art.Look(t.Key), camp, -1, camp.TransformPoint(CampaignMapLayout.CampUnit), 180f - camp.eulerAngles.y, art.TierRing(t.Tier), true);
         }
 
         // A region baked into the scene may have been moved by hand; its object is the truth, the layout table the fallback.

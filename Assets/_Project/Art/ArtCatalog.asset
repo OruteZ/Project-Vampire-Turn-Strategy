@@ -45,7 +45,12 @@ MonoBehaviour:
   - {fileID: 11400000, guid: b8576f9ef41446941a8892294469fe04, type: 2}
   - {fileID: 11400000, guid: 1581e270dd9c77d41b7929a2e065869e, type: 2}
   - {fileID: 11400000, guid: 4e64c1817ded2194aa09ada82f761954, type: 2}
-  skeletonLook: {fileID: 11400000, guid: bda20e5804f236b4487296b250518250, type: 2}
+  - {fileID: 11400000, guid: 6fb984d95b018eb45b1408be3bc716a3, type: 2}
+  - {fileID: 11400000, guid: cc21f896256a48649b2069d9b28d85a9, type: 2}
+  minionLooks:
+  - {fileID: 11400000, guid: bda20e5804f236b4487296b250518250, type: 2}
+  - {fileID: 11400000, guid: 01e4528811aa25c4b907fb3cb7746203, type: 2}
+  - {fileID: 11400000, guid: e6f1164413c421d4e96f6b8ed53aa2c6, type: 2}
   vampireLook: {fileID: 11400000, guid: 2aa0e12222516714582208c22eb067d2, type: 2}
   unitAnimator: {fileID: 9100000, guid: 2b7b31fac4d09d24bab28abb943acab0, type: 2}
   spawnAnimator: {fileID: 22100000, guid: 1fdfeebf2685688439c5272f58b765dd, type: 2}
@@ -105,6 +110,8 @@ MonoBehaviour:
   - {fileID: 21300000, guid: fed5860c9b7b8d24b921fc2facdf3c67, type: 3}
   - {fileID: 21300000, guid: c57883d5c48158941be365229cf0f909, type: 3}
   - {fileID: 21300000, guid: 5170dc0b0e5797244b6c2fbbd36d0d20, type: 3}
+  - {fileID: 21300000, guid: 3bbac68dbe2fe3a439ae92de46c83167, type: 3}
+  - {fileID: 21300000, guid: 721eb28b67d216a42b85f09b273c65fd, type: 3}
   uiPrefabs:
   - {fileID: 4654971216602336425, guid: 8a6d5f97315c9a04f9ceb0e8317bb261, type: 3}
   - {fileID: 7476782851927854031, guid: 91a89f5b582042147a074fc07aa52830, type: 3}

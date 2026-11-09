@@ -28,12 +28,7 @@ namespace VampireSpawn.Game.Screens
 
         public static Text Wrap(Text t) { t.horizontalOverflow = HorizontalWrapMode.Wrap; return t; }
 
-        public static readonly Dictionary<UnitKind, string> Weapon = new Dictionary<UnitKind, string>
-        {
-            [UnitKind.PSpear] = "ICON_SM_Wep_Pitchfork_01_DarkFantasy", [UnitKind.PArcher] = "ICON_DarkFantasy_Inventory_Bows_01_Clean",
-            [UnitKind.Sword] = "ICON_SM_Wep_Sword_01_DarkFantasy", [UnitKind.Archer] = "ICON_DarkFantasy_Inventory_Bows_01_Clean",
-            [UnitKind.Knight] = "ICON_SM_Wep_Shield_Heater_01_Dungeon", [UnitKind.Hunter] = "ICON_SM_Wep_Crossbow_01_DarkFantasy",
-        };
+        public string Weapon(string key) => art != null ? art.Icon(key) : null;
 
         public void Frame(RectTransform rt, Color edge, float ppu = FramePpu) =>
             Ui.Frame(rt, S("SPR_DarkFantasyMenus_Frame_Box_Medium_02"), S("SPR_DarkFantasyMenus_Frame_Box_Medium_02_Background"), edge, ppu);

@@ -12,7 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 17bd5ddb0e5d89541abe42a0b4789540, type: 3}
   m_Name: 01_parcher
   m_EditorClassIdentifier: VampireSpawn.Game::VampireSpawn.Game.Data.UnitTypeData
-  kind: 1
   key: parcher
   tier: 0
   pop: 1
@@ -23,6 +22,8 @@ MonoBehaviour:
   mov: 3
   rng: 2
   bane: 0
+  heal: 0
+  skills: 
   unlockAt: 1
   upgrades:
   - id: parcher_mov
@@ -33,13 +34,25 @@ MonoBehaviour:
     mov: 1
     rng: 0
     bane: 0
+    heal: 0
     ability: 0
   - id: parcher_ambush
-    cost: 40
+    cost: 30
     hp: 0
     atk: 0
     def: 0
     mov: 0
     rng: 0
     bane: 0
+    heal: 0
     ability: 2
+  - id: parcher_rng
+    cost: 30
+    hp: 0
+    atk: 0
+    def: 0
+    mov: 0
+    rng: 1
+    bane: 0
+    heal: 0
+    ability: 0
