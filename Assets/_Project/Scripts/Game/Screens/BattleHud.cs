@@ -342,7 +342,7 @@ namespace VampireSpawn.Game.Screens
             HoverTip.Add(brief, Loc.Text(stg.Brief), 0.6f);
             Def(brief, Kit.Icon.Boss, Ui.Blood, Loc.T("battle.defeatBoss", stg.BossName), Loc.T("battle.objective"));
             Def(brief, Kit.Icon.Star, Ui.Candle, Loc.Text(stg.Bonus.Text), Loc.T("battle.bonus"));
-            Def(brief, Kit.Icon.Skulls, Ui.Blood, Loc.T("battle.enemyList", stg.Enemies.Length - 1, stg.BossName), Loc.T("battle.enemy"));
+            Def(brief, Kit.Icon.Skulls, Ui.Blood, Kit.EnemyList(stg), Loc.T("battle.enemy"));
 
             var ins = s.InspectUnit is int id ? b.Find(id) : null;
             var show = st.Hover ?? ins;
@@ -425,7 +425,9 @@ namespace VampireSpawn.Game.Screens
                 if (ally != null) Panel(root, b, ally, Vector2.zero, new Vector2(Edge, Edge + 48f), sel == ally);
                 if (sel != null && b.Phase == Phase.Player && !sel.Acted) Actions(root, s, a);
             }
+            var mendTarget = sel != null && s.Mode == SelectMode.Mend && b.CanMend(sel, st.Hover) ? st.Hover : null;
             if (st.HoverCorpse != null) CorpsePanel(root, st.HoverCorpse);
+            else if (mendTarget != null) Panel(root, b, mendTarget, new Vector2(1f, 0f), new Vector2(-Edge - 216f, Edge + 48f), true, b.MendAmount(sel, mendTarget));
             else if (st.Hover != null && st.Hover.Side == Side.Enemy) Panel(root, b, st.Hover, new Vector2(1f, 0f), new Vector2(-Edge - 216f, Edge + 48f), true);
 
             var atk = new HashSet<Hex>(s.Overlay().Where(m => m.Mark == Mark.Atk).Select(m => m.Hex));
@@ -508,7 +510,7 @@ namespace VampireSpawn.Game.Screens
             else Ui.Ellipsize(t, width - iconW);
         }
 
-        void StatCell(Transform row, string icon, string value, string label, float px, Color iconColor, Color valueColor, string watch = null)
+        RectTransform StatCell(Transform row, string icon, string value, string label, float px, Color iconColor, Color valueColor, string watch = null)
         {
             var cell = Ui.Row(row, "Stat " + label, 6, 0, null, null, TextAnchor.LowerLeft);
             cell.GetComponent<HorizontalLayoutGroup>().childForceExpandWidth = false;
@@ -517,6 +519,7 @@ namespace VampireSpawn.Game.Screens
             Ui.Size(v, -1, px * 1.3f);
             if (watch != null) Watch(v, watch);
             HoverTip.Add(cell, label, 0.3f);
+            return cell;
         }
 
         RectTransform PanelFrame(RectTransform root, string name, Vector2 anchor, Vector2 pos, Color edge)
@@ -536,7 +539,7 @@ namespace VampireSpawn.Game.Screens
             return col;
         }
 
-        RectTransform Panel(RectTransform root, Battle b, Unit o, Vector2 anchor, Vector2 pos, bool lit)
+        RectTransform Panel(RectTransform root, Battle b, Unit o, Vector2 anchor, Vector2 pos, bool lit, int heal = 0)
         {
             var spawn = o.Role == Role.Spawn;
             var side = o.Side == Side.Ally ? Ui.Steel : spawn ? Ui.Spawn : Ui.Blood;
@@ -551,7 +554,8 @@ namespace VampireSpawn.Game.Screens
             Ui.Ellipsize(T(head, spawn ? Loc.T("hud.spawnOf", o.Origin) : Loc.Text(o.Name), 22, Ui.Bone, true, true), PanelW - 80);
             var big = Ui.Row(col, "Big", 22);
             big.GetComponent<HorizontalLayoutGroup>().childForceExpandWidth = false;
-            StatCell(big, "ICON_DarkFantasy_Stat_Health_01_Clean", o.Hp + "/" + o.MaxHp, Loc.T("unit.card.hp"), 34, side, o.Side == Side.Ally && o.Hp * 3 <= o.MaxHp ? Ui.Blood : Ui.Bone, "hp" + o.Id);
+            var hp = StatCell(big, "ICON_DarkFantasy_Stat_Health_01_Clean", o.Hp + "/" + o.MaxHp, Loc.T("unit.card.hp"), 34, side, o.Side == Side.Ally && o.Hp * 3 <= o.MaxHp ? Ui.Blood : Ui.Bone, "hp" + o.Id);
+            if (heal > 0) Ui.Size(T(hp, "+" + heal, 34, Ui.Steel, true), -1, 34 * 1.3f);
             StatCell(big, "ICON_DarkFantasy_Stat_Speed_01_Clean", o.Mov.ToString(), Loc.T("unit.card.mov"), 34, side, Ui.Bone, "mov" + o.Id);
             var small = Ui.Row(col, "Small", 18);
             small.GetComponent<HorizontalLayoutGroup>().childForceExpandWidth = false;
@@ -622,6 +626,8 @@ namespace VampireSpawn.Game.Screens
         void Actions(RectTransform root, BattleSession s, BattleActions a)
         {
             var exec = s.Mode == SelectMode.Execute;
+            var mend = s.Mode == SelectMode.Mend;
+            var sel = s.SelectedUnit;
             var row = Ui.Row(root, "ActionBar", 8, 0, null, null, TextAnchor.LowerCenter);
             row.anchorMin = row.anchorMax = row.pivot = new Vector2(0.5f, 0f);
             row.anchoredPosition = new Vector2(0f, Edge);
@@ -632,15 +638,17 @@ namespace VampireSpawn.Game.Screens
             {
                 ("ICON_DarkFantasy_Status_Dead_01_Clean", Loc.T(exec ? "unit.card.cancelExec" : "unit.card.exec"), a.Exec, exec, true),
                 (Kit.Icon.Wait, Loc.T("unit.card.wait"), a.Wait, false, false),
+                (Kit.Icon.Heal, Loc.T(mend ? "hud.cancelMend" : "hud.mend"), a.Mend, mend, false),
             })
             {
+                if (act == a.Mend && !sel.Has(Ability.Mend)) continue;
                 var col = Ui.Col(row, "Slot " + label, 4);
                 col.GetComponent<VerticalLayoutGroup>().childAlignment = TextAnchor.UpperCenter;
                 col.GetComponent<VerticalLayoutGroup>().childForceExpandWidth = false;
                 Ui.Size(col, 90);
                 var slot = Ui.Node(col, "Slot");
                 Ui.Size(slot, 64, 64);
-                Frame(slot, on ? Ui.Blood : danger ? Ui.BloodDim : Ui.SteelDim, 14f);
+                Frame(slot, on ? (danger ? Ui.Blood : Ui.Steel) : danger ? Ui.BloodDim : Ui.SteelDim, 14f);
                 var ic = Ui.Sprite(slot, "Icon", S(icon), danger ? Ui.Blood : Ui.Steel);
                 ic.rectTransform.anchorMin = ic.rectTransform.anchorMax = new Vector2(0.5f, 0.5f);
                 ic.rectTransform.sizeDelta = new Vector2(40f, 40f);
@@ -724,10 +732,15 @@ namespace VampireSpawn.Game.Screens
                 m.anchorMin = m.anchorMax = new Vector2(0.5f, 1f);
                 m.pivot = new Vector2(0.5f, 0f);
                 m.anchoredPosition = new Vector2(0f, y - 4f);
-                m.sizeDelta = new Vector2(60f, 24f);
+                m.sizeDelta = new Vector2(u.Rng >= 2 ? 110f : 60f, 24f);
                 m.GetComponent<HorizontalLayoutGroup>().childForceExpandWidth = false;
                 Ui.Size(Ui.Sprite(m, "Icon", S("ICON_DarkFantasy_Stat_Speed_01_Stroke"), Ui.Blood), 20, 20);
                 T(m, u.Mov.ToString(), 20, Ui.Blood, true).gameObject.AddComponent<Outline>().effectColor = Ui.Ink;
+                if (u.Rng >= 2)
+                {
+                    Ui.Size(Ui.Sprite(m, "Rng", S(Kit.Icon.Rng), Ui.Blood), 20, 20);
+                    T(m, u.Rng.ToString(), 20, Ui.Blood, true).gameObject.AddComponent<Outline>().effectColor = Ui.Ink;
+                }
                 y += 24f;
             }
             if (b.EatTarget == u.Id)

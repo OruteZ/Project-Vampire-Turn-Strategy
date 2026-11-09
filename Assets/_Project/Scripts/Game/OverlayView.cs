@@ -13,7 +13,7 @@ namespace VampireSpawn.Game
         // Sizes are the prototype's SVG units, where the hex corner radius R is 30.
         const float R = 30f;
 
-        static readonly Color Ally = Screens.Ui.Steel, Enemy = Screens.Ui.Blood, Bone = Screens.Ui.Bone, MoonBlood = Screens.Ui.MoonBlood;
+        static readonly Color Ally = Screens.Ui.Steel, Enemy = Screens.Ui.Blood, Bone = Screens.Ui.Bone, MoonBlood = Screens.Ui.MoonBlood, Spawn = Screens.Ui.Spawn;
 
         struct Style
         {
@@ -31,6 +31,8 @@ namespace VampireSpawn.Game
             [Mark.Move] = S(Ally, 0.08f, Ally, 1f, R - 2.5f, 2f),
             [Mark.Atk] = S(Enemy, 0f, Enemy, 1f, R - 3f, 2f),
             [Mark.Exec] = S(Enemy, 0f, Enemy, 1f, R - 3f, 2f, 4f, 4f),
+            [Mark.Bury] = S(Spawn, 0f, Spawn, 1f, R - 3f, 2f, 4f, 4f),
+            [Mark.Mend] = S(Ally, 0f, Ally, 1f, R - 3f, 2f, 4f, 4f),
             [Mark.Sel] = S(Ally, 0f, Ally, 1f, R - 3f, 3f),
             [Mark.MarkZone] = S(MoonBlood, 0.05f, MoonBlood, 1f, R - 2f, 1f),
             [Mark.Target] = S(Enemy, 0f, Enemy, 1f, R - 1.5f, 3f),

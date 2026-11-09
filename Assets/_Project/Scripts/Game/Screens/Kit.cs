@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 using VampireSpawn.Core;
@@ -104,9 +105,18 @@ namespace VampireSpawn.Game.Screens
                 Boss = "ICON_DarkFantasy_Map_Monster_01_Clean", Star = "ICON_DarkFantasy_Map_Star_01_Clean", Skulls = "ICON_DarkFantasy_Map_Skull_01_Clean",
                 Turn = "ICON_DarkFantasy_Status_Time_01_Clean", Lock = "ICON_DarkFantasyMenus_Menu_Lock_Closed_01_Clean", Trophy = "ICON_DarkFantasyMenus_Menu_Trophy_01_Clean",
                 Retry = "ICON_DarkFantasyMenus_Menu_Refresh_01_Clean", Leave = "ICON_DarkFantasyMenus_Menu_Quit_01_Clean", Rules = "ICON_DarkFantasy_Inventory_Notes_01_Clean",
-                Up = "ICON_DarkFantasy_Status_Up_01_Clean", Wait = "ICON_DarkFantasy_Status_Down_01_Clean", Flag = "ICON_DarkFantasy_Map_Flag_01_Clean", Home = "ICON_DarkFantasy_Map_Home_01_Clean", Sword = "ICON_SM_Wep_Sword_01_DarkFantasy";
+                Up = "ICON_DarkFantasy_Status_Up_01_Clean", Wait = "ICON_DarkFantasy_Status_Down_01_Clean", Flag = "ICON_DarkFantasy_Map_Flag_01_Clean", Home = "ICON_DarkFantasy_Map_Home_01_Clean", Sword = "ICON_SM_Wep_Sword_01_DarkFantasy",
+                Heal = "ICON_DarkFantasy_Status_Health_01_Clean";
 
-            public static readonly string[] All = { Hp, Mov, Atk, Def, Rng, Fang, Dead, Target, Gold, Silver, Pop, Boss, Star, Skulls, Turn, Lock, Trophy, Retry, Leave, Rules, Up, Wait, Flag, Home, Sword };
+            public static readonly string[] All = { Hp, Mov, Atk, Def, Rng, Fang, Dead, Target, Gold, Silver, Pop, Boss, Star, Skulls, Turn, Lock, Trophy, Retry, Leave, Rules, Up, Wait, Flag, Home, Sword, Heal };
+        }
+
+        // docs/content/enemies.md 7: "Minions n, boss" then the count of each minion kind present.
+        public static string EnemyList(Stage s)
+        {
+            var minions = s.Minions;
+            var kinds = GameData.Minions.Select(m => (m, n: minions.Count(e => e.Kind == m.Key))).Where(x => x.n > 0).Select(x => Loc.Text(x.m.Name) + " " + x.n);
+            return Loc.T("battle.enemyList", minions.Length, s.BossName) + " · " + string.Join(" · ", kinds);
         }
 
         // ui-style.md 14-3-1: [icon][number], the label lives in the tooltip.
