@@ -95,7 +95,7 @@ namespace VampireSpawn.Core
 
         readonly HashSet<string> upgrades;
         readonly List<BattleEvent> events = new List<BattleEvent>();
-        // Ids start at 1 per battle. The prototype's uid never resets across battles; ids are never shown, so only order matters.
+        // Ids are never shown; only their order matters (creation order is acting order).
         int nextId = 1;
 
         public Battle(Stage stage, IEnumerable<string> ownedUpgrades = null, IEnumerable<Placement> formation = null)
@@ -245,7 +245,7 @@ namespace VampireSpawn.Core
             return Done();
         }
 
-        // Unlike the constructor this does not filter by stage.Units; the prototype's "예시 편성" button does not either.
+        // Unlike the constructor this does not filter by stage.Units: the sample is the stage's own, so it is trusted.
         public CommandResult UseSample()
         {
             if (!Begin(Phase.Deploy, out var no)) return no;

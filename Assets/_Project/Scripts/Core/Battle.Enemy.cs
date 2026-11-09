@@ -186,7 +186,7 @@ namespace VampireSpawn.Core
                     }
                 }
                 if (best.HasValue && best.Value != e.Pos) MoveEnemy(e, best.Value);
-                // No liveness check: an enemy the pike wall just killed still strikes, as in the prototype. docs/dev/unity-port.md
+                if (!units.Contains(e)) return;
                 adj = AlliesInReach(e, e.Pos);
             }
             if (adj.Count > 0) ApplyHit(e, PickTarget(e, adj));

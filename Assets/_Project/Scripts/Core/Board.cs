@@ -83,7 +83,7 @@ namespace VampireSpawn.Core
             return result;
         }
 
-        // An unreachable goal returns just the goal, as the prototype does.
+        // An unreachable goal returns just the goal.
         public List<Hex> PathTo(Hex from, Hex to, Side side, Func<Hex, Occupant> occupant)
         {
             var prev = new Dictionary<Hex, Hex> { [from] = from };

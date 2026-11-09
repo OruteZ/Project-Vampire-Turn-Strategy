@@ -11,7 +11,7 @@ namespace VampireSpawn.Core
             Col = col; Row = row;
         }
 
-        // Flat-top, odd-q offset. Order matches the prototype's NB table because BFS tie-breaks depend on it.
+        // Flat-top, odd-q offset. Keep this order: BFS tie-breaks, and so enemy moves, depend on it.
         static readonly (int dc, int dr)[][] Offsets =
         {
             new[] { (1, 0), (1, -1), (0, -1), (-1, -1), (-1, 0), (0, 1) },

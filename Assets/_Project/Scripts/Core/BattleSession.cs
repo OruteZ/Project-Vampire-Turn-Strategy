@@ -5,7 +5,6 @@ namespace VampireSpawn.Core
 {
     public enum SelectMode { Act, Execute, Mend }
 
-    // One per prototype overlay class: ov-deploy, ov-threat, ov-move, ov-atk, ov-exec, ov-sel, ov-markzone, ov-mark.
     public enum Mark { Deploy, Move, Atk, Exec, Sel, MarkZone, Target, Bury, Mend }
 
     public readonly struct MarkedHex
@@ -23,7 +22,7 @@ namespace VampireSpawn.Core
         public Message TargetLabel;
     }
 
-    // The prototype's click and selection state (S.selected, S.inspect, S.mode, S.deployType) and onHex. Threat cells are gone: docs/ui/battle-hud.md 1-4.
+    // Click and selection state of the battle screen. Threat cells are not drawn: docs/ui/battle-hud.md 1-4.
     public sealed class BattleSession
     {
         public readonly Battle Battle;
@@ -141,7 +140,7 @@ namespace VampireSpawn.Core
             return After(Battle.EndTurn());
         }
 
-        // A drop outside the board passes null; the prototype treats it like a drop outside the deploy zone.
+        // A drop outside the board passes null and counts as a drop outside the deploy zone (recall).
         public CommandResult Drop(int id, Hex? to)
         {
             Flash = default;
