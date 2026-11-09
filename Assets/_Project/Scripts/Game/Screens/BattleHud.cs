@@ -24,7 +24,7 @@ namespace VampireSpawn.Game.Screens
         {
             public RectTransform Rt;
             public Image[] Cells;
-            public int Per, MaxHp;
+            public int MaxHp;
             public Color Color;
         }
 
@@ -127,7 +127,7 @@ namespace VampireSpawn.Game.Screens
                 if (sp.z <= 0f) continue;
                 if (RectTransformUtility.ScreenPointToLocalPointInRectangle((RectTransform)h.Rt.parent, sp, null, out var lp)) h.Rt.localPosition = lp;
                 // The view's hp follows the hit animations; the model already holds the result.
-                var full = Mathf.CeilToInt(v.HpFraction * h.MaxHp / h.Per - 0.001f);
+                var full = Mathf.CeilToInt(v.HpFraction * h.MaxHp - 0.001f);
                 for (var i = 0; i < h.Cells.Length; i++)
                     if (!blink.Contains(h.Cells[i])) h.Cells[i].color = i < full ? h.Color : Ui.Deep;
             }
@@ -693,24 +693,32 @@ namespace VampireSpawn.Game.Screens
 
         // ---------- heads (ui-style.md 8-1, 8-3, 8-4) ----------
 
+        const float HeadBarW = 72f;
+
         void Head(RectTransform layer, Battle b, Unit u, bool named, bool showMov, int damage)
         {
-            var per = u.MaxHp > 12 ? 2 : 1;
-            var cells = (u.MaxHp + per - 1) / per;
-            var full = (u.Hp + per - 1) / per;
-            var lost = damage > 0 ? full - Mathf.Max(0, (u.Hp - damage + per - 1) / per) : 0;
+            var cells = Mathf.Max(1, u.MaxHp);
+            var full = u.Hp;
+            var lost = damage > 0 ? full - Mathf.Max(0, u.Hp - damage) : 0;
             var color = u.Side == Side.Ally ? Ui.Steel : u.Role == Role.Spawn ? Ui.Spawn : Ui.Blood;
-            var w = cells * 7f - 1f;
+            const float w = HeadBarW;
             var rt = Ui.Place(layer, "Head " + u.Id, new Vector2(0.5f, 0.5f), Vector2.zero, new Vector2(w, 8f));
             rt.pivot = new Vector2(0.5f, 0f);
             Ui.Bg(Ui.Place(rt, "Back", new Vector2(0.5f, 0.5f), Vector2.zero, new Vector2(w + 4f, 12f)), Ui.Alpha(Ui.Ink, 0.85f), null, false);
             var imgs = new Image[cells];
             for (var i = 0; i < cells; i++)
             {
-                var c = Ui.Place(rt, "Cell", new Vector2(0f, 0.5f), new Vector2(i * 7f, 0f), new Vector2(6f, 8f));
-                c.pivot = new Vector2(0f, 0.5f);
+                var c = Ui.Node(rt, "Cell");
+                c.anchorMin = new Vector2((float)i / cells, 0f);
+                c.anchorMax = new Vector2((float)(i + 1) / cells, 1f);
+                c.offsetMin = c.offsetMax = Vector2.zero;
                 imgs[i] = Ui.Bg(c, i < full ? color : Ui.Deep, null, false);
                 if (i >= full - lost && i < full) blink.Add(imgs[i]);
+            }
+            for (var i = 1; i < cells; i++)
+            {
+                var line = Ui.Place(rt, "Divider", new Vector2((float)i / cells, 0.5f), Vector2.zero, new Vector2(1f, 8f));
+                Ui.Bg(line, Ui.Alpha(Ui.Ink, 0.55f), null, false);
             }
             if (u.Def > 0)
             {
@@ -721,15 +729,7 @@ namespace VampireSpawn.Game.Screens
                 shields.GetComponent<HorizontalLayoutGroup>().childForceExpandWidth = false;
                 for (var i = 0; i < u.Def; i++) Ui.Size(Ui.Sprite(shields, "Shield", S(Kit.Icon.BoardDef), Ui.Bone), 16, 16);
             }
-            var x = 4f;
-            if (per > 1)
-            {
-                var n = T(Ui.Place(rt, "Num", new Vector2(1f, 0.5f), new Vector2(x, 0f), new Vector2(30f, 16f)), u.Hp.ToString(), 14, Ui.Bone, true, false, TextAnchor.MiddleLeft);
-                n.rectTransform.parent.GetComponent<RectTransform>().pivot = new Vector2(0f, 0.5f);
-                Ui.Stretch(n.rectTransform);
-                n.gameObject.AddComponent<Outline>().effectColor = Ui.Ink;
-                x += 26f;
-            }
+            const float x = 4f;
             if (damage > 0)
             {
                 var at = Ui.Place(rt, "Damage", new Vector2(1f, 0.5f), new Vector2(x, 0f), new Vector2(60f, 28f));
@@ -776,7 +776,7 @@ namespace VampireSpawn.Game.Screens
                 t.anchoredPosition = new Vector2(0f, y);
                 t.sizeDelta = new Vector2(32f, 32f);
             }
-            heads[u.Id] = new HeadMark { Rt = rt, Cells = imgs, Per = per, MaxHp = u.MaxHp, Color = color };
+            heads[u.Id] = new HeadMark { Rt = rt, Cells = imgs, MaxHp = u.MaxHp, Color = color };
         }
 
         // ---------- result (battle-hud.md 5) ----------
