@@ -12,7 +12,7 @@
 | `UiSound.cs` | 버튼 올림·누름 (uGUI `Selectable`, UI Toolkit `VisualElement`). 버튼 만드는 함수가 부른다 |
 
 - 칸은 **필드로 고른다**: `Sound.Play(s => s.click)`. 문자열 키·이름 찾기가 없어서 칸 이름을 바꾸거나 지우면 컴파일 오류로 드러난다.
-- 카탈로그 위치: `ArtCatalog.sound`. 각 화면 Flow 가 `Sound.Use(art.sound)` 를 부른다 (씬에 새 참조를 걸지 않는다).
+- 카탈로그 위치: `Assets/_Project/Audio/SoundCatalog.asset`, `ArtCatalog.sound` 에 걸려 있다. 각 화면 Flow 가 `Sound.Use(art.sound)` 를 부른다 (씬에 새 참조를 걸지 않는다).
 - 유닛 소리: `UnitLook.sounds` (모습마다). 빈 칸은 `SoundCatalog.unitDefault`. 스폰은 `SoundCatalog.spawn`. BattleView 가 애니메이션 트리거 바로 옆에서 부른다 (소리 = 동작 시점).
 - 카탈로그가 없거나 칸이 비면 소리 없이 지나간다.
 

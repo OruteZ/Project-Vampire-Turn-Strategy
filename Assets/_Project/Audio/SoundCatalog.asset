@@ -1,0 +1,118 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b2bbde8a5946a3b46aad317c565af2a2, type: 3}
+  m_Name: SoundCatalog
+  m_EditorClassIdentifier: VampireSpawn.Game::VampireSpawn.Game.SoundCatalog
+  menuMusic:
+    clips: []
+    volume: 1
+  campMusic:
+    clips: []
+    volume: 1
+  battleMusic:
+    clips: []
+    volume: 1
+  battleAmbience:
+    clips: []
+    volume: 1
+  campAmbience:
+    clips: []
+    volume: 1
+  brazier:
+    clips: []
+    volume: 1
+  click:
+    clips: []
+    volume: 1
+  hover:
+    clips: []
+    volume: 1
+  denied:
+    clips: []
+    volume: 1
+  select:
+    clips: []
+    volume: 1
+  place:
+    clips: []
+    volume: 1
+  purchase:
+    clips: []
+    volume: 1
+  march:
+    clips: []
+    volume: 1
+  playerTurn:
+    clips: []
+    volume: 1
+  enemyTurn:
+    clips: []
+    volume: 1
+  coffin:
+    clips: []
+    volume: 1
+  fullMoon:
+    clips: []
+    volume: 1
+  moonWane:
+    clips: []
+    volume: 1
+  execute:
+    clips: []
+    volume: 1
+  mend:
+    clips: []
+    volume: 1
+  bury:
+    clips: []
+    volume: 1
+  drain:
+    clips: []
+    volume: 1
+  drainFailed:
+    clips: []
+    volume: 1
+  rise:
+    clips: []
+    volume: 1
+  victory:
+    clips: []
+    volume: 1
+  defeat:
+    clips: []
+    volume: 1
+  unitDefault:
+    attack:
+      clips: []
+      volume: 1
+    hurt:
+      clips: []
+      volume: 1
+    death:
+      clips: []
+      volume: 1
+    step:
+      clips: []
+      volume: 1
+  spawn:
+    attack:
+      clips: []
+      volume: 1
+    hurt:
+      clips: []
+      volume: 1
+    death:
+      clips: []
+      volume: 1
+    step:
+      clips: []
+      volume: 1
