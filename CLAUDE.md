@@ -53,6 +53,10 @@
 - .gitattributes 에 Unity YAML(.unity, .prefab, .asset, .mat, .anim, .controller) 이 UnityYAMLMerge 로 등록돼 있다. 새 클론은 `git config merge.unityyamlmerge.driver '"<Unity>/Editor/Data/Tools/UnityYAMLMerge.exe" merge -p %O %B %A %A'` 를 한 번 한다
 - 에디터 작업(씬·프리팹·에셋 편집, 계층 확인, 컴파일·콘솔, 테스트·빌드)은 모두 Unity CLI(`unity`)로 한다. Unity MCP(`mcp__unityMCP__*`)와 씬·에셋 YAML 직접 편집은 쓰지 않는다
 - 에디터가 같은 프로젝트를 열고 있으면 batchmode 컴파일이 잠금으로 실패한다. 에디터를 끄지 말고 "빌드 미검증(에디터 실행 중)" 으로 보고한다
+- **Unity 에디터는 이 컴퓨터에서 동시에 최대 2개** (사용자 결정 2026-11-09). batchmode(시험·빌드)와 사용자가 연 에디터도 센다. 가져오기 작업자(AssetImportWorker)와 `unity` CLI 는 세지 않는다
+  - 띄우기 전에 센다: `(Get-CimInstance Win32_Process -Filter "Name='Unity.exe'" | ? { $_.CommandLine -match '-projectpath' -and $_.CommandLine -notmatch 'AssetImportWorker' }).Count`
+  - 2개면 새로 띄우지 않고 남이 띄운 에디터도 끄지 않는다. 그 단계는 체크하지 않고 댓글 "에디터 대기(2개 한도)" + 라벨 `에디터 필요` 를 단 뒤 에디터 없이 되는 일부터 한다. 보고엔 "빌드 미검증(에디터 한도)"
+  - 자기가 띄운 에디터·batchmode 는 그 작업이 끝나면 바로 닫는다
 - 시작 씬은 처음 씬이 생길 때 Build Settings 0번에 등록한다
 - 유료 에셋(`Assets/Synty/`, `UPackage/`)은 git 에 올리지 않는다(공개 저장소, 라이선스). 새 클론은 docs/guides/asset-setup.md 대로 `bash tools/assets/setup.sh`. Synty 참조를 더하거나 빼면 `node tools/assets/scan.mjs` 로 목록을 다시 뽑아 같이 커밋한다
 - 프로젝트 메뉴(`VampireSpawn`)에는 **도구 모음 (Tools)** 창 하나만 둔다. 새 `[MenuItem]` 을 만들지 않고 도구 모음 창에 분야별 버튼 한 줄로 더한다. 하위 도구는 상위 창 안 버튼으로만 연다
