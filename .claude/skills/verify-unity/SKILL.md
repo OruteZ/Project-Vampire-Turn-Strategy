@@ -72,5 +72,6 @@ Build Settings scene 0 is what play mode starts in only when it is the open scen
 - `asset find --type AnimationClip` (or `Sprite`) returns 0, because it matches only an asset's main type and clips and sprites are sub-assets of FBX and texture files. Count them with `$V eval 'UnityEditor.AssetDatabase.FindAssets("t:AnimationClip", new[]{"Assets/Synty/<folder>"}).Length'`.
 - `$V window Console <slug>` fails when the Console window is not open in that Editor. The error lists the open windows. Use `$V console` for console evidence instead.
 - `vu.sh eval` uses the CLI's 30 s default. A long editor call (for example `AssetDatabase.Refresh()` after a checkout) needs `unity --no-banner command --project-path "<path>" script eval --timeout 600 --code '...'`.
+- After several `UiAudit.Resize` calls in one play session, `click`/`key` stop reaching the game (`input-read` stays frozen). `$V stop` then `$V play` fixes it, so run resize audits last.
 - Checking out another commit in a worktree while its Editor is open makes Unity reimport, and SIDEKICK's scripts re-add `com.unity.formats.fbx` to `Packages/manifest.json` on commits that lack it. Run `git checkout -- Packages` before switching back.
 - A fresh clone upgrades `Assets/Settings/Mobile_RPAsset.asset` (URP asset version 12 to 13) on first import. P1 commits that upgrade, so a later diff there is new.
