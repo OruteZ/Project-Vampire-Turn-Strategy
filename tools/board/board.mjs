@@ -1,4 +1,4 @@
-// Topic board (docs/guides/work-status.md): one issue per big topic, its steps in order under "## 흐름", on the GitHub Project "Vampire Spawn 작업".
+// Topic board (.claude/skills/topic-issue/SKILL.md): one issue per big topic, its steps in order under "## 흐름", on the GitHub Project "Vampire Spawn 작업".
 //   node tools/board/board.mjs open "<제목>" ["<목표>"]     opens a topic issue (label 주제) and puts it on the board as 미작업
 //   node tools/board/board.mjs status <#> <상태>             미작업 | 작업 중 | 사용자 대기 | 작업 완료
 //   node tools/board/board.mjs after <#> <선행#>             <#> 는 <선행#> 가 닫혀야 시작한다 (GitHub 이슈 의존 "Blocked by")
