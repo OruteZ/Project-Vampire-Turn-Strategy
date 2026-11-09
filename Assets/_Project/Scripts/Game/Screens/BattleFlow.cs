@@ -39,6 +39,7 @@ namespace VampireSpawn.Game.Screens
         void Start()
         {
             App.Ensure(data);
+            Sound.Use(View.board.art.sound);
             screen = App.Canvas(transform);
             if (viewCamera != null)
             {
@@ -75,6 +76,8 @@ namespace VampireSpawn.Game.Screens
         public void StartBattle(Stage s, IEnumerable<Placement> formation, bool startNow)
         {
             stage = s;
+            Sound.Music(x => x.battleMusic);
+            Sound.Ambience(x => x.battleAmbience);
             finished = enemyPlaying = leaveArm = rulesOpen = logOpen = false;
             hoverId = hoverCorpse = null;
             over = null;
@@ -180,9 +183,9 @@ namespace VampireSpawn.Game.Screens
         {
             if (e.Kind != BattleEventKind.Banner || banner == null) return;
             // The model has already left the full-moon turn while it plays back, so the banner is the only cue (ui-style.md 7-2).
-            if (e.Text.Key == "banner.fullMoon") { fullMoon = true; RenderBattle(); }
+            if (e.BannerKind == BannerKind.FullMoon) { fullMoon = true; RenderBattle(); }
             banner.text = Loc.Text(e.Text);
-            banner.color = e.Style == "enemy" ? Ui.Blood : Ui.Steel;
+            banner.color = e.BannerKind != BannerKind.PlayerTurn ? Ui.Blood : Ui.Steel;
             banner.gameObject.SetActive(true);
             bannerUntil = Time.unscaledTime + BannerSeconds;
         }
@@ -264,6 +267,8 @@ namespace VampireSpawn.Game.Screens
         {
             finished = true;
             over = OverInfo.From(Session.Battle, demo, Campaign);
+            Sound.Music(null);
+            if (over.Won) Sound.Play(x => x.victory); else Sound.Play(x => x.defeat);
             if (over.Won && !demo) CampaignStore.Save(Campaign);
             Ui.Clear(overRoot);
             hud.Over(overRoot, over, actions);

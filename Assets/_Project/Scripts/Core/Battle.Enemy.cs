@@ -18,7 +18,7 @@ namespace VampireSpawn.Core
         {
             Phase = Phase.Enemy;
             Say(new Message("log.enemyTurn", Turn), "t");
-            Emit(BattleEvent.Banner(new Message("banner.enemyTurn", Turn), "enemy"));
+            Emit(BattleEvent.Banner(BannerKind.EnemyTurn, new Message("banner.enemyTurn", Turn)));
             foreach (var c in corpses.ToList()) Rise(c);
 
             var v = Vampire;
@@ -32,7 +32,7 @@ namespace VampireSpawn.Core
                 v.JustWoke = true;
                 Emit(BattleEvent.Woke(v.Id));
                 Say(new Message("log.woke", v.Name), "k");
-                Emit(BattleEvent.Banner(new Message("banner.coffin"), "enemy"));
+                Emit(BattleEvent.Banner(BannerKind.Coffin, new Message("banner.coffin")));
             }
             if (full)
             {
@@ -59,7 +59,7 @@ namespace VampireSpawn.Core
             Turn++;
             Phase = Phase.Player;
             Say(new Message("log.playerTurn", Turn), "t");
-            Emit(BattleEvent.Banner(new Message("banner.playerTurn", Turn), "player"));
+            Emit(BattleEvent.Banner(BannerKind.PlayerTurn, new Message("banner.playerTurn", Turn)));
             FixEatTarget();
         }
 
@@ -110,17 +110,17 @@ namespace VampireSpawn.Core
         void FullMoonAct(Unit v)
         {
             var t = EatTarget.HasValue ? Find(EatTarget.Value) : null;
-            Emit(BattleEvent.Banner(new Message("banner.fullMoon"), "enemy"));
+            Emit(BattleEvent.Banner(BannerKind.FullMoon, new Message("banner.fullMoon")));
             if (t != null && Hex.Distance(v.Pos, t.Pos) <= Rules.EatRange && !Board.Lit(t.Pos))
             {
                 Say(new Message("log.drained", v.Name, t.Name), "k");
-                Emit(BattleEvent.Popup(t.Id, new Message("popup.drain"), "blood"));
+                Emit(BattleEvent.Popup(t.Id, PopupKind.Drain, new Message("popup.drain")));
                 Emit(BattleEvent.Hit(t.Id, v.Id));
                 Stats.Drained++;
                 Kill(t, v, DeathCause.Drain);
                 v.Hp = Math.Min(v.MaxHp, v.Hp + v.Heal);
                 Emit(BattleEvent.HpChanged(v.Id, v.Hp));
-                Emit(BattleEvent.Popup(v.Id, new Message("popup.heal", v.Heal), "heal"));
+                Emit(BattleEvent.Popup(v.Id, PopupKind.Feed, new Message("popup.heal", v.Heal)));
                 Moon = 0;
                 EatTarget = null;
                 Say(new Message("log.moonSet"), "sys");
@@ -130,7 +130,7 @@ namespace VampireSpawn.Core
                 : Board.Lit(t.Pos) ? new Message("why.lit", t.Name)
                 : new Message("why.far", t.Name);
             Say(new Message("log.drainFailed", why, v.Name), "h");
-            Emit(BattleEvent.Popup(v.Id, new Message("popup.drainFailed"), "heal"));
+            Emit(BattleEvent.Popup(v.Id, PopupKind.DrainFailed, new Message("popup.drainFailed")));
             Moon = 0;
             EatTarget = null;
             Say(new Message("log.moonSet"), "sys");
@@ -201,7 +201,7 @@ namespace VampireSpawn.Core
                 if (!a.Has(Ability.Pike) || Hex.Distance(a.Pos, e.Pos) != 1) continue;
                 e.Hp -= 1;
                 Emit(BattleEvent.HpChanged(e.Id, e.Hp));
-                Emit(BattleEvent.Popup(e.Id, new Message("popup.damage", 1), "dmg"));
+                Emit(BattleEvent.Popup(e.Id, PopupKind.Damage, new Message("popup.damage", 1)));
                 Say(new Message("log.pike", a.Name, e.Name), "h");
                 if (e.Hp <= 0) { Kill(e, a, DeathCause.Blow); break; }
             }

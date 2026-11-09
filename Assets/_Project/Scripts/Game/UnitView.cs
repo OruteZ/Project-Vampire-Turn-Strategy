@@ -7,6 +7,7 @@ namespace VampireSpawn.Game
         public int Id { get; private set; }
         public float HpFraction { get; private set; } = 1f;
         public bool Lying { get; private set; }
+        public UnitSounds Sounds { get; set; }
 
         static readonly int WalkParam = Animator.StringToHash("Walk");
         static readonly int BaseColor = Shader.PropertyToID("_BaseColor");

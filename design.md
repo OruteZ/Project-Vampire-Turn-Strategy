@@ -9,6 +9,7 @@
 | [docs/content/](docs/content/) | 에이전트 | 데이터 기획서 (유닛·적·스테이지·캠페인 해금) |
 | [docs/ui/](docs/ui/) | 에이전트 | 화면별 UI 기획서 |
 | [docs/art/](docs/art/) | 에이전트 | 아트 방향 기획서 |
+| [docs/audio/](docs/audio/) | 에이전트 | 사운드 기획서 (준비할 사운드 목록, 나는 순간) |
 | [docs/areas/](docs/areas/) | 에이전트 | 분야별 안내서: 코드·문서·아트 경로, 지금 유효한 사용자 결정 |
 | [docs/guides/](docs/guides/) | 에이전트 | 작업 규칙 세부 형식 (이슈 등) |
 | [docs/dev/](docs/dev/) | 에이전트 | 구현 기록: 코드 구조, 포팅 기록, 검증 방법. 기획서가 아니다 |

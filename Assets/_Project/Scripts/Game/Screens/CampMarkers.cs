@@ -69,7 +69,7 @@ namespace VampireSpawn.Game.Screens
                 var btn = m.Root.gameObject.AddComponent<Button>();
                 btn.targetGraphic = hit;
                 btn.transition = Selectable.Transition.None;
-                btn.onClick.AddListener(() => pick(index));
+                UiSound.Add(btn).onClick.AddListener(() => pick(index));
                 var hover = m.Root.gameObject.AddComponent<MarkerHover>();
                 hover.Changed = on => { m.Hover = on; view.Restyle(); };
                 view.markers[i] = m;

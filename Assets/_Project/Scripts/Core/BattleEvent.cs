@@ -4,6 +4,11 @@ namespace VampireSpawn.Core
 {
     public enum BattleEventKind { Log, Banner, Walk, Popup, Hit, Hint, Died, CorpseLeft, Rose, Woke, HpChanged, Buried, MoonChanged }
 
+    public enum BannerKind { PlayerTurn, EnemyTurn, Coffin, FullMoon }
+
+    // Feed is the vampire's own heal after a drain, kept apart from a Mend heal so the view can tell them apart.
+    public enum PopupKind { Damage, Heal, Feed, Execute, Bury, Drain, DrainFailed }
+
     public readonly struct BattleEvent
     {
         public readonly BattleEventKind Kind;
@@ -13,6 +18,9 @@ namespace VampireSpawn.Core
         public readonly IReadOnlyList<Hex> Path;
         public readonly Hex At;
 
+        public BannerKind BannerKind => (BannerKind)Value;
+        public PopupKind PopupKind => (PopupKind)Value;
+
         BattleEvent(BattleEventKind kind, int unitId = 0, Message text = default, string style = null, IReadOnlyList<Hex> path = null,
             int otherId = 0, int value = 0, Hex at = default)
         {
@@ -20,9 +28,11 @@ namespace VampireSpawn.Core
         }
 
         public static BattleEvent Log(Message text, string style) => new BattleEvent(BattleEventKind.Log, text: text, style: style);
-        public static BattleEvent Banner(Message text, string style) => new BattleEvent(BattleEventKind.Banner, text: text, style: style);
+        public static BattleEvent Banner(BannerKind kind, Message text) =>
+            new BattleEvent(BattleEventKind.Banner, text: text, style: kind == BannerKind.PlayerTurn ? "player" : "enemy", value: (int)kind);
         public static BattleEvent Walk(int unitId, IReadOnlyList<Hex> path) => new BattleEvent(BattleEventKind.Walk, unitId, path: path);
-        public static BattleEvent Popup(int unitId, Message text, string style) => new BattleEvent(BattleEventKind.Popup, unitId, text, style);
+        public static BattleEvent Popup(int unitId, PopupKind kind, Message text) =>
+            new BattleEvent(BattleEventKind.Popup, unitId, text, kind == PopupKind.Damage ? "dmg" : kind == PopupKind.Drain ? "blood" : "heal", value: (int)kind);
         public static BattleEvent Hit(int unitId, int attackerId) => new BattleEvent(BattleEventKind.Hit, unitId, otherId: attackerId);
         public static BattleEvent Hint(Message text) => new BattleEvent(BattleEventKind.Hint, text: text);
         public static BattleEvent Died(int unitId, Hex at) => new BattleEvent(BattleEventKind.Died, unitId, at: at);

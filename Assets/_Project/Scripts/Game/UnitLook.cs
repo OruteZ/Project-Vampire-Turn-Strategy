@@ -31,6 +31,7 @@ namespace VampireSpawn.Game
         [Tooltip("무기를 붙일 뼈 이름을 정한다")] public Rig rig;
         public Grip[] weapons;
         [Tooltip("비우면 ArtCatalog.unitAnimator")] public RuntimeAnimatorController animator;
+        [Tooltip("빈 칸은 SoundCatalog.unitDefault (docs/audio/sounds.md 6)")] public UnitSounds sounds;
 
         public const string BakedFolder = "Assets/_Generated/Resources/Characters";
 

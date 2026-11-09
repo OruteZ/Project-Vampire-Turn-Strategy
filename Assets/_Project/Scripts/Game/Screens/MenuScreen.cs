@@ -77,6 +77,7 @@ namespace VampireSpawn.Game.Screens
             colors.pressedColor = new Color(0.97f, 0.97f, 0.97f);
             colors.fadeDuration = 0.08f;
             btn.colors = colors;
+            UiSound.Add(btn);
             if (click != null) btn.onClick.AddListener(() => click());
             OnHover.Add(rt, enter);
             return meta;
@@ -98,7 +99,7 @@ namespace VampireSpawn.Game.Screens
                 t.raycastTarget = true;
                 if (current) Ui.Size(Ui.Bg(Ui.Node(cell, "Underline"), Ui.Steel, null, false), -1, 2);
                 var l = locale;
-                t.gameObject.AddComponent<Button>().onClick.AddListener(() => { if (l != Loc.Current) LocalizationSettings.SelectedLocale = l; });
+                UiSound.Add(t.gameObject.AddComponent<Button>()).onClick.AddListener(() => { if (l != Loc.Current) LocalizationSettings.SelectedLocale = l; });
             }
         }
     }

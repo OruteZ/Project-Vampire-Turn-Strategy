@@ -42,6 +42,7 @@ namespace VampireSpawn.Game.Screens
             ToolkitKit.Picture(card.Q(className: "card-frame"), art.Ui("SPR_DarkFantasyMenus_Frame_Box_Medium_02"));
             ToolkitKit.Picture(card.Q(className: "card-icon"), art.Ui(icon));
             card.Q<Label>(className: "card-name").text = title;
+            UiSound.Add(card);
             card.RegisterCallback<ClickEvent>(_ => click?.Invoke());
             ToolkitKit.Tip(card, desc, tip);
             card.RegisterCallback<PointerEnterEvent>(_ => enter?.Invoke());
@@ -56,6 +57,7 @@ namespace VampireSpawn.Game.Screens
                 label.AddToClassList("lang");
                 label.EnableInClassList("current", locale == Loc.Current);
                 var l = locale;
+                UiSound.Add(label);
                 label.RegisterCallback<ClickEvent>(_ => { if (l != Loc.Current) LocalizationSettings.SelectedLocale = l; });
                 row.Add(label);
             }

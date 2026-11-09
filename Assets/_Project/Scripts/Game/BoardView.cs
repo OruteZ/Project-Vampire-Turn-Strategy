@@ -162,6 +162,8 @@ namespace VampireSpawn.Game
                 case Terrain.Torch:
                     if (art.brazier != null) Prop(art.brazier, tile.transform, top, 0.9f, 0f);
                     if (art.fire != null) Prop(art.fire, tile.transform, top + Vector3.up * art.hexSize * 0.55f, 0f, 0f);
+                    // ponytail: guessed distances (full volume within 6 hexes, silent past 25); retune once the battle camera's height is heard.
+                    Sound.Loop(tile, s => s.brazier, art.hexSize * 6f, art.hexSize * 25f);
                     AddLight(tile.transform, top + Vector3.up * art.hexSize * 1.2f, LightType.Point, art.torchLight, 2.5f, art.hexSize * 4f);
                     break;
                 case Terrain.Sun:
