@@ -31,7 +31,7 @@
 | 창 | `A_MOD_BL_Idle_Standing_Masc` | `A_MOD_BL_Walk_F_Masc` | `A_MOD_SWD_Attack_HeavyStab01_ReturnToIdle_Neut` | `A_MOD_SWD_Hit_F_React_Neut` | `A_MOD_SWD_Death_B_Neut` |
 | 검·방패 | 같음 | 같음 | `A_MOD_SWD_Attack_LightCombo01A_ReturnToIdle_Neut` | 같음 | 같음 |
 | 활 | `A_MOD_BOW_Stand_Idle_BowDown_Neut` | `A_MOD_BL_Walk_F_Masc` | `A_MOD_BOW_Stand_Shoot_ToBowDown_Neut` | `A_MOD_BOW_Hit_Head_F_React_Masc` | `A_MOD_BOW_Death_Stomach_F_Masc` |
-| Polygon 활 (#99, 원거리 Polygon 유닛) | `A_POLY_BOW_Stand_Idle_BowDown_Neut` | Polygon 기본 | `A_POLY_BOW_Stand_Shoot_ToBowDown_Neut` | `A_POLY_BOW_Hit_Head_F_React_Masc` | `A_POLY_BOW_Death_Stomach_F_Masc` |
+| Polygon 활 (#99, 원거리 Polygon 유닛) | `A_POLY_BOW_Stand_Idle_BowDown_Neut` | Polygon 기본 | `A_POLY_BOW_Stand_Shoot_ToBowDown_Neut` | `A_POLY_BOW_Hit_Head_F_React_Masc` | `A_POLY_BOW_Death_Stomach_F_Masc` (파일 이름) |
 | Sidekick 맨손 (스폰) | 창과 같음 | 같음 | `A_MOD_SWD_Attack_LightCombo01A_ReturnToIdle_Neut` | 같음 | 같음 |
 | Polygon 기본 | 지금 `Unit.controller` 그대로 (Polygon 판 클립) | | | | |
 
