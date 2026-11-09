@@ -41,7 +41,7 @@ namespace VampireSpawn.Tests
         {
             // A designer's invalid data logs an error while the scene starts; GameDataAssetTests owns that check, this test pins the HTML values below.
             LogAssert.ignoreFailingMessages = true;
-            yield return SceneManager.LoadSceneAsync("Main");
+            yield return SceneManager.LoadSceneAsync("Battle");
             yield return null;
             LogAssert.ignoreFailingMessages = false;
             // The golden traces are HTML values; the scene loads the designer's data assets, which may differ.

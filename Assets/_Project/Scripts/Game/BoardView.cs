@@ -70,7 +70,7 @@ namespace VampireSpawn.Game
         }
 
         // Stable per-cell number, so a stage looks the same every time (stage-dressing.md 2).
-        static int Hash(int c, int r)
+        internal static int Hash(int c, int r)
         {
             unchecked
             {
@@ -129,6 +129,10 @@ namespace VampireSpawn.Game
                 child.transform.SetParent(null, false);
                 Kill(child);
             }
+            // Without this LateUpdate keeps fitting viewCamera to a board that is gone.
+            Board = null;
+            Stage = null;
+            RenderSettings.fog = false;
         }
 
         static void Kill(Object o) { if (Application.isPlaying) Destroy(o); else DestroyImmediate(o); }
@@ -174,26 +178,31 @@ namespace VampireSpawn.Game
 
         // fitWidth 0 keeps the prefab's own scale (used for particle FX whose bounds are meaningless).
         // stretch: a wall piece keeps its length along the row (x) while the height cap squashes only y and z, so walls stay walls instead of shrinking to stubs.
-        void Prop(GameObject prefab, Transform parent, Vector3 at, float fitWidth, float yaw, float maxHeight = 99f, bool stretch = false)
+        void Prop(GameObject prefab, Transform parent, Vector3 at, float fitWidth, float yaw, float maxHeight = 99f, bool stretch = false) =>
+            Place(prefab, parent, at, fitWidth * art.hexSize, yaw, maxHeight * art.hexSize, stretch);
+
+        // Shared with CampaignMapView (campaign-map.md 2-5): sizes are in world units.
+        internal static GameObject Place(GameObject prefab, Transform parent, Vector3 at, float fitWidth, float yaw, float maxHeight = 99f, bool stretch = false)
         {
             var go = Instantiate(prefab, parent);
             go.name = prefab.name;
             go.transform.position = at;
             go.transform.rotation = Quaternion.Euler(0f, yaw, 0f);
-            if (fitWidth <= 0f) return;
+            if (fitWidth <= 0f) return go;
             var renderers = go.GetComponentsInChildren<Renderer>();
-            if (renderers.Length == 0) return;
+            if (renderers.Length == 0) return go;
             var b = renderers[0].bounds;
             foreach (var r in renderers) b.Encapsulate(r.bounds);
             var size = Mathf.Max(b.size.x, b.size.z);
-            if (size <= 0.001f) return;
-            var byWidth = fitWidth * art.hexSize / size;
-            var byHeight = b.size.y > 0.001f ? maxHeight * art.hexSize / b.size.y : float.MaxValue;
+            if (size <= 0.001f) return go;
+            var byWidth = fitWidth / size;
+            var byHeight = b.size.y > 0.001f ? maxHeight / b.size.y : float.MaxValue;
             var k = Mathf.Min(byWidth, byHeight);
-            go.transform.localScale = Vector3.Scale(go.transform.localScale, stretch && b.size.x > 0.001f ? new Vector3(fitWidth * art.hexSize / b.size.x, k, k) : Vector3.one * k);
+            go.transform.localScale = Vector3.Scale(go.transform.localScale, stretch && b.size.x > 0.001f ? new Vector3(fitWidth / b.size.x, k, k) : Vector3.one * k);
+            return go;
         }
 
-        static Light AddLight(Transform parent, Vector3 at, LightType type, Color color, float intensity, float range)
+        internal static Light AddLight(Transform parent, Vector3 at, LightType type, Color color, float intensity, float range)
         {
             var go = new GameObject(type + " Light");
             go.transform.SetParent(parent, false);
@@ -219,11 +228,11 @@ namespace VampireSpawn.Game
             viewCamera.transform.rotation = rot;
             fittedAspect = viewCamera.aspect;
             fittedFrame = frame;
-            // Shift the projection so the camera axis lands on the frame's centre instead of the screen's.
+            // Shift the projection so the camera axis lands on the frame's centre. The axis lands at NDC -p[0,2], hence the minus.
             viewCamera.ResetProjectionMatrix();
             var p = viewCamera.projectionMatrix;
-            p[0, 2] = 2f * (frame.center.x - 0.5f);
-            p[1, 2] = 2f * (frame.center.y - 0.5f);
+            p[0, 2] = -2f * (frame.center.x - 0.5f);
+            p[1, 2] = -2f * (frame.center.y - 0.5f);
             viewCamera.projectionMatrix = p;
             // A narrow frame (4:3, 5:4) crops the near rows sideways under perspective, so back off until every board corner is inside it.
             var h = art.hexSize;

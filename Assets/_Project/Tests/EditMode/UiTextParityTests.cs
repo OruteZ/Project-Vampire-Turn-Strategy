@@ -88,21 +88,62 @@ namespace VampireSpawn.Tests
             }
         }
 
+        static bool InButton(UnityEngine.UIElements.VisualElement e)
+        {
+            for (var p = e.parent; p != null; p = p.parent) if (p.ClassListContains("btn")) return true;
+            return false;
+        }
+
+        // docs/ui/stage-select.md 6 and 9-3: each layer shows only what its decision needs, and no sentences.
         [TestCaseSource(nameof(CampShots))]
-        public void CampaignScreenShowsEveryGoldenState(string name)
+        public void CampaignLayersShowOnlyWhatTheirDecisionNeeds(string name)
         {
             var shot = Load().shots.First(s => s.name == name);
             var c = Campaign.Parse(shot.camp);
-            var sel = CampaignScreen.DefaultStage(c);
-            CampaignScreen.Build(root, c, new CampView { Selected = sel, ResetArm = shot.arm }, new CampaignActions(), null);
-            var texts = root.GetComponentsInChildren<Text>(true).Select(t => t.text).ToList();
-            CollectionAssert.IsEmpty(texts.Where(t => RawKey.IsMatch(t)), name + " shows a table key instead of its text");
-            CollectionAssert.Contains(texts, c.Gold.ToString(), name + " gold");
-            foreach (var st in Campaign.Stages) CollectionAssert.Contains(texts, Loc.Text(st.Title), name + " route");
-            CollectionAssert.DoesNotContain(texts, Loc.Text(Campaign.Stages[sel].Brief), name + " brief moved to the tooltip");
-            AssertNoSentences(root, name, GameData.Upgrades.Select(u => Loc.Text(u.Desc)).ToArray());
-            foreach (var t in GameData.Types.Where(t => c.UpgradesOpen(t.Kind))) CollectionAssert.Contains(texts, Loc.Text(t.Name), name + " barracks");
-            if (shot.arm) CollectionAssert.Contains(texts, Loc.T("camp.resetConfirm"), name + " reset armed");
+            var art = UnityEditor.AssetDatabase.LoadAssetAtPath<ArtCatalog>("Assets/_Project/Art/ArtCatalog.asset");
+            var map = root.gameObject.AddComponent<CampaignMapView>();
+            map.art = art;
+            var markers = CampMarkers.Build(root, art, map, _ => { });
+            var ui = CampToolkit.Build(root, art, k => CampInput.Of(k, 0f), _ => { });
+            List<string> Labels() => UnityEngine.UIElements.UQueryExtensions.Query<UnityEngine.UIElements.Label>(ui.Root).ToList().Select(l => l.text).Where(t => !string.IsNullOrEmpty(t)).ToList();
+            var allowed = GameData.Upgrades.Select(u => Loc.Text(u.Desc)).Concat(Campaign.Stages.Select(st => Loc.Text(st.Bonus.Text))).ToArray();
+            void Check(string layer, List<string> labels)
+            {
+                CollectionAssert.IsEmpty(labels.Where(t => RawKey.IsMatch(t)), name + " " + layer + " shows a table key instead of its text");
+                // Button words are exempt, as in AssertNoSentences ("정말 초기화할까요?" is the armed reset button).
+                var free = UnityEngine.UIElements.UQueryExtensions.Query<UnityEngine.UIElements.Label>(ui.Root).ToList().Where(l => l.GetFirstAncestorOfType<UnityEngine.UIElements.VisualElement>() != null && !InButton(l)).Select(l => l.text.Trim());
+                CollectionAssert.IsEmpty(free.Where(t => t.Length > 8 && Sentence.IsMatch(t) && !allowed.Contains(t)), name + " " + layer + " shows sentences");
+            }
+
+            var mapNav = CampNav.FromMenu(c, null);
+            if (shot.arm) mapNav = mapNav.Step(c, CampInput.Of(CampKey.Reset, 0f)).next;
+            ui.Fill(c, mapNav, k => CampInput.Of(k, 0f));
+            markers.Fill(c, mapNav, new Rect(0f, 0f, 1f, 1f));
+            var l1 = Labels();
+            Check("L1", l1);
+            CollectionAssert.Contains(l1, Loc.T("camp.expedition"), name + " L1 title");
+            var bands = root.GetComponentsInChildren<Text>(true).Select(t => t.text).ToList();
+            foreach (var st in Campaign.Stages) CollectionAssert.Contains(bands, Loc.Text(st.Title), name + " marker name band");
+            Assert.AreEqual(0, UnityEngine.UIElements.UQueryExtensions.Q(ui.Root, "bk-gold").childCount, name + " gold stays out of the map layer");
+            if (shot.arm) CollectionAssert.Contains(l1, Loc.T("camp.resetConfirm"), name + " reset armed");
+
+            var sel = CampNav.DefaultStage(c);
+            var infoNav = CampNav.FromMenu(c, null).Step(c, CampInput.Pick(sel, 0f)).next;
+            ui.Fill(c, infoNav, k => CampInput.Of(k, 0f));
+            var l2 = Labels();
+            Check("L2", l2);
+            var stage = Campaign.Stages[sel];
+            CollectionAssert.Contains(l2, Loc.Text(stage.Title), name + " L2 stage name");
+            CollectionAssert.Contains(l2, "+" + stage.Reward, name + " L2 clear reward");
+            CollectionAssert.DoesNotContain(l2, Loc.Text(stage.Brief), name + " brief moved to the tooltip");
+
+            var barracksNav = infoNav.Step(c, CampInput.Of(CampKey.Barracks, 0f)).next;
+            ui.Fill(c, barracksNav, k => CampInput.Of(k, 0f));
+            var l3 = Labels();
+            Check("L3", l3);
+            CollectionAssert.Contains(l3, c.Gold.ToString(), name + " L3 gold");
+            CollectionAssert.Contains(l3, Loc.Text(GameData.Types[barracksNav.Tab].Name), name + " L3 picked unit");
+            Assert.AreEqual(GameData.Types.Length, UnityEngine.UIElements.UQueryExtensions.Q(ui.Root, "bk-tabs").childCount, name + " six tabs");
         }
 
         [TestCaseSource(nameof(ShotNames))]

@@ -1,0 +1,126 @@
+/* docs/ui/main-menu.md. Sizes are 1920x1080 reference px (Panel.asset scales like the uGUI canvas). */
+.screen {
+    flex-grow: 1;
+}
+
+/* main-menu.md 후속: one centre anchor. The block is 618 px tall and sat at y 120 on 1080, so its top is centre - 420. */
+.block {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 50%;
+    margin-top: -420px;
+    align-items: center;
+}
+
+/* Vertical stops measured on the uGUI menu at 1920x1080: title centre 352, break 402, cards from 465. */
+.crest {
+    width: 200px;
+    height: 170px;
+}
+
+.title {
+    margin-top: 22px;
+    height: 72px;
+    /* TextCore draws about 10% larger than uGUI Text at the same size; 50 here matches uGUI 56. */
+    font-size: 50px;
+    color: var(--bone);
+    -unity-text-align: middle-center;
+    -unity-text-outline-width: 1px;
+    -unity-text-outline-color: var(--ink);
+}
+
+.break {
+    margin-top: 6px;
+    width: 600px;
+    height: 24px;
+}
+
+.cards {
+    margin-top: 44px;
+    flex-direction: row;
+}
+
+.card {
+    width: 360px;
+    height: 280px;
+    margin: 0 20px;
+    align-items: center;
+    -unity-slice-scale: 0.111px;
+    -unity-background-image-tint-color: var(--panel);
+}
+
+.card:hover {
+    -unity-background-image-tint-color: rgba(31, 33, 44, 0.95);
+}
+
+.card-frame {
+    position: absolute;
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    -unity-slice-scale: 0.111px;
+    -unity-background-image-tint-color: var(--steel-dim);
+}
+
+.card.on .card-frame {
+    -unity-background-image-tint-color: var(--steel);
+}
+
+.card-icon {
+    margin-top: 36px;
+    width: 104px;
+    height: 104px;
+    -unity-background-scale-mode: scale-to-fit;
+    -unity-background-image-tint-color: var(--muted);
+}
+
+.card.on .card-icon {
+    -unity-background-image-tint-color: var(--steel);
+}
+
+.card-name {
+    margin-top: 16px;
+    height: 44px;
+    font-size: 29px;
+    color: var(--bone);
+    -unity-text-align: middle-center;
+}
+
+.card-meta {
+    position: absolute;
+    left: 24px;
+    right: 24px;
+    bottom: 26px;
+    height: 34px;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+}
+
+.card-meta > .value {
+    margin: 0 10px;
+}
+
+.languages {
+    position: absolute;
+    top: 24px;
+    right: 24px;
+    flex-direction: row;
+}
+
+.lang {
+    margin-left: 16px;
+    padding: 0 0 2px 0;
+    font-size: 14px;
+    color: var(--dim);
+    border-bottom-width: 0;
+}
+
+.lang.current {
+    color: var(--bone);
+    -unity-font-style: bold;
+    border-bottom-width: 2px;
+    border-bottom-color: var(--steel);
+}

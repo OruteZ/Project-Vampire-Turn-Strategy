@@ -5,7 +5,8 @@
         "VampireSpawn.Core",
         "Unity.Localization",
         "Unity.InputSystem",
-        "UnityEngine.UI"
+        "UnityEngine.UI",
+        "Unity.Cinemachine"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

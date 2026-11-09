@@ -62,6 +62,7 @@ Build Settings scene 0 is what play mode starts in only when it is the open scen
 
 ## Gotchas
 
+- `$V key <K>` and `$V click <x> <y>` press and release inside one frame. Game code that polls `isPressed` edges (`KeyEdges.Pressed`, the camp screen's map click and B/Esc keys) never sees them. Send `down`, wait about 0.25 s, then `up` (`$V key B down` … `$V key B up`, `$V click x y down` … `up`). uGUI and UI Toolkit buttons still take the one-frame click.
 - `script eval` runs in the Editor update, which has its own Input System state. It reads `(0.00, 0.00)` for a pointer the game did receive. Use `input-probe` and `input-read`, or read the game's own model.
 - Human-format CLI output prints `Error:` with nothing after it on success. Use `--json` (as `vu.sh` does) and check `Success`.
 - PlayMode tests cannot run synchronously over the CLI (entering play mode reloads the domain and drops the request). `$V test playmode <filter>` starts them with `--async-tests` and polls `test status`; its JSON uses lower-case `summary.passed`/`failed`.

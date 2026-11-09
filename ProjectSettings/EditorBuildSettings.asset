@@ -6,7 +6,13 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/_Project/Scenes/Main.unity
+    path: Assets/_Project/Scenes/Menu.unity
+    guid: d8e58109f13244d4195af48b3678fc36
+  - enabled: 1
+    path: Assets/_Project/Scenes/Camp.unity
+    guid: 194da4613afebaf49a5be328b98c1d13
+  - enabled: 1
+    path: Assets/_Project/Scenes/Battle.unity
     guid: 161a79621c21e4d46989ca0ae0bf9c0c
   m_configObjects:
     com.unity.addressableassets: {fileID: 11400000, guid: 603b3fdc96e986441bb5312de4c63eb3, type: 2}

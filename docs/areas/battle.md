@@ -8,19 +8,17 @@
 - 코드: `Assets/_Project/Scripts/Core/` (규칙, Unity 참조 없음), `Assets/_Project/Scripts/Game/` (화면·입력)
 - 테스트: `Assets/_Project/Tests/EditMode/`
 - HTML 정답 도구: `tools/golden/prototype-golden.mjs` (설명은 `docs/dev/unity-port.md`)
-- 씬: `Assets/_Project/Scenes/Main.unity` (Build Settings 0번)
+- 씬: `Assets/_Project/Scenes/Battle.unity` (컨트롤러 `BattleFlow`). 메뉴·원정은 `Menu.unity`(Build 0)·`Camp.unity`, 씬을 넘는 상태는 `App.cs` (docs/dev/scene-split.md)
 - 검증: `.claude/skills/verify-unity/`
 
 ## 결정
 | 결정 | 상태 | 날짜 | 출처 |
 |---|---|---|---|
-| 게임 수치·스테이지는 데이터 에셋(Assets/_Project/Data)에 두고 기획자용 편집기로 고친다. 에셋은 데이터 기획서(docs/content)를 구현한 것이고, 기획서가 비어 있는 동안 기본값은 HTML 데모 값이다 | 시험 중 | 2026-11-05 | 이슈 #1, docs/request/GameData_ScriptableObject_Editor_Request.md (#19) |
+| 게임 수치·스테이지는 데이터 에셋(Assets/_Project/Data)에 두고 기획자용 편집기로 고친다. 에셋은 데이터 기획서(docs/content)를 구현한 것이고, 기획서가 비어 있는 동안 기본값은 HTML 데모 값이다 | 시험 중 | 2026-11-05 | 이슈 #1, 요청 #19 |
 | 에디터 작업은 전부 Unity CLI 로 한다 | 시험 중 | 2026-11-05 | CLAUDE.md |
 | UI 는 프리팹 대신 코드로 만든 uGUI, 한글 글꼴은 HTML 목록대로 OS 글꼴을 쓴다(글꼴 파일 내려받기는 사용자 허락 뒤) | 시험 중 | 2026-11-05 | 이슈 #14 |
 
 ## 열린 작업
-- 위협 범위 토글이 docs/design/ui.md "위협 범위는 직접 제공하지 않는다" 와 다르다. 전투 화면 기획서(docs/ui/battle-hud.md)가 아직 없다
-- 메뉴 정식 제목 (docs/ui/main-menu.md 열린 질문)
 - 전투 카메라 연출: 후보 보고서 docs/art/battle-camera-candidates.md, 사용자 선택 대기 (#97)
 
 ## 맡길 때

@@ -30,7 +30,7 @@ Run from the repo root (or the worktree) in Git Bash. Follow CLAUDE.md for the E
 4. **Refresh the asset list** if any Synty reference changed: `node tools/assets/scan.mjs`, and commit `tools/assets/*.tsv` with the change.
 5. **Prove it.**
    - `bash .claude/skills/verify-unity/scripts/vu.sh test editor` must pass, in particular `SidekickRecipeTests` (every recipe baked and up to date, every `UnitLook` resolves) and `RequiredAssetsTests`.
-   - For a new or changed character, look at it in the game: start the demo battle with the verify-unity skill and screenshot the unit (`docs/review/`).
+   - For a new or changed character, look at it in the game: start the demo battle with the verify-unity skill and screenshot the unit (`verify-artifacts/`, path in the task comment).
 6. **Report** what was imported, what was baked (name and part count), any missing parts, and the test summary.
 
 ## Adding a character made with Sidekick

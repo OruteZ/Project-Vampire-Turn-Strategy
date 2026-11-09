@@ -1,0 +1,131 @@
+/* docs/ui/stage-select.md 2-2, 3-1 and docs/ui/upgrade.md 3, 5. 1920x1080 reference px, fixed sizes, one-point anchors.
+   Rows inside a panel use the spec tables' x/y from the panel's top-left, hence absolute positions.
+   Font sizes are the ui-style.md tokens x 0.9 (TextCore draws about 10% larger, docs/dev/ui-toolkit-trial.md 4). */
+.camp { flex-grow: 1; }
+
+/* Layers: the root carries l-map / l-info / l-barracks (CampNav.Layer). */
+.info-panel, .barracks-panel { display: none; }
+.l-info .info-panel { display: flex; }
+.l-barracks .barracks-panel { display: flex; }
+.map-only { display: none; }
+.l-map .map-only { display: flex; }
+
+.btn { position: absolute; justify-content: center; align-items: center; -unity-slice-scale: 0.111px; }
+.btn-frame, .panel-frame { position: absolute; left: 0; top: 0; right: 0; bottom: 0; -unity-slice-scale: 0.111px; }
+.btn-text { font-size: 15px; color: var(--bone); -unity-text-align: middle-center; }
+.btn.ghost .btn-text { color: var(--muted); }
+.btn.danger .btn-text { color: #c8304a; }
+.btn.primary .btn-text { color: var(--ink); -unity-font-style: bold; }
+.btn:hover { -unity-background-image-tint-color: rgba(38, 41, 54, 0.96); }
+.btn.disabled { opacity: 0.4; }
+.key {
+    position: absolute; right: 6px; bottom: 6px; height: 18px; padding: 0 4px;
+    font-size: 12px; color: var(--muted); background-color: rgba(15, 16, 22, 0.85);
+    border-width: 1px; border-color: var(--line); -unity-text-align: middle-center;
+}
+.icon { -unity-background-scale-mode: scale-to-fit; }
+
+.head { position: absolute; left: 24px; top: 24px; width: 480px; height: 64px; }
+#menu { left: 0; top: 4px; width: 56px; height: 56px; }
+#menu .icon { width: 28px; height: 28px; -unity-background-image-tint-color: var(--muted); }
+.title { position: absolute; left: 72px; top: 0; width: 400px; height: 64px; font-size: 29px; color: var(--bone); -unity-text-align: middle-left; }
+
+.reset { right: 24px; top: 24px; width: 220px; height: 44px; }
+
+.barracks-btn { left: 24px; bottom: 24px; width: 240px; height: 56px; flex-direction: row; justify-content: flex-start; padding-left: 16px; }
+.barracks-btn .icon { width: 28px; height: 28px; margin-right: 10px; -unity-background-image-tint-color: var(--steel); }
+.barracks-btn .btn-text { -unity-text-align: middle-left; }
+.barracks-btn.on .btn-frame { -unity-background-image-tint-color: var(--steel); }
+.badge {
+    width: 24px; height: 24px; margin-right: 8px; border-radius: 12px; background-color: #e3a84b;
+    justify-content: center; align-items: center; display: none;
+}
+.badge.shown { display: flex; }
+.badge-text { font-size: 13px; color: var(--ink); -unity-font-style: bold; padding: 0; margin: 0; }
+
+.panel { position: absolute; right: 24px; top: 24px; width: 560px; -unity-slice-scale: 0.111px; }
+.info-panel { height: 520px; }
+.barracks-panel { height: 680px; }
+
+/* The crest prefab draws about 1.9x its box wide and 1.3x tall, so a 72 box fills the gap left of March. */
+.info-crest { position: absolute; left: 106px; top: 390px; width: 72px; height: 72px; }
+.info-badge { position: absolute; left: 32px; top: 36px; width: 48px; height: 48px; justify-content: center; align-items: center; }
+.ring-fill, .ring { position: absolute; left: 0; top: 0; right: 0; bottom: 0; }
+.ring { left: -2px; top: -2px; right: -2px; bottom: -2px; }
+.ring-text { font-size: 18px; -unity-font-style: bold; color: var(--bone); padding: 0; margin: 0; }
+.info-name { position: absolute; left: 96px; top: 32px; width: 400px; height: 56px; font-size: 29px; color: var(--bone); -unity-text-align: middle-left; overflow: hidden; text-overflow: ellipsis; }
+.close { left: 504px; top: 16px; width: 40px; height: 40px; }
+.close .icon { width: 20px; height: 20px; -unity-background-image-tint-color: var(--muted); }
+.close .key { right: -2px; bottom: -14px; }
+.break { position: absolute; left: 32px; top: 100px; width: 496px; height: 24px; }
+
+.line { position: absolute; left: 32px; width: 496px; flex-direction: row; align-items: center; }
+.goal { top: 136px; height: 40px; }
+.bonus { top: 184px; height: 48px; }
+.line-icon { width: 30px; height: 30px; margin-right: 12px; flex-shrink: 0; }
+.line-text { font-size: 15px; color: var(--bone); width: 454px; padding: 0; margin: 0; }
+.line-text.wrap { white-space: normal; }
+
+.stats { position: absolute; left: 32px; top: 248px; width: 496px; height: 40px; flex-direction: row; align-items: center; }
+.stats > .value { margin-right: 28px; }
+.stats .value-text { font-size: 18px; }
+.roster { position: absolute; left: 32px; top: 312px; width: 496px; height: 64px; flex-direction: row; }
+.chip { width: 64px; height: 64px; margin-right: 10px; justify-content: center; align-items: center; -unity-slice-scale: 0.0714px; }
+.chip-frame { position: absolute; left: 0; top: 0; right: 0; bottom: 0; -unity-slice-scale: 0.0714px; }
+.chip-icon { width: 40px; height: 40px; -unity-background-scale-mode: scale-to-fit; }
+.march { position: absolute; left: 268px; top: 428px; width: 260px; height: 60px; }
+.march > .btn { left: 0; top: 0; width: 260px; height: 60px; }
+
+.bk-icon { position: absolute; left: 32px; top: 44px; width: 32px; height: 32px; }
+.bk-name { position: absolute; left: 76px; top: 32px; width: 200px; height: 56px; font-size: 29px; color: var(--bone); -unity-text-align: middle-left; }
+.bk-gold { position: absolute; left: 312px; top: 32px; width: 168px; height: 56px; flex-direction: row; justify-content: flex-end; align-items: center; }
+.bk-gold .value-icon { width: 28px; height: 28px; }
+.bk-gold .value-text { font-size: 31px; }
+.tabs { position: absolute; left: 32px; top: 104px; width: 496px; height: 64px; flex-direction: row; }
+.tabs > .chip { margin-right: 8px; }
+.tab-dot { position: absolute; right: 6px; top: 6px; width: 10px; height: 10px; border-radius: 5px; background-color: #e3a84b; }
+.tab-lock { position: absolute; right: 4px; bottom: 4px; width: 18px; height: 18px; }
+.chip.on .chip-frame { border-width: 2px; border-color: rgba(143, 176, 204, 0.4); }
+.bk-unit { position: absolute; left: 32px; top: 188px; width: 496px; height: 40px; flex-direction: row; align-items: center; }
+.bk-unit-icon { width: 40px; height: 40px; margin-right: 12px; }
+.bk-unit-name { font-size: 20px; color: var(--bone); width: 300px; }
+.bk-stats { position: absolute; left: 84px; top: 240px; width: 412px; height: 32px; flex-direction: row; align-items: center; }
+.bk-stats > .value { margin-right: 14px; }
+.bk-stats .value-text { font-size: 15px; -unity-font-style: normal; }
+.bk-stats .value-icon { width: 22px; height: 22px; }
+.bk-break { top: 284px; }
+.bk-ups { position: absolute; left: 32px; top: 320px; width: 496px; height: 328px; }
+
+.up {
+    width: 496px; height: 152px; margin-bottom: 12px; flex-shrink: 0;
+    background-color: rgba(15, 16, 22, 0.92); border-width: 1px; border-color: var(--line);
+}
+.up.owned { border-color: #e3a84b; }
+.up-name { position: absolute; left: 16px; top: 16px; width: 400px; height: 24px; flex-direction: row; align-items: center; }
+.up-name > Label { font-size: 15px; -unity-font-style: bold; color: var(--bone); padding: 0; margin: 0; }
+.up-fang { width: 18px; height: 18px; margin-right: 6px; }
+.up-owned { position: absolute; left: 456px; top: 16px; width: 24px; height: 24px; font-size: 18px; color: #e3a84b; -unity-text-align: middle-center; padding: 0; margin: 0; }
+.up-desc { position: absolute; left: 16px; top: 48px; width: 464px; height: 40px; font-size: 13px; color: var(--muted); white-space: normal; padding: 0; margin: 0; }
+.up-price { position: absolute; left: 16px; top: 96px; width: 120px; height: 40px; flex-direction: row; align-items: center; }
+.up-price .value-icon { width: 22px; height: 22px; }
+.up-price .value-text { font-size: 18px; }
+.up-act { position: absolute; left: 280px; top: 96px; width: 200px; height: 40px; }
+.up-act > .btn { left: 0; top: 0; width: 200px; height: 40px; }
+.up-lock { position: absolute; right: 0; top: 8px; width: 24px; height: 24px; }
+
+/* ui-style.md 12: panels show/hide in 0.15 s rising 8 px, easing out (CampToolkit.Enter/Leave, #89). */
+.panel, .dialog { transition-property: opacity, translate; transition-duration: 0.15s; transition-timing-function: ease-out-cubic; }
+.panel.enter, .panel.leave, .dialog.enter { opacity: 0; translate: 0 8px; }
+.info-panel.leave, .barracks-panel.leave { display: flex; }
+
+/* upgrade.md 6-1: the buy dialog, one centre anchor over a 60% night veil. */
+.dialog-veil { position: absolute; left: 0; top: 0; right: 0; bottom: 0; background-color: rgba(18, 19, 26, 0.6); display: none; }
+.asking .dialog-veil { display: flex; }
+.dialog { position: absolute; left: 50%; top: 50%; width: 480px; height: 232px; margin-left: -240px; margin-top: -116px; -unity-slice-scale: 0.111px; }
+.dialog-name { position: absolute; left: 32px; top: 32px; width: 416px; height: 32px; font-size: 22px; -unity-font-style: bold; color: var(--bone); -unity-text-align: middle-center; overflow: hidden; text-overflow: ellipsis; padding: 0; margin: 0; }
+.dialog-ask { position: absolute; left: 32px; top: 72px; width: 416px; height: 24px; font-size: 15px; color: var(--muted); -unity-text-align: middle-center; padding: 0; margin: 0; }
+.dialog-price { position: absolute; left: 32px; top: 108px; width: 416px; height: 32px; flex-direction: row; justify-content: center; align-items: center; }
+.dialog-price .value-icon { width: 24px; height: 24px; }
+.dialog-price .value-text { font-size: 18px; }
+.dialog-cancel { left: 48px; top: 164px; width: 180px; height: 44px; }
+.dialog-ok { left: 252px; top: 164px; width: 180px; height: 44px; }

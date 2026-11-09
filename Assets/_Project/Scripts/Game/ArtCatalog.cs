@@ -37,7 +37,15 @@ namespace VampireSpawn.Game
         public Color skeletonRing = new Color(0.71f, 0.66f, 0.56f);
         public Color vampireRing = new Color(0.78f, 0.19f, 0.29f);
         public Color spawnRing = new Color(0.65f, 0.31f, 0.77f);
-        public Color coffin = new Color(0.25f, 0.06f, 0.11f);
+        [Tooltip("잠든 뱀파이어의 관. 색칠 없이 그대로 (docs/art/unit-visuals.md 5)")] public GameObject coffin;
+
+        public Color TierRing(VampireSpawn.Core.Tier tier) => tier switch
+        {
+            VampireSpawn.Core.Tier.Peasant => peasantRing,
+            VampireSpawn.Core.Tier.Knight => knightRing,
+            VampireSpawn.Core.Tier.Hunter => hunterRing,
+            _ => regularRing,
+        };
 
         [Header("UI")]
         [Tooltip("Synty UI 스프라이트. 이름으로 찾는다 (docs/art/ui-style.md)")]
@@ -46,8 +54,19 @@ namespace VampireSpawn.Game
         [Tooltip("Synty UI 장식 프리팹 (Crest, Section_Break). 이름으로 찾는다")]
         public GameObject[] uiPrefabs;
 
+        [Header("UI Toolkit trial (#44)")]
+        public UnityEngine.UIElements.PanelSettings panel;
+        public UnityEngine.UIElements.VisualTreeAsset menuDocument;
+        [Tooltip("장 선택 (docs/ui/stage-select.md 10)")] public UnityEngine.UIElements.VisualTreeAsset campDocument;
+
         public Sprite Ui(string name) => System.Array.Find(ui ?? System.Array.Empty<Sprite>(), s => s != null && s.name == name);
 
         public GameObject UiPrefab(string name) => System.Array.Find(uiPrefabs ?? System.Array.Empty<GameObject>(), p => p != null && p.name == name);
+
+        [Header("Campaign map (docs/art/campaign-map.md)")]
+        [Tooltip("CampaignMapLayout.Names 의 프리팹. 도구 모음 > 지도 > 프리팹 목록 채우기로 채운다")]
+        public GameObject[] mapProps;
+
+        public GameObject MapProp(string name) => System.Array.Find(mapProps ?? System.Array.Empty<GameObject>(), p => p != null && p.name == name);
     }
 }

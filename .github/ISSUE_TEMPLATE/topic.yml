@@ -1,0 +1,26 @@
+name: 주제
+description: 큰 주제 하나(기능·화면·도구 흐름). 이미 있는 주제에 더할 일은 그 이슈 댓글로. 에이전트는 채팅으로 맡겨야 시작한다.
+labels: ["주제"]
+body:
+  - type: textarea
+    id: goal
+    attributes:
+      label: 목표
+      description: 이 주제가 끝나면 무엇이 되나
+    validations:
+      required: true
+  - type: textarea
+    id: wants
+    attributes:
+      label: 원하는 것
+      description: 한 줄씩. 에이전트가 이것을 본문 '흐름' 단계로 풀어 쓴다
+      placeholder: |
+        - …
+        - …
+    validations:
+      required: true
+  - type: textarea
+    id: refs
+    attributes:
+      label: 참고 (선택)
+      description: 관련 파일, 스크린샷, 링크
