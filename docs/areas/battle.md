@@ -16,11 +16,10 @@
 |---|---|---|---|
 | 게임 수치·스테이지는 데이터 에셋(Assets/_Project/Data)에 두고 기획자용 편집기로 고친다. 에셋은 데이터 기획서(docs/content)를 구현한 것이고, 기획서가 비어 있는 동안 기본값은 HTML 데모 값이다 | 시험 중 | 2026-11-05 | 이슈 #1, 요청 #19 |
 | 에디터 작업은 전부 Unity CLI 로 한다 | 시험 중 | 2026-11-05 | CLAUDE.md |
+| 전투 카메라 연출은 후보 A 등급(변이·연쇄 변이·적 턴 따라가기·보름달)만 먼저 넣는다. 기본 시점에서 평행 이동·당기기만 한다 (docs/art/battle-camera.md, 코드 `Game/BattleCamera.cs`) | 시험 중 | 2026-11-09 | #97 "A등급으로 시작" |
+| 전투 재생 대기는 HTML 데모의 2배(`BattleView.Pace`). 배속은 설정 화면이 생기면. 붉은 비네트는 뱀파이어 흡혈 모션에만 강하게 | 시험 중 | 2026-11-09 | #97 "모든 유닛의 행동 속도를 전반적으로 늦출 필요", "비네트는 흡혈하는 모션동안만" |
 | UI 는 프리팹 대신 코드로 만든 uGUI, 한글 글꼴은 HTML 목록대로 OS 글꼴을 쓴다(글꼴 파일 내려받기는 사용자 허락 뒤) | 시험 중 | 2026-11-05 | 이슈 #14 |
 | 병종 강화는 세 갈래 중 하나만 산다(나머지 둘은 잠김, 되돌릴 수 없음). 1번 = 스폰이 물려받는 능력치, 2·3번 = 물려받지 않는 것 (docs/systems/progression.md) | 시험 중 | 2026-11-09 | #99 "셋 중 하나 선택" |
-
-## 열린 작업
-- 전투 카메라 연출: 후보 보고서 docs/art/battle-camera-candidates.md, 사용자 선택 대기 (#97)
 
 ## 맡길 때
 - 모델: 규칙 이식(P4)은 opus xhigh, 나머지 구현은 opus low (`~/.claude/rules/pstack-models.md`)
@@ -29,3 +28,4 @@
 - 함정: `Rules`, `Role`, `Side` 는 Core 타입 이름이다. Game 쪽에 같은 이름의 메서드를 만들면 CS0119 가 난다.
 - 함정: 에디터가 뒤에 있을 때 `wasPressedThisFrame` 은 에디터 입력 갱신에 속할 수 있어 놓친다. `BoardInput` 은 `isPressed` 의 바뀜으로 누름·뗌을 잡는다.
 - 함정: `VampireSpawn.Core` 는 `noEngineReferences` 다. 규칙 코드에 `UnityEngine` 을 쓰면 컴파일이 깨진다. 화면에 필요한 것은 `Game` 쪽에 둔다.
+- 함정: MonoBehaviour 에 `Reset()` 이름의 메서드를 만들지 않는다. 에디터에서 `AddComponent` 때 Unity 가 불러 필드가 비어 있는 채 실행된다 (`BattleCamera.Snap`).

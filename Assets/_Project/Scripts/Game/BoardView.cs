@@ -20,6 +20,10 @@ namespace VampireSpawn.Game
         // The normalized screen rect the board must fit in; the camera itself draws the whole screen (stage-dressing.md 1-4).
         public Rect Frame => frame;
 
+        // The fitted pose: where the camera sits and the board point it looks at. BattleCamera moves away from it and back.
+        public Vector3 BasePosition { get; private set; }
+        public Vector3 BaseLook { get; private set; }
+
         public void FrameInto(Rect r)
         {
             frame = r;
@@ -243,6 +247,8 @@ namespace VampireSpawn.Game
                 if (System.Array.TrueForAll(corners, c => frame.Contains(viewCamera.WorldToViewportPoint(c)))) break;
                 distance *= 1.04f;
             }
+            BasePosition = viewCamera.transform.position;
+            BaseLook = center;
             RenderSettings.fogStartDistance = distance * 1.1f;
             RenderSettings.fogEndDistance = distance * 2.4f;
         }

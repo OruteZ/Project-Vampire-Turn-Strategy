@@ -145,10 +145,11 @@
 
 1. 유닛 머리 위에 체력 칸 막대. 칸 하나 = 체력 1. 칸 크기 6×8px, 간격 1px. 체력이 12 를 넘으면 칸 하나 = 체력 2 로 바꾸고 막대 끝에 숫자를 붙인다.
 2. 찬 칸 색: 아군 `ally`, 적 `enemy`, 스폰 `spawn`. 빈 칸 `bg.panelDeep`.
-3. 평소에는 칸 막대만. 호버하거나 선택한 유닛만 막대 위에 이름(`small`)과 숫자. 이 유닛의 머리 위 표시는 다른 유닛 것보다 위에 그린다.
+3. 평소에는 칸 막대와 7 의 공격·방어만. 호버하거나 선택한 유닛만 막대 위에 이름(`small`)과 숫자. 이 유닛의 머리 위 표시는 다른 유닛 것보다 위에 그린다.
 4. 바탕은 `HUD_DarkFantasy_WorldSpace_NameAlly_01` / `NameEnemy_01` 에서 이름 칸을 끄고 막대만 남겨 쓴다.
 5. 칸 하나 = 체력 2 일 때 붙는 숫자는 막대 오른쪽 4px 에 붙인다.
 6. 보드 위에 글자 라벨(예: "다음 턴 보름달", "보름달 표적")을 두지 않는다. 같은 정보는 보름달 게이지 상태 줄, 표적 아이콘, 아군 패널 경고 줄이 준다.
+7. 모든 유닛(아군·적·스폰 모두, 늘 보임) 막대 왼쪽 6px 에 공격·방어를 `Stat_Strength_01_Stroke`·`Status_Defense_01_Stroke` 16px (진영 색) + 숫자 `small` Bold `text.1` 로 붙인다. 공격은 패널처럼 "{atk}+{bane}". 피해 계산(공격 − 방어)을 보드에서 바로 하게 하는 계산 도움이다 (ui.md). 적만 띄우지 않는다.
 
 ### 8-2. 칸 표시
 
@@ -190,7 +191,7 @@
 | 보름달 표적 | `Icons_Status/ICON_DarkFantasy_Status_Targeted_01` |
 | 스폰·변이 | `Icons_Status/ICON_DarkFantasy_Status_Vampiric_01` |
 | 처치 | `Icons_Status/ICON_DarkFantasy_Status_Dead_01` |
-| 병종 무기 | `Icons_Weapons/` : 농민 창병 `ICON_SM_Wep_Pitchfork_01_DarkFantasy`, 농민 궁수·궁수 `ICON_SM_Wep_Crossbow_01_Arrow_01_DarkFantasy`(키트에 활이 없어 화살), 검사 `ICON_SM_Wep_Sword_01_DarkFantasy`, 기사 `ICON_SM_Wep_Shield_Heater_01_Dungeon`, 사냥꾼 `ICON_SM_Wep_Crossbow_01_DarkFantasy`, 스켈레톤 `ICON_SM_Wep_Bone_01_Dungeon`, 뱀파이어 `ICON_SM_Wep_Scythe_01_DarkFantasy` |
+| 병종 무기 | `Icons_Weapons/` : 농민 창병 `ICON_SM_Wep_Pitchfork_01_DarkFantasy`, 농민 궁수·궁수 `Icons_Inventory/ICON_DarkFantasy_Inventory_Bows_01_Clean`(무기 아이콘에 활이 없어 인벤토리 활), 검사 `ICON_SM_Wep_Sword_01_DarkFantasy`, 기사 `ICON_SM_Wep_Shield_Heater_01_Dungeon`, 사냥꾼 `ICON_SM_Wep_Crossbow_01_DarkFantasy`, 스켈레톤 `ICON_SM_Wep_Bone_01_Dungeon`, 뱀파이어 `ICON_SM_Wep_Scythe_01_DarkFantasy` |
 
 - 크기: 패널 안 수치 옆 24px, 행동 줄 40px, 보드 위 20~32px.
 - 색: 아이콘은 그 수치의 진영 색으로 물들인다. 광원·재화 아이콘만 `light`.
