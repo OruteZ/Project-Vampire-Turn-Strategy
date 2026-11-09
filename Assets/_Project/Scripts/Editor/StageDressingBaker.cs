@@ -16,7 +16,7 @@ namespace VampireSpawn.Editor
 
         // battle-terrain.md 2.
         const float Width = 160f, Depth = 140f, HeightRange = 8f, Below = 2f;
-        const int Resolution = 257, Splat = 256;
+        const int Splat = 256;
 
         public static string Bake()
         {
@@ -64,11 +64,24 @@ namespace VampireSpawn.Editor
             var origin = new Vector3((xMin + xMax) * 0.5f - Width * 0.5f, -Below, (zMin + zMax) * 0.5f - Depth * 0.5f);
             var seed = stage.Id.Aggregate(17, (k, ch) => unchecked(k * 31 + ch)) & 0xffff;
             float ox = seed % 251 * 1.37f, oz = seed / 251 * 0.91f;
-            var water = new List<Vector2>();
-            for (var r = 0; r < board.Rows; r++)
-                for (var c = 0; c < board.Cols; c++)
-                    if (board.At(new Hex(c, r)) == Terrain.Water) { var w = BoardView.Local(new Hex(c, r), s); water.Add(new Vector2(w.x, w.z)); }
+            var river = River(board, s, ox, oz);
+            // Distance past the river bank; negative inside the channel (battle-terrain.md 2-2).
+            float Bank(float x, float z)
+            {
+                var best = float.MaxValue;
+                foreach (var (a, b, wa, wb) in river)
+                {
+                    var p = new Vector2(x, z);
+                    var ab = b - a;
+                    var t = Mathf.Clamp01(Vector2.Dot(p - a, ab) / Mathf.Max(ab.sqrMagnitude, 1e-6f));
+                    var w = Mathf.Lerp(wa, wb, t) * (0.55f + 0.15f * Mathf.PerlinNoise(x / 4f + ox, z / 4f + oz)) * s;
+                    best = Mathf.Min(best, Vector2.Distance(p, a + ab * t) - w);
+                }
+                return best;
+            }
 
+            // A finer grid where there is a shoreline, or the bank shows 0.6-wide stair steps.
+            var Resolution = river.Count > 0 ? 513 : 257;
             var heights = new float[Resolution, Resolution];
             for (var i = 0; i < Resolution; i++)
                 for (var j = 0; j < Resolution; j++)
@@ -83,10 +96,10 @@ namespace VampireSpawn.Editor
                         var hills = 0.7f * Mathf.PerlinNoise(x / 14f + oz, z / 14f + ox) + 0.3f * Mathf.PerlinNoise(x / 6f + ox + 40f, z / 6f + oz);
                         y += Mathf.Clamp01(away / 12f) * amp * hills;
                     }
-                    foreach (var w in water)
+                    if (river.Count > 0)
                     {
-                        var d = Vector2.Distance(w, new Vector2(x, z)) / (0.8f * s);
-                        if (d < 1f) y = Mathf.Min(y, Mathf.Lerp(-0.5f, y, Mathf.SmoothStep(0f, 1f, d)));
+                        var bank = Bank(x, z);
+                        if (bank < 0.35f * s) y = Mathf.Min(y, Mathf.Lerp(-0.5f, y, Mathf.SmoothStep(0f, 1f, bank / (0.35f * s))));
                     }
                     heights[i, j] = (y + Below) / HeightRange;
                 }
@@ -121,16 +134,62 @@ namespace VampireSpawn.Editor
             go.transform.localPosition = origin;
             go.transform.SetSiblingIndex(0);
             var terrain = go.GetComponent<UnityEngine.Terrain>();
-            // The default LOD (pixel error 5) flattens the 0.5-deep water pits and buries their surface.
+            // The default LOD (pixel error 5) flattens the 0.5-deep channel and buries the water.
             terrain.heightmapPixelError = 1f;
+            if (river.Count > 0)
+            {
+                var water = GameObject.CreatePrimitive(PrimitiveType.Quad);
+                Object.DestroyImmediate(water.GetComponent<Collider>());
+                water.name = "Water";
+                water.transform.SetParent(root.transform, false);
+                water.transform.localPosition = origin + new Vector3(Width * 0.5f, Below - 0.14f, Depth * 0.5f);
+                water.transform.localRotation = Quaternion.Euler(90f, 0f, 0f);
+                water.transform.localScale = new Vector3(Width, Depth, 1f);
+                water.GetComponent<MeshRenderer>().sharedMaterial = art.water;
+            }
             var props = root.transform.Find("Props");
             if (props == null) return;
-            foreach (Transform p in props)
+            foreach (var p in props.Cast<Transform>().ToList())
             {
                 var at = p.position;
+                if (river.Count > 0 && Bank(at.x - root.transform.position.x, at.z - root.transform.position.z) < 0.3f * s) { Object.DestroyImmediate(p.gameObject); continue; }
                 at.y = terrain.SampleHeight(at) + terrain.transform.position.y - 0.05f;
                 p.position = at;
             }
+        }
+
+        // battle-terrain.md 2-2: segments joining touching water cells, plus a meandering run off the board from each edge water cell. Widths are in cells.
+        static List<(Vector2 a, Vector2 b, float wa, float wb)> River(Board board, float s, float ox, float oz)
+        {
+            var cells = new List<(Hex h, Vector2 p)>();
+            for (var r = 0; r < board.Rows; r++)
+                for (var c = 0; c < board.Cols; c++)
+                    if (board.At(new Hex(c, r)) == Terrain.Water) { var w = BoardView.Local(new Hex(c, r), s); cells.Add((new Hex(c, r), new Vector2(w.x, w.z))); }
+            var segs = new List<(Vector2, Vector2, float, float)>();
+            for (var i = 0; i < cells.Count; i++)
+            {
+                segs.Add((cells[i].p, cells[i].p, 1f, 1f));
+                for (var j = i + 1; j < cells.Count; j++)
+                    if (Vector2.Distance(cells[i].p, cells[j].p) <= 1.8f * s) segs.Add((cells[i].p, cells[j].p, 1f, 1f));
+                // A run that stops one land cell short of the edge (a crossing, s9's moat) carries on past that cell.
+                var h = cells[i].h;
+                bool Land(int c, int r) => board.At(new Hex(c, r)) != Terrain.Water;
+                var (dir, skip) = h.Col == 0 ? (Vector2.left, 0) : h.Col == board.Cols - 1 ? (Vector2.right, 0)
+                    : h.Col == 1 && Land(0, h.Row) ? (Vector2.left, 1) : h.Col == board.Cols - 2 && Land(board.Cols - 1, h.Row) ? (Vector2.right, 1)
+                    : h.Row == 0 ? (Vector2.up, 0) : h.Row == board.Rows - 1 ? (Vector2.down, 0) : (Vector2.zero, 0);
+                if (dir == Vector2.zero) continue;
+                var side = new Vector2(-dir.y, dir.x);
+                var start = cells[i].p + dir * (skip * 2.5f * s);
+                var prev = start;
+                for (var k = 1; k <= 40; k++)
+                {
+                    var bend = 2f * (2f * Mathf.PerlinNoise(k / 10f + ox + i, oz) - 1f) * Mathf.Clamp01(k / 6f);
+                    var next = start + dir * k + side * bend;
+                    segs.Add((prev, next, 1f + 0.5f * Mathf.Clamp01((k - 1) / 20f), 1f + 0.5f * Mathf.Clamp01(k / 20f)));
+                    prev = next;
+                }
+            }
+            return segs;
         }
     }
 }

@@ -11,7 +11,6 @@ namespace VampireSpawn.Game
 
         public Board Board { get; private set; }
         public Stage Stage { get; private set; }
-        Mesh hexMesh;
         float fittedAspect;
         Rect frame = new Rect(0f, 0f, 1f, 1f), fittedFrame;
 
@@ -54,7 +53,6 @@ namespace VampireSpawn.Game
             Clear();
             Stage = stage;
             Board = new Board(stage.Map);
-            if (hexMesh == null) hexMesh = BuildHexMesh(art.hexSize * 0.97f, 0.02f);
             Dress(stage.Id);
             for (var r = 0; r < Board.Rows; r++)
                 for (var c = 0; c < Board.Cols; c++)
@@ -203,14 +201,6 @@ namespace VampireSpawn.Game
             tile.transform.SetParent(transform, false);
             var top = Stand(h);
             tile.transform.position = top;
-            if (terrain == Terrain.Water)
-            {
-                // battle-terrain.md 2: the water surface sits over the pit the bake carved under it.
-                tile.transform.position = HexToWorld(h) + Vector3.up * -0.14f;
-                tile.AddComponent<MeshFilter>().sharedMesh = hexMesh;
-                tile.AddComponent<MeshRenderer>().sharedMaterial = art.water;
-            }
-
             switch (terrain)
             {
                 case Terrain.Torch:
@@ -308,32 +298,6 @@ namespace VampireSpawn.Game
             BaseLook = center;
             RenderSettings.fogStartDistance = distance * 1.1f;
             RenderSettings.fogEndDistance = distance * 2.4f;
-        }
-
-        static Mesh BuildHexMesh(float radius, float height)
-        {
-            var verts = new Vector3[7 + 24];
-            var tris = new System.Collections.Generic.List<int>();
-            verts[0] = new Vector3(0f, height, 0f);
-            for (var i = 0; i < 6; i++)
-            {
-                var a = Mathf.Deg2Rad * 60f * i;
-                verts[1 + i] = new Vector3(radius * Mathf.Cos(a), height, radius * Mathf.Sin(a));
-            }
-            for (var i = 0; i < 6; i++) tris.AddRange(new[] { 0, 1 + (i + 1) % 6, 1 + i });
-            for (var i = 0; i < 6; i++)
-            {
-                var p0 = verts[1 + i];
-                var p1 = verts[1 + (i + 1) % 6];
-                var k = 7 + i * 4;
-                verts[k] = p0; verts[k + 1] = p1;
-                verts[k + 2] = new Vector3(p1.x, 0f, p1.z); verts[k + 3] = new Vector3(p0.x, 0f, p0.z);
-                tris.AddRange(new[] { k, k + 1, k + 2, k, k + 2, k + 3 });
-            }
-            var mesh = new Mesh { name = "Hex", vertices = verts, triangles = tris.ToArray() };
-            mesh.RecalculateNormals();
-            mesh.RecalculateBounds();
-            return mesh;
         }
     }
 }
