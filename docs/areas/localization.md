@@ -7,7 +7,7 @@
 - 패키지: `com.unity.localization` 1.5.14 (Addressables 2.x 가 따라 들어온다)
 - 표: 문자열 표 하나 `Text` (`Assets/_Project/Localization/Tables/`), 언어 `Locales/ko.asset`(기준, 프로젝트 언어), `en.asset`(빈 칸은 한국어로). 설정 `Localization Settings.asset`
 - 코드: `Core/Message.cs`(키 + 값), `Game/Loc.cs`(`Loc.T`, `Loc.Text`, 조사 `JosaFormatter`), `Editor/SourceText.cs`(데이터 편집기의 한국어 문장 칸), 언어 줄 `Game/Screens/MenuScreen.cs`, 글꼴 `Game/Screens/Ui.cs`
-- 시험: `Tests/EditMode/LocalizationTableTests.cs`(모든 키에 모든 언어, 언어 이름·글꼴), `SmokeTests.PlayerTextComesFromTable`(Core·화면 코드에 한글 문장 없음), HTML 비교 시험은 한국어 표로 돈다(`KoreanLocale.cs`)
+- 시험: `Tests/EditMode/LocalizationTableTests.cs`(모든 키에 모든 언어, 언어 이름·글꼴), `SmokeTests.PlayerTextComesFromTable`(Core·화면 코드에 한글 문장 없음), EditMode 시험은 한국어 표로 돈다(`KoreanLocale.cs`)
 
 ## 결정
 | 결정 | 상태 | 날짜 | 출처 |
@@ -37,4 +37,4 @@
 - 함정: Core 는 `noEngineReferences` 라 패키지를 못 쓴다. Core 는 `Message` 만 낸다. 한글 리터럴을 Core 나 `Game/Screens` 에 넣으면 `PlayerTextComesFromTable` 이 실패한다(`DataSet.cs` 검사 문장, `Debug.Log`, 인스펙터 `[Tooltip]` 은 에디터용이라 뺐다)
 - 함정: 데이터 문장(병종·강화·장 이름 등)은 에셋이 아니라 표에 있다. 데이터 편집기 "고른 항목을 기본값으로" 는 수치만 되돌리고 문장은 되돌리지 않는다. 새 장을 복제하면 문장 칸이 비어 있다
 - 함정: josa 형식 지정자는 낱말 뒤에 조사를 붙여 낱말째 쓴다(`{0:josa(이|가)}`). 「」 같은 기호 뒤의 조사에는 쓰지 못해 고정 조사를 둔다
-- 함정: HTML 비교 시험은 한국어 표로 고정해 돈다. 기준값(`tools/golden/out`)은 한국어다. `Core/PrototypeData.cs` 는 이제 문장 없이 생성된다
+- 함정: EditMode 시험은 한국어 표로 고정해 돈다. 시험의 기대 문장은 한국어다

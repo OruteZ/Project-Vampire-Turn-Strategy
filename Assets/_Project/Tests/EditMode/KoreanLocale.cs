@@ -3,7 +3,7 @@ using UnityEngine.Localization.Settings;
 
 namespace VampireSpawn.Tests
 {
-    // The prototype goldens are Korean, so every EditMode test renders text with the Korean table.
+    // Expected texts in the tests are Korean, so every EditMode test renders text with the Korean table.
     [SetUpFixture]
     public class KoreanLocale
     {

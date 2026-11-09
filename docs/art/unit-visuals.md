@@ -14,7 +14,11 @@
 | 궁수 | Sidekick `FantasyKnights_02` | Sidekick | | 활 `SM_Wep_Rigged_Bow_01` | 활 |
 | 기사 | Sidekick `FantasyKnights_06` | Sidekick | 검 `SM_Wep_Sword_02` | 방패 `SM_Wep_Shield_01` | 검·방패 |
 | 사냥꾼 | PolygonDarkFantasy `SM_Chr_Hunter_Male_01` | Polygon | 석궁 `SM_Wep_Rigged_CrossBow_01` | | Polygon 기본 |
+| 장의사 (#99) | PolygonDarkFantasy `SM_Chr_Gravedigger_Male_01` | Polygon | 삽 `SM_Wep_Shovel_01` | | Polygon 기본 |
+| 역병 의사 (#99) | PolygonDarkFantasy `SM_Chr_PlagueDoctor_01` | Polygon | 지팡이 `SM_Wep_Staff_01` | | Polygon 기본 |
 | 스켈레톤 | `SM_Chr_Skeleton_01` | Polygon | 검 `SM_Wep_Sword_03` | | Polygon 기본 |
+| 스켈레톤 궁수 (#99) | `SM_Chr_Skeleton_Ranger_01` | Polygon | | 활 `SM_Wep_Rigged_Bow_01` | Polygon 기본 |
+| 스켈레톤 중갑병 (#99) | `SM_Chr_Skeleton_HeavyArmor_01` | Polygon | 철퇴 `SM_Wep_Mace_01` | 방패 `SM_Wep_Shield_01` | Polygon 기본 |
 | 뱀파이어 | `SM_Chr_DarkLord_Male_01` | Polygon | 낫 `SM_Wep_Scythe_01` | | Polygon 기본 |
 | 스폰 | 원래 병종 모델 | 원래 것 | 없음 | 없음 | 맨손 근접 (units.md "원거리 공격을 할 수 없다") |
 

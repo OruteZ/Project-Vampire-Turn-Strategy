@@ -33,7 +33,7 @@ namespace VampireSpawn.Core
         public bool IsCleared(Stage s) => cleared.Contains(s.Id);
         public bool StageOpen(int index) => index == 0 || cleared.Contains(Stages[index - 1].Id);
 
-        public bool UpgradesOpen(UnitKind kind)
+        public bool UpgradesOpen(string kind)
         {
             var i = GameData.Type(kind).UnlockAt - 1;
             return i >= 0 && i < Stages.Length && cleared.Contains(Stages[i].Id);
@@ -51,13 +51,18 @@ namespace VampireSpawn.Core
 
         public int SpentGold => upgrades.Sum(id => GameData.Upgrades.First(u => u.Id == id).Cost);
 
-        public Battle NewBattle(Stage stage, IEnumerable<Placement<UnitKind>> formation = null) =>
+        public Battle NewBattle(Stage stage, IEnumerable<Placement> formation = null) =>
             new Battle(stage, stage.Id == "demo" ? null : upgrades, formation);
+
+        // docs/systems/progression.md 5-6: one branch per unit type; buying it locks the other two.
+        public Upgrade Chosen(string unit) => GameData.Branches(unit).FirstOrDefault(u => upgrades.Contains(u.Id));
+
+        public bool CanBuy(Upgrade up) => up != null && UpgradesOpen(up.Unit) && Chosen(up.Unit) == null && Gold >= up.Cost;
 
         public bool Buy(string upgradeId)
         {
             var up = GameData.Upgrades.FirstOrDefault(u => u.Id == upgradeId);
-            if (up == null || !UpgradesOpen(up.Unit) || Gold < up.Cost || upgrades.Contains(up.Id)) return false;
+            if (!CanBuy(up)) return false;
             Gold -= up.Cost;
             upgrades.Add(up.Id);
             return true;
@@ -81,7 +86,10 @@ namespace VampireSpawn.Core
         public string ToJson() =>
             "{\"gold\":" + Gold + ",\"cleared\":" + Set(cleared) + ",\"bonus\":" + Set(bonus) + ",\"ups\":" + Set(upgrades) + "}";
 
-        // Same acceptance rule as the prototype's loadCamp: anything without a numeric gold field starts a fresh campaign.
+        // True when Parse had to fix the save (progression.md 17); the caller saves the fixed one.
+        public bool Repaired { get; private set; }
+
+        // Anything without a numeric gold field starts a fresh campaign.
         public static Campaign Parse(string raw)
         {
             var c = new Campaign();
@@ -92,7 +100,23 @@ namespace VampireSpawn.Core
             Read(raw, "cleared", c.cleared);
             Read(raw, "bonus", c.bonus);
             Read(raw, "ups", c.upgrades);
+            c.KeepOneBranchEach();
             return c;
+        }
+
+        void KeepOneBranchEach()
+        {
+            var kept = new List<Upgrade>();
+            foreach (var id in upgrades)
+            {
+                var up = GameData.Upgrades.FirstOrDefault(u => u.Id == id);
+                if (up == null) continue;
+                if (kept.Any(k => k.Unit == up.Unit)) { Gold += up.Cost; continue; }
+                kept.Add(up);
+            }
+            Repaired = kept.Count != upgrades.Count;
+            upgrades.Clear();
+            upgrades.AddRange(kept.Select(u => u.Id));
         }
 
         static void Read(string raw, string field, List<string> into)

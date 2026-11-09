@@ -12,7 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 17bd5ddb0e5d89541abe42a0b4789540, type: 3}
   m_Name: 04_knight
   m_EditorClassIdentifier: VampireSpawn.Game::VampireSpawn.Game.Data.UnitTypeData
-  kind: 4
   key: knight
   tier: 2
   pop: 3
@@ -23,23 +22,37 @@ MonoBehaviour:
   mov: 3
   rng: 1
   bane: 0
+  heal: 0
+  skills: 
   unlockAt: 7
   upgrades:
-  - id: knight_def
-    cost: 80
-    hp: 0
+  - id: knight_hp
+    cost: 90
+    hp: 4
     atk: 0
-    def: 1
+    def: 0
     mov: 0
     rng: 0
     bane: 0
+    heal: 0
+    ability: 0
+  - id: knight_def
+    cost: 90
+    hp: 0
+    atk: 0
+    def: 2
+    mov: 0
+    rng: 0
+    bane: 0
+    heal: 0
     ability: 0
   - id: knight_charge
-    cost: 80
+    cost: 90
     hp: 0
     atk: 0
     def: 0
     mov: 0
     rng: 0
     bane: 0
+    heal: 0
     ability: 4

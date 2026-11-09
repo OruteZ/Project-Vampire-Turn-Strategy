@@ -58,6 +58,7 @@ namespace VampireSpawn.Game.Screens
                 Pick = k => input.Act(s => s.Pick(k)),
                 Recall = id => input.Run(s => s.Recall(id)),
                 Exec = () => input.Act(s => s.ToggleExecute()),
+                Mend = () => input.Act(s => s.ToggleMend()),
                 Wait = () => input.Run(s => s.Wait()),
                 ToggleRules = () => { rulesOpen = !rulesOpen; RenderBattle(); },
                 ToggleLog = () => { logOpen = !logOpen; RenderBattle(); },
@@ -71,7 +72,7 @@ namespace VampireSpawn.Game.Screens
             Fx.FadeIn(screen);
         }
 
-        public void StartBattle(Stage s, IEnumerable<Placement<UnitKind>> formation, bool startNow)
+        public void StartBattle(Stage s, IEnumerable<Placement> formation, bool startNow)
         {
             stage = s;
             finished = enemyPlaying = leaveArm = rulesOpen = logOpen = false;
@@ -131,19 +132,24 @@ namespace VampireSpawn.Game.Screens
         void RenderBattle()
         {
             if (Session == null) return;
-            var b = Session.Battle;
             Ui.Clear(hudRoot);
-            hud.Build(hudRoot, Session, new HudState
+            hud.Build(hudRoot, Session, HudNow(), actions);
+        }
+
+        HudState HudNow()
+        {
+            var b = Session.Battle;
+            return new HudState
             {
                 Hover = hoverId is int id ? b.Find(id) : null,
                 HoverCorpse = hoverCorpse is int cid ? b.Corpses.FirstOrDefault(c => c.Id == cid) : null,
                 Alt = altDown, EnemyPlaying = enemyPlaying, LeaveArmed = leaveArm, RulesOpen = rulesOpen, LogOpen = logOpen, Demo = demo,
                 FullMoon = fullMoon, MoonFading = moonFading,
                 Upgrades = (demo ? App.DemoUpgrades : Campaign.Upgrades) ?? Enumerable.Empty<string>(),
-            }, actions);
+            };
         }
 
-        // battle-hud.md 6: Esc closes a window, then leaves execute mode, and only then drops the selection.
+        // battle-hud.md 6: Esc closes a window, then leaves execute or mend mode, and only then drops the selection.
         bool CloseBattlePopup()
         {
             if (rulesOpen || logOpen)
@@ -152,8 +158,9 @@ namespace VampireSpawn.Game.Screens
                 RenderBattle();
                 return true;
             }
-            if (Session.Mode != SelectMode.Execute) return false;
-            input.Act(x => x.ToggleExecute());
+            if (Session.Mode == SelectMode.Execute) input.Act(x => x.ToggleExecute());
+            else if (Session.Mode == SelectMode.Mend) input.Act(x => x.ToggleMend());
+            else return false;
             return true;
         }
 
@@ -196,6 +203,7 @@ namespace VampireSpawn.Game.Screens
             if (kb == null) return;
             var one = keys.Pressed("1", kb.digit1Key.isPressed);
             var two = keys.Pressed("2", kb.digit2Key.isPressed);
+            var three = keys.Pressed("3", kb.digit3Key.isPressed);
             var space = keys.Pressed("space", kb.spaceKey.isPressed);
             if (View.IsBusy || enemyPlaying || OverShown) return;
             var b = Session.Battle;
@@ -203,6 +211,7 @@ namespace VampireSpawn.Game.Screens
             var canAct = b.Phase == Phase.Player && sel != null && !sel.Acted;
             if (one && canAct) actions.Exec();
             if (two && canAct) actions.Wait();
+            if (three && canAct && sel.Has(Ability.Mend)) actions.Mend();
             if (space && (b.Phase == Phase.Deploy ? b.Allies.Any() : b.Phase == Phase.Player)) Primary();
         }
 
@@ -216,10 +225,12 @@ namespace VampireSpawn.Game.Screens
             var corpse = at is Hex hc && over == null ? Session.Battle.CorpseAt(hc)?.Id : null;
             input.overlay.SetHover(at);
             if (over == hoverId && corpse == hoverCorpse && alt == altDown) return;
+            var altChanged = alt != altDown;
             hoverId = over;
             hoverCorpse = corpse;
             altDown = alt;
-            RenderBattle();
+            if (altChanged) RenderBattle();
+            else hud.RebuildHover(Session, HudNow(), actions);
         }
 
         void LateUpdate()

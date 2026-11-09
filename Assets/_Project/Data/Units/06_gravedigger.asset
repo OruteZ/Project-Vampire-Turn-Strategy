@@ -1,0 +1,58 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 17bd5ddb0e5d89541abe42a0b4789540, type: 3}
+  m_Name: 06_gravedigger
+  m_EditorClassIdentifier: VampireSpawn.Game::VampireSpawn.Game.Data.UnitTypeData
+  key: gravedigger
+  tier: 0
+  pop: 2
+  silver: 0
+  hp: 7
+  atk: 2
+  def: 0
+  mov: 3
+  rng: 1
+  bane: 0
+  heal: 0
+  skills: 09000000
+  unlockAt: 4
+  upgrades:
+  - id: gravedigger_mov
+    cost: 60
+    hp: 0
+    atk: 0
+    def: 0
+    mov: 1
+    rng: 0
+    bane: 0
+    heal: 0
+    ability: 0
+  - id: gravedigger_rite
+    cost: 60
+    hp: 0
+    atk: 0
+    def: 0
+    mov: 0
+    rng: 0
+    bane: 0
+    heal: 0
+    ability: 7
+  - id: gravedigger_twice
+    cost: 60
+    hp: 0
+    atk: 0
+    def: 0
+    mov: 0
+    rng: 0
+    bane: 0
+    heal: 0
+    ability: 8

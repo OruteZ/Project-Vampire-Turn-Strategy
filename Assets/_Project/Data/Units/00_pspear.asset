@@ -12,7 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 17bd5ddb0e5d89541abe42a0b4789540, type: 3}
   m_Name: 00_pspear
   m_EditorClassIdentifier: VampireSpawn.Game::VampireSpawn.Game.Data.UnitTypeData
-  kind: 0
   key: pspear
   tier: 0
   pop: 1
@@ -23,23 +22,37 @@ MonoBehaviour:
   mov: 3
   rng: 1
   bane: 0
+  heal: 0
+  skills: 
   unlockAt: 1
   upgrades:
   - id: pspear_hp
     cost: 30
-    hp: 2
+    hp: 3
     atk: 0
     def: 0
     mov: 0
     rng: 0
     bane: 0
+    heal: 0
     ability: 0
   - id: pspear_pike
-    cost: 40
+    cost: 30
     hp: 0
     atk: 0
     def: 0
     mov: 0
     rng: 0
     bane: 0
+    heal: 0
     ability: 1
+  - id: pspear_formation
+    cost: 30
+    hp: 0
+    atk: 0
+    def: 0
+    mov: 0
+    rng: 0
+    bane: 0
+    heal: 0
+    ability: 5

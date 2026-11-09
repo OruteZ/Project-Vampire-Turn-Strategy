@@ -1331,6 +1331,234 @@ MonoBehaviour:
     m_Key: camp.cancel
     m_Metadata:
       m_Items: []
+  - m_Id: 1147185399656448
+    m_Key: unit.gravedigger.name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1147185487736832
+    m_Key: unit.gravedigger.glyph
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1147185487736833
+    m_Key: unit.gravedigger.desc
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1147185487736834
+    m_Key: unit.doctor.name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1147185487736835
+    m_Key: unit.doctor.glyph
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1147185487736836
+    m_Key: unit.doctor.desc
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1147185487736837
+    m_Key: upgrade.pspear_formation.name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1147185487736838
+    m_Key: upgrade.pspear_formation.desc
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1147185487736839
+    m_Key: upgrade.parcher_rng.name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1147185487736840
+    m_Key: upgrade.parcher_rng.desc
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1147185487736841
+    m_Key: upgrade.sword_atk.name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1147185487736842
+    m_Key: upgrade.sword_atk.desc
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1147185487736843
+    m_Key: upgrade.archer_bane.name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1147185487736844
+    m_Key: upgrade.archer_bane.desc
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1147185487736845
+    m_Key: upgrade.knight_hp.name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1147185487736846
+    m_Key: upgrade.knight_hp.desc
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1147185487736847
+    m_Key: upgrade.hunter_ward.name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1147185487736848
+    m_Key: upgrade.hunter_ward.desc
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1147185487736849
+    m_Key: upgrade.gravedigger_mov.name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1147185487736850
+    m_Key: upgrade.gravedigger_mov.desc
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1147185487736851
+    m_Key: upgrade.gravedigger_rite.name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1147185487736852
+    m_Key: upgrade.gravedigger_rite.desc
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1147185487736853
+    m_Key: upgrade.gravedigger_twice.name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1147185487736854
+    m_Key: upgrade.gravedigger_twice.desc
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1147185487736855
+    m_Key: upgrade.doctor_mov.name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1147185487736856
+    m_Key: upgrade.doctor_mov.desc
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1147185487736857
+    m_Key: upgrade.doctor_heal.name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1147185487736858
+    m_Key: upgrade.doctor_heal.desc
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1147185487736859
+    m_Key: upgrade.doctor_def.name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1147185487736860
+    m_Key: upgrade.doctor_def.desc
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1147185487736861
+    m_Key: skill.formation
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1147185487736862
+    m_Key: skill.ward
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1147185487736863
+    m_Key: skill.rite
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1147185487736864
+    m_Key: skill.bury
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1147185487736865
+    m_Key: skill.twice
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1147185487736866
+    m_Key: skill.mend
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1147185487736867
+    m_Key: tag.formation
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1147185487736868
+    m_Key: log.rite
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1147185487736869
+    m_Key: log.bury
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1147185487736870
+    m_Key: log.buryAgain
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1147185487736871
+    m_Key: log.mend
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1147185487736872
+    m_Key: popup.bury
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1147185487736873
+    m_Key: reason.cannotBury
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1147185487736874
+    m_Key: reason.cannotMend
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1147185491931136
+    m_Key: hint.mend
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1147185491931137
+    m_Key: skeletonArcher.name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1147185491931138
+    m_Key: skeletonArcher.glyph
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1147185491931139
+    m_Key: skeletonHeavy.name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1147185491931140
+    m_Key: skeletonHeavy.glyph
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1147185491931141
+    m_Key: unit.card.skeletonArcherNote
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1147185491931142
+    m_Key: unit.card.skeletonHeavyNote
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1147185491931143
+    m_Key: hud.mend
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1147185491931144
+    m_Key: hud.cancelMend
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1147185491931145
+    m_Key: camp.branchRule
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1147185491931146
+    m_Key: camp.branchChosen
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1147185491931147
+    m_Key: camp.branchLocked
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1147185491931148
+    m_Key: camp.buyWarn
+    m_Metadata:
+      m_Items: []
   m_Metadata:
     m_Items: []
   m_KeyGenerator:

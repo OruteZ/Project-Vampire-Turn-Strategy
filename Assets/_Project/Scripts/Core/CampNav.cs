@@ -72,20 +72,21 @@ namespace VampireSpawn.Core
             return Last;
         }
 
-        public static TabState TabOf(Campaign c, UnitKind kind)
+        public static TabState TabOf(Campaign c, string kind)
         {
             if (c.UpgradesOpen(kind)) return TabState.Open;
             var at = GameData.Type(kind).UnlockAt - 1;
             return at >= 0 && at <= Last && c.StageOpen(at) ? TabState.Locked : TabState.Hidden;
         }
 
-        public static int Affordable(Campaign c, UnitKind? kind = null) =>
-            GameData.Upgrades.Count(u => (kind == null || u.Unit == kind) && c.UpgradesOpen(u.Unit) && !c.Upgrades.Contains(u.Id) && u.Cost <= c.Gold);
+        // Unit types that can pick a branch now (stage-select.md 6 badge; one branch per type).
+        public static int Affordable(Campaign c, string kind = null) =>
+            GameData.Types.Count(t => (kind == null || t.Key == kind) && GameData.Branches(t.Key).Any(c.CanBuy));
 
         // upgrade.md 4-5: the tab picked last this run, else the first with something to buy, else the first open, else the first.
         public static int DefaultTab(Campaign c, int previous)
         {
-            var kinds = GameData.Types.Select(t => t.Kind).ToArray();
+            var kinds = GameData.Types.Select(t => t.Key).ToArray();
             if (previous >= 0 && previous < kinds.Length && TabOf(c, kinds[previous]) != TabState.Hidden) return previous;
             for (var i = 0; i < kinds.Length; i++) if (Affordable(c, kinds[i]) > 0) return i;
             for (var i = 0; i < kinds.Length; i++) if (TabOf(c, kinds[i]) == TabState.Open) return i;
@@ -122,7 +123,7 @@ namespace VampireSpawn.Core
                     if (!Barracks) return Unchanged(calm, wasArmed);
                     return calm.StepTab(c, input.Key == CampKey.Right ? 1 : -1, wasArmed);
                 case CampKey.Tab:
-                    if (!Barracks || input.Index < 0 || input.Index >= GameData.Types.Length || TabOf(c, GameData.Types[input.Index].Kind) == TabState.Hidden)
+                    if (!Barracks || input.Index < 0 || input.Index >= GameData.Types.Length || TabOf(c, GameData.Types[input.Index].Key) == TabState.Hidden)
                         return Unchanged(calm, wasArmed);
                     return (calm.With(tab: input.Index), CampDo.Redraw);
                 case CampKey.Enter:
@@ -160,7 +161,7 @@ namespace VampireSpawn.Core
         {
             var n = GameData.Types.Length;
             for (var i = Tab + dir; i >= 0 && i < n; i += dir)
-                if (TabOf(c, GameData.Types[i].Kind) != TabState.Hidden) return (With(tab: i), CampDo.Redraw);
+                if (TabOf(c, GameData.Types[i].Key) != TabState.Hidden) return (With(tab: i), CampDo.Redraw);
             return Unchanged(this, wasArmed);
         }
     }
