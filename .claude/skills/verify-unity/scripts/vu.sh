@@ -30,8 +30,71 @@ background_mode() {
   uj editor.playmode set_run_in_background --enabled true >/dev/null
 }
 
+# Machine-wide editor slots shared by every session and worktree (CLAUDE.md: max 2 editors). A slot is a file naming a project.
+SLOTS="$(cygpath -u "${LOCALAPPDATA:-$HOME/AppData/Local}")/VampireSpawn/editor-slots"
+MAX_EDITORS="${VU_MAX_EDITORS:-2}"
+HERE="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+norm() { tr '\\' '/' | tr '[:upper:]' '[:lower:]' | sed 's:/*$::'; }
+ME="$(echo "$PROJECT" | norm)"
+SLOT_FILE="$SLOTS/$(echo "$ME" | sed 's/[^a-z0-9]/_/g')"
+
+running_projects() { powershell.exe -NoProfile -ExecutionPolicy Bypass -File "$(cygpath -w "$HERE/editors.ps1")" 2>/dev/null | tr -d '\r' | norm || true; }
+age() { echo $(( $(date +%s) - $(stat -c %Y "$1") )); }
+
+lock_slots() {
+  mkdir -p "$SLOTS"
+  for _ in $(seq 1 120); do
+    mkdir "$SLOTS/.mutex" 2>/dev/null && return 0
+    [ -d "$SLOTS/.mutex" ] && [ "$(age "$SLOTS/.mutex")" -gt 60 ] && rmdir "$SLOTS/.mutex" 2>/dev/null
+    sleep 0.5
+  done
+  die "slot mutex stuck: $SLOTS/.mutex"
+}
+unlock_slots() { rmdir "$SLOTS/.mutex" 2>/dev/null || true; }
+
+# Prints "running" (editor for this project already up or starting), "taken" (new slot), or the busy project list.
+try_take_slot() {
+  local running busy f
+  running="$(running_projects)"
+  # A slot whose editor never appeared within 10 min belongs to a dead session.
+  for f in "$SLOTS"/*; do
+    [ -f "$f" ] || continue
+    grep -qxF "$(cat "$f")" <<<"$running" || [ "$(age "$f")" -le 600 ] || rm -f "$f"
+  done
+  busy="$( { echo "$running"; cat "$SLOTS"/* 2>/dev/null || true; } | grep -v '^$' | sort -u || true)"
+  if grep -qxF "$ME" <<<"$busy"; then echo running; return; fi
+  if [ "$(grep -c . <<<"$busy" || true)" -ge "$MAX_EDITORS" ]; then echo "$busy" | tr '\n' ' '; return; fi
+  echo "$ME" > "$SLOT_FILE"; echo taken
+}
+
+acquire_slot() {
+  local deadline=$(( $(date +%s) + ${VU_WAIT:-0} )) v
+  while :; do
+    lock_slots; v="$(try_take_slot)"; unlock_slots
+    case "$v" in running|taken) echo "$v"; return 0 ;; esac
+    if [ "$(date +%s)" -ge "$deadline" ]; then
+      echo "WAIT editor slots full ($MAX_EDITORS): $v" >&2
+      echo "Do not open another editor or close someone else's. Wait: run 'VU_WAIT=1800 vu.sh $CMD' in the background and do editor-free work meanwhile, or report '에디터 대기(2개 한도)'." >&2
+      exit 3
+    fi
+    sleep 15
+  done
+}
+release_slot() { rm -f "$SLOT_FILE"; }
+
+cmd_batch() {
+  local s; s="$(acquire_slot)"
+  [ "$s" = taken ] || die "an editor or batch run already holds $PROJECT; batchmode would hit Unity's project lock. Use vu.sh test against the open editor"
+  trap release_slot EXIT
+  unity "$@"
+}
+
 cmd_launch() {
-  if [ -n "$(editor_line)" ]; then echo "editor already open for $PROJECT (not owned by this run)"; else
+  local s=open
+  [ -n "$(editor_line)" ] || s="$(acquire_slot)"
+  if [ "$s" = open ]; then echo "editor already open for $PROJECT (not owned by this run)"
+  elif [ "$s" = running ]; then echo "editor for $PROJECT is starting in another run"
+  else
     unity --no-banner open "$PROJECT" >/dev/null 2>&1 &
     echo "$PROJECT" > "$STATE/opened-by-vu"
     echo "opening editor for $PROJECT"
@@ -123,14 +186,15 @@ cmd_test() {
 cmd_cleanup() {
   [ "$(uj editor status 2>/dev/null | field playMode)" = playing ] && uj editor.playmode stop >/dev/null || true
   if [ -f "$STATE/opened-by-vu" ] && [ "$(cat "$STATE/opened-by-vu")" = "$PROJECT" ]; then
-    unity --no-banner close "$PROJECT" >/dev/null && rm -f "$STATE/opened-by-vu" && echo "closed editor opened by vu"
+    unity --no-banner close "$PROJECT" >/dev/null && rm -f "$STATE/opened-by-vu" && release_slot && echo "closed editor opened by vu"
   else
     echo "left user's editor open"
   fi
   echo "artifacts kept in $ART"
 }
 
-case "${1:-}" in
-  launch|doctor|play|stop|shot|window|eval|key|click|input-probe|input-read|console|test|cleanup) c="${1/-/_}"; shift; "cmd_$c" "$@" ;;
-  *) echo "usage: vu.sh launch|doctor|play|stop|shot <slug> [w h]|window <title> <slug>|eval <code>|key <Key> [press|down|up]|click <x> <y> [click|down|up|move]|input-probe|input-read|console [log|warn|error] [n]|test [editor|playmode] [filter]|cleanup" >&2; exit 2 ;;
+CMD="${1:-}"
+case "$CMD" in
+  launch|batch|doctor|play|stop|shot|window|eval|key|click|input-probe|input-read|console|test|cleanup) c="${1/-/_}"; shift; "cmd_$c" "$@" ;;
+  *) echo "usage: vu.sh launch|batch <unity args>|doctor|play|stop|shot <slug> [w h]|window <title> <slug>|eval <code>|key <Key> [press|down|up]|click <x> <y> [click|down|up|move]|input-probe|input-read|console [log|warn|error] [n]|test [editor|playmode] [filter]|cleanup" >&2; exit 2 ;;
 esac
