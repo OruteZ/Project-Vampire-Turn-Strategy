@@ -2,8 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-using UnityEngine.UI;
+using UnityEngine.UIElements;
 using VampireSpawn.Core;
+using static VampireSpawn.Game.Screens.ToolkitKit;
 
 namespace VampireSpawn.Game.Screens
 {
@@ -15,56 +16,67 @@ namespace VampireSpawn.Game.Screens
         public IEnumerable<string> Upgrades = Enumerable.Empty<string>();
     }
 
-    // docs/ui/battle-hud.md in the docs/art/ui-style.md tokens. Sizes are 1920x1080 px.
+    // docs/ui/battle-hud.md in the docs/art/ui-style.md tokens on UI Toolkit. Places and sizes are Assets/_Project/UI/Battle.uss;
+    // this builds the elements and sets what the battle state decides.
     public sealed class BattleHud
     {
-        const float Edge = 24f, FramePpu = Kit.FramePpu, PanelW = 340f, PanelH = 190f;
-
         sealed class HeadMark
         {
-            public RectTransform Rt;
-            public Image[] Cells;
+            public VisualElement Root;
+            public VisualElement[] Cells;
             public int MaxHp;
             public Color Color;
         }
 
         readonly ArtCatalog art;
-        readonly List<Graphic> pulse = new List<Graphic>();
-        readonly HashSet<Graphic> blink = new HashSet<Graphic>();
+        readonly Label tip;
         readonly Dictionary<int, HeadMark> heads = new Dictionary<int, HeadMark>();
-        RectTransform headLayer, hoverLayer;
+        readonly HashSet<VisualElement> blink = new HashSet<VisualElement>();
+        VisualElement headLayer, hoverLayer, moonDisk;
+        Color[] moonColors;
+        bool moonPulse;
         // Values and panels of the previous build, so only real changes flash and only new panels slide in (ui-style.md 12).
         Dictionary<string, string> lastValues = new Dictionary<string, string>(), values = new Dictionary<string, string>();
         HashSet<string> lastPanels = new HashSet<string>(), panels = new HashSet<string>();
 
-        public BattleHud(ArtCatalog art) { this.art = art; kit = new Kit(art); }
+        public BattleHud(ArtCatalog art, Label tip)
+        {
+            this.art = art;
+            this.tip = tip;
+        }
 
         public bool HasHeads => heads.Count > 0;
 
-        readonly Kit kit;
+        Sprite S(string name) => art.Ui(name);
 
-        Sprite S(string name) => kit.S(name);
+        VisualElement Icon(VisualElement parent, string sprite, Color tint, string classes = "icon") => Pic(parent, art, sprite, tint, classes);
 
-        static Text T(Transform p, string s, float px, Color c, bool bold = false, bool display = false, TextAnchor a = TextAnchor.UpperLeft) => Kit.T(p, s, px, c, bold, display, a);
+        void Tip(VisualElement owner, string text, long delayMs) => ToolkitKit.Tip(owner, text, tip, delayMs);
 
-        static Text Wrap(Text t) => Kit.Wrap(t);
+        VisualElement Value(VisualElement row, string icon, string value, Color iconColor, Color valueColor, string tipText = null) =>
+            ToolkitKit.Value(row, art, icon, value, iconColor, valueColor, tipText, tip);
 
-        void Frame(RectTransform rt, Color edge, float ppu = Kit.FramePpu) => kit.Frame(rt, edge, ppu);
-
-        Button Btn(Transform parent, string label, Action click, BtnKind kind, Vector2 size, bool enabled = true, string tip = null) => kit.Btn(parent, label, click, kind, size, enabled, tip);
-
-        static void Hotkey(RectTransform button, string key) => Kit.Hotkey(button, key);
-
-        string Weapon(string key) => kit.Weapon(key);
-
-
-        public void Build(RectTransform root, BattleSession s, HudState st, BattleActions a)
+        VisualElement Btn(VisualElement parent, string label, Action click, BtnKind kind, bool enabled = true, string tipText = null, string classes = null)
         {
-            pulse.Clear();
+            var b = ToolkitKit.Btn(parent, art, label, kind, null, click, enabled);
+            if (classes != null) foreach (var c in classes.Split(' ')) b.AddToClassList(c);
+            if (tipText != null) Tip(b, tipText, 0);
+            return b;
+        }
+
+        static void Hotkey(VisualElement b, string key)
+        {
+            L(b, key, "key");
+            KeepClearOfKey(b, key);
+        }
+
+        public void Build(VisualElement root, BattleSession s, HudState st, BattleActions a)
+        {
+            root.Clear();
             (lastValues, values) = (values, lastValues);
             values.Clear();
             var b = s.Battle;
-            Shade(root);
+            Shade(E(root, "shade"));
             var hot = b.Phase == Phase.Player && b.MoonNext() && !st.FullMoon;
             if (st.FullMoon || st.MoonFading)
             {
@@ -72,20 +84,17 @@ namespace VampireSpawn.Game.Screens
                 if (st.MoonFading) Fx.FadeOut(vg, 0.4f);
             }
             else if (hot) Vignette(root, 0.08f);
-            headLayer = Ui.Node(root, "Heads");
-            Ui.Stretch(headLayer);
+            headLayer = E(root, "layer");
             Moon(root, b, hot, st.FullMoon, st.MoonFading);
             if (b.Phase == Phase.Deploy) Deploy(root, s, st, a);
             else Fight(root, s, st, a);
-            hoverLayer = Ui.Node(root, "Hover");
-            Ui.Stretch(hoverLayer);
+            hoverLayer = E(root, "layer");
             Hover(s, st, a);
             EndTurn(root, b, st, a);
             Corner(root, st, a);
-            if (BattleScreen.ShowsHint(s, st.EnemyPlaying))
-                Ui.Stretch(T(Ui.Place(root, "Hint", new Vector2(0.5f, 0f), new Vector2(0f, Edge + 96f), new Vector2(1000f, 24f)),
-                    BattleScreen.Hint(s, st.EnemyPlaying), 17, Ui.Muted, false, false, TextAnchor.MiddleCenter).rectTransform);
+            if (BattleScreen.ShowsHint(s, st.EnemyPlaying)) L(root, BattleScreen.Hint(s, st.EnemyPlaying), "hint");
             if (st.RulesOpen) RulesPopup(root, a);
+            UseFonts(root);
         }
 
         // Hovering only redraws the unit panels and heads; rebuilding the whole HUD per hovered cell stalled the frame.
@@ -94,9 +103,11 @@ namespace VampireSpawn.Game.Screens
             if (hoverLayer == null || headLayer == null) return;
             lastValues.Clear();
             foreach (var kv in values) lastValues[kv.Key] = kv.Value;
-            Ui.Clear(headLayer);
-            Ui.Clear(hoverLayer);
+            headLayer.Clear();
+            hoverLayer.Clear();
             Hover(s, st, a);
+            UseFonts(hoverLayer);
+            UseFonts(headLayer);
         }
 
         void Hover(BattleSession s, HudState st, BattleActions a)
@@ -113,81 +124,43 @@ namespace VampireSpawn.Game.Screens
 
         public void Tick(Camera cam, BattleView view)
         {
-            var k = 1f + 0.1f * Mathf.Sin(Time.unscaledTime * Mathf.PI * 2f / 1.2f);
-            foreach (var g in pulse) { var c = Ui.MoonBlood * k; c.a = 1f; g.color = c; }
+            if (moonPulse && moonDisk != null) moonDisk.MarkDirtyRepaint();
             var on = Time.unscaledTime % 0.5f < 0.25f;
-            foreach (var g in blink) g.color = Ui.Alpha(g.color, on ? 1f : 0.15f);
-            if (cam == null || art == null) return;
+            foreach (var c in blink) c.style.opacity = on ? 1f : 0.15f;
+            if (cam == null || art == null || headLayer?.panel == null) return;
             foreach (var kv in heads)
             {
                 var v = view.ViewOf(kv.Key);
                 var h = kv.Value;
-                var sp = v != null && !v.Lying ? cam.WorldToScreenPoint(v.transform.position + Vector3.up * (art.unitHeight * art.hexSize + 0.15f)) : Vector3.back;
-                h.Rt.gameObject.SetActive(sp.z > 0f);
-                if (sp.z <= 0f) continue;
-                if (RectTransformUtility.ScreenPointToLocalPointInRectangle((RectTransform)h.Rt.parent, sp, null, out var lp)) h.Rt.localPosition = lp;
+                var world = v != null && !v.Lying ? v.transform.position + Vector3.up * (art.unitHeight * art.hexSize + 0.15f) : (Vector3?)null;
+                var shown = world.HasValue && cam.WorldToScreenPoint(world.Value).z > 0f;
+                h.Root.style.display = shown ? DisplayStyle.Flex : DisplayStyle.None;
+                if (!shown) continue;
+                var p = RuntimePanelUtils.CameraTransformWorldToPanel(headLayer.panel, world.Value, cam);
+                h.Root.style.left = p.x;
+                h.Root.style.top = p.y;
                 // The view's hp follows the hit animations; the model already holds the result.
                 var full = Mathf.CeilToInt(v.HpFraction * h.MaxHp - 0.001f);
                 for (var i = 0; i < h.Cells.Length; i++)
-                    if (!blink.Contains(h.Cells[i])) h.Cells[i].color = i < full ? h.Color : Ui.Deep;
+                    if (!blink.Contains(h.Cells[i])) h.Cells[i].style.backgroundColor = i < full ? h.Color : Ui.Deep;
             }
         }
 
         // ---------- shared pieces ----------
 
-        static Sprite edgeFade, wideFade;
-
-        // stage-dressing.md 1-6: the world runs behind the HUD, so the outer quarter darkens to keep HUD text readable.
-        public static Image Shade(Transform root)
-        {
-            var shade = Ui.Sprite(root, "Shade", WideFade(), Ui.Alpha(Ui.Ink, 0.55f));
-            shade.preserveAspect = false;
-            Ui.Stretch(shade.rectTransform);
-            return shade;
-        }
-
-        static Sprite WideFade()
-        {
-            if (wideFade != null) return wideFade;
-            const int N = 64;
-            var tex = new Texture2D(N, N, TextureFormat.RGBA32, false) { wrapMode = TextureWrapMode.Clamp };
-            for (var y = 0; y < N; y++)
-                for (var x = 0; x < N; x++)
-                {
-                    float u = (x + 0.5f) / N, v = (y + 0.5f) / N;
-                    var a = Mathf.Clamp01(1f - Mathf.Min(Mathf.Min(u, 1f - u), Mathf.Min(v, 1f - v)) / 0.25f);
-                    tex.SetPixel(x, y, new Color(1f, 1f, 1f, a * a));
-                }
-            tex.Apply();
-            return wideFade = Sprite.Create(tex, new Rect(0, 0, N, N), new Vector2(0.5f, 0.5f));
-        }
+        static Texture2D edgeFade;
 
         // ui-style.md 7-2: an 80 px fade on all four edges, as one full-screen texture.
-        static Sprite EdgeFade()
+        VisualElement Vignette(VisualElement root, float alpha)
         {
-            if (edgeFade != null) return edgeFade;
-            const int N = 128;
-            var tex = new Texture2D(N, N, TextureFormat.RGBA32, false) { wrapMode = TextureWrapMode.Clamp };
-            for (var y = 0; y < N; y++)
-                for (var x = 0; x < N; x++)
-                {
-                    float u = (x + 0.5f) / N, v = (y + 0.5f) / N;
-                    var a = Mathf.Max(Mathf.Clamp01(1f - Mathf.Min(u, 1f - u) / (80f / 1920f)), Mathf.Clamp01(1f - Mathf.Min(v, 1f - v) / (80f / 1080f)));
-                    tex.SetPixel(x, y, new Color(1f, 1f, 1f, a * a));
-                }
-            tex.Apply();
-            return edgeFade = Sprite.Create(tex, new Rect(0, 0, N, N), new Vector2(0.5f, 0.5f));
+            var e = E(root, "vignette");
+            e.style.backgroundImage = new StyleBackground(edgeFade ??= FadeTexture(128, (u, v) =>
+                Mathf.Max(Mathf.Clamp01(1f - Mathf.Min(u, 1f - u) / (80f / 1920f)), Mathf.Clamp01(1f - Mathf.Min(v, 1f - v) / (80f / 1080f)))));
+            e.style.unityBackgroundImageTintColor = Ui.Alpha(Ui.MoonBlood, alpha);
+            return e;
         }
 
-        Image Vignette(RectTransform root, float alpha)
-        {
-            var img = Ui.Sprite(root, "Vignette", EdgeFade(), Ui.Alpha(Ui.MoonBlood, alpha));
-            img.preserveAspect = false;
-            Ui.Stretch(img.rectTransform);
-            return img;
-        }
-
-        Text Watch(Text t, string key)
+        Label Watch(Label t, string key)
         {
             values[key] = t.text;
             if (lastValues.TryGetValue(key, out var was) && was != t.text) Fx.Flash(t);
@@ -195,150 +168,115 @@ namespace VampireSpawn.Game.Screens
         }
 
         // full: the full-moon enemy turn is playing (7-2); fading: it just ended, so the blood drains away over 0.4 s.
-        void Moon(RectTransform root, Battle b, bool hot, bool full, bool fading)
+        void Moon(VisualElement root, Battle b, bool hot, bool full, bool fading)
         {
-            const float D = 112f;
-            var box = Ui.Place(root, "Moon", new Vector2(0.5f, 1f), new Vector2(0f, -Edge), new Vector2(D, D));
-            var disk = S("SPR_DarkFantasyMenus_Frame_Ring_01_Background");
-            Ui.Stretch(Ui.Sprite(box, "Back", disk, Ui.Deep).rectTransform);
+            var box = E(root, "moon");
+            Tip(box, Loc.T("battle.moon") + " · " + Loc.T("battle.rule.moon", Rules.MoonMax), 400);
+            Picture(E(box, "fill"), S(RingBack), Ui.Deep);
             var max = Rules.MoonMax;
             var moon = full ? max : b.Moon;
-            for (var i = 0; i < max; i++)
+            moonColors = Enumerable.Range(0, max).Select(i => i < moon ? (hot || full ? Ui.MoonBlood : Ui.Sun) : Ui.Panel2).ToArray();
+            moonPulse = hot;
+            moonDisk = E(box, "moon-disk");
+            var lit = moon;
+            moonDisk.generateVisualContent += ctx => Phases(ctx, max, i => moonPulse && i < lit ? Fx.Bright(Ui.MoonBlood, Fx.PulseK()) : moonColors[i]);
+            if (fading)
             {
-                var img = Ui.Sprite(box, "Phase " + i, disk, i < moon ? (hot || full ? Ui.MoonBlood : Ui.Sun) : Ui.Panel2);
-                img.type = Image.Type.Filled;
-                img.fillMethod = Image.FillMethod.Radial360;
-                img.fillOrigin = (int)Image.Origin360.Top;
-                img.fillClockwise = true;
-                img.fillAmount = 1f / max - 0.015f;
-                img.preserveAspect = true;
-                Ui.Stretch(img.rectTransform, 12, 12, 12, 12);
-                img.rectTransform.localEulerAngles = new Vector3(0f, 0f, -360f * i / max);
-                if (hot && i < moon) pulse.Add(img);
-                if (fading)
-                {
-                    var drain = Ui.Sprite(box, "Drain " + i, disk, Ui.MoonBlood);
-                    drain.type = Image.Type.Filled;
-                    drain.fillMethod = Image.FillMethod.Radial360;
-                    drain.fillOrigin = (int)Image.Origin360.Top;
-                    drain.fillAmount = img.fillAmount;
-                    drain.preserveAspect = true;
-                    Ui.Stretch(drain.rectTransform, 12, 12, 12, 12);
-                    drain.rectTransform.localEulerAngles = img.rectTransform.localEulerAngles;
-                    Fx.FadeOut(drain, 0.4f);
-                }
+                var drain = E(box, "moon-disk");
+                drain.generateVisualContent += ctx => Phases(ctx, max, _ => Ui.MoonBlood);
+                Fx.FadeOut(drain, 0.4f);
             }
             var v = b.Vampire;
             if (v != null && v.Asleep)
             {
-                var pivot = Ui.Place(box, "WakeAt", new Vector2(0.5f, 0.5f), Vector2.zero, Vector2.zero);
-                pivot.localEulerAngles = new Vector3(0f, 0f, -360f * Rules.MoonWake / max);
-                Ui.Bg(Ui.Place(pivot, "Coffin", new Vector2(0.5f, 0.5f), new Vector2(0f, D / 2f - 14f), new Vector2(5f, 26f)), Ui.Line, null, false);
+                var pin = E(box, "moon-pin");
+                pin.style.rotate = new Rotate(360f * Rules.MoonWake / max);
+                E(pin, "coffin");
             }
-            Ui.Stretch(Ui.Sprite(box, "Ring", S("SPR_DarkFantasyMenus_Frame_Ring_01"), hot || full ? Ui.MoonBlood : Ui.Steel).rectTransform, -6, -6, -6, -6);
+            Picture(E(box, "moon-ring"), S(Ring), hot || full ? Ui.MoonBlood : Ui.Steel);
             if (full)
                 for (var k = 0; k < 4; k++)
                 {
-                    var pivot = Ui.Place(box, "SkullAt", new Vector2(0.5f, 0.5f), Vector2.zero, Vector2.zero);
-                    pivot.localEulerAngles = new Vector3(0f, 0f, 45f + 90f * k);
-                    Ui.Sprite(pivot, "Skull", S("SPR_DarkFantasyMenus_Greeble_DemonSkull_01"), Ui.MoonBlood).rectTransform.anchoredPosition = new Vector2(0f, D / 2f + 6f);
-                    var sk = (RectTransform)pivot.GetChild(0);
-                    sk.sizeDelta = new Vector2(28f, 28f);
-                    sk.localEulerAngles = Vector3.zero;
+                    var pin = E(box, "moon-pin");
+                    pin.style.rotate = new Rotate(-(45f + 90f * k));
+                    Icon(pin, "SPR_DarkFantasyMenus_Greeble_DemonSkull_01", Ui.MoonBlood, "icon moon-skull");
                 }
-            var label = Ui.Col(root, "MoonLabel", 0);
-            label.anchorMin = label.anchorMax = label.pivot = new Vector2(0.5f, 1f);
-            label.anchoredPosition = new Vector2(0f, -Edge - D - 6f);
-            label.sizeDelta = new Vector2(300f, 44f);
-            Watch(T(label, moon + "/" + max, 20, Ui.Bone, true, false, TextAnchor.UpperCenter), "moon");
-            HoverTip.Add(box, Loc.T("battle.moon") + " · " + Loc.T("battle.rule.moon", Rules.MoonMax), 0.4f);
+            var label = E(root, "moon-label col");
+            Watch(L(label, moon + "/" + max, "moon-count"), "moon");
             var state = hot ? Loc.T("moon.nextTurn") : v != null && v.Asleep ? Loc.T("battle.coffinAt", Rules.MoonWake) : "";
-            if (state.Length > 0) T(label, state, 14, hot ? Ui.MoonBlood : Ui.Muted, hot, false, TextAnchor.UpperCenter);
+            if (state.Length > 0) L(label, state, hot ? "moon-state hot" : "moon-state", hot ? Ui.MoonBlood : Ui.Muted);
         }
 
-        void EndTurn(RectTransform root, Battle b, HudState st, BattleActions a)
+        // One wedge per phase from the top, clockwise, with a 1.5% gap (the old radial fill).
+        static void Phases(MeshGenerationContext ctx, int max, Func<int, Color> color)
         {
-            var label = BattleScreen.PrimaryLabel(b, st.EnemyPlaying, out var enabled);
-            var tip = b.Phase == Phase.Deploy && !enabled ? Loc.T("hud.needAlly") : null;
-            var btn = Btn(root, label, a.Primary, BtnKind.Primary, new Vector2(200f, 56f), enabled, tip);
-            var rt = (RectTransform)btn.transform;
-            rt.anchorMin = rt.anchorMax = rt.pivot = new Vector2(1f, 0f);
-            rt.anchoredPosition = new Vector2(-Edge, Edge);
-            Hotkey(rt, "Space");
-            var left = b.Phase == Phase.Player && !st.EnemyPlaying ? b.Allies.Count(u => !u.Acted) : 0;
-            if (left > 0)
+            var r = ctx.visualElement.contentRect;
+            var c = r.center;
+            var radius = Mathf.Min(r.width, r.height) * 0.5f;
+            var p = ctx.painter2D;
+            for (var i = 0; i < max; i++)
             {
-                // ui-style.md 14-3-3: inside the button, left of the label.
-                var badge = kit.Badge(rt, left.ToString(), 28, Ui.Steel, Ui.Ink, Ui.Bone);
-                badge.anchorMin = badge.anchorMax = badge.pivot = new Vector2(0f, 0.5f);
-                badge.anchoredPosition = new Vector2(12f, 0f);
-                badge.gameObject.AddComponent<LayoutElement>().ignoreLayout = true;
-                HoverTip.Add(badge, Loc.T("battle.allyPhase"), 0.3f);
+                var start = -90f + 360f * i / max;
+                p.fillColor = color(i);
+                p.BeginPath();
+                p.MoveTo(c);
+                p.Arc(c, radius, start, start + 360f * (1f / max - 0.015f));
+                p.ClosePath();
+                p.Fill();
             }
         }
 
-        void Corner(RectTransform root, HudState st, BattleActions a)
+        void EndTurn(VisualElement root, Battle b, HudState st, BattleActions a)
         {
-            var row = Ui.Row(root, "Corner", 4, 0, null, null, TextAnchor.LowerLeft);
-            row.anchorMin = row.anchorMax = row.pivot = Vector2.zero;
-            row.anchoredPosition = new Vector2(Edge - 12f, Edge - 6f);
-            row.sizeDelta = new Vector2(420f, 40f);
-            row.GetComponent<HorizontalLayoutGroup>().childControlWidth = false;
-            kit.IconBtn(row, Kit.Icon.Rules, Loc.T("battle.rules"), a.ToggleRules);
-            if (st.LeaveArmed) Btn(row, Loc.T("battle.leaveConfirm"), a.Leave, BtnKind.Danger, new Vector2(220f, 40f), !st.EnemyPlaying);
-            else kit.IconBtn(row, Kit.Icon.Leave, Loc.T("battle.leave"), a.Leave, 40f, null, !st.EnemyPlaying);
+            var label = BattleScreen.PrimaryLabel(b, st.EnemyPlaying, out var enabled);
+            var btn = Btn(root, label, a.Primary, BtnKind.Primary, enabled, b.Phase == Phase.Deploy && !enabled ? Loc.T("hud.needAlly") : null, "end-turn");
+            Hotkey(btn, "Space");
+            var left = b.Phase == Phase.Player && !st.EnemyPlaying ? b.Allies.Count(u => !u.Acted) : 0;
+            // ui-style.md 14-3-3: inside the button, left of the label.
+            if (left > 0) Tip(RingBadge(btn, art, left.ToString(), 28, Ui.Steel, Ui.Ink, Ui.Bone), Loc.T("battle.allyPhase"), 300);
         }
 
-        void RulesPopup(RectTransform root, BattleActions a)
+        void Corner(VisualElement root, HudState st, BattleActions a)
         {
-            var back = Ui.Node(root, "RulesBack");
-            Ui.Stretch(back);
-            Ui.Bg(back, Ui.Alpha(Ui.Ink, 0.85f));
-            UiSound.Add(back.gameObject.AddComponent<Button>()).onClick.AddListener(() => a.ToggleRules?.Invoke());
-            var p = Ui.Col(back, "RulesPopup", 8, 32);
-            p.anchorMin = p.anchorMax = p.pivot = new Vector2(0.5f, 0.5f);
-            p.sizeDelta = new Vector2(720f, 0f);
-            p.gameObject.AddComponent<ContentSizeFitter>().verticalFit = ContentSizeFitter.FitMode.PreferredSize;
-            p.gameObject.AddComponent<Button>().transition = Selectable.Transition.None;
-            Ui.Frame(p, S("SPR_DarkFantasyMenus_Frame_Box_Medium_02"), S("SPR_DarkFantasyMenus_Frame_Box_Medium_02_Background"), Ui.Steel, FramePpu);
-            T(p, Loc.T("battle.rules"), 32, Ui.Bone, true, true);
-            foreach (var line in BattleScreen.RuleLines) Wrap(T(p, line, 17, Ui.Muted));
-            var row = Ui.Row(p, "Close", 0, 0, null, null, TextAnchor.MiddleRight);
-            Btn(row, Loc.T("hud.close"), a.ToggleRules, BtnKind.Ghost, new Vector2(100f, 36f));
+            var row = E(root, "corner");
+            Tip(IconBtn(row, art, Kit.Icon.Rules, a.ToggleRules), Loc.T("battle.rules"), 300);
+            if (st.LeaveArmed) Btn(row, Loc.T("battle.leaveConfirm"), a.Leave, BtnKind.Danger, !st.EnemyPlaying);
+            else Tip(IconBtn(row, art, Kit.Icon.Leave, a.Leave, !st.EnemyPlaying), Loc.T("battle.leave"), 300);
+        }
+
+        void RulesPopup(VisualElement root, BattleActions a)
+        {
+            var veil = E(root, "veil", true);
+            Click(veil, null);
+            veil.RegisterCallback<ClickEvent>(e => { if (e.target == veil) a.ToggleRules?.Invoke(); });
+            var p = E(veil, "window rules", true);
+            Frame(p, art, Ui.Steel);
+            L(p, Loc.T("battle.rules"), "rules-title display");
+            foreach (var line in BattleScreen.RuleLines) L(p, line, "rules-line");
+            Btn(E(p, "rules-close"), Loc.T("hud.close"), a.ToggleRules, BtnKind.Ghost);
         }
 
         // ---------- deploy (battle-hud.md 2) ----------
 
-        void Deploy(RectTransform root, BattleSession s, HudState st, BattleActions a)
+        void Deploy(VisualElement root, BattleSession s, HudState st, BattleActions a)
         {
             var b = s.Battle;
             var stg = b.Stage;
-            var title = Ui.Col(root, "Title", 8);
-            title.anchorMin = title.anchorMax = title.pivot = new Vector2(0f, 1f);
-            title.anchoredPosition = new Vector2(Edge, -Edge);
-            title.sizeDelta = new Vector2(PanelW, 110f);
-            var name = Ui.Row(title, "Name", 12, 0, null, null, TextAnchor.MiddleLeft);
-            name.GetComponent<HorizontalLayoutGroup>().childForceExpandWidth = false;
+            var title = E(root, "deploy-title col");
+            var name = E(title, "stage-name row", true);
             var last = stg == Campaign.Stages.LastOrDefault();
             var num = Array.IndexOf(Campaign.Stages, stg) + 1;
-            if (num > 0 && !st.Demo) kit.Badge(name, num.ToString(), 40, last ? Ui.Blood : Ui.Steel, Ui.Deep, Ui.Bone);
-            var tt = T(name, Loc.Text(stg.Title), 32, last ? Ui.Blood : Ui.Bone, true, true, TextAnchor.MiddleLeft);
-            Ui.Ellipsize(tt, PanelW - 56);
-            HoverTip.Add(name, BattleScreen.Subtitle(stg, st.Demo), 0.4f);
-            var res = Ui.Row(title, "Resources", 24, 0, null, null, TextAnchor.MiddleLeft);
-            res.GetComponent<HorizontalLayoutGroup>().childForceExpandWidth = false;
-            kit.Value(res, Kit.Icon.Pop, b.Used(t => t.Pop) + "/" + stg.Pop, 22, Ui.Candle, Ui.Candle, Loc.T("battle.pop"));
-            if (stg.Silver > 0) kit.Value(res, Kit.Icon.Silver, b.Used(t => t.Silver) + "/" + stg.Silver, 22, Ui.Candle, Ui.Candle, Loc.T("battle.silver"));
-            kit.Value(res, Kit.Icon.Flag, b.Allies.Count().ToString(), 22, Ui.Steel, Ui.Bone, Loc.T("battle.deployed"));
+            if (num > 0 && !st.Demo) RingBadge(name, art, num.ToString(), 40, last ? Ui.Blood : Ui.Steel, Ui.Deep, Ui.Bone);
+            L(name, Loc.Text(stg.Title), "display", last ? Ui.Blood : Ui.Bone);
+            Tip(name, BattleScreen.Subtitle(stg, st.Demo), 400);
+            var res = E(title, "res row");
+            Value(res, Kit.Icon.Pop, b.Used(t => t.Pop) + "/" + stg.Pop, Ui.Candle, Ui.Candle, Loc.T("battle.pop"));
+            if (stg.Silver > 0) Value(res, Kit.Icon.Silver, b.Used(t => t.Silver) + "/" + stg.Silver, Ui.Candle, Ui.Candle, Loc.T("battle.silver"));
+            Value(res, Kit.Icon.Flag, b.Allies.Count().ToString(), Ui.Steel, Ui.Bone, Loc.T("battle.deployed"));
 
-            var roster = Ui.Col(root, "Roster", 8);
-            roster.anchorMin = roster.anchorMax = roster.pivot = new Vector2(0f, 1f);
-            roster.anchoredPosition = new Vector2(Edge, -Edge - 130f);
-            roster.sizeDelta = new Vector2(PanelW, 0f);
-            roster.gameObject.AddComponent<ContentSizeFitter>().verticalFit = ContentSizeFitter.FitMode.PreferredSize;
-            roster.GetComponent<VerticalLayoutGroup>().padding = new RectOffset(16, 16, 16, 16);
-            Frame(roster, Ui.Steel);
-            T(roster, Loc.T("battle.formation"), 22, Ui.Bone, true, true);
+            var roster = E(root, "box roster col", true);
+            Frame(roster, art, Ui.Steel);
+            L(roster, Loc.T("battle.formation"), "box-title display");
             var pop = b.Used(t => t.Pop);
             var sil = b.Used(t => t.Silver);
             foreach (var k in stg.Units)
@@ -348,117 +286,97 @@ namespace VampireSpawn.Game.Screens
                 var kind = k;
                 RosterRow(roster, t, k, s.DeployType == k, can, st.Upgrades, () => a.Pick?.Invoke(kind));
             }
-            var acts = Ui.Row(roster, "Acts", 8);
-            acts.GetComponent<HorizontalLayoutGroup>().childControlWidth = false;
-            Btn(acts, Loc.T("battle.recallAll"), a.Clear, BtnKind.Normal, new Vector2(150f, 40f));
-            Btn(acts, Loc.T("battle.sample"), a.Sample, BtnKind.Normal, new Vector2(150f, 40f));
+            var acts = E(roster, "acts row");
+            Btn(acts, Loc.T("battle.recallAll"), a.Clear, BtnKind.Normal);
+            Btn(acts, Loc.T("battle.sample"), a.Sample, BtnKind.Normal);
 
-            var brief = Ui.Col(root, "Brief", 6);
-            brief.anchorMin = brief.anchorMax = brief.pivot = new Vector2(1f, 1f);
-            brief.anchoredPosition = new Vector2(-Edge, -Edge);
-            brief.sizeDelta = new Vector2(PanelW, 0f);
-            brief.gameObject.AddComponent<ContentSizeFitter>().verticalFit = ContentSizeFitter.FitMode.PreferredSize;
-            brief.GetComponent<VerticalLayoutGroup>().padding = new RectOffset(16, 16, 16, 16);
-            Frame(brief, Ui.SteelDim);
-            brief.GetComponent<VerticalLayoutGroup>().spacing = 10;
-            HoverTip.Add(brief, Loc.Text(stg.Brief), 0.6f);
+            var brief = E(root, "box brief col", true);
+            Frame(brief, art, Ui.SteelDim);
+            Tip(brief, Loc.Text(stg.Brief), 600);
             Def(brief, Kit.Icon.Boss, Ui.Blood, Loc.T("battle.defeatBoss", stg.BossName), Loc.T("battle.objective"));
             Def(brief, Kit.Icon.Star, Ui.Candle, Loc.Text(stg.Bonus.Text), Loc.T("battle.bonus"));
             Def(brief, Kit.Icon.Skulls, Ui.Blood, Kit.EnemyList(stg), Loc.T("battle.enemy"));
         }
 
-        void DeployHover(RectTransform root, BattleSession s, HudState st, BattleActions a)
+        void DeployHover(VisualElement root, BattleSession s, HudState st, BattleActions a)
         {
             var b = s.Battle;
             var ins = s.InspectUnit is int id ? b.Find(id) : null;
             var show = st.Hover ?? ins;
-            if (show != null)
-            {
-                var p = Panel(root, b, show, new Vector2(1f, 0f), new Vector2(-Edge, Edge + 100f), true);
-                if (show.Side == Side.Ally)
-                {
-                    var uid = show.Id;
-                    var r = (RectTransform)Btn(p, Loc.T("unit.card.recall"), () => a.Recall?.Invoke(uid), BtnKind.Normal, new Vector2(90f, 32f)).transform;
-                    r.anchorMin = r.anchorMax = r.pivot = new Vector2(1f, 0f);
-                    r.anchoredPosition = new Vector2(-16f, 12f);
-                }
-            }
+            if (show == null) return;
+            var p = Panel(root, b, show, "deploy-side", true);
+            if (show.Side != Side.Ally) return;
+            var uid = show.Id;
+            Btn(p, Loc.T("unit.card.recall"), () => a.Recall?.Invoke(uid), BtnKind.Normal, true, null, "recall");
         }
 
-        void RosterRow(Transform parent, UnitType t, string k, bool on, bool can, IEnumerable<string> upgrades, Action pick)
+        void RosterRow(VisualElement parent, UnitType t, string k, bool on, bool can, IEnumerable<string> upgrades, Action pick)
         {
-            var rt = Ui.Row(parent, "Roster " + t.Key, 10, 0, null, null, TextAnchor.MiddleLeft);
-            Ui.Size(rt).minHeight = 64;
-            rt.GetComponent<HorizontalLayoutGroup>().padding = new RectOffset(10, 10, 6, 6);
-            rt.GetComponent<HorizontalLayoutGroup>().childForceExpandWidth = false;
-            Frame(rt, on ? Ui.Steel : Ui.Line, 14f);
-            var icon = Ui.Sprite(rt, "Icon", S(Weapon(k)), on ? Ui.Steel : Ui.Muted);
-            Ui.Size(icon, 40, 40);
-            var col = Ui.Col(rt, "Info", 4);
-            Ui.Size(col, -1, -1, 1);
-            var top = Ui.Row(col, "Top", 10);
-            top.GetComponent<HorizontalLayoutGroup>().childForceExpandWidth = false;
-            Ui.Size(T(top, Loc.Text(t.Name), 17, Ui.Bone, true), -1, -1, 1);
-            kit.Value(top, Kit.Icon.Pop, t.Pop.ToString(), 15, can ? Ui.Candle : Ui.Blood, can ? Ui.Muted : Ui.Blood, Loc.T("battle.pop"));
-            if (t.Silver > 0) kit.Value(top, Kit.Icon.Silver, t.Silver.ToString(), 15, can ? Ui.Candle : Ui.Blood, can ? Ui.Muted : Ui.Blood, Loc.T("battle.silver"));
-            kit.Stats(col, Battle.Preview(k, upgrades), 14, Ui.SteelDim, Ui.Muted).GetComponent<HorizontalLayoutGroup>().spacing = 8;
-            var btn = rt.gameObject.AddComponent<Button>();
-            btn.targetGraphic = rt.GetComponentInChildren<Image>();
-            UiSound.Add(btn).onClick.AddListener(() => pick());
+            var row = E(parent, "roster-row row", true);
+            Frame(row, art, on ? Ui.Steel : Ui.Line);
+            row.Q(className: "panel-frame").AddToClassList("thin");
+            Icon(row, art.Icon(k), on ? Ui.Steel : Ui.Muted, "icon roster-icon");
+            var col = E(row, "roster-info col");
+            var top = E(col, "row");
+            L(top, Loc.Text(t.Name), "roster-name");
+            Value(top, Kit.Icon.Pop, t.Pop.ToString(), can ? Ui.Candle : Ui.Blood, can ? Ui.Muted : Ui.Blood, Loc.T("battle.pop"));
+            if (t.Silver > 0) Value(top, Kit.Icon.Silver, t.Silver.ToString(), can ? Ui.Candle : Ui.Blood, can ? Ui.Muted : Ui.Blood, Loc.T("battle.silver"));
+            Stats(col, Battle.Preview(k, upgrades));
+            Click(row, pick);
         }
 
-        void Def(Transform parent, string icon, Color iconColor, string value, string tip)
+        void Stats(VisualElement parent, Unit u)
         {
-            var row = Ui.Row(parent, "Def", 10, 0, null, null, TextAnchor.UpperLeft);
-            row.GetComponent<HorizontalLayoutGroup>().childForceExpandWidth = false;
-            Ui.Size(Ui.Sprite(row, "Icon", S(icon), iconColor), 24, 24);
-            Ui.Size(Wrap(T(row, value, 15, Ui.Bone)), PanelW - 32 - 34, -1, 1);
-            HoverTip.Add(row, tip, 0.3f);
+            var row = E(parent, "unit-stats row");
+            Value(row, Kit.Icon.Hp, u.Hp.ToString(), Ui.SteelDim, Ui.Muted, Loc.T("unit.card.hp"));
+            Value(row, Kit.Icon.Atk, u.Atk + (u.Bane > 0 ? "+" + u.Bane : ""), Ui.SteelDim, Ui.Muted, Loc.T("unit.card.atk"));
+            Value(row, Kit.Icon.Def, u.Def.ToString(), Ui.SteelDim, Ui.Muted, Loc.T("unit.card.def"));
+            Value(row, Kit.Icon.Mov, u.Mov.ToString(), Ui.SteelDim, Ui.Muted, Loc.T("unit.card.mov"));
+            Value(row, Kit.Icon.Rng, u.Rng.ToString(), Ui.SteelDim, Ui.Muted, Loc.T("unit.card.rng"));
+        }
+
+        void Def(VisualElement parent, string icon, Color iconColor, string value, string tipText)
+        {
+            var row = E(parent, "def row", true);
+            Icon(row, icon, iconColor, "icon def-icon");
+            L(row, value, "def-text");
+            Tip(row, tipText, 300);
         }
 
         // ---------- player / enemy turn (battle-hud.md 3, 4) ----------
 
-        void Fight(RectTransform root, BattleSession s, HudState st, BattleActions a)
+        void Fight(VisualElement root, BattleSession s, HudState st, BattleActions a)
         {
             var b = s.Battle;
-            var stats = Ui.Row(root, "Stats", 28, 0, null, null, TextAnchor.UpperLeft);
-            stats.anchorMin = stats.anchorMax = stats.pivot = new Vector2(0f, 1f);
-            stats.anchoredPosition = new Vector2(Edge, -Edge);
-            stats.sizeDelta = new Vector2(400f, 48f);
-            stats.GetComponent<HorizontalLayoutGroup>().childForceExpandWidth = false;
-            stats.gameObject.AddComponent<ContentSizeFitter>().horizontalFit = ContentSizeFitter.FitMode.PreferredSize;
+            var stats = E(root, "fight-stats row");
             var spawns = b.Enemies.Count(e => e.Role == Role.Spawn);
-            kit.Value(stats, Kit.Icon.Turn, b.Turn.ToString(), 22, Ui.Bone, Ui.Bone, Loc.T("battle.turn"));
-            kit.Value(stats, Kit.Icon.Pop, b.Allies.Count().ToString(), 22, Ui.Steel, Ui.Steel, Loc.T("battle.allies"));
-            kit.Value(stats, Kit.Icon.Skulls, b.Enemies.Count(e => e.Role != Role.Spawn).ToString(), 22, Ui.Blood, Ui.Blood, Loc.T("battle.enemies"));
-            kit.Value(stats, Kit.Icon.Fang, spawns + (b.Corpses.Count > 0 ? " +" + b.Corpses.Count : ""), 22, Ui.Spawn, Ui.Spawn, Loc.T("unit.card.spawn"));
+            Value(stats, Kit.Icon.Turn, b.Turn.ToString(), Ui.Bone, Ui.Bone, Loc.T("battle.turn"));
+            Value(stats, Kit.Icon.Pop, b.Allies.Count().ToString(), Ui.Steel, Ui.Steel, Loc.T("battle.allies"));
+            Value(stats, Kit.Icon.Skulls, b.Enemies.Count(e => e.Role != Role.Spawn).ToString(), Ui.Blood, Ui.Blood, Loc.T("battle.enemies"));
+            Value(stats, Kit.Icon.Fang, spawns + (b.Corpses.Count > 0 ? " +" + b.Corpses.Count : ""), Ui.Spawn, Ui.Spawn, Loc.T("unit.card.spawn"));
             // Direction review: Alt is the only way to read enemy movement, so its key stays on screen.
-            var alt = Ui.Row(stats, "Alt", 4, 0, null, null, TextAnchor.MiddleLeft);
-            alt.GetComponent<HorizontalLayoutGroup>().childForceExpandWidth = false;
-            var key = Ui.Node(alt, "Key");
-            Ui.Size(key, 34, 22);
-            Ui.Bg(key, Ui.Alpha(Ui.Deep, 0.85f), st.Alt ? Ui.Blood : Ui.Line);
-            Ui.Stretch(T(key, "Alt", 14, st.Alt ? Ui.Bone : Ui.Muted, false, false, TextAnchor.MiddleCenter).rectTransform);
-            Ui.Size(Ui.Sprite(alt, "Icon", S(Kit.Icon.Mov), st.Alt ? Ui.Blood : Ui.Muted), 22, 22);
-            HoverTip.Add(alt, Loc.T("hud.altTip"), 0.2f);
+            var alt = E(stats, "row", true);
+            L(alt, "Alt", st.Alt ? "alt-key on" : "alt-key");
+            Icon(alt, Kit.Icon.Mov, st.Alt ? Ui.Blood : Ui.Muted, "icon alt-icon");
+            Tip(alt, Loc.T("hud.altTip"), 200);
             if (b.Vampire is Unit v && !v.Asleep) Boss(root, v);
             Log(root, b, st, a);
         }
 
-        void FightHover(RectTransform root, BattleSession s, HudState st, BattleActions a)
+        void FightHover(VisualElement root, BattleSession s, HudState st, BattleActions a)
         {
             var b = s.Battle;
             var sel = s.SelectedUnit;
             if (!st.EnemyPlaying)
             {
                 var ally = sel ?? (st.Hover != null && st.Hover.Side == Side.Ally ? st.Hover : null);
-                if (ally != null) Panel(root, b, ally, Vector2.zero, new Vector2(Edge, Edge + 48f), sel == ally);
+                if (ally != null) Panel(root, b, ally, "ally-side", sel == ally);
                 if (sel != null && b.Phase == Phase.Player && !sel.Acted) Actions(root, s, a);
             }
             var mendTarget = sel != null && s.Mode == SelectMode.Mend && b.CanMend(sel, st.Hover) ? st.Hover : null;
             if (st.HoverCorpse != null) CorpsePanel(root, st.HoverCorpse);
-            else if (mendTarget != null) Panel(root, b, mendTarget, new Vector2(1f, 0f), new Vector2(-Edge - 216f, Edge + 48f), true, b.MendAmount(sel, mendTarget));
-            else if (st.Hover != null && st.Hover.Side == Side.Enemy) Panel(root, b, st.Hover, new Vector2(1f, 0f), new Vector2(-Edge - 216f, Edge + 48f), true);
+            else if (mendTarget != null) Panel(root, b, mendTarget, "other-side", true, b.MendAmount(sel, mendTarget));
+            else if (st.Hover != null && st.Hover.Side == Side.Enemy) Panel(root, b, st.Hover, "other-side", true);
 
             var atk = new HashSet<Hex>(s.Overlay().Where(m => m.Mark == Mark.Atk).Select(m => m.Hex));
             foreach (var u in b.Units)
@@ -466,31 +384,19 @@ namespace VampireSpawn.Game.Screens
                 var dmg = sel != null && st.Hover == u && atk.Contains(u.Pos) ? b.Damage(sel, u) : 0;
                 Head(headLayer, b, u, u == st.Hover || u == sel, st.Alt && u.Side == Side.Enemy, dmg);
             }
-            if (st.Hover != null && heads.TryGetValue(st.Hover.Id, out var top)) top.Rt.SetAsLastSibling();
+            if (st.Hover != null && heads.TryGetValue(st.Hover.Id, out var top)) top.Root.BringToFront();
         }
 
-        void Boss(RectTransform root, Unit v)
+        void Boss(VisualElement root, Unit v)
         {
-            var bar = Ui.Place(root, "Boss", new Vector2(0.5f, 1f), new Vector2(0f, -Edge - 112f - 60f), new Vector2(560f, 40f));
-            Ui.Stretch(Ui.Sprite(bar, "Back", S("SPR_DarkFantasyMenus_Frame_Bar_Medium_01_Background"), Ui.Deep, 12f).rectTransform);
+            var bar = E(root, "boss");
+            Picture(bar, S("SPR_DarkFantasyMenus_Frame_Bar_Medium_01_Background"), Ui.Deep);
             var f = Mathf.Clamp01((float)v.Hp / v.MaxHp);
-            var fill = Ui.Node(bar, "Fill");
-            Ui.Bg(fill, Ui.Blood, null, false);
-            fill.anchorMin = Vector2.zero;
-            fill.anchorMax = new Vector2(f, 1f);
-            fill.offsetMin = new Vector2(24f, 10f);
-            fill.offsetMax = new Vector2(-24f * f, -10f);
-            Ui.Stretch(Ui.Sprite(bar, "Frame", S("SPR_DarkFantasyMenus_Frame_Bar_Medium_01"), Ui.Blood, 12f).rectTransform);
-            var name = Watch(T(bar, Loc.Text(v.Name) + "   " + v.Hp + "/" + v.MaxHp, 17, Ui.Bone, true, false, TextAnchor.MiddleCenter), "boss");
-            Ui.Stretch(name.rectTransform);
-            name.gameObject.AddComponent<Outline>().effectColor = Ui.Deep;
-            foreach (var x in new[] { 0f, 1f })
-            {
-                var rt = Ui.Sprite(bar, "Skull", S("SPR_DarkFantasyMenus_Greeble_DemonSkull_01"), Ui.Blood).rectTransform;
-                rt.anchorMin = rt.anchorMax = rt.pivot = new Vector2(x, 0.5f);
-                rt.anchoredPosition = new Vector2(x == 0f ? -30f : 30f, 0f);
-                rt.sizeDelta = new Vector2(48f, 48f);
-            }
+            E(bar, "boss-fill").style.width = Mathf.Max(0f, 536f * f - 24f);
+            Picture(E(bar, "boss-frame"), S("SPR_DarkFantasyMenus_Frame_Bar_Medium_01"), Ui.Blood);
+            Watch(L(bar, Loc.Text(v.Name) + "   " + v.Hp + "/" + v.MaxHp, "boss-name"), "boss");
+            Icon(bar, "SPR_DarkFantasyMenus_Greeble_DemonSkull_01", Ui.Blood, "icon boss-skull left");
+            Icon(bar, "SPR_DarkFantasyMenus_Greeble_DemonSkull_01", Ui.Blood, "icon boss-skull right");
         }
 
         static readonly Dictionary<string, (string icon, Color color)> LogIcon = new Dictionary<string, (string, Color)>
@@ -499,103 +405,74 @@ namespace VampireSpawn.Game.Screens
             ["h"] = ("ICON_DarkFantasy_Status_Targeted_01_Stroke", Ui.MoonBlood),
         };
 
-        void Log(RectTransform root, Battle b, HudState st, BattleActions a)
+        void Log(VisualElement root, Battle b, HudState st, BattleActions a)
         {
-            const float W = 320f;
-            var col = Ui.Col(root, "Log", 4);
-            col.anchorMin = col.anchorMax = col.pivot = new Vector2(1f, 1f);
-            col.anchoredPosition = new Vector2(-Edge, -Edge);
-            col.sizeDelta = new Vector2(W, 0f);
-            col.gameObject.AddComponent<ContentSizeFitter>().verticalFit = ContentSizeFitter.FitMode.PreferredSize;
-            var head = T(col, Loc.T("battle.log") + (st.LogOpen ? " ▴" : " ▾"), 14, Ui.Dim, false, false, TextAnchor.UpperRight);
-            head.raycastTarget = true;
-            UiSound.Add(head.gameObject.AddComponent<Button>()).onClick.AddListener(() => a.ToggleLog?.Invoke());
-            if (st.LogOpen)
+            var col = E(root, "log col");
+            var head = L(col, Loc.T("battle.log") + (st.LogOpen ? " ▴" : " ▾"), "log-head");
+            head.pickingMode = PickingMode.Position;
+            Click(head, a.ToggleLog);
+            if (!st.LogOpen)
             {
-                var view = Ui.Scroll(col, "Lines", out var scroll);
-                Ui.Size(scroll, W, 400f);
-                Ui.Bg((RectTransform)scroll.transform, Ui.Alpha(Ui.Deep, 0.92f), Ui.Line);
-                view.GetComponent<VerticalLayoutGroup>().padding = new RectOffset(10, 10, 10, 10);
-                view.GetComponent<VerticalLayoutGroup>().spacing = 4;
-                foreach (var l in b.Log) LogLine(view, l, W - 20f, true);
+                foreach (var l in b.Log.Take(1)) LogLine(col, l);
                 return;
             }
-            foreach (var l in b.Log.Take(1)) LogLine(col, l, W, false);
+            var view = new ScrollView(ScrollViewMode.Vertical) { horizontalScrollerVisibility = ScrollerVisibility.Hidden };
+            view.AddToClassList("log-lines");
+            col.Add(view);
+            foreach (var l in b.Log) LogLine(view, l);
         }
 
-        void LogLine(Transform parent, LogEntry l, float width, bool wrap)
+        void LogLine(VisualElement parent, LogEntry l)
         {
-            var row = Ui.Row(parent, "Log", 6, 0, null, null, wrap ? TextAnchor.UpperLeft : TextAnchor.MiddleRight);
-            row.GetComponent<HorizontalLayoutGroup>().childForceExpandWidth = false;
-            var text = Loc.Text(l.Text);
-            var iconW = 0f;
-            if (LogIcon.TryGetValue(l.Style, out var ic))
-            {
-                Ui.Size(Ui.Sprite(row, "Icon", S(ic.icon), ic.color), 16, 16);
-                iconW = 22f;
-            }
-            var t = T(row, text, 17, l.Style == "t" ? Ui.Dim : Ui.Muted, false, false, wrap ? TextAnchor.UpperLeft : TextAnchor.MiddleRight);
-            t.name = "Log";
-            if (wrap) Ui.Size(Wrap(t), width - iconW, -1, 1);
-            else Ui.Ellipsize(t, width - iconW);
+            var row = E(parent, "log-line row");
+            if (LogIcon.TryGetValue(l.Style, out var ic)) Icon(row, ic.icon, ic.color, "icon log-icon");
+            L(row, Loc.Text(l.Text), "log-text", l.Style == "t" ? Ui.Dim : Ui.Muted);
         }
 
-        RectTransform StatCell(Transform row, string icon, string value, string label, float px, Color iconColor, Color valueColor, string watch = null)
+        VisualElement StatCell(VisualElement row, string icon, string value, string label, Color iconColor, Color valueColor, string watch = null)
         {
-            var cell = Ui.Row(row, "Stat " + label, 6, 0, null, null, TextAnchor.LowerLeft);
-            cell.GetComponent<HorizontalLayoutGroup>().childForceExpandWidth = false;
-            Ui.Size(Ui.Sprite(cell, "Icon", S(icon), iconColor), 24, 24);
-            var v = T(cell, value, px, valueColor, true);
-            Ui.Size(v, -1, px * 1.3f);
+            var cell = E(row, "stat", true);
+            Icon(cell, icon, iconColor, "icon stat-icon");
+            var v = L(cell, value, "stat-value", valueColor);
             if (watch != null) Watch(v, watch);
-            HoverTip.Add(cell, label, 0.3f);
+            Tip(cell, label, 300);
             return cell;
         }
 
-        RectTransform PanelFrame(RectTransform root, string name, Vector2 anchor, Vector2 pos, Color edge)
+        VisualElement PanelFrame(VisualElement root, string name, string side, Color edge)
         {
-            var p = Ui.Place(root, name, anchor, pos, new Vector2(PanelW, PanelH));
-            Frame(p, edge);
+            var p = E(root, "unit " + side, true);
+            p.name = name;
+            Frame(p, art, edge);
             if (!lastPanels.Contains(name)) Fx.Appear(p);
             panels.Add(name);
             return p;
         }
 
-        RectTransform PanelBody(RectTransform p)
-        {
-            var col = Ui.Col(p, "Body", 6, 16);
-            Ui.Stretch(col);
-            col.GetComponent<VerticalLayoutGroup>().padding = new RectOffset(20, 20, 16, 14);
-            return col;
-        }
-
-        RectTransform Panel(RectTransform root, Battle b, Unit o, Vector2 anchor, Vector2 pos, bool lit, int heal = 0)
+        VisualElement Panel(VisualElement root, Battle b, Unit o, string side, bool lit, int heal = 0)
         {
             var spawn = o.Role == Role.Spawn;
-            var side = o.Side == Side.Ally ? Ui.Steel : spawn ? Ui.Spawn : Ui.Blood;
+            var color = o.Side == Side.Ally ? Ui.Steel : spawn ? Ui.Spawn : Ui.Blood;
             var dim = o.Side == Side.Ally ? Ui.SteelDim : spawn ? Ui.Alpha(Ui.Spawn, 0.6f) : Ui.BloodDim;
-            var p = PanelFrame(root, "Panel " + o.Id, anchor, pos, lit ? side : dim);
-            if (o.Side == Side.Enemy && !spawn) Spikes(p, side);
-            if (spawn) Corner(p, "ICON_DarkFantasy_Status_Vampiric_01_Clean", Ui.Spawn);
-            var col = PanelBody(p);
-            var head = Ui.Row(col, "Head", 10, 0, null, null, TextAnchor.LowerLeft);
-            head.GetComponent<HorizontalLayoutGroup>().childForceExpandWidth = false;
-            if (o.Type != null && Weapon(o.Type) is string wi) Ui.Size(Ui.Sprite(head, "Weapon", S(wi), side), 26, 26);
-            Ui.Ellipsize(T(head, spawn ? Loc.T("hud.spawnOf", o.Origin) : Loc.Text(o.Name), 22, Ui.Bone, true, true), PanelW - 80);
-            var big = Ui.Row(col, "Big", 22);
-            big.GetComponent<HorizontalLayoutGroup>().childForceExpandWidth = false;
-            var hp = StatCell(big, "ICON_DarkFantasy_Stat_Health_01_Clean", o.Hp + "/" + o.MaxHp, Loc.T("unit.card.hp"), 34, side, o.Side == Side.Ally && o.Hp * 3 <= o.MaxHp ? Ui.Blood : Ui.Bone, "hp" + o.Id);
-            if (heal > 0) Ui.Size(T(hp, "+" + heal, 34, Ui.Steel, true), -1, 34 * 1.3f);
-            StatCell(big, "ICON_DarkFantasy_Stat_Speed_01_Clean", o.Mov.ToString(), Loc.T("unit.card.mov"), 34, side, Ui.Bone, "mov" + o.Id);
-            var small = Ui.Row(col, "Small", 18);
-            small.GetComponent<HorizontalLayoutGroup>().childForceExpandWidth = false;
-            StatCell(small, "ICON_DarkFantasy_Stat_Strength_01_Clean", o.Atk + (o.Bane > 0 ? "+" + o.Bane : ""), Loc.T("unit.card.atk"), 20, side, Ui.Muted);
-            StatCell(small, "ICON_DarkFantasy_Status_Defense_01_Clean", o.Def.ToString(), Loc.T("unit.card.def"), 20, side, Ui.Muted);
-            StatCell(small, "ICON_DarkFantasy_Stat_Accuracy_01_Clean", o.Rng.ToString(), Loc.T("unit.card.rng"), 20, side, Ui.Muted);
+            var p = PanelFrame(root, "Panel " + o.Id, side, lit ? color : dim);
+            if (o.Side == Side.Enemy && !spawn) Spikes(p, color);
+            if (spawn) CornerBadge(p, "ICON_DarkFantasy_Status_Vampiric_01_Clean", Ui.Spawn);
+            var col = E(p, "unit-body col");
+            var head = E(col, "unit-head row");
+            if (o.Type != null && art.Icon(o.Type) is string wi) Icon(head, wi, color, "icon unit-weapon");
+            L(head, spawn ? Loc.T("hud.spawnOf", o.Origin) : Loc.Text(o.Name), "unit-name display");
+            var big = E(col, "big row");
+            var hp = StatCell(big, Kit.Icon.Hp, o.Hp + "/" + o.MaxHp, Loc.T("unit.card.hp"), color, o.Side == Side.Ally && o.Hp * 3 <= o.MaxHp ? Ui.Blood : Ui.Bone, "hp" + o.Id);
+            if (heal > 0) L(hp, "+" + heal, "stat-value stat-heal");
+            StatCell(big, Kit.Icon.Mov, o.Mov.ToString(), Loc.T("unit.card.mov"), color, Ui.Bone, "mov" + o.Id);
+            var small = E(col, "small row");
+            StatCell(small, Kit.Icon.Atk, o.Atk + (o.Bane > 0 ? "+" + o.Bane : ""), Loc.T("unit.card.atk"), color, Ui.Muted);
+            StatCell(small, Kit.Icon.Def, o.Def.ToString(), Loc.T("unit.card.def"), color, Ui.Muted);
+            StatCell(small, Kit.Icon.Rng, o.Rng.ToString(), Loc.T("unit.card.rng"), color, Ui.Muted);
             var (warn, wc) = Warning(b, o);
-            if (warn != null) T(col, warn, 15, wc, true).name = "Warn";
-            if (o.Side == Side.Ally && BattleScreen.Skills(o) is string sk) T(col, sk, 14, Ui.Muted);
-            HoverTip.Add(p, BattleScreen.Note(o), 0.5f);
+            if (warn != null) L(col, warn, "warn", wc);
+            if (o.Side == Side.Ally && BattleScreen.Skills(o) is string sk) L(col, sk, "skills");
+            Tip(p, BattleScreen.Note(o), 500);
             return p;
         }
 
@@ -613,81 +490,56 @@ namespace VampireSpawn.Game.Screens
             return (null, default);
         }
 
-        void CorpsePanel(RectTransform root, Corpse c)
+        void CorpsePanel(VisualElement root, Corpse c)
         {
-            var p = PanelFrame(root, "Corpse " + c.Id, new Vector2(1f, 0f), new Vector2(-Edge - 216f, Edge + 48f), Ui.Spawn);
-            Corner(p, "ICON_DarkFantasy_Status_Vampiric_01_Clean", Ui.Spawn);
-            var col = PanelBody(p);
-            var head = Ui.Row(col, "Head", 10, 0, null, null, TextAnchor.LowerLeft);
-            head.GetComponent<HorizontalLayoutGroup>().childForceExpandWidth = false;
-            T(head, Loc.T("unit.card.corpseOf", c.Name), 22, Ui.Bone, true, true);
-            T(head, Loc.T("unit.card.corpse"), 14, Ui.Spawn);
-            var big = Ui.Row(col, "Big", 22);
-            big.GetComponent<HorizontalLayoutGroup>().childForceExpandWidth = false;
-            StatCell(big, "ICON_DarkFantasy_Stat_Health_01_Clean", c.MaxHp.ToString(), Loc.T("unit.card.hp"), 34, Ui.Spawn, Ui.Bone);
-            StatCell(big, "ICON_DarkFantasy_Stat_Speed_01_Clean", c.Mov.ToString(), Loc.T("unit.card.mov"), 34, Ui.Spawn, Ui.Bone);
-            var small = Ui.Row(col, "Small", 18);
-            small.GetComponent<HorizontalLayoutGroup>().childForceExpandWidth = false;
-            StatCell(small, "ICON_DarkFantasy_Stat_Strength_01_Clean", c.Atk.ToString(), Loc.T("unit.card.atk"), 20, Ui.Spawn, Ui.Muted);
-            StatCell(small, "ICON_DarkFantasy_Status_Defense_01_Clean", "0", Loc.T("unit.card.def"), 20, Ui.Spawn, Ui.Muted);
-            StatCell(small, "ICON_DarkFantasy_Stat_Accuracy_01_Clean", "1", Loc.T("unit.card.rng"), 20, Ui.Spawn, Ui.Muted);
-            T(col, Loc.T("hud.warn.corpse"), 15, Ui.Spawn, true).name = "Warn";
+            var p = PanelFrame(root, "Corpse " + c.Id, "other-side", Ui.Spawn);
+            CornerBadge(p, "ICON_DarkFantasy_Status_Vampiric_01_Clean", Ui.Spawn);
+            var col = E(p, "unit-body col");
+            var head = E(col, "unit-head row");
+            L(head, Loc.T("unit.card.corpseOf", c.Name), "unit-name display");
+            L(head, Loc.T("unit.card.corpse"), "unit-tag");
+            var big = E(col, "big row");
+            StatCell(big, Kit.Icon.Hp, c.MaxHp.ToString(), Loc.T("unit.card.hp"), Ui.Spawn, Ui.Bone);
+            StatCell(big, Kit.Icon.Mov, c.Mov.ToString(), Loc.T("unit.card.mov"), Ui.Spawn, Ui.Bone);
+            var small = E(col, "small row");
+            StatCell(small, Kit.Icon.Atk, c.Atk.ToString(), Loc.T("unit.card.atk"), Ui.Spawn, Ui.Muted);
+            StatCell(small, Kit.Icon.Def, "0", Loc.T("unit.card.def"), Ui.Spawn, Ui.Muted);
+            StatCell(small, Kit.Icon.Rng, "1", Loc.T("unit.card.rng"), Ui.Spawn, Ui.Muted);
+            L(col, Loc.T("hud.warn.corpse"), "warn", Ui.Spawn);
         }
 
-        void Spikes(RectTransform p, Color c)
+        // .decor stands out of its frame on purpose (UiAudit skips it); .overhang is its full-size holder.
+        void Spikes(VisualElement p, Color c)
         {
-            foreach (var (x, n) in new[] { (0f, "SPR_DarkFantasyMenus_Greeble_Spikes_02_TopLeft"), (1f, "SPR_DarkFantasyMenus_Greeble_Spikes_02_TopRight") })
-            {
-                var g = Ui.Sprite(p, "Spikes", S(n), c).rectTransform;
-                g.anchorMin = g.anchorMax = g.pivot = new Vector2(x, 1f);
-                g.anchoredPosition = new Vector2(x == 0f ? -10f : 10f, 10f);
-                g.sizeDelta = new Vector2(32f, 32f);
-            }
+            var decor = E(p, "overhang decor");
+            Icon(decor, "SPR_DarkFantasyMenus_Greeble_Spikes_02_TopLeft", c, "icon spike left");
+            Icon(decor, "SPR_DarkFantasyMenus_Greeble_Spikes_02_TopRight", c, "icon spike right");
         }
 
-        void Corner(RectTransform p, string icon, Color c)
-        {
-            var g = Ui.Sprite(p, "Badge", S(icon), c).rectTransform;
-            g.anchorMin = g.anchorMax = g.pivot = new Vector2(0f, 1f);
-            g.anchoredPosition = new Vector2(-6f, 6f);
-            g.sizeDelta = new Vector2(24f, 24f);
-        }
+        void CornerBadge(VisualElement p, string icon, Color c) => Icon(E(p, "overhang decor"), icon, c, "icon corner-badge");
 
-        void Actions(RectTransform root, BattleSession s, BattleActions a)
+        void Actions(VisualElement root, BattleSession s, BattleActions a)
         {
             var exec = s.Mode == SelectMode.Execute;
             var mend = s.Mode == SelectMode.Mend;
             var sel = s.SelectedUnit;
-            var row = Ui.Row(root, "ActionBar", 8, 0, null, null, TextAnchor.LowerCenter);
-            row.anchorMin = row.anchorMax = row.pivot = new Vector2(0.5f, 0f);
-            row.anchoredPosition = new Vector2(0f, Edge);
-            row.sizeDelta = new Vector2(400f, 84f);
-            row.GetComponent<HorizontalLayoutGroup>().childForceExpandWidth = false;
+            var row = E(root, "actions");
             var key = 1;
             foreach (var (icon, label, act, on, danger) in new[]
             {
-                ("ICON_DarkFantasy_Status_Dead_01_Clean", Loc.T(exec ? "unit.card.cancelExec" : "unit.card.exec"), a.Exec, exec, true),
+                (Kit.Icon.Dead, Loc.T(exec ? "unit.card.cancelExec" : "unit.card.exec"), a.Exec, exec, true),
                 (Kit.Icon.Wait, Loc.T("unit.card.wait"), a.Wait, false, false),
                 (Kit.Icon.Heal, Loc.T(mend ? "hud.cancelMend" : "hud.mend"), a.Mend, mend, false),
             })
             {
                 if (act == a.Mend && !sel.Has(Ability.Mend)) continue;
-                var col = Ui.Col(row, "Slot " + label, 4);
-                col.GetComponent<VerticalLayoutGroup>().childAlignment = TextAnchor.UpperCenter;
-                col.GetComponent<VerticalLayoutGroup>().childForceExpandWidth = false;
-                Ui.Size(col, 90);
-                var slot = Ui.Node(col, "Slot");
-                Ui.Size(slot, 64, 64);
-                Frame(slot, on ? (danger ? Ui.Blood : Ui.Steel) : danger ? Ui.BloodDim : Ui.SteelDim, 14f);
-                var ic = Ui.Sprite(slot, "Icon", S(icon), danger ? Ui.Blood : Ui.Steel);
-                ic.rectTransform.anchorMin = ic.rectTransform.anchorMax = new Vector2(0.5f, 0.5f);
-                ic.rectTransform.sizeDelta = new Vector2(40f, 40f);
-                Hotkey(slot, (key++).ToString());
-                var btn = slot.gameObject.AddComponent<Button>();
-                btn.targetGraphic = slot.GetComponentInChildren<Image>();
-                var go = act;
-                UiSound.Add(btn).onClick.AddListener(() => go?.Invoke());
-                HoverTip.Add(slot, label, 0.2f);
+                var slot = E(row, "slot", true);
+                Frame(slot, art, on ? (danger ? Ui.Blood : Ui.Steel) : danger ? Ui.BloodDim : Ui.SteelDim);
+                slot.Q(className: "panel-frame").AddToClassList("thin");
+                Icon(slot, icon, danger ? Ui.Blood : Ui.Steel);
+                L(slot, (key++).ToString(), "key");
+                Click(slot, act);
+                Tip(slot, label, 200);
             }
         }
 
@@ -695,166 +547,121 @@ namespace VampireSpawn.Game.Screens
 
         const float HeadBarW = 72f;
 
-        void Head(RectTransform layer, Battle b, Unit u, bool named, bool showMov, int damage)
+        void Head(VisualElement layer, Battle b, Unit u, bool named, bool showMov, int damage)
         {
             var cells = Mathf.Max(1, u.MaxHp);
             var full = u.Hp;
             var lost = damage > 0 ? full - Mathf.Max(0, u.Hp - damage) : 0;
             var color = u.Side == Side.Ally ? Ui.Steel : u.Role == Role.Spawn ? Ui.Spawn : Ui.Blood;
-            const float w = HeadBarW;
-            var rt = Ui.Place(layer, "Head " + u.Id, new Vector2(0.5f, 0.5f), Vector2.zero, new Vector2(w, 8f));
-            rt.pivot = new Vector2(0.5f, 0f);
-            Ui.Bg(Ui.Place(rt, "Back", new Vector2(0.5f, 0.5f), Vector2.zero, new Vector2(w + 4f, 12f)), Ui.Alpha(Ui.Ink, 0.85f), null, false);
-            var imgs = new Image[cells];
+            var rt = E(layer, "head");
+            rt.style.display = DisplayStyle.None;
+            E(rt, "head-back");
+            var imgs = new VisualElement[cells];
             for (var i = 0; i < cells; i++)
             {
-                var c = Ui.Node(rt, "Cell");
-                c.anchorMin = new Vector2((float)i / cells, 0f);
-                c.anchorMax = new Vector2((float)(i + 1) / cells, 1f);
-                c.offsetMin = c.offsetMax = Vector2.zero;
-                imgs[i] = Ui.Bg(c, i < full ? color : Ui.Deep, null, false);
-                if (i >= full - lost && i < full) blink.Add(imgs[i]);
+                var c = E(rt, "cell");
+                c.style.left = HeadBarW * i / cells;
+                c.style.width = HeadBarW / cells;
+                c.style.backgroundColor = i < full ? color : Ui.Deep;
+                imgs[i] = c;
+                if (i >= full - lost && i < full) blink.Add(c);
             }
-            for (var i = 1; i < cells; i++)
-            {
-                var line = Ui.Place(rt, "Divider", new Vector2((float)i / cells, 0.5f), Vector2.zero, new Vector2(1f, 8f));
-                Ui.Bg(line, Ui.Alpha(Ui.Ink, 0.55f), null, false);
-            }
+            for (var i = 1; i < cells; i++) E(rt, "divider").style.left = HeadBarW * i / cells;
             if (u.Def > 0)
             {
-                var shields = Ui.Row(rt, "Def", -3, 0, null, null, TextAnchor.MiddleCenter);
-                shields.anchorMin = shields.anchorMax = new Vector2(0.5f, 0.5f);
-                shields.pivot = new Vector2(0.5f, 0.3f);
-                shields.sizeDelta = new Vector2(w + 40f, 16f);
-                shields.GetComponent<HorizontalLayoutGroup>().childForceExpandWidth = false;
-                for (var i = 0; i < u.Def; i++) Ui.Size(Ui.Sprite(shields, "Shield", S(Kit.Icon.BoardDef), Ui.Bone), 16, 16);
+                var shields = E(rt, "shields");
+                for (var i = 0; i < u.Def; i++) Icon(shields, Kit.Icon.BoardDef, Ui.Bone, "icon shield");
             }
-            const float x = 4f;
             if (damage > 0)
             {
-                var at = Ui.Place(rt, "Damage", new Vector2(1f, 0.5f), new Vector2(x, 0f), new Vector2(60f, 28f));
-                at.pivot = new Vector2(0f, 0.5f);
-                if (damage >= u.Hp) Ui.Place(at, "Dead", new Vector2(0f, 0.5f), Vector2.zero, new Vector2(24f, 24f)).gameObject.AddComponent<Image>().sprite = S("ICON_DarkFantasy_Status_Dead_01_Stroke");
-                else
-                {
-                    var d = T(at, "−" + damage, 20, u.Side == Side.Ally ? Ui.Blood : Ui.Bone, true, false, TextAnchor.MiddleLeft);
-                    Ui.Stretch(d.rectTransform);
-                    d.gameObject.AddComponent<Outline>().effectColor = Ui.Ink;
-                }
+                var at = E(rt, "damage");
+                if (damage >= u.Hp) Icon(at, "ICON_DarkFantasy_Status_Dead_01_Stroke", Color.white);
+                else L(at, "−" + damage, "outline", u.Side == Side.Ally ? Ui.Blood : Ui.Bone);
             }
+            // Stacked above the bar: name, enemy move/range (Alt), the vampire's target mark.
             var y = u.Def > 0 ? 20f : 12f;
             if (named)
             {
-                var n = T(Ui.Place(rt, "Name", new Vector2(0.5f, 1f), new Vector2(0f, y - 4f), new Vector2(240f, 18f)), Loc.Text(u.Name) + "  " + u.Hp + "/" + u.MaxHp, 14, Ui.Bone, true, false, TextAnchor.LowerCenter);
-                n.rectTransform.parent.GetComponent<RectTransform>().pivot = new Vector2(0.5f, 0f);
-                Ui.Stretch(n.rectTransform);
-                n.gameObject.AddComponent<Outline>().effectColor = Ui.Ink;
+                L(rt, Loc.Text(u.Name) + "  " + u.Hp + "/" + u.MaxHp, "head-name outline").style.bottom = y - 4f;
                 y += 18f;
             }
             if (showMov)
             {
-                var m = Ui.Row(rt, "Mov", 2, 0, null, null, TextAnchor.LowerCenter);
-                m.anchorMin = m.anchorMax = new Vector2(0.5f, 1f);
-                m.pivot = new Vector2(0.5f, 0f);
-                m.anchoredPosition = new Vector2(0f, y - 4f);
-                m.sizeDelta = new Vector2(u.Rng >= 2 ? 110f : 60f, 24f);
-                m.GetComponent<HorizontalLayoutGroup>().childForceExpandWidth = false;
-                Ui.Size(Ui.Sprite(m, "Icon", S("ICON_DarkFantasy_Stat_Speed_01_Stroke"), Ui.Blood), 20, 20);
-                T(m, u.Mov.ToString(), 20, Ui.Blood, true).gameObject.AddComponent<Outline>().effectColor = Ui.Ink;
+                var m = E(rt, "head-mov");
+                m.style.bottom = y - 4f;
+                Icon(m, "ICON_DarkFantasy_Stat_Speed_01_Stroke", Ui.Blood);
+                L(m, u.Mov.ToString(), "outline");
                 if (u.Rng >= 2)
                 {
-                    Ui.Size(Ui.Sprite(m, "Rng", S(Kit.Icon.Rng), Ui.Blood), 20, 20);
-                    T(m, u.Rng.ToString(), 20, Ui.Blood, true).gameObject.AddComponent<Outline>().effectColor = Ui.Ink;
+                    Icon(m, Kit.Icon.Rng, Ui.Blood);
+                    L(m, u.Rng.ToString(), "outline");
                 }
                 y += 24f;
             }
-            if (b.EatTarget == u.Id)
-            {
-                var t = Ui.Sprite(rt, "Targeted", S("ICON_DarkFantasy_Status_Targeted_01_Stroke"), Ui.Blood).rectTransform;
-                t.anchorMin = t.anchorMax = new Vector2(0.5f, 1f);
-                t.pivot = new Vector2(0.5f, 0f);
-                t.anchoredPosition = new Vector2(0f, y);
-                t.sizeDelta = new Vector2(32f, 32f);
-            }
-            heads[u.Id] = new HeadMark { Rt = rt, Cells = imgs, MaxHp = u.MaxHp, Color = color };
+            if (b.EatTarget == u.Id) Icon(rt, Kit.Icon.Target, Ui.Blood, "icon head-target").style.bottom = y;
+            heads[u.Id] = new HeadMark { Root = rt, Cells = imgs, MaxHp = u.MaxHp, Color = color };
         }
 
         // ---------- result (battle-hud.md 5) ----------
 
-        public void Over(RectTransform root, OverInfo o, BattleActions a)
+        public void Over(VisualElement root, OverInfo o, BattleActions a)
         {
-            var backdrop = Ui.Node(root, "Over");
-            Ui.Stretch(backdrop);
-            Ui.Bg(backdrop, Ui.Alpha(Ui.Ink, 0.7f));
-            backdrop.gameObject.AddComponent<Button>().onClick.AddListener(() => a.CloseOver?.Invoke());
-            var box = Ui.Col(backdrop, "OverBox", 16, 36);
-            box.anchorMin = box.anchorMax = box.pivot = new Vector2(0.5f, 0.5f);
-            box.sizeDelta = new Vector2(640f, 0f);
-            box.GetComponent<VerticalLayoutGroup>().childAlignment = TextAnchor.UpperCenter;
-            box.gameObject.AddComponent<ContentSizeFitter>().verticalFit = ContentSizeFitter.FitMode.PreferredSize;
-            box.gameObject.AddComponent<Button>().transition = Selectable.Transition.None;
+            root.Clear();
+            var veil = E(root, "veil", true);
+            veil.RegisterCallback<ClickEvent>(e => { if (e.target == veil) a.CloseOver?.Invoke(); });
+            var box = E(veil, "window over-box col", true);
             var edge = o.Won ? Ui.Steel : Ui.Blood;
-            Ui.Frame(box, S("SPR_DarkFantasyMenus_Frame_Box_Medium_02"), S("SPR_DarkFantasyMenus_Frame_Box_Medium_02_Background"), edge, FramePpu);
+            Frame(box, art, edge);
             // ui-style.md 14-4: a big emblem carries the result, like the reference's Mission Failed screen. Large_01 is the demon skull, so only defeat wears it.
-            var emblem = Ui.Node(box, "Emblem");
-            Ui.Size(emblem, 200, 170);
-            if (kit.Prefab(emblem, o.Won ? MenuScreen.Crest : "Crest_DarkFantasyMenus_Large_01", new Vector2(0.5f, 0.5f), Vector2.zero, 150f, edge) == null)
-                Ui.Stretch(Ui.Sprite(emblem, "Icon", S(o.Won ? Kit.Icon.Trophy : Kit.Icon.Dead), edge).rectTransform, 37, 22, 37, 22);
+            var emblem = E(box, "emblem decor");
+            var crest = art.UiPrefab(o.Won ? MenuToolkit.Crest : "Crest_DarkFantasyMenus_Large_01");
+            if (crest != null) Prefab(emblem, crest, edge);
+            else Icon(emblem, o.Won ? Kit.Icon.Trophy : Kit.Icon.Dead, edge);
             var st = o.Stats;
             var stg = o.Stage;
-            var title = T(box, Loc.T(o.Won ? "over.won" : "over.lost"), 64, o.Won ? Ui.Sun : Ui.Blood, true, true, TextAnchor.UpperCenter);
-            HoverTip.Add(title.rectTransform, o.Won ? Loc.T("over.wonLine", o.Turn, stg.BossName) : Loc.T("over.lostLine"), 0.3f);
-            title.raycastTarget = true;
+            var title = L(box, Loc.T(o.Won ? "over.won" : "over.lost"), "over-title display", o.Won ? Ui.Sun : Ui.Blood);
+            var titleTip = o.Won ? Loc.T("over.wonLine", o.Turn, stg.BossName) : Loc.T("over.lostLine");
 
-            var tally = Ui.Row(box, "Tally", 36, 0, null, null, TextAnchor.MiddleCenter);
-            tally.GetComponent<HorizontalLayoutGroup>().childForceExpandWidth = false;
-            kit.Value(tally, Kit.Icon.Dead, st.Lost.ToString(), 24, Ui.Muted, Ui.Bone, Loc.T("over.fallen"));
-            kit.Value(tally, Kit.Icon.Skulls, st.Executed.ToString(), 24, Ui.Blood, Ui.Bone, Loc.T("over.execs"));
-            kit.Value(tally, Kit.Icon.Fang, st.Risen.ToString(), 24, Ui.Spawn, Ui.Bone, Loc.T("over.risen"));
-            kit.Value(tally, Kit.Icon.Target, st.Drained.ToString(), 24, Ui.MoonBlood, Ui.Bone, Loc.T("over.drained"));
+            var tally = E(box, "tally row");
+            Value(tally, Kit.Icon.Dead, st.Lost.ToString(), Ui.Muted, Ui.Bone, Loc.T("over.fallen"));
+            Value(tally, Kit.Icon.Skulls, st.Executed.ToString(), Ui.Blood, Ui.Bone, Loc.T("over.execs"));
+            Value(tally, Kit.Icon.Fang, st.Risen.ToString(), Ui.Spawn, Ui.Bone, Loc.T("over.risen"));
+            Value(tally, Kit.Icon.Target, st.Drained.ToString(), Ui.MoonBlood, Ui.Bone, Loc.T("over.drained"));
 
             var ok = o.Won && o.BonusOk;
             if (o.Won)
             {
-                var rew = Ui.Row(box, "Reward", 36, 0, null, null, TextAnchor.MiddleCenter);
-                rew.GetComponent<HorizontalLayoutGroup>().childForceExpandWidth = false;
+                var rew = E(box, "reward row");
                 var bonusTip = Loc.T("over.bonus", Loc.Text(stg.Bonus.Text)) + " · " + (ok ? Loc.T("over.done") : Loc.T("over.failed"));
                 if (o.Camp)
                 {
                     var r = o.Result;
-                    kit.Value(rew, Kit.Icon.Gold, r.ClearGold > 0 ? "+" + r.ClearGold : "0", 28, Ui.Candle, r.ClearGold > 0 ? Ui.Candle : Ui.Dim,
+                    Value(rew, Kit.Icon.Gold, r.ClearGold > 0 ? "+" + r.ClearGold : "0", Ui.Candle, r.ClearGold > 0 ? Ui.Candle : Ui.Dim,
                         r.FirstClear ? Loc.T("over.firstClear") : Loc.T("over.replayClear"));
-                    kit.Value(rew, Kit.Icon.Star, !ok ? "✕" : r.BonusGold > 0 ? "+" + r.BonusGold : "✓", 28, ok ? Ui.Candle : Ui.Dim, ok ? Ui.Candle : Ui.Dim, bonusTip);
+                    Value(rew, Kit.Icon.Star, !ok ? "✕" : r.BonusGold > 0 ? "+" + r.BonusGold : "✓", ok ? Ui.Candle : Ui.Dim, ok ? Ui.Candle : Ui.Dim, bonusTip);
                     var nxt = Array.IndexOf(Campaign.Stages, stg) + 1;
                     var next = nxt < Campaign.Stages.Length ? Campaign.Stages[nxt] : null;
                     if (r.FirstClear && next != null)
                     {
-                        var news = Ui.Row(box, "Unlocked", 10, 0, null, null, TextAnchor.MiddleCenter);
-                        news.GetComponent<HorizontalLayoutGroup>().childForceExpandWidth = false;
-                        var lockOpen = Ui.Sprite(news, "Next", S(Kit.Icon.Flag), Ui.Sun);
-                        Ui.Size(lockOpen, 28, 28);
-                        T(news, Loc.Text(next.Title), 20, Ui.Bone, true, false, TextAnchor.MiddleLeft);
+                        var news = E(box, "unlocked row", true);
+                        Icon(news, Kit.Icon.Flag, Ui.Sun);
+                        L(news, Loc.Text(next.Title));
                         foreach (var u in next.Units.Where(u => GameData.Type(u).UnlockAt == nxt + 1))
-                        {
-                            var chip = Ui.Sprite(news, "New", S(Weapon(u)), Ui.Candle);
-                            Ui.Size(chip, 32, 32);
-                            HoverTip.Add(chip.rectTransform, Loc.T("camp.new", GameData.Type(u).Name), 0.2f);
-                            chip.raycastTarget = true;
-                        }
-                        HoverTip.Add(news, Loc.T("over.nextOpen", next.Label, next.Title), 0.4f);
+                            Tip(Icon(news, art.Icon(u), Ui.Candle, "icon new"), Loc.T("camp.new", GameData.Type(u).Name), 200);
+                        Tip(news, Loc.T("over.nextOpen", next.Label, next.Title), 400);
                     }
-                    if (r.FirstClear && next == null) HoverTip.Add(title.rectTransform, Loc.T("over.campaignDone"), 0.3f);
+                    if (r.FirstClear && next == null) titleTip += "\n" + Loc.T("over.campaignDone");
                 }
-                else kit.Value(rew, Kit.Icon.Star, ok ? "✓" : "✕", 28, ok ? Ui.Candle : Ui.Dim, ok ? Ui.Candle : Ui.Dim, bonusTip);
+                else Value(rew, Kit.Icon.Star, ok ? "✓" : "✕", ok ? Ui.Candle : Ui.Dim, ok ? Ui.Candle : Ui.Dim, bonusTip);
             }
+            Tip(title, titleTip, 300);
 
-            var acts = Ui.Row(box, "Acts", 10, 0, null, null, TextAnchor.MiddleCenter);
-            acts.GetComponent<HorizontalLayoutGroup>().childControlWidth = false;
-            acts.GetComponent<HorizontalLayoutGroup>().childForceExpandWidth = false;
+            var acts = E(box, "over-acts row");
             var w = o.Camp ? 178f : 270f;
-            if (o.Camp) Btn(acts, Loc.T("over.toCamp"), a.ToCamp, BtnKind.Primary, new Vector2(w, 52f));
-            Btn(acts, Loc.T("over.retry"), a.Retry, o.Camp ? BtnKind.Normal : BtnKind.Primary, new Vector2(w, 52f));
-            Btn(acts, Loc.T("over.redeploy"), a.Redeploy, BtnKind.Normal, new Vector2(w, 52f));
+            if (o.Camp) Btn(acts, Loc.T("over.toCamp"), a.ToCamp, BtnKind.Primary).style.width = w;
+            Btn(acts, Loc.T("over.retry"), a.Retry, o.Camp ? BtnKind.Normal : BtnKind.Primary).style.width = w;
+            Btn(acts, Loc.T("over.redeploy"), a.Redeploy, BtnKind.Normal).style.width = w;
+            UseFonts(root);
         }
     }
 }

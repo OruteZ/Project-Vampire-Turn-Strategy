@@ -1,8 +1,7 @@
 using System;
 using System.Linq;
 using UnityEngine;
-using UnityEngine.EventSystems;
-using UnityEngine.UI;
+using UnityEngine.UIElements;
 using VampireSpawn.Core;
 
 namespace VampireSpawn.Game.Screens
@@ -12,79 +11,56 @@ namespace VampireSpawn.Game.Screens
     [DefaultExecutionOrder(1000)]
     public sealed class CampMarkers : MonoBehaviour
     {
-        const float Hit = 96f, Badge = 44f, Picked = 56f, Band = 280f;
+        const float Badge = 44f, Picked = 56f;
 
         sealed class Marker
         {
-            public RectTransform Root, Badge, NameBand;
-            public Image Ring, Fill, Star;
-            public Text Number, Name;
+            public VisualElement Root, Badge, Ring, Fill, Star;
+            public Label Number, Name;
+            public IVisualElementScheduledItem Pulse;
             public bool Hover;
             public float Size = CampMarkers.Badge;
         }
 
         Marker[] markers;
         CampaignMapView map;
-        RectTransform canvas;
+        ArtCatalog art;
+        VisualElement layer;
         Rect empty;
-        CampLayer layer;
+        CampLayer shownLayer;
         int focus;
 
-        public static CampMarkers Build(RectTransform screen, ArtCatalog art, CampaignMapView map, Action<int> pick)
+        public static CampMarkers Build(Transform host, VisualElement layer, ArtCatalog art, CampaignMapView map, Action<int> pick)
         {
-            var host = Ui.Node(screen, "Markers");
-            Ui.Stretch(host);
             var view = host.gameObject.AddComponent<CampMarkers>();
             view.map = map;
-            view.canvas = screen;
-            var kit = new Kit(art);
-            view.kit = kit;
+            view.art = art;
+            view.layer = layer;
             view.markers = new Marker[Campaign.Stages.Length];
             for (var i = 0; i < view.markers.Length; i++)
             {
-                var m = new Marker();
-                m.Root = Ui.Node(host, "Marker " + (i + 1));
-                m.Root.anchorMin = m.Root.anchorMax = Vector2.zero;
-                m.Root.sizeDelta = new Vector2(Hit, Hit);
-                var hit = Ui.Bg(m.Root, Ui.Alpha(Ui.Ink, 0f));
-                hit.raycastTarget = true;
-                m.Badge = Ui.Place(m.Root, "Badge", new Vector2(0.5f, 0.5f), Vector2.zero, new Vector2(Badge, Badge));
-                m.Fill = Ui.Sprite(m.Badge, "Fill", kit.S("SPR_DarkFantasyMenus_Frame_Ring_01_Background"), Ui.Deep);
-                Ui.Stretch(m.Fill.rectTransform);
-                m.Ring = Ui.Sprite(m.Badge, "Ring", kit.S("SPR_DarkFantasyMenus_Frame_Ring_01"), Ui.Line);
-                Ui.Stretch(m.Ring.rectTransform, -2, -2, -2, -2);
-                m.Number = Kit.T(m.Badge, (i + 1).ToString(), 20, Ui.Bone, true, false, TextAnchor.MiddleCenter);
-                Ui.Stretch(m.Number.rectTransform);
-                m.Star = Ui.Sprite(m.Root, "Star", kit.S(Kit.Icon.Star), Ui.Line);
-                var star = m.Star.rectTransform;
-                star.anchorMin = star.anchorMax = new Vector2(0.5f, 0.5f);
-                star.anchoredPosition = new Vector2(18f, -18f);
-                star.sizeDelta = new Vector2(20f, 20f);
-                m.NameBand = Ui.Place(m.Root, "Name", new Vector2(0.5f, 0.5f), new Vector2(0f, -48f), new Vector2(Band, 32f));
-                m.NameBand.pivot = new Vector2(0.5f, 1f);
-                Ui.Bg(m.NameBand, Ui.Alpha(Ui.Deep, 0.92f), Ui.Line, false);
-                m.Name = Kit.T(m.NameBand, Loc.Text(Campaign.Stages[i].Title), 17, Ui.Bone, false, false, TextAnchor.MiddleCenter);
-                Ui.Stretch(m.Name.rectTransform);
+                var m = new Marker { Root = ToolkitKit.E(layer, "marker", true) };
+                m.Root.name = "Marker " + (i + 1);
+                m.Badge = ToolkitKit.RingBadge(m.Root, art, (i + 1).ToString(), Badge, Ui.Line, Ui.Deep, Ui.Bone);
+                m.Badge.AddToClassList("marker-badge");
+                m.Fill = m.Badge.Q(className: "ring-fill");
+                m.Ring = m.Badge.Q(className: "ring");
+                m.Number = m.Badge.Q<Label>();
+                m.Star = ToolkitKit.E(m.Root, "marker-star");
+                m.Name = ToolkitKit.L(m.Root, Loc.Text(Campaign.Stages[i].Title), "marker-name");
                 var index = i;
-                var btn = m.Root.gameObject.AddComponent<Button>();
-                btn.targetGraphic = hit;
-                btn.transition = Selectable.Transition.None;
-                UiSound.Add(btn).onClick.AddListener(() => pick(index));
-                var hover = m.Root.gameObject.AddComponent<MarkerHover>();
-                hover.Changed = on => { m.Hover = on; view.Restyle(); };
+                ToolkitKit.Click(m.Root, () => pick(index));
+                m.Root.RegisterCallback<PointerEnterEvent>(_ => { m.Hover = true; view.Restyle(); });
+                m.Root.RegisterCallback<PointerLeaveEvent>(_ => { m.Hover = false; view.Restyle(); });
                 view.markers[i] = m;
             }
             return view;
         }
 
-        Campaign campaign;
-        Kit kit;
-
         // empty is in normalized viewport units (stage-select.md 2-3).
         public void Fill(Campaign c, CampNav nav, Rect empty)
         {
-            campaign = c;
-            layer = nav.Layer;
+            shownLayer = nav.Layer;
             focus = nav.Stage;
             this.empty = empty;
             for (var i = 0; i < markers.Length; i++)
@@ -93,16 +69,20 @@ namespace VampireSpawn.Game.Screens
                 var last = i == markers.Length - 1;
                 var s = Campaign.Stages[i];
                 var accent = last ? Ui.Blood : Ui.Steel;
-                // Fx keeps the colour it was added with, so a refill drops the old pulse before recolouring.
-                foreach (var fx in m.Ring.GetComponents<Fx>()) { if (Application.isPlaying) Destroy(fx); else DestroyImmediate(fx); }
-                if (c.IsCleared(s)) { m.Ring.color = accent; m.Fill.color = accent; m.Number.color = Ui.Ink; }
-                else if (c.StageOpen(i)) { m.Ring.color = last ? Ui.Blood : Ui.Sun; m.Fill.color = Ui.Deep; m.Number.color = Ui.Bone; Fx.Pulse(m.Ring); }
-                else { m.Ring.color = last ? Ui.BloodDim : Ui.Line; m.Fill.color = Ui.Deep; m.Number.color = Ui.Dim; }
+                m.Pulse?.Pause();
+                m.Pulse = null;
+                Color ring, fill, ink;
+                if (c.IsCleared(s)) (ring, fill, ink) = (accent, accent, Ui.Ink);
+                else if (c.StageOpen(i)) (ring, fill, ink) = (last ? Ui.Blood : Ui.Sun, Ui.Deep, Ui.Bone);
+                else (ring, fill, ink) = (last ? Ui.BloodDim : Ui.Line, Ui.Deep, Ui.Dim);
+                m.Ring.style.unityBackgroundImageTintColor = ring;
+                m.Fill.style.unityBackgroundImageTintColor = fill;
+                m.Number.style.color = ink;
+                if (c.StageOpen(i) && !c.IsCleared(s)) m.Pulse = Fx.Pulse(m.Ring, ring);
                 var locked = !c.StageOpen(i);
-                m.Star.sprite = kit.S(locked ? Kit.Icon.Lock : Kit.Icon.Star);
-                m.Star.rectTransform.sizeDelta = Vector2.one * (locked ? 18f : 20f);
-                m.Star.color = locked ? Ui.Dim : c.BonusDone.Contains(s.Id) ? Ui.Candle : Ui.Line;
-                m.Name.color = last ? Ui.Blood : Ui.Bone;
+                ToolkitKit.Picture(m.Star, art.Ui(locked ? Kit.Icon.Lock : Kit.Icon.Star), locked ? Ui.Dim : c.BonusDone.Contains(s.Id) ? Ui.Candle : Ui.Line);
+                m.Star.EnableInClassList("locked", locked);
+                m.Name.style.color = last ? Ui.Blood : Ui.Bone;
             }
             Restyle();
             LateUpdate();
@@ -116,55 +96,43 @@ namespace VampireSpawn.Game.Screens
             for (var i = 0; i < markers.Length; i++)
             {
                 var m = markers[i];
-                var picked = layer == CampLayer.Info && i == focus;
-                var focused = layer == CampLayer.Map && i == focus;
-                m.NameBand.gameObject.SetActive(m.Hover || picked);
+                var picked = shownLayer == CampLayer.Info && i == focus;
+                var focused = shownLayer == CampLayer.Map && i == focus;
+                m.Name.EnableInClassList("shown", m.Hover || picked);
                 m.Size = picked ? Picked : Badge;
-                m.Ring.transform.localScale = Vector3.one * ((m.Hover || focused) && !picked ? 1.1f : 1f);
+                m.Ring.style.scale = new Scale(Vector2.one * ((m.Hover || focused) && !picked ? 1.1f : 1f));
             }
         }
 
         void LateUpdate()
         {
             if (markers == null || map == null) return;
-            var size = canvas.rect.size;
+            var size = ToolkitKit.PanelSize();
             for (var i = 0; i < markers.Length; i++)
             {
                 var m = markers[i];
-                var p = layer == CampLayer.Barracks ? null : map.ScreenPoint(i);
+                var p = shownLayer == CampLayer.Barracks ? null : map.ScreenPoint(i);
                 var show = p.HasValue && empty.Contains(p.Value);
-                if (m.Root.gameObject.activeSelf != show) m.Root.gameObject.SetActive(show);
-                if (show) m.Root.anchoredPosition = new Vector2(p.Value.x * size.x, p.Value.y * size.y);
+                m.Root.style.display = show ? DisplayStyle.Flex : DisplayStyle.None;
+                if (show)
+                {
+                    m.Root.style.left = p.Value.x * size.x;
+                    m.Root.style.top = (1f - p.Value.y) * size.y;
+                }
                 // stage-select.md 4-2: 44 -> 56 over 0.15 s.
-                var d = Mathf.MoveTowards(m.Badge.sizeDelta.x, m.Size, (Picked - Badge) / 0.15f * Time.unscaledDeltaTime);
-                m.Badge.sizeDelta = new Vector2(d, d);
+                var d = Mathf.MoveTowards(m.Badge.style.width.value.value, m.Size, (Picked - Badge) / 0.15f * Time.unscaledDeltaTime);
+                m.Badge.style.width = d;
+                m.Badge.style.height = d;
             }
             // 4-3: far markers (higher on screen) first, hovered/focused/picked on top.
-            Array.Sort(order ??= BuildOrder(), (a, b) => Rank(b).CompareTo(Rank(a)));
-            for (var k = 0; k < order.Length; k++) markers[order[k]].Root.SetSiblingIndex(k);
-        }
-
-        int[] order;
-
-        int[] BuildOrder()
-        {
-            var o = new int[markers.Length];
-            for (var i = 0; i < o.Length; i++) o[i] = i;
-            return o;
+            layer.Sort((a, b) => Rank(Array.FindIndex(markers, x => x.Root == a)).CompareTo(Rank(Array.FindIndex(markers, x => x.Root == b))));
         }
 
         float Rank(int i)
         {
             var m = markers[i];
-            var top = m.Hover || i == focus ? -10000f : 0f;
-            return m.Root.anchoredPosition.y + top;
-        }
-
-        sealed class MarkerHover : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
-        {
-            public Action<bool> Changed;
-            public void OnPointerEnter(PointerEventData e) => Changed?.Invoke(true);
-            public void OnPointerExit(PointerEventData e) => Changed?.Invoke(false);
+            var top = m.Hover || i == focus ? 10000f : 0f;
+            return m.Root.style.top.value.value + top;
         }
     }
 }

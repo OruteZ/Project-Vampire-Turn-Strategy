@@ -1,6 +1,6 @@
 using UnityEngine;
 using UnityEngine.Localization.Settings;
-using UnityEngine.UI;
+using UnityEngine.UIElements;
 using VampireSpawn.Core;
 using VampireSpawn.Game.Data;
 
@@ -13,9 +13,8 @@ namespace VampireSpawn.Game.Screens
         public BoardView board;
         public Camera viewCamera;
 
-        RectTransform screen;
         RenderTexture backdropTex;
-        UnityEngine.UIElements.UIDocument toolkitMenu;
+        UIDocument menu;
         readonly KeyEdges keys = new KeyEdges();
 
         void Start()
@@ -24,7 +23,6 @@ namespace VampireSpawn.Game.Screens
             Sound.Use(board.art.sound);
             Sound.Music(s => s.menuMusic);
             Sound.Ambience(null);
-            screen = App.Canvas(transform);
             LocalizationSettings.SelectedLocaleChanged += OnLocaleChanged;
             Show(true);
         }
@@ -40,30 +38,20 @@ namespace VampireSpawn.Game.Screens
 
         public void Show(bool fade)
         {
-            if (toolkitMenu != null) { Destroy(toolkitMenu.gameObject); toolkitMenu = null; }
-            Ui.Clear(screen);
-            if (!screen.TryGetComponent<Image>(out var bg)) bg = screen.gameObject.AddComponent<Image>();
-            bg.color = Ui.Ink;
+            if (menu != null) Destroy(menu.gameObject);
             Backdrop(Campaign.Stages[0]);
             System.Action<int> hover = i => { if (App.MenuSel != i) { App.MenuSel = i; Show(false); } };
-            if (MenuToolkit.On && board.art.panel != null) toolkitMenu = MenuToolkit.Build(transform, board.art, App.Campaign, Demo, Camp, App.MenuSel, hover);
-            else MenuScreen.Build(screen, App.Campaign, Demo, Camp, board.art, App.MenuSel, hover);
-            if (fade) Fx.FadeIn(screen);
+            menu = MenuToolkit.Build(transform, board.art, App.Campaign, backdropTex, Demo, Camp, App.MenuSel, hover);
+            if (fade) Fx.FadeIn(menu.rootVisualElement);
         }
 
-        // ui-style.md 11-1: the stage board, blurred and darkened 60%. A tiny render target upscaled is the blur.
+        // ui-style.md 11-1: a tiny render target upscaled is the blur.
         void Backdrop(Stage s)
         {
             if (viewCamera == null || board == null) return;
             if (backdropTex == null) backdropTex = new RenderTexture(240, 135, 16) { filterMode = FilterMode.Bilinear };
             if (board.Stage != s) board.Show(s);
             viewCamera.targetTexture = backdropTex;
-            var img = Ui.Node(screen, "Backdrop").gameObject.AddComponent<RawImage>();
-            img.texture = backdropTex;
-            img.color = new Color(0.4f, 0.4f, 0.4f);
-            img.raycastTarget = false;
-            Ui.Stretch(img.rectTransform);
-            img.transform.SetAsFirstSibling();
         }
 
         void Demo() => App.GoBattle(GameData.Stages[0], demo: true);

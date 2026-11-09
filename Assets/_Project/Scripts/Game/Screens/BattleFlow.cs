@@ -1,8 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-using UnityEngine.EventSystems;
-using UnityEngine.UI;
+using UnityEngine.UIElements;
 using VampireSpawn.Core;
 using VampireSpawn.Game.Data;
 
@@ -18,17 +17,18 @@ namespace VampireSpawn.Game.Screens
         // Prototype timers: leave confirmation 2500 ms, phase banner 1300 ms.
         const float LeaveSeconds = 2.5f, BannerSeconds = 1.3f;
 
-        public bool OverShown => overRoot != null && overRoot.gameObject.activeSelf;
+        public bool OverShown => overRoot != null && overRoot.ClassListContains("shown");
 
         bool demo, leaveArm, rulesOpen, logOpen, finished, enemyPlaying, fullMoon, moonFading, altDown;
         float leaveUntil, bannerUntil;
         Vector2Int fittedSize;
         Stage stage;
         OverInfo over;
-        RectTransform screen, boardArea, overRoot, hudRoot;
+        UIDocument doc;
+        VisualElement overRoot, hudRoot;
         BattleHud hud;
         int? hoverId, hoverCorpse;
-        Text banner;
+        Label banner;
         BattleActions actions;
         readonly KeyEdges keys = new KeyEdges();
 
@@ -40,7 +40,12 @@ namespace VampireSpawn.Game.Screens
         {
             App.Ensure(data);
             Sound.Use(View.board.art.sound);
-            screen = App.Canvas(transform);
+            doc = ToolkitKit.Document(transform, "Battle (UI Toolkit)", View.board.art.panel, View.board.art.battleDocument);
+            var root = doc.rootVisualElement;
+            banner = root.Q<Label>("banner");
+            hudRoot = root.Q("hud");
+            overRoot = root.Q("over");
+            hud = new BattleHud(View.board.art, root.Q<Label>("tip"));
             if (viewCamera != null)
             {
                 viewCamera.clearFlags = CameraClearFlags.SolidColor;
@@ -48,7 +53,7 @@ namespace VampireSpawn.Game.Screens
             }
             input.Changed += OnBattleChanged;
             View.Played += OnPlayed;
-            input.PointerBlocked = () => EventSystem.current != null && EventSystem.current.IsPointerOverGameObject();
+            input.PointerBlocked = () => ToolkitKit.PointerOverUi(doc);
             input.EscapeFirst = CloseBattlePopup;
             actions = new BattleActions
             {
@@ -66,11 +71,11 @@ namespace VampireSpawn.Game.Screens
                 Retry = () => StartBattle(stage, Session.Battle.StartFormation, true),
                 Redeploy = () => StartBattle(stage, Session.Battle.StartFormation, false),
                 ToCamp = () => App.GoCamp(Back()),
-                CloseOver = () => overRoot.gameObject.SetActive(false),
+                CloseOver = () => overRoot.RemoveFromClassList("shown"),
             };
             demo = App.BattleStage == null || App.Demo;
             StartBattle(App.BattleStage ?? GameData.Stages[0], App.Formation, App.StartNow);
-            Fx.FadeIn(screen);
+            Fx.FadeIn(root);
         }
 
         public void StartBattle(Stage s, IEnumerable<Placement> formation, bool startNow)
@@ -81,31 +86,10 @@ namespace VampireSpawn.Game.Screens
             finished = enemyPlaying = leaveArm = rulesOpen = logOpen = false;
             hoverId = hoverCorpse = null;
             over = null;
-            Ui.Clear(screen);
-
-            boardArea = Ui.Node(screen, "BoardArea");
-            // ui-style.md 1-3: the HUD keeps off a 360/150/360/190 px margin around the board.
-            Ui.Stretch(boardArea, 360f, 150f, 360f, 190f);
-            banner = Ui.Text(boardArea, "", 32f / Ui.Base, Ui.Steel, true, true, TextAnchor.UpperCenter);
-            var br = banner.rectTransform;
-            br.anchorMin = new Vector2(0f, 1f);
-            br.anchorMax = Vector2.one;
-            br.offsetMin = new Vector2(0f, -60f);
-            br.offsetMax = new Vector2(0f, -12f);
-            var ol = banner.gameObject.AddComponent<Outline>();
-            ol.effectColor = Ui.Ink;
-            ol.effectDistance = new Vector2(2f, -2f);
-            banner.gameObject.SetActive(false);
-
-            hudRoot = Ui.Node(screen, "Hud");
-            Ui.Stretch(hudRoot);
-            hud = new BattleHud(View.board.art);
-
-            overRoot = Ui.Node(screen, "OverRoot");
-            Ui.Stretch(overRoot);
-            overRoot.gameObject.SetActive(false);
-
-            Canvas.ForceUpdateCanvases();
+            banner.RemoveFromClassList("shown");
+            hudRoot.Clear();
+            overRoot.Clear();
+            overRoot.RemoveFromClassList("shown");
             FitCameraRect();
             var battle = demo ? new Battle(s, App.DemoUpgrades, formation) : Campaign.NewBattle(s, formation);
             input.Begin(new BattleSession(battle));
@@ -122,20 +106,17 @@ namespace VampireSpawn.Game.Screens
         void FitCameraRect()
         {
             if (viewCamera == null) return;
-            var corners = new Vector3[4];
-            Canvas.ForceUpdateCanvases();
-            boardArea.GetWorldCorners(corners);
-            float w = Screen.width, h = Screen.height;
             fittedSize = new Vector2Int(Screen.width, Screen.height);
-            // stage-dressing.md 1-4: the world fills the screen behind the HUD; only the board is framed into the board area.
+            // stage-dressing.md 1-4: the world fills the screen behind the HUD; only the board is framed into the board area
+            // (.board-area in Battle.uss: 360/150/360/190 px, ui-style.md 1-3), in viewport units with y up.
+            var size = ToolkitKit.PanelSize();
             viewCamera.rect = new Rect(0f, 0f, 1f, 1f);
-            View.board.FrameInto(new Rect(corners[0].x / w, corners[0].y / h, (corners[2].x - corners[0].x) / w, (corners[2].y - corners[0].y) / h));
+            View.board.FrameInto(new Rect(360f / size.x, 190f / size.y, (size.x - 720f) / size.x, (size.y - 340f) / size.y));
         }
 
         void RenderBattle()
         {
             if (Session == null) return;
-            Ui.Clear(hudRoot);
             hud.Build(hudRoot, Session, HudNow(), actions);
         }
 
@@ -185,8 +166,8 @@ namespace VampireSpawn.Game.Screens
             // The model has already left the full-moon turn while it plays back, so the banner is the only cue (ui-style.md 7-2).
             if (e.BannerKind == BannerKind.FullMoon) { fullMoon = true; RenderBattle(); }
             banner.text = Loc.Text(e.Text);
-            banner.color = e.BannerKind != BannerKind.PlayerTurn ? Ui.Blood : Ui.Steel;
-            banner.gameObject.SetActive(true);
+            banner.style.color = e.BannerKind != BannerKind.PlayerTurn ? Ui.Blood : Ui.Steel;
+            banner.AddToClassList("shown");
             bannerUntil = Time.unscaledTime + BannerSeconds;
         }
 
@@ -194,7 +175,7 @@ namespace VampireSpawn.Game.Screens
         {
             if (Session == null) return;
             if (leaveArm && Time.unscaledTime > leaveUntil) { leaveArm = false; RenderBattle(); }
-            if (banner != null && banner.gameObject.activeSelf && Time.unscaledTime > bannerUntil) banner.gameObject.SetActive(false);
+            if (banner != null && banner.ClassListContains("shown") && Time.unscaledTime > bannerUntil) banner.RemoveFromClassList("shown");
             if (Screen.width != fittedSize.x || Screen.height != fittedSize.y) FitCameraRect();
             TrackHover();
             Hotkeys();
@@ -247,7 +228,7 @@ namespace VampireSpawn.Game.Screens
             var b = Session.Battle;
             if (b.Phase == Phase.Deploy) input.Run(s => s.Start());
             else if (b.Phase == Phase.Player) { enemyPlaying = true; input.Run(s => s.EndTurn()); }
-            else if (b.Phase == Phase.Over && over != null) overRoot.gameObject.SetActive(true);
+            else if (b.Phase == Phase.Over && over != null) overRoot.AddToClassList("shown");
         }
 
         void Leave()
@@ -270,9 +251,8 @@ namespace VampireSpawn.Game.Screens
             Sound.Music(null);
             if (over.Won) Sound.Play(x => x.victory); else Sound.Play(x => x.defeat);
             if (over.Won && !demo) CampaignStore.Save(Campaign);
-            Ui.Clear(overRoot);
             hud.Over(overRoot, over, actions);
-            overRoot.gameObject.SetActive(true);
+            overRoot.AddToClassList("shown");
         }
     }
 }

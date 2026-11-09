@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Every screen at every aspect ratio: UiAudit report + screenshot into verify-artifacts/$VU_RUN/. Usage: VU_RUN=<id> [LOCALE=en] [ONLY=1-menu] [TOOLKIT=1] bash tools/ui-audit/sweep.sh
+# Every screen at every aspect ratio: UiAudit report + screenshot into verify-artifacts/$VU_RUN/. Usage: VU_RUN=<id> [LOCALE=en] [ONLY=1-menu] bash tools/ui-audit/sweep.sh
 set -u
 ROOT="$(cd "$(dirname "$0")/../.." && pwd)"
 export VU_PROJECT="${VU_PROJECT:-$ROOT}"
@@ -33,7 +33,6 @@ declare -A SCREENS=(
 SIZES="${SIZES:-1920x1080 1280x720 1920x1200 1440x1080 1280x1024 2560x1080}"
 
 bash "$V" play >/dev/null || exit 1
-ev "UnityEngine.PlayerPrefs.SetInt(\"ui.toolkitMenu\", ${TOOLKIT:-0}); return 1;" >/dev/null
 ev "UnityEngine.Localization.Settings.LocalizationSettings.SelectedLocale = UnityEngine.Localization.Settings.LocalizationSettings.AvailableLocales.GetLocale(\"${LOCALE:-ko}\"); return 1;" >/dev/null
 sleep 1
 for size in $SIZES; do
@@ -42,6 +41,8 @@ for size in $SIZES; do
   for key in $(printf '%s\n' "${!SCREENS[@]}" | sort | grep -E "${ONLY:-.}"); do
     ev "${SCREENS[$key]}" >/dev/null
     sleep 1
+    # A fresh battle opens with the start camera sweep (BattleCamera); the board is framed only after it settles (~6 s).
+    [ "$key" = 3-deploy ] && sleep 6
     { echo "## $key $size"; ev "return VampireSpawn.Editor.UiAudit.Report();"; echo; } >> "$REPORT"
     bash "$V" shot "$key-$size" "$w" "$h" >/dev/null
   done

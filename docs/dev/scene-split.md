@@ -19,7 +19,7 @@
 - 캠페인 저장(`App.Campaign`), 메뉴에서 고른 카드, 장 선택의 마지막 상태(`App.Nav`)와 다음에 열 상태(`App.CampStart`), 시작할 전투(`BattleStage`·`Demo`·`Formation`·`StartNow`).
 - 화면 전환은 `App.GoMenu()`, `App.GoCamp(nav)`, `App.GoBattle(stage, demo)` 이다. 씬이 바뀌면 앞 화면의 카메라·안개·보드·UI 가 같이 사라진다. 그래서 옛 `GameFlow.ClearScreen` 이 하던 손 정리가 없다.
 - 데이터(`GameDataAsset`)는 처음 열린 씬의 컨트롤러가 `App.Ensure(data)` 로 한 번 싣는다.
-- 공용: 캔버스 `App.Canvas` (Expand, ui-style.md 15-1), 키 눌림 `KeyEdges`.
+- 공용: UI 문서 `ToolkitKit.Document` (패널 `Assets/_Project/UI/Panel.asset`, Expand, ui-style.md 15-1), 키 눌림 `KeyEdges`.
 
 ## 3. 원정 지도
 

@@ -259,7 +259,9 @@ L3 병영: 오른쪽 칸이 병영 칸(560×680)으로 바뀌고 카메라가 �
 3. 글 예산: 화면에 문장 없음 (`UiTextParityTests.AssertNoSentences`). 이름 띠·버튼 낱말만.
 4. 스크린샷: 1920×1080 의 L1·L2·L3, 그리고 2560×1080·1280×1024 의 L2 (`verify-artifacts/`, 경로는 주제 이슈 댓글에).
 
-## 10. 어느 UI 로 짓나 (UI Toolkit + uGUI)
+## 10. 어느 UI 로 짓나 (UI Toolkit)
+
+> #106 (2026-11-09, 사용자 "UGUI 폐기하고 UITOOLKIT으로 완전히 옮기고 싶어"): 아래 표의 uGUI 칸도 UI Toolkit 으로 옮겼다. 지역 표식은 `Camp.uxml` 의 `markers` 층에, 그늘은 `shade` 에 있고 그리는 순서는 3D 지도 → 그늘 → 표식 → 칸이다. 아래는 #43 당시 기록이다.
 
 사용자 결정(#43): "개발을 UI Toolkit + UGUI로". #44 시험(docs/dev/ui-toolkit-trial.md 6 "새로 만들거나 크게 고치는 화면부터 UI Toolkit, 보드 위에 뜨는 것은 uGUI")을 따른다.
 

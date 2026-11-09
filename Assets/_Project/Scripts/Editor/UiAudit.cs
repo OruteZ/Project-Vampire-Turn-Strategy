@@ -3,14 +3,15 @@ using System.Linq;
 using System.Text;
 using UnityEditor;
 using UnityEngine;
-using UnityEngine.UI;
+using UnityEngine.UIElements;
 
 namespace VampireSpawn.Editor
 {
-    // Play-mode layout check driven from the CLI (docs/dev/ui-audit.md): what leaves the screen, its own box, or its framed panel.
+    // Play-mode layout check driven from the CLI (docs/dev/ui-audit.md): what leaves the screen, its own box, or its framed panel. Units are panel px.
     public static class UiAudit
     {
         const float Slack = 2f;
+        static readonly string[] Frames = { "card", "panel", "unit", "box", "window" };
 
         public static string Resize(int width, int height)
         {
@@ -20,27 +21,8 @@ namespace VampireSpawn.Editor
 
         public static string Report()
         {
-            Canvas.ForceUpdateCanvases();
-            var screen = new Rect(0, 0, Screen.width, Screen.height);
             var found = new List<string>();
-            foreach (var g in Object.FindObjectsByType<Graphic>(FindObjectsSortMode.None))
-            {
-                if (!g.isActiveAndEnabled || g.color.a < 0.02f || g.canvas == null || g is RawImage) continue;
-                var drawn = Drawn(g);
-                if (drawn.width <= 0f) continue;
-                var path = Path(g.transform);
-                // Glyph quads overhang the line box: bold bearings sideways, OS-font ascent and descent by up to 40% of the size (Latin descenders); vertical spill is font metrics, sideways spill is the visible fault.
-                var (hs, vs) = g is Text tx ? (4f * g.canvas.scaleFactor, Mathf.Max(6f, tx.fontSize * 0.4f * g.canvas.scaleFactor)) : (Slack, Slack);
-                string Over(Rect outer, Rect inner) => Spill(outer, inner, hs, vs);
-                if (Over(screen, drawn) is var s && s != "") found.Add("off-screen\t" + path + "\t" + s);
-                if (g is Text t && Over(World(g.rectTransform), drawn) is var o && o != "") found.Add("text>box\t" + path + "\t" + o + " \"" + Clip(t.text) + "\"");
-                var frame = FramedAncestor(g.transform);
-                if (frame != null && Over(World(frame), drawn) is var f && f != "") found.Add("out-of-frame\t" + path + "\t" + f + " frame=" + frame.name);
-                // A button label running under its key cap (Kit.Hotkey).
-                if (g is Text lt && g.transform.parent != null && g.transform.parent.Find("Key") is RectTransform key && key != g.transform && World(key).Overlaps(drawn))
-                    found.Add("key-overlap\t" + path + "\t\"" + Clip(lt.text) + "\"");
-            }
-            foreach (var doc in Object.FindObjectsByType<UnityEngine.UIElements.UIDocument>(FindObjectsSortMode.None)) ToolkitReport(doc, found);
+            foreach (var doc in Object.FindObjectsByType<UIDocument>(FindObjectsSortMode.None)) Toolkit(doc, found);
             var board = Object.FindFirstObjectByType<VampireSpawn.Game.BoardView>();
             if (board != null && board.Board != null && board.viewCamera != null && board.viewCamera.targetTexture == null)
             {
@@ -59,46 +41,43 @@ namespace VampireSpawn.Editor
             return sb.ToString();
         }
 
-        // The same three checks for UI Toolkit, in panel units: off the panel, text wider than its label, outside its .card or .panel.
-        static void ToolkitReport(UnityEngine.UIElements.UIDocument doc, List<string> found)
+        // Off the panel, text wider than its label, outside its framed box. Ellipsized labels cut on purpose; .decor stands out on purpose.
+        static void Toolkit(UIDocument doc, List<string> found)
         {
             var root = doc.rootVisualElement;
             if (root == null || root.panel == null) return;
             var screen = root.worldBound;
-            foreach (var e in UnityEngine.UIElements.UQueryExtensions.Query<UnityEngine.UIElements.VisualElement>(root).ToList())
+            foreach (var e in root.Query<VisualElement>().ToList())
             {
-                if (e.resolvedStyle.display == UnityEngine.UIElements.DisplayStyle.None || e.resolvedStyle.visibility == UnityEngine.UIElements.Visibility.Hidden) continue;
                 if (Hidden(e) || e.worldBound.width <= 0f) continue;
-                var label = e as UnityEngine.UIElements.Label;
-                var drawn = e.resolvedStyle.backgroundImage.sprite != null || (label != null && !string.IsNullOrWhiteSpace(label.text));
+                var label = e as Label;
+                var drawn = e.resolvedStyle.backgroundImage.sprite != null || e.resolvedStyle.backgroundImage.texture != null || (label != null && !string.IsNullOrWhiteSpace(label.text));
                 if (!drawn) continue;
-                var path = ToolkitPath(e);
-                if (Spill(screen, e.worldBound, Slack, Slack) is var s && s != "") found.Add("off-screen\ttk:" + path + "\t" + s);
-                if (label != null)
+                var path = Path(e);
+                if (Spill(screen, e.worldBound) is var s && s != "") found.Add("off-screen\t" + path + "\t" + s);
+                if (label != null && label.resolvedStyle.whiteSpace == WhiteSpace.NoWrap && label.resolvedStyle.textOverflow != TextOverflow.Ellipsis)
                 {
-                    var need = label.MeasureTextSize(label.text, 0, UnityEngine.UIElements.VisualElement.MeasureMode.Undefined, 0, UnityEngine.UIElements.VisualElement.MeasureMode.Undefined);
-                    if (label.resolvedStyle.whiteSpace == UnityEngine.UIElements.WhiteSpace.NoWrap && need.x > label.contentRect.width + 4f)
-                        found.Add("text>box\ttk:" + path + "\tR" + (need.x - label.contentRect.width).ToString("0") + " \"" + Clip(label.text) + "\"");
+                    var need = label.MeasureTextSize(label.text, 0, VisualElement.MeasureMode.Undefined, 0, VisualElement.MeasureMode.Undefined);
+                    if (need.x > label.contentRect.width + 4f) found.Add("text>box\t" + path + "\tR" + (need.x - label.contentRect.width).ToString("0") + " \"" + Clip(label.text) + "\"");
                 }
-                // .decor is drawn to stand out of its panel (the castle crest over the stage panel); it must still stay on screen.
                 for (var p = e.parent; p != null; p = p.parent)
                     if (p.ClassListContains("decor")) break;
-                    else if (p.ClassListContains("card") || p.ClassListContains("panel"))
+                    else if (Frames.Any(p.ClassListContains))
                     {
-                        if (Spill(p.worldBound, e.worldBound, Slack, Slack) is var f && f != "") found.Add("out-of-frame\ttk:" + path + "\t" + f + " frame=" + p.name);
+                        if (Spill(p.worldBound, e.worldBound) is var f && f != "") found.Add("out-of-frame\t" + path + "\t" + f + " frame=" + (string.IsNullOrEmpty(p.name) ? p.GetClasses().FirstOrDefault() : p.name));
                         break;
                     }
             }
         }
 
-        static bool Hidden(UnityEngine.UIElements.VisualElement e)
+        static bool Hidden(VisualElement e)
         {
             for (var p = e; p != null; p = p.parent)
-                if (p.resolvedStyle.display == UnityEngine.UIElements.DisplayStyle.None) return true;
+                if (p.resolvedStyle.display == DisplayStyle.None || p.resolvedStyle.visibility == Visibility.Hidden || p.resolvedStyle.opacity < 0.02f) return true;
             return false;
         }
 
-        static string ToolkitPath(UnityEngine.UIElements.VisualElement e)
+        static string Path(VisualElement e)
         {
             var names = new List<string>();
             for (var p = e; p != null && p.parent != null; p = p.parent) names.Add(string.IsNullOrEmpty(p.name) ? p.GetClasses().FirstOrDefault() ?? p.GetType().Name : p.name);
@@ -106,58 +85,16 @@ namespace VampireSpawn.Editor
             return string.Join("/", names);
         }
 
-        // Text glyphs, not the RectTransform: overflowing text draws outside its rect.
-        static Rect Drawn(Graphic g)
-        {
-            if (!(g is Text t)) return World(g.rectTransform);
-            var verts = t.cachedTextGenerator.verts;
-            if (verts.Count == 0 || string.IsNullOrWhiteSpace(t.text)) return Rect.zero;
-            var min = new Vector2(float.MaxValue, float.MaxValue);
-            var max = new Vector2(float.MinValue, float.MinValue);
-            var scale = 1f / t.pixelsPerUnit;
-            foreach (var v in verts)
-            {
-                var w = (Vector2)t.rectTransform.TransformPoint(v.position * scale);
-                min = Vector2.Min(min, w);
-                max = Vector2.Max(max, w);
-            }
-            return Rect.MinMaxRect(min.x, min.y, max.x, max.y);
-        }
-
-        static Rect World(RectTransform rt)
-        {
-            var c = new Vector3[4];
-            rt.GetWorldCorners(c);
-            return Rect.MinMaxRect(c[0].x, c[0].y, c[2].x, c[2].y);
-        }
-
-        static string Spill(Rect outer, Rect inner, float hs, float vs)
+        static string Spill(Rect outer, Rect inner)
         {
             var parts = new List<string>();
-            void Add(string side, float px, float slack) { if (px > slack) parts.Add(side + px.ToString("0")); }
-            Add("L", outer.xMin - inner.xMin, hs);
-            Add("R", inner.xMax - outer.xMax, hs);
-            Add("T", inner.yMax - outer.yMax, vs);
-            Add("B", outer.yMin - inner.yMin, vs);
+            void Add(string side, float px) { if (px > Slack) parts.Add(side + px.ToString("0")); }
+            Add("L", outer.xMin - inner.xMin);
+            Add("R", inner.xMax - outer.xMax);
+            Add("T", outer.yMin - inner.yMin);
+            Add("B", inner.yMax - outer.yMax);
             return string.Join(",", parts);
         }
-
-        // A panel is framed when Ui.Frame or Kit.Btn put a "Frame" image directly under it.
-        static RectTransform FramedAncestor(Transform t)
-        {
-            for (var p = t.parent; p != null; p = p.parent)
-                if (p.Find("Frame") is Transform f && f != t && f.GetComponent<Image>() != null) return (RectTransform)p;
-            return null;
-        }
-
-        static string Path(Transform t)
-        {
-            var names = new List<string>();
-            for (var p = t; p != null && p.GetComponent<Canvas>() == null; p = p.parent) names.Add(p.name);
-            names.Reverse();
-            return string.Join("/", names);
-        }
-
 
         static string Clip(string s) { s = s.Replace("\n", " "); return s.Length > 40 ? s.Substring(0, 40) + "…" : s; }
     }

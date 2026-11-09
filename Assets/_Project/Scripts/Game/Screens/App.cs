@@ -1,9 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.EventSystems;
-using UnityEngine.InputSystem.UI;
 using UnityEngine.SceneManagement;
-using UnityEngine.UI;
 using VampireSpawn.Core;
 using VampireSpawn.Game.Data;
 
@@ -75,23 +72,6 @@ namespace VampireSpawn.Game.Screens
             var problems = data.Problems();
             if (problems.Count > 0) Debug.LogError("게임 데이터에 문제가 있다:\n" + string.Join("\n", problems));
             if (data.Missing().Count == 0) GameData.Use(data.ToDataSet());
-        }
-
-        // ui-style.md 15-1: the canvas never shrinks below 1920x1080, only the spare axis grows. Panel.asset matches.
-        public static RectTransform Canvas(Transform owner)
-        {
-            var go = new GameObject("UI", typeof(RectTransform), typeof(UnityEngine.Canvas), typeof(CanvasScaler), typeof(GraphicRaycaster));
-            go.layer = 5;
-            go.transform.SetParent(owner, false);
-            go.GetComponent<UnityEngine.Canvas>().renderMode = RenderMode.ScreenSpaceOverlay;
-            var scaler = go.GetComponent<CanvasScaler>();
-            scaler.uiScaleMode = CanvasScaler.ScaleMode.ScaleWithScreenSize;
-            scaler.screenMatchMode = CanvasScaler.ScreenMatchMode.Expand;
-            scaler.referenceResolution = new Vector2(1920f, 1080f);
-            var screen = Ui.Node(go.transform, "Screen");
-            Ui.Stretch(screen);
-            if (EventSystem.current == null) new GameObject("EventSystem", typeof(EventSystem), typeof(InputSystemUIInputModule)).transform.SetParent(owner, false);
-            return screen;
         }
     }
 
