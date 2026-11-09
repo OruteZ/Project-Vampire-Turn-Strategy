@@ -125,6 +125,7 @@ MonoBehaviour:
   - {fileID: 21300000, guid: 3bbac68dbe2fe3a439ae92de46c83167, type: 3}
   - {fileID: 21300000, guid: 721eb28b67d216a42b85f09b273c65fd, type: 3}
   - {fileID: 21300000, guid: 344440301ba583b44923d2f7575e62ba, type: 3}
+  - {fileID: 21300000, guid: b3fa69947e6b2f54697740ed52182a3d, type: 3}
   uiPrefabs:
   - {fileID: 4654971216602336425, guid: 8a6d5f97315c9a04f9ceb0e8317bb261, type: 3}
   - {fileID: 7476782851927854031, guid: 91a89f5b582042147a074fc07aa52830, type: 3}

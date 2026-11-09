@@ -184,7 +184,7 @@
 |---|---|
 | 체력 | `Icons_Stats/ICON_DarkFantasy_Stat_Health_01` |
 | 이동력 | `Icons_Stats/ICON_DarkFantasy_Stat_Speed_01` |
-| 공격력 | `Icons_Stats/ICON_DarkFantasy_Stat_Strength_01` |
+| 공격력 | `Icons_Status/ICON_DarkFantasy_Status_Attack_01` |
 | 방어력 | `Icons_Status/ICON_DarkFantasy_Status_Defense_01` |
 | 사거리 | `Icons_Stats/ICON_DarkFantasy_Stat_Accuracy_01` |
 | 보름달 표적 | `Icons_Status/ICON_DarkFantasy_Status_Targeted_01` |

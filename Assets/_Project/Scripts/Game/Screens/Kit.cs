@@ -8,7 +8,7 @@ namespace VampireSpawn.Game.Screens
     {
         public static class Icon
         {
-            public const string Hp = "ICON_DarkFantasy_Stat_Health_01_Clean", Mov = "ICON_DarkFantasy_Stat_Speed_01_Clean", Atk = "ICON_DarkFantasy_Stat_Strength_01_Clean",
+            public const string Hp = "ICON_DarkFantasy_Stat_Health_01_Clean", Mov = "ICON_DarkFantasy_Stat_Speed_01_Clean", Atk = "ICON_DarkFantasy_Status_Attack_01_Clean",
                 Def = "ICON_DarkFantasy_Status_Defense_01_Clean", Rng = "ICON_DarkFantasy_Stat_Accuracy_01_Clean", Fang = "ICON_DarkFantasy_Status_Vampiric_01_Clean",
                 Dead = "ICON_DarkFantasy_Status_Dead_01_Clean", BoardDef = "ICON_DarkFantasy_Status_Defense_01_Stroke", Target = "ICON_DarkFantasy_Status_Targeted_01_Stroke",
                 Gold = "ICON_DarkFantasyMenus_Currency_Coin_01_Clean", Silver = "ICON_DarkFantasy_Inventory_Currency_01_Clean", Pop = "ICON_DarkFantasy_Inventory_Helmets_01_Clean",

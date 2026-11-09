@@ -118,7 +118,7 @@
 - 아군 패널: 장식 없는 `Frame_Box_Medium`, 쇠색. 왼쪽 아래
 - 적 패널: 같은 크기, 핏빛 틀에 모서리 `Greeble_Spikes`. 오른쪽 아래. **이동력을 반드시 보인다** (ui.md "스펙에는 이동력도")
 - 스폰 패널: 아군 틀 모양 + 보라색 + 원래 병종 이름. 방어 0·원거리 불가를 빗금으로 (units.md)
-- 아이콘: `Stat_Health_01`(체력), `Stat_Speed_01`(이동), `Stat_Strength_01`(공격), `Status_Defense_01`(방어), 무기는 `ICON_SM_Wep_*`(창 `Pitchfork`·`Polearm`, 궁수 `Crossbow` 등)
+- 아이콘: `Stat_Health_01`(체력), `Stat_Speed_01`(이동), `Status_Attack_01`(공격, 칼), `Status_Defense_01`(방어), 무기는 `ICON_SM_Wep_*`(창 `Pitchfork`·`Polearm`, 궁수 `Crossbow` 등)
 
 ### 5-3. 머리 위 표시 (보드 위, 1단계)
 
