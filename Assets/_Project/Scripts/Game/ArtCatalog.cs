@@ -22,6 +22,11 @@ namespace VampireSpawn.Game
             return themes[0];
         }
 
+        [Tooltip("장별 꾸미기 프리팹, 이름 = 장 id (docs/art/stage-dressing.md 4). 도구 모음 > 전투 보드 > 꾸미기 프리팹 굽기로 채운다")]
+        public GameObject[] stageDressings;
+
+        public GameObject Dressing(string stageId) => System.Array.Find(stageDressings ?? System.Array.Empty<GameObject>(), p => p != null && p.name == stageId);
+
         [Header("Units")]
         [Tooltip("병종 모습. 순서 상관없이 UnitLook.key (병종 key) 로 찾는다")]
         public UnitLook[] allyLooks;
