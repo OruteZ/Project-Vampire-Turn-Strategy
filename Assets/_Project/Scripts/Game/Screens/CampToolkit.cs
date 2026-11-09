@@ -280,6 +280,8 @@ namespace VampireSpawn.Game.Screens
                 row.RegisterCallback<PointerEnterEvent>(_ => Stats(stats, now, next));
                 row.RegisterCallback<PointerLeaveEvent>(_ => Stats(stats, now, null));
             }
+            // USS has no :last-child; the gap belongs only between rows, or three rows overflow the 480 viewport by 12.
+            if (ups.contentContainer.childCount > 0) ups.contentContainer[ups.contentContainer.childCount - 1].style.marginBottom = 0;
         }
 
         // upgrade.md 3 stat row; with a hovered branch (5-5) the numbers it would change turn light.

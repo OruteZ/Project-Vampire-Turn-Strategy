@@ -209,7 +209,7 @@ namespace VampireSpawn.Core
                         o.AddRange(b.Allies.Where(a => b.CanMend(sel, a)).Select(a => new MarkedHex(Mark.Mend, a.Pos)));
                     else
                     {
-                        o.AddRange(b.Enemies.Where(e => Hex.Distance(sel.Pos, e.Pos) <= sel.Rng).Select(e => new MarkedHex(Mark.Atk, e.Pos)));
+                        o.AddRange(b.Enemies.Where(e => !e.Asleep && Hex.Distance(sel.Pos, e.Pos) <= sel.Rng).Select(e => new MarkedHex(Mark.Atk, e.Pos)));
                         o.AddRange(b.Corpses.Where(c => b.CanBury(sel, c)).Select(c => new MarkedHex(Mark.Bury, c.Pos)));
                     }
                 }

@@ -34,8 +34,9 @@ namespace VampireSpawn.Tests
                 foreach (var g in look.weapons.Where(g => g.prefab != null))
                 {
                     var w = children.First(t => t.name == g.prefab.name + "(Clone)");
-                    // Any hold, a new weapon left on AsIs included: the long end must not trail behind the unit.
-                    Assert.Greater(Vector3.Dot(LongEnd(w), Vector3.forward), -0.3f, name + " " + g.prefab.name + " (" + g.hold + ") trails behind, a reverse grip");
+                    // Any melee hold, a new weapon left on AsIs included: the long end must not trail behind the unit.
+                    // A bow is symmetric and a levelled crossbow's butt points back, so shooters are checked in the attack pose instead.
+                    if (!Shoots(look)) Assert.Greater(Vector3.Dot(LongEnd(w), Vector3.forward), -0.3f, name + " " + g.prefab.name + " (" + g.hold + ") trails behind, a reverse grip");
                     if (g.hold == Hold.AsIs) continue;
                     var blade = w.up;
                     if (g.hold == Hold.Pole)
@@ -50,6 +51,54 @@ namespace VampireSpawn.Tests
             }
             finally { Object.DestroyImmediate(view.gameObject); }
         }
+
+        static bool Shoots(UnitLook look) => look.animator != null && look.animator.name.Contains("Bow");
+
+        static IEnumerable<string> Shooters() => All.Where(Shoots).Select(l => l.name);
+
+        // docs/art/unit-visuals.md 3-1: at the shot the bow or crossbow stands up straight on the drawn arm. Polygon hand bones need a grip rotation for this.
+        [TestCaseSource(nameof(Shooters))]
+        public void ShootersHoldTheirWeaponUprightOnTheBowArm(string name)
+        {
+            var look = Look(name);
+            var view = UnitView.Create(Art, look, null, 0, new Vector3(0f, -500f, 0f), 0f, Color.gray, true);
+            try
+            {
+                var animator = view.GetComponentInChildren<Animator>();
+                animator.cullingMode = AnimatorCullingMode.AlwaysAnimate;
+                animator.Play("Attack", 0, 0.25f);
+                animator.Update(0f);
+                var g = look.weapons.First(x => x.prefab != null);
+                var w = view.GetComponentsInChildren<Transform>(true).First(t => t.name == g.prefab.name + "(Clone)");
+                Assert.AreEqual(Hand.Left, g.hand, name + " shoots with the left arm out");
+                var arm = (w.parent.position - w.parent.parent.position).normalized;
+                var thin = Thinnest(w);
+                // Bow: the thin axis is across the arm (limbs stand in the arm's vertical plane). Crossbow: the thin axis points up (limbs level).
+                var up = Mathf.Abs(Vector3.Dot(thin, Vector3.up));
+                var across = Mathf.Abs(Vector3.Dot(thin, arm));
+                Assert.IsTrue(up > 0.8f || across < 0.6f && Mathf.Abs(Vector3.Dot(Longest(w), Vector3.up)) > 0.7f,
+                    name + " " + g.prefab.name + " tilted at the shot: thin " + thin + ", arm " + arm);
+                // The mesh's bulk sits on the body side of the hand when the bow's belly faces the target (a flipped bow points it forward), and when a crossbow's stock runs back along the arm.
+                var bulk = (w.TransformPoint(MeshBounds(w).center) - w.parent.position).normalized;
+                Assert.Less(Vector3.Dot(bulk, arm), -0.5f, name + " " + g.prefab.name + " faces backwards at the shot");
+            }
+            finally { Object.DestroyImmediate(view.gameObject); }
+        }
+
+        static Bounds MeshBounds(Transform w)
+        {
+            var meshes = w.GetComponentsInChildren<MeshFilter>(true).Select(m => m.sharedMesh)
+                .Concat(w.GetComponentsInChildren<SkinnedMeshRenderer>(true).Select(s => s.sharedMesh)).Where(m => m != null).ToList();
+            var b = meshes[0].bounds;
+            foreach (var m in meshes) b.Encapsulate(m.bounds);
+            return b;
+        }
+
+        static Vector3 Axis(Transform w, int i) { var v = Vector3.zero; v[i] = 1f; return w.TransformDirection(v).normalized; }
+
+        static Vector3 Thinnest(Transform w) { var s = MeshBounds(w).size; return Axis(w, s.x <= s.y && s.x <= s.z ? 0 : s.y <= s.z ? 1 : 2); }
+
+        static Vector3 Longest(Transform w) { var s = MeshBounds(w).size; return Axis(w, s.x >= s.y && s.x >= s.z ? 0 : s.y >= s.z ? 1 : 2); }
 
         // World direction from the weapon's pivot to the far end of its longest axis.
         static Vector3 LongEnd(Transform w)
