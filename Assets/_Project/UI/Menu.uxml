@@ -2,6 +2,7 @@
     <Style src="Theme.uss" />
     <Style src="Menu.uss" />
     <ui:VisualElement name="menu" class="screen" picking-mode="Ignore">
+        <ui:VisualElement name="backdrop" class="backdrop" picking-mode="Ignore" />
         <ui:VisualElement name="block" class="block" picking-mode="Ignore">
         <ui:VisualElement name="crest" class="crest" picking-mode="Ignore" />
         <ui:Label name="title" class="title display" text="PROJECT VAMPIRE SPAWN" picking-mode="Ignore" />

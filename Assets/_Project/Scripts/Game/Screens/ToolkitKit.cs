@@ -7,9 +7,14 @@ using UnityEngine.UIElements;
 
 namespace VampireSpawn.Game.Screens
 {
-    // Shared UI Toolkit pieces for screens built from UXML/USS (docs/dev/ui-toolkit-trial.md 4, 6). Colours are the Ui tokens.
+    public enum BtnKind { Primary, Normal, Danger, DangerOn, Ghost }
+
+    // Shared UI Toolkit pieces (docs/dev/ui-toolkit-trial.md 4, 6). Shared classes live in Assets/_Project/UI/Theme.uss; colours are the Ui tokens.
     public static class ToolkitKit
     {
+        public const string FrameBox = "SPR_DarkFantasyMenus_Frame_Box_Medium_02", FrameBack = "SPR_DarkFantasyMenus_Frame_Box_Medium_02_Background",
+            Ring = "SPR_DarkFantasyMenus_Frame_Ring_01", RingBack = "SPR_DarkFantasyMenus_Frame_Ring_01_Background";
+
         // UIDocument builds its tree in OnEnable, so the assets go in before the object wakes.
         public static UIDocument Document(Transform host, string name, PanelSettings panel, VisualTreeAsset tree)
         {
@@ -20,17 +25,63 @@ namespace VampireSpawn.Game.Screens
             doc.panelSettings = panel;
             doc.visualTreeAsset = tree;
             go.SetActive(true);
-            // The root and the template container cover the whole screen; left pickable they make every click "over UI" (PanelRaycaster).
+            // The root and the template container cover the whole screen; left pickable they make every click "over UI".
             doc.rootVisualElement.pickingMode = PickingMode.Ignore;
             foreach (var c in doc.rootVisualElement.Children()) c.pickingMode = PickingMode.Ignore;
             UseFonts(doc.rootVisualElement);
+            // With Input System as the only input backend, runtime panels get pointer events only through an EventSystem (measured: no clicks without it).
+            if (UnityEngine.EventSystems.EventSystem.current == null)
+                new GameObject("EventSystem", typeof(UnityEngine.EventSystems.EventSystem), typeof(UnityEngine.InputSystem.UI.InputSystemUIInputModule)).transform.SetParent(host, false);
             return doc;
+        }
+
+        // ui-style.md 15-1 on Panel.asset (Scale With Screen Size, Expand, 1920x1080): the panel never shrinks below 1920x1080, the spare axis grows.
+        // Computed, not read from layout, so the first frame (before UI Toolkit lays out) already knows it.
+        public static Vector2 PanelSize()
+        {
+            var scale = Mathf.Min(Screen.width / 1920f, Screen.height / 1080f);
+            return scale > 0f ? new Vector2(Screen.width / scale, Screen.height / scale) : new Vector2(1920f, 1080f);
+        }
+
+        // True when the mouse is over an element that takes clicks; the screen-wide root and layers are Ignore.
+        public static bool PointerOverUi(UIDocument doc)
+        {
+            var panel = doc != null ? doc.rootVisualElement.panel : null;
+            var mouse = UnityEngine.InputSystem.Mouse.current;
+            if (panel == null || mouse == null) return false;
+            var p = RuntimePanelUtils.ScreenToPanel(panel, new Vector2(mouse.position.x.ReadValue(), Screen.height - mouse.position.y.ReadValue()));
+            var hit = panel.Pick(p);
+            return hit != null && hit.pickingMode == PickingMode.Position;
         }
 
         public static void UseFonts(VisualElement root)
         {
             root.style.unityFontDefinition = FontDefinition.FromSDFFont(OsFont("font.body"));
-            foreach (var d in root.Query(className: "display").ToList()) d.style.unityFontDefinition = FontDefinition.FromSDFFont(OsFont("font.display"));
+            var display = FontDefinition.FromSDFFont(OsFont("font.display"));
+            foreach (var d in root.Query(className: "display").ToList()) d.style.unityFontDefinition = display;
+        }
+
+        public static VisualElement E(VisualElement parent, string classes = null, bool pick = false)
+        {
+            var e = new VisualElement { pickingMode = pick ? PickingMode.Position : PickingMode.Ignore };
+            Classes(e, classes);
+            parent?.Add(e);
+            return e;
+        }
+
+        public static Label L(VisualElement parent, string text, string classes = null, Color? color = null)
+        {
+            var l = new Label(text) { pickingMode = PickingMode.Ignore };
+            Classes(l, classes);
+            if (color.HasValue) l.style.color = color.Value;
+            parent?.Add(l);
+            return l;
+        }
+
+        static void Classes(VisualElement e, string classes)
+        {
+            if (classes == null) return;
+            foreach (var c in classes.Split(' ')) if (c.Length > 0) e.AddToClassList(c);
         }
 
         public static void Picture(VisualElement e, Sprite s, Color? tint = null)
@@ -40,25 +91,106 @@ namespace VampireSpawn.Game.Screens
             if (tint.HasValue) e.style.unityBackgroundImageTintColor = tint.Value;
         }
 
+        public static VisualElement Pic(VisualElement parent, ArtCatalog art, string sprite, Color tint, string classes = "icon")
+        {
+            var e = E(parent, classes);
+            Picture(e, art.Ui(sprite), tint);
+            return e;
+        }
+
+        // ui-style.md 5 frame.panel: the box background in panel tint and the frame in the edge colour; the frame is a .panel-frame child.
+        public static void Frame(VisualElement panel, ArtCatalog art, Color edge)
+        {
+            Picture(panel, art.Ui(FrameBack), Ui.Alpha(Ui.Panel, 0.92f));
+            var frame = panel.Q(className: "panel-frame");
+            if (frame == null) { frame = E(null, "panel-frame"); panel.Insert(0, frame); }
+            Picture(frame, art.Ui(FrameBox), edge);
+        }
+
+        public static VisualElement Chip(VisualElement parent, ArtCatalog art, Color edge, Sprite icon, Color iconColor, float iconSize = 36f)
+        {
+            var chip = E(parent, "chip", true);
+            Picture(chip, art.Ui(FrameBack), Ui.Alpha(Ui.Panel, 0.92f));
+            Picture(E(chip, "chip-frame"), art.Ui(FrameBox), edge);
+            var i = E(chip, "chip-icon");
+            i.style.width = iconSize;
+            i.style.height = iconSize;
+            Picture(i, icon, iconColor);
+            return chip;
+        }
+
+        // ui-style.md 14-3-2: a number in a ring.
+        public static VisualElement RingBadge(VisualElement parent, ArtCatalog art, string text, float d, Color ring, Color fill, Color ink)
+        {
+            var b = E(parent, "ring-badge");
+            b.style.width = d;
+            b.style.height = d;
+            Picture(E(b, "ring-fill"), art.Ui(RingBack), fill);
+            Picture(E(b, "ring"), art.Ui(Ring), ring);
+            if (text != null) L(b, text, "ring-text", ink).style.fontSize = Mathf.Max(13f, d * 0.45f);
+            return b;
+        }
+
+        public static VisualElement Btn(VisualElement parent, ArtCatalog art, string text, BtnKind kind, string key = null, Action click = null, bool enabled = true)
+        {
+            var b = E(parent, "btn", true);
+            E(b, "btn-frame");
+            L(b, text, "btn-text");
+            if (key != null) L(b, key, "key");
+            Style(b, art, kind);
+            Click(b, click, enabled);
+            return b;
+        }
+
+        // ui-style.md 14-3: the key sits inside the button's bottom-right corner; the label keeps clear of it.
+        public static void KeepClearOfKey(VisualElement b, string key)
+        {
+            b.AddToClassList("has-key");
+            b.Q<Label>(className: "btn-text").style.right = (key.Length > 1 ? 8f + key.Length * 8f : 18f) + 10f;
+        }
+
+        public static VisualElement IconBtn(VisualElement parent, ArtCatalog art, string icon, Action click, bool enabled = true)
+        {
+            var b = E(parent, "icon-btn", true);
+            Picture(E(b, "icon"), art.Ui(icon));
+            Click(b, click, enabled);
+            return b;
+        }
+
+        public static void Click(VisualElement b, Action click, bool enabled = true)
+        {
+            b.EnableInClassList("disabled", !enabled);
+            UiSound.Add(b);
+            if (click != null) b.RegisterCallback<ClickEvent>(_ => { if (!b.ClassListContains("disabled")) click(); });
+        }
+
+        // ui-style.md 3 button table: fill and frame by kind; ghost draws neither.
+        public static void Style(VisualElement b, ArtCatalog art, BtnKind kind)
+        {
+            foreach (var k in new[] { "ghost", "normal", "primary", "danger" }) b.RemoveFromClassList(k);
+            b.AddToClassList(kind == BtnKind.Ghost ? "ghost" : kind == BtnKind.Primary ? "primary" : kind is BtnKind.Danger or BtnKind.DangerOn ? "danger" : "normal");
+            var frame = b.Q(className: "btn-frame");
+            if (kind == BtnKind.Ghost)
+            {
+                b.style.backgroundImage = StyleKeyword.None;
+                if (frame != null) frame.style.backgroundImage = StyleKeyword.None;
+                return;
+            }
+            Picture(b, art.Ui(FrameBack), kind == BtnKind.Primary ? Ui.Steel : Ui.Alpha(Ui.Panel, 0.92f));
+            if (frame != null) Picture(frame, art.Ui(FrameBox), kind == BtnKind.Primary ? Ui.Bone : kind == BtnKind.Danger ? Ui.BloodDim : kind == BtnKind.DangerOn ? Ui.Blood : Ui.SteelDim);
+        }
+
         // ui-style.md 14-3-1: [icon][number], the label lives in the tooltip.
         public static VisualElement Value(VisualElement row, ArtCatalog art, string icon, string value, Color iconColor, Color textColor, string tip = null, Label tipLabel = null)
         {
-            var v = new VisualElement();
-            v.AddToClassList("value");
-            var i = new VisualElement { pickingMode = PickingMode.Ignore };
-            i.AddToClassList("value-icon");
-            Picture(i, art.Ui(icon), iconColor);
-            var t = new Label(value) { pickingMode = PickingMode.Ignore };
-            t.AddToClassList("value-text");
-            t.style.color = textColor;
-            v.Add(i);
-            v.Add(t);
-            row.Add(v);
+            var v = E(row, "value", true);
+            Picture(E(v, "value-icon"), art.Ui(icon), iconColor);
+            L(v, value, "value-text", textColor);
             if (tip != null && tipLabel != null) Tip(v, tip, tipLabel, 300);
             return v;
         }
 
-        // HoverTip's frame.tip: shown above the owner after the pointer rests; kept on screen.
+        // frame.tip: shown above the owner after the pointer rests; kept on screen.
         public static void Tip(VisualElement owner, string text, Label tip, long delayMs = 600)
         {
             if (!string.IsNullOrEmpty(text)) Tip(owner, () => text, tip, delayMs);
@@ -68,6 +200,7 @@ namespace VampireSpawn.Game.Screens
         public static void Tip(VisualElement owner, Func<string> text, Label tip, long delayMs = 600)
         {
             if (tip == null) return;
+            if (owner.pickingMode == PickingMode.Ignore) owner.pickingMode = PickingMode.Position;
             IVisualElementScheduledItem pending = null;
             owner.RegisterCallback<PointerEnterEvent>(_ =>
             {
@@ -77,6 +210,7 @@ namespace VampireSpawn.Game.Screens
                     if (string.IsNullOrEmpty(now)) return;
                     tip.text = now;
                     tip.style.display = DisplayStyle.Flex;
+                    tip.BringToFront();
                     var b = owner.worldBound;
                     var local = tip.parent.WorldToLocal(new Vector2(b.xMin, b.yMin));
                     var room = tip.parent.contentRect;
@@ -85,10 +219,11 @@ namespace VampireSpawn.Game.Screens
                 }).StartingIn(delayMs);
             });
             owner.RegisterCallback<PointerLeaveEvent>(_ => { pending?.Pause(); tip.style.display = DisplayStyle.None; });
-            owner.RegisterCallback<DetachFromPanelEvent>(_ => pending?.Pause());
+            owner.RegisterCallback<DetachFromPanelEvent>(_ => { pending?.Pause(); tip.style.display = DisplayStyle.None; });
         }
 
         // A Synty INTERFACE uGUI prefab redrawn as stacked VisualElements: same sprites, tints, rects, mirroring, scaled into the host's box.
+        // The prefabs are only read as data; nothing of uGUI is drawn.
         public static void Prefab(VisualElement host, GameObject prefab, Color? tint = null)
         {
             if (host == null || prefab == null) return;
@@ -124,9 +259,33 @@ namespace VampireSpawn.Game.Screens
             });
         }
 
+        static Texture2D wideFade;
+
+        // stage-dressing.md 1-6: the world runs behind the HUD, so the outer quarter darkens to keep HUD text readable.
+        public static void Shade(VisualElement e)
+        {
+            if (e == null) return;
+            e.style.backgroundImage = new StyleBackground(wideFade ??= FadeTexture(64, (u, v) => Mathf.Clamp01(1f - Mathf.Min(Mathf.Min(u, 1f - u), Mathf.Min(v, 1f - v)) / 0.25f)));
+            e.style.unityBackgroundImageTintColor = Ui.Alpha(Ui.Ink, 0.55f);
+            e.style.backgroundSize = new BackgroundSize(BackgroundSizeType.Length) { x = Length.Percent(100), y = Length.Percent(100) };
+        }
+
+        public static Texture2D FadeTexture(int n, Func<float, float, float> alpha)
+        {
+            var tex = new Texture2D(n, n, TextureFormat.RGBA32, false) { wrapMode = TextureWrapMode.Clamp };
+            for (var y = 0; y < n; y++)
+                for (var x = 0; x < n; x++)
+                {
+                    var a = alpha((x + 0.5f) / n, (y + 0.5f) / n);
+                    tex.SetPixel(x, y, new Color(1f, 1f, 1f, a * a));
+                }
+            tex.Apply();
+            return tex;
+        }
+
         static readonly Dictionary<string, FontAsset> fonts = new Dictionary<string, FontAsset>();
 
-        // UI Toolkit cannot draw uGUI's OS dynamic Font, so the same pick (first installed name in the chain) is loaded from its file.
+        // UI Toolkit cannot draw an OS dynamic Font, so the first installed name in the language's chain (Text table font.body / font.display) is loaded from its file.
         static FontAsset OsFont(string key)
         {
             var chain = Loc.T(key);

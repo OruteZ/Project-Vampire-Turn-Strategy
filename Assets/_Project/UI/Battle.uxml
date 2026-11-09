@@ -1,0 +1,12 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements">
+    <Style src="Theme.uss" />
+    <Style src="Battle.uss" />
+    <ui:VisualElement name="battle" class="battle" picking-mode="Ignore">
+        <ui:VisualElement name="board-area" class="board-area" picking-mode="Ignore">
+            <ui:Label name="banner" class="banner display outline" picking-mode="Ignore" />
+        </ui:VisualElement>
+        <ui:VisualElement name="hud" class="layer" picking-mode="Ignore" />
+        <ui:VisualElement name="over" class="layer over" picking-mode="Ignore" />
+        <ui:Label name="tip" class="tip" picking-mode="Ignore" />
+    </ui:VisualElement>
+</ui:UXML>

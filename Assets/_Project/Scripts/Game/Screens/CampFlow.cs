@@ -1,5 +1,5 @@
 using UnityEngine;
-using UnityEngine.EventSystems;
+using UnityEngine.UIElements;
 using VampireSpawn.Core;
 using VampireSpawn.Game.Data;
 
@@ -12,7 +12,6 @@ namespace VampireSpawn.Game.Screens
         public CampaignMapView map;
 
         CampNav nav;
-        RectTransform screen;
         CampToolkit ui;
         CampMarkers markers;
         readonly KeyEdges keys = new KeyEdges();
@@ -27,16 +26,14 @@ namespace VampireSpawn.Game.Screens
             Sound.Use(map.art.sound);
             Sound.Music(s => s.campMusic);
             Sound.Ambience(s => s.campAmbience);
-            screen = App.Canvas(transform);
             nav = App.CampStart ?? CampNav.FromMenu(Campaign, App.Nav);
             App.CampStart = null;
             map.Show(Campaign);
-            BattleHud.Shade(screen);
-            markers = CampMarkers.Build(screen, map.art, map, i => Send(CampInput.Pick(i, Time.unscaledTime)));
             ui = CampToolkit.Build(transform, map.art, In, Send);
-            Canvas.ForceUpdateCanvases();
+            ToolkitKit.Shade(ui.Root.Q("shade"));
+            markers = CampMarkers.Build(transform, ui.Root.Q("markers"), map.art, map, i => Send(CampInput.Pick(i, Time.unscaledTime)));
             Redraw(true);
-            Fx.FadeIn(screen);
+            Fx.FadeIn(ui.Root);
         }
 
         CampInput In(CampKey key) => CampInput.Of(key, Time.unscaledTime);
@@ -68,7 +65,7 @@ namespace VampireSpawn.Game.Screens
         void Redraw(bool snap)
         {
             var empty = EmptyArea(nav.Layer);
-            var size = screen.rect.size;
+            var size = ToolkitKit.PanelSize();
             ui.Fill(Campaign, nav, In);
             markers.Fill(Campaign, nav, empty);
             map.Look(nav.Layer, nav.Stage, empty, new Vector2(48f / size.x, 48f / size.y), snap);
@@ -79,21 +76,12 @@ namespace VampireSpawn.Game.Screens
         // stage-select.md 2-3: the screen minus the corner UI and, in L2/L3, the 560 px side panel; normalized viewport units.
         Rect EmptyArea(CampLayer layer)
         {
-            var size = screen.rect.size;
+            var size = ToolkitKit.PanelSize();
             var right = layer == CampLayer.Map ? 24f : 608f;
             return new Rect(24f / size.x, 104f / size.y, (size.x - 24f - right) / size.x, (size.y - 112f - 104f) / size.y);
         }
 
-        bool PointerOverUi()
-        {
-            if (EventSystem.current != null && EventSystem.current.IsPointerOverGameObject()) return true;
-            var panel = ui?.Doc.rootVisualElement.panel;
-            var mouse = UnityEngine.InputSystem.Mouse.current;
-            if (panel == null || mouse == null) return false;
-            var p = UnityEngine.UIElements.RuntimePanelUtils.ScreenToPanel(panel, new Vector2(mouse.position.x.ReadValue(), Screen.height - mouse.position.y.ReadValue()));
-            var hit = panel.Pick(p);
-            return hit != null && hit.pickingMode == UnityEngine.UIElements.PickingMode.Position && hit != ui.Root;
-        }
+        bool PointerOverUi() => ToolkitKit.PointerOverUi(ui?.Doc);
 
         // stage-select.md 5-2 keys, the 2.5 s confirm expiry, and a click on bare map (5-1) all go through CampNav.
         void Update()

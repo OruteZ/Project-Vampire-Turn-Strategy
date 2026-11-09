@@ -10,20 +10,7 @@
 .map-only { display: none; }
 .l-map .map-only { display: flex; }
 
-.btn { position: absolute; justify-content: center; align-items: center; -unity-slice-scale: 0.111px; }
-.btn-frame, .panel-frame { position: absolute; left: 0; top: 0; right: 0; bottom: 0; -unity-slice-scale: 0.111px; }
-.btn-text { font-size: 15px; color: var(--bone); -unity-text-align: middle-center; }
-.btn.ghost .btn-text { color: var(--muted); }
-.btn.danger .btn-text { color: #c8304a; }
-.btn.primary .btn-text { color: var(--ink); -unity-font-style: bold; }
-.btn:hover { -unity-background-image-tint-color: rgba(38, 41, 54, 0.96); }
-.btn.disabled { opacity: 0.4; }
-.key {
-    position: absolute; right: 6px; bottom: 6px; height: 18px; padding: 0 4px;
-    font-size: 12px; color: var(--muted); background-color: rgba(15, 16, 22, 0.85);
-    border-width: 1px; border-color: var(--line); -unity-text-align: middle-center;
-}
-.icon { -unity-background-scale-mode: scale-to-fit; }
+.camp .btn { position: absolute; }
 
 .head { position: absolute; left: 24px; top: 24px; width: 480px; height: 64px; }
 #menu { left: 0; top: 4px; width: 56px; height: 56px; }
@@ -50,9 +37,6 @@
 /* The crest prefab draws about 1.9x its box wide and 1.3x tall, so a 72 box fills the gap left of March. */
 .info-crest { position: absolute; left: 106px; top: 390px; width: 72px; height: 72px; }
 .info-badge { position: absolute; left: 32px; top: 36px; width: 48px; height: 48px; justify-content: center; align-items: center; }
-.ring-fill, .ring { position: absolute; left: 0; top: 0; right: 0; bottom: 0; }
-.ring { left: -2px; top: -2px; right: -2px; bottom: -2px; }
-.ring-text { font-size: 18px; -unity-font-style: bold; color: var(--bone); padding: 0; margin: 0; }
 .info-name { position: absolute; left: 96px; top: 32px; width: 400px; height: 56px; font-size: 29px; color: var(--bone); -unity-text-align: middle-left; overflow: hidden; text-overflow: ellipsis; }
 .close { left: 504px; top: 16px; width: 40px; height: 40px; }
 .close .icon { width: 20px; height: 20px; -unity-background-image-tint-color: var(--muted); }
@@ -70,9 +54,6 @@
 .stats > .value { margin-right: 28px; }
 .stats .value-text { font-size: 18px; }
 .roster { position: absolute; left: 32px; top: 312px; width: 496px; height: 56px; flex-direction: row; }
-.chip { width: 56px; height: 56px; margin-right: 6px; justify-content: center; align-items: center; -unity-slice-scale: 0.0714px; }
-.chip-frame { position: absolute; left: 0; top: 0; right: 0; bottom: 0; -unity-slice-scale: 0.0714px; }
-.chip-icon { width: 36px; height: 36px; -unity-background-scale-mode: scale-to-fit; }
 .march { position: absolute; left: 268px; top: 428px; width: 260px; height: 60px; }
 .march > .btn { left: 0; top: 0; width: 260px; height: 60px; }
 
@@ -132,3 +113,16 @@
 .dialog-price .value-text { font-size: 18px; }
 .dialog-cancel { left: 48px; top: 196px; width: 180px; height: 44px; }
 .dialog-ok { left: 252px; top: 196px; width: 180px; height: 44px; }
+
+/* stage-select.md 4: region markers pinned to the map's 3D points (CampMarkers moves .marker each frame; its centre is the point). */
+.marker { position: absolute; width: 96px; height: 96px; margin-left: -48px; margin-top: -48px; justify-content: center; align-items: center; }
+.marker-badge { width: 44px; height: 44px; justify-content: center; align-items: center; }
+.marker-badge .ring-text { font-size: 18px; }
+.marker-star { position: absolute; left: 66px; top: 66px; width: 20px; height: 20px; margin-left: -10px; margin-top: -10px; -unity-background-scale-mode: scale-to-fit; }
+.marker-star.locked { width: 18px; height: 18px; margin-left: -9px; margin-top: -9px; }
+.marker-name {
+    position: absolute; left: -92px; top: 96px; width: 280px; height: 32px;
+    background-color: rgba(15, 16, 22, 0.92); border-width: 1px; border-color: var(--line);
+    font-size: 15px; color: var(--bone); -unity-text-align: middle-center; padding: 0; margin: 0; display: none;
+}
+.marker-name.shown { display: flex; }

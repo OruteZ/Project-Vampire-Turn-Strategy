@@ -68,13 +68,14 @@ namespace VampireSpawn.Game
         [Tooltip("Synty UI 스프라이트. 이름으로 찾는다 (docs/art/ui-style.md)")]
         public Sprite[] ui;
 
-        [Tooltip("Synty UI 장식 프리팹 (Crest, Section_Break). 이름으로 찾는다")]
+        [Tooltip("Synty UI 장식 프리팹 (Crest, Section_Break). uGUI 프리팹이지만 그리지 않고 ToolkitKit.Prefab 이 그림 정보만 읽는다")]
         public GameObject[] uiPrefabs;
 
-        [Header("UI Toolkit trial (#44)")]
+        [Header("UI Toolkit (Assets/_Project/UI)")]
         public UnityEngine.UIElements.PanelSettings panel;
         public UnityEngine.UIElements.VisualTreeAsset menuDocument;
         [Tooltip("장 선택 (docs/ui/stage-select.md 10)")] public UnityEngine.UIElements.VisualTreeAsset campDocument;
+        [Tooltip("전투 화면 (docs/ui/battle-hud.md)")] public UnityEngine.UIElements.VisualTreeAsset battleDocument;
 
         public Sprite Ui(string name) => System.Array.Find(ui ?? System.Array.Empty<Sprite>(), s => s != null && s.name == name);
 

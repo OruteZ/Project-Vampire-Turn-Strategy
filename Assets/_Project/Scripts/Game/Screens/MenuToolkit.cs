@@ -7,19 +7,19 @@ using VampireSpawn.Core;
 
 namespace VampireSpawn.Game.Screens
 {
-    // UI Toolkit trial of the main menu (#44, docs/dev/ui-toolkit-trial.md). Layout and look are Assets/_Project/UI/Menu.uxml and .uss;
+    // docs/ui/main-menu.md. Layout and look are Assets/_Project/UI/Menu.uxml and .uss;
     // this only fills text, pictures and clicks. Pictures come from ArtCatalog by name so tools/assets/scan.mjs still sees them.
     public static class MenuToolkit
     {
-        public const string PrefKey = "ui.toolkitMenu";
+        // Crest_*_Large_01 is a demon skull; Large_03 has none, so the hunters' menu wears it (ui-style.md 5-3).
+        public const string Crest = "Crest_DarkFantasyMenus_Large_03";
 
-        public static bool On => PlayerPrefs.GetInt(PrefKey, 0) == 1;
-
-        public static UIDocument Build(Transform host, ArtCatalog art, Campaign campaign, Action demo, Action camp, int selected, Action<int> hover)
+        public static UIDocument Build(Transform host, ArtCatalog art, Campaign campaign, RenderTexture backdrop, Action demo, Action camp, int selected, Action<int> hover)
         {
             var doc = ToolkitKit.Document(host, "Menu (UI Toolkit)", art.panel, art.menuDocument);
             var root = doc.rootVisualElement;
-            ToolkitKit.Prefab(root.Q("crest"), art.UiPrefab(MenuScreen.Crest));
+            if (backdrop != null) root.Q("backdrop").style.backgroundImage = new StyleBackground(Background.FromRenderTexture(backdrop));
+            ToolkitKit.Prefab(root.Q("crest"), art.UiPrefab(Crest));
             ToolkitKit.Prefab(root.Q("break"), art.UiPrefab("Component_DarkFantasyMenus_Section_Break_02"));
             var tip = root.Q<Label>("tip");
 

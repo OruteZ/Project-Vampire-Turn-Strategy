@@ -45,3 +45,46 @@
     white-space: normal;
     display: none;
 }
+
+/* Shared pieces (ToolkitKit.Btn / Frame / Chip / RingBadge). ui-style.md 3 buttons, 5 frames; slice-scale 1/9 = the uGUI ppu 9 frame. */
+.fill { position: absolute; left: 0; top: 0; right: 0; bottom: 0; }
+.btn { justify-content: center; align-items: center; -unity-slice-scale: 0.111px; }
+.btn-frame, .panel-frame { position: absolute; left: 0; top: 0; right: 0; bottom: 0; -unity-slice-scale: 0.111px; }
+.thin, .thin > .panel-frame { -unity-slice-scale: 0.0714px; }
+.btn-text { font-size: 15px; color: var(--bone); -unity-text-align: middle-center; padding: 0; margin: 0; }
+.btn.has-key .btn-text { position: absolute; left: 0; top: 0; bottom: 0; }
+.btn.ghost .btn-text { color: var(--muted); }
+.btn.danger .btn-text { color: #c8304a; }
+.btn.primary .btn-text { color: var(--ink); -unity-font-style: bold; }
+.btn:hover { -unity-background-image-tint-color: rgba(38, 41, 54, 0.96); }
+.btn.primary:hover { -unity-background-image-tint-color: #9dc1e0; }
+.btn.disabled { opacity: 0.4; }
+.btn.disabled .btn-text { color: var(--dim); }
+.key {
+    position: absolute; right: 6px; bottom: 6px; height: 18px; padding: 0 4px; margin: 0;
+    font-size: 12px; color: var(--muted); background-color: rgba(15, 16, 22, 0.85);
+    border-width: 1px; border-color: var(--line); -unity-text-align: middle-center;
+}
+.icon { -unity-background-scale-mode: scale-to-fit; }
+.icon-btn { width: 40px; height: 40px; }
+.icon-btn > .icon { position: absolute; left: 6px; top: 6px; right: 6px; bottom: 6px; -unity-background-image-tint-color: var(--muted); }
+.icon-btn:hover > .icon { -unity-background-image-tint-color: var(--bone); }
+.icon-btn.disabled { opacity: 0.35; }
+
+.chip { width: 56px; height: 56px; margin-right: 6px; justify-content: center; align-items: center; -unity-slice-scale: 0.0714px; }
+.chip-frame { position: absolute; left: 0; top: 0; right: 0; bottom: 0; -unity-slice-scale: 0.0714px; }
+.chip-icon { width: 36px; height: 36px; -unity-background-scale-mode: scale-to-fit; }
+
+.ring-badge { justify-content: center; align-items: center; flex-shrink: 0; }
+.ring-fill, .ring { position: absolute; left: 0; top: 0; right: 0; bottom: 0; }
+.ring { left: -2px; top: -2px; right: -2px; bottom: -2px; }
+.ring-text { font-size: 18px; -unity-font-style: bold; color: var(--bone); padding: 0; margin: 0; -unity-text-align: middle-center; }
+
+/* stage-dressing.md 1-6 edge shade and ui-style.md 12 fades. */
+.shade { position: absolute; left: 0; top: 0; right: 0; bottom: 0; }
+.layer { position: absolute; left: 0; top: 0; right: 0; bottom: 0; }
+.fade-cover { position: absolute; left: 0; top: 0; right: 0; bottom: 0; background-color: black; transition-property: opacity; transition-duration: 0.3s; }
+.fade-cover.gone { opacity: 0; }
+.appear { transition-property: opacity, translate; transition-duration: 0.15s; transition-timing-function: ease-out-cubic; }
+.appear.enter { opacity: 0; translate: 0 8px; }
+.outline { -unity-text-outline-width: 1px; -unity-text-outline-color: var(--ink); }

@@ -1,5 +1,7 @@
 # UI Toolkit 시험: 메인 메뉴 (#44)
 
+> #106 (2026-11-09): 시험이 끝나 모든 화면이 UI Toolkit 이다. uGUI 메뉴(`MenuScreen.cs`)와 도구 모음 스위치(`ui.toolkitMenu`)는 지웠다. 아래 1~6 은 #44 당시 기록이다. 지금 구조·함정은 docs/areas/ui.md.
+
 > 질문(사용자): "UI 레이아웃 픽셀 위치가 하드코딩으로 박혀 있는데 … uGUI와 UI Toolkit을 혼합해서 써먹어 보는 것도 가능한가?"
 > 시험: 메인 메뉴 하나를 UI Toolkit(UXML/USS)으로 다시 만들어 지금 uGUI 메뉴와 나란히 비교했다. 게임 기본은 uGUI 그대로다.
 

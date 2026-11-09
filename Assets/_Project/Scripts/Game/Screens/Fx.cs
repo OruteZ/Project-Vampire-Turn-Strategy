@@ -1,84 +1,55 @@
+using System;
 using UnityEngine;
-using UnityEngine.UI;
+using UnityEngine.UIElements;
 
 namespace VampireSpawn.Game.Screens
 {
-    // ui-style.md 12: the 1.2 s pulse (brightness ±10%) and the 0.2 s flash (+30% then back) for 1단계 changes.
-    public sealed class Fx : MonoBehaviour
+    // ui-style.md 12 motion on UI Toolkit: screen fade-in, panel appear, the 1.2 s pulse (brightness ±10%) and the 0.2 s flash (+30% then back).
+    public static class Fx
     {
-        Graphic g;
-        Color baseColor;
-        float start, period, flash, fade;
-
-        public static void Pulse(Graphic g, float period = 1.2f) => Add(g).period = period;
-
-        public static void Flash(Graphic g, float seconds = 0.2f) => Add(g).flash = seconds;
-
-        // ui-style.md 12 screen change: a black cover that clears in 0.3 s.
-        public static void FadeIn(RectTransform root, float seconds = 0.3f)
+        // A black cover that clears in 0.3 s (.fade-cover transition in Theme.uss).
+        public static void FadeIn(VisualElement root)
         {
-            var cover = Ui.Node(root, "FadeIn");
-            Ui.Stretch(cover);
-            FadeOut(Ui.Bg(cover, Color.black, null, false), seconds);
+            var cover = ToolkitKit.E(root, "fade-cover");
+            cover.RegisterCallback<TransitionEndEvent>(_ => cover.RemoveFromHierarchy());
+            Later(cover, () => cover.AddToClassList("gone"));
         }
 
-        public static void FadeOut(Graphic g, float seconds) => Add(g).fade = seconds;
-
-        // ui-style.md 12: a panel shows in 0.15 s, rising 8 px.
-        public static void Appear(RectTransform rt) => rt.gameObject.AddComponent<PanelAppear>();
-
-        static Fx Add(Graphic g)
+        // A panel shows in 0.15 s rising 8 px (.appear in Theme.uss).
+        public static void Appear(VisualElement e)
         {
-            var fx = g.gameObject.AddComponent<Fx>();
-            fx.g = g;
-            fx.baseColor = g.color;
-            fx.start = Time.unscaledTime;
-            return fx;
+            e.AddToClassList("appear");
+            e.AddToClassList("enter");
+            Later(e, () => e.RemoveFromClassList("enter"));
         }
 
-        void Update()
+        // Two scheduler ticks: the first frame must resolve the start style, or there is nothing to transition from.
+        public static void Later(VisualElement e, Action then) => e.schedule.Execute(() => e.schedule.Execute(then));
+
+        public static void FadeOut(VisualElement e, float seconds)
         {
-            var t = Time.unscaledTime - start;
-            var k = 1f;
-            if (fade > 0f)
+            var start = Time.unscaledTime;
+            e.schedule.Execute(() => e.style.opacity = 1f - (Time.unscaledTime - start) / seconds).Every(16).ForDuration((long)(seconds * 1000f));
+            e.schedule.Execute(e.RemoveFromHierarchy).StartingIn((long)(seconds * 1000f));
+        }
+
+        public static float PulseK(float period = 1.2f) => 1f + 0.1f * Mathf.Sin(Time.unscaledTime * Mathf.PI * 2f / period);
+
+        public static Color Bright(Color c, float k) => new Color(c.r * k, c.g * k, c.b * k, c.a);
+
+        // Tints the element's picture; pause the returned item before recolouring it.
+        public static IVisualElementScheduledItem Pulse(VisualElement e, Color c, float period = 1.2f) =>
+            e.schedule.Execute(() => e.style.unityBackgroundImageTintColor = Bright(c, PulseK(period))).Every(16);
+
+        public static void Flash(Label l, float seconds = 0.2f)
+        {
+            var c = l.style.color.keyword == StyleKeyword.Undefined ? l.style.color.value : l.resolvedStyle.color;
+            var start = Time.unscaledTime;
+            l.schedule.Execute(() =>
             {
-                if (t >= fade) { Destroy(gameObject); return; }
-                g.color = new Color(baseColor.r, baseColor.g, baseColor.b, baseColor.a * (1f - t / fade));
-                return;
-            }
-            if (period > 0f) k = 1f + 0.1f * Mathf.Sin(t * Mathf.PI * 2f / period);
-            else if (t < flash) k = 1f + 0.3f * (1f - t / flash);
-            else { g.color = baseColor; Destroy(this); return; }
-            var c = baseColor * k;
-            c.a = baseColor.a;
-            g.color = c;
-        }
-    }
-
-    public sealed class PanelAppear : MonoBehaviour
-    {
-        const float Seconds = 0.15f, Rise = 8f;
-        CanvasGroup group;
-        Vector2 end;
-        float start;
-
-        void Start()
-        {
-            var rt = (RectTransform)transform;
-            end = rt.anchoredPosition;
-            group = gameObject.AddComponent<CanvasGroup>();
-            start = Time.unscaledTime;
-            Update();
-        }
-
-        void Update()
-        {
-            var k = Mathf.Clamp01((Time.unscaledTime - start) / Seconds);
-            group.alpha = k;
-            ((RectTransform)transform).anchoredPosition = end - new Vector2(0f, Rise * (1f - k));
-            if (k < 1f) return;
-            Destroy(group);
-            Destroy(this);
+                var t = Time.unscaledTime - start;
+                l.style.color = t < seconds ? Bright(c, 1f + 0.3f * (1f - t / seconds)) : c;
+            }).Every(16).ForDuration((long)(seconds * 1000f) + 32);
         }
     }
 }

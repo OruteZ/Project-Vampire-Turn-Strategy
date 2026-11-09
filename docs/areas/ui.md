@@ -3,7 +3,7 @@
 ## 경로
 - 기획: docs/design/ui.md, docs/design/art.md
 - 기획서: docs/ui/ (화면별. 장 선택 3 레이어 docs/ui/stage-select.md, 병영 docs/ui/upgrade.md), docs/art/ui-style.md (UI 스타일: 색·글꼴·틀·버튼·배치 토큰, 15 고정 크기, 16 화면 배치 원칙), docs/art/ui-references.md (화면별 레이아웃 조사·요소별 레퍼런스), docs/art/campaign-map.md (장 선택 바탕 3D 원정 지도)
-- 코드: Assets/_Project/Scripts/Game/Screens/ (`Ui.cs` 색 토큰·글꼴·틀·말줄임, `Kit.cs` 글자·버튼·무기 아이콘·장식 프리팹, `BattleHud.cs` 전투 화면, `CampFlow.cs`·`CampToolkit.cs`·`CampMarkers.cs` 장 선택·병영, `MenuScreen.cs` 메인 메뉴, `HoverTip.cs` 툴팁, `Fx.cs` 맥박·번쩍임, `App.cs` 캔버스·씬 전환). 원정 지도는 `Game/CampaignMapView.cs` + 배치 표 `Game/CampaignMapLayout.cs`, Camp 씬에 구움 (campaign-map.md 10). 구현 기록 docs/dev/unity-port.md "전투 화면 달과 피"
+- 코드: Assets/_Project/Scripts/Game/Screens/ (`ToolkitKit.cs` 문서 만들기·버튼·틀·칩·값·툴팁·Synty 프리팹 다시 쌓기·그늘, `Ui.cs` 색 토큰, `Kit.cs` 아이콘 이름, `BattleHud.cs` 전투 화면, `CampFlow.cs`·`CampToolkit.cs`·`CampMarkers.cs` 장 선택·병영, `MenuToolkit.cs`·`MenuFlow.cs` 메인 메뉴, `Fx.cs` 나타남·맥박·번쩍임·검은 화면, `App.cs` 씬 전환). 배치·크기는 Assets/_Project/UI/ 의 UXML·USS (`Theme.uss` 공용, `Menu`·`Camp`·`Battle` 화면별, `Panel.asset` 패널 비율). 원정 지도는 `Game/CampaignMapView.cs` + 배치 표 `Game/CampaignMapLayout.cs`, Camp 씬에 구움 (campaign-map.md 10). 구현 기록 docs/dev/unity-port.md "전투 화면 달과 피"
 - UI 스프라이트: `ArtCatalog.ui`, 장식 프리팹: `ArtCatalog.uiPrefabs` (이름으로 찾는다). 새 스프라이트는 이 배열에 더하고 `node tools/assets/scan.mjs`
 - 아트: Assets/Synty/InterfaceDarkFantasyMenus, Assets/Synty/InterfaceDarkFantasyHUD, Assets/Synty/InterfaceCore (분류는 art-assets.md)
 - 화면 검사: `tools/ui-audit/sweep.sh`, `Scripts/Editor/UiAudit.cs`, 기록 docs/dev/ui-audit.md
@@ -39,7 +39,7 @@
 | 화면 가운데는 게임(3D), UI 는 모서리·가장자리. 가운데 UI 는 결과·확인·규칙 창 같은 특정한 순간만. 한 레이어 UI 넓이 ≤ 30% (ui-style.md 16) | 시험 중 | 2026-11-07 | #43 "게임적 요소가 항상 중앙에 보이고 … 특정한 상황 아니면 사이드에" |
 | 장 선택은 3 레이어: L1 지도(전경) → L2 장 정보(목표·출정) → L3 병영. 레이어가 바뀌면 오른쪽 칸과 카메라만 바뀌고 Esc 는 한 레이어 뒤로 (stage-select.md) | 시험 중 | 2026-11-07 | #43 요구 2 |
 | 정보는 그 레이어 결정에 필요할 때만: 가진 금화는 병영(L3)에서만, 지도·장 정보에는 병영 버튼의 "고를 수 있는 병종 수" 배지만 (#99 배타 선택으로 강화 수 → 병종 수) (stage-select.md 6) | 시험 중 | 2026-11-07 | #43 "각 자원이나 정보는 각 Scene에서 필요한 경우에만" |
-| UI 는 화면 단위로 섞는다: 새로 만들거나 크게 고치는 화면은 UI Toolkit(UXML/USS), 3D 를 따라가는 표시(머리 위 체력, 지도 지역 표식)는 uGUI. 장 선택(#43)이 두 번째 UI Toolkit 화면 (stage-select.md 10) | 시험 중 | 2026-11-07 | #43 채팅 "개발을 UI Toolkit + UGUI로 하도록 하자", #44 추천 |
+| UGUI 를 걷어내고 모든 게임 UI 를 UI Toolkit(UXML·USS)으로 짓는다. 3D 를 따라가는 표시(머리 위 체력, 지역 표식)도 UI Toolkit 패널 좌표로 옮긴다. Synty INTERFACE uGUI 프리팹은 그리지 않고 `ToolkitKit.Prefab` 이 그림 정보만 읽는다 | 시험 중 | 2026-11-09 | #106 "UGUI 폐기하고 UITOOLKIT으로 완전히 옮기고 싶어" |
 | 장 선택 바탕은 Synty 프리팹을 코드가 데이터 표대로 놓아 짓는 3D 원정 지도. 장마다 지역 하나, 지역 표식은 고정 크기 UI(3D 점을 따라감), 이름은 가리킨·고른 지역만. 진행은 빛(클리어한 지역의 화로)으로 보인다 (campaign-map.md) | 시험 중 | 2026-11-07 | #43 "Synty 에셋을 사용해 3D맵을 제작 … 그 지역을 클릭하면 스테이지 정보화면으로" |
 | 병영 강화 구매 확인은 두 번 누르기 대신 화면 가운데 작은 확인 창(이름·"구매하시겠습니까?"·가격·취소/구매). 산 뒤 번쩍임은 없다 (upgrade.md 6) | 시험 중 | 2026-11-08 | #87 "번쩍임 … 필요 없음. 정말 살까요 표기보다 --를 구매하시겠습니까? 하고 가운데 작은 레터박스" |
 | 장 선택 칸 나타남·사라짐은 감속(ease-out) | 시험 중 | 2026-11-08 | #87 "UI 등장에 이징이 없음" |
@@ -50,14 +50,17 @@
 - 모델: 테마·스타일·화면 기획서와 방향 검토는 opus, 목업·화면 구현은 sonnet
 - 함정: Synty 키트 글꼴(LT Museum, Markazi, Pirata One)은 라틴 문자만 있다. 한글 글자는 #16 글꼴로
 - 함정: 키트 장식은 대부분 악마 상징(해골, 오망성, 촉수)이다. 플레이어는 토벌대라서 어디에 쓸지는 테마가 정한다. 문장(Crest) 28개 중 해골이 없는 것은 Large_03(마름모)·Banner_02(천) 정도다
-- 함정: Synty 틀 스프라이트의 9-slice 테두리가 180~380px 라 그대로 쓰면 두껍다. `Image.pixelsPerUnitMultiplier` 로 줄인다 (ui-style.md 5절)
+- 함정: Synty 틀 스프라이트의 9-slice 테두리가 180~380px 라 그대로 쓰면 두껍다. USS `-unity-slice-scale` 로 줄인다(0.111px = 옛 ppu 9, 0.0714px = ppu 14) (ui-style.md 5절)
 - 함정: UIDocument 의 뿌리와 템플릿 칸은 화면 전체를 덮고 기본으로 클릭을 받는다. 그대로 두면 EventSystem 이 늘 "UI 위" 라고 해 지도·보드 클릭이 안 된다. `ToolkitKit.Document` 가 Ignore 로 둔다
 - 함정: 투영 옮김(`BoardView.FitCamera`)은 `p[0,2] = -(2·cx − 1)`. 부호가 반대면 화면 가운데에서 반대쪽으로 간다
 - 함정: 원정 지도 카메라는 Cinemachine 이다. 빈 곳 맞춤에 컴포저 화면 위치를 쓰면 옆으로 덜 간다. 렌즈 시프트를 쓰고, 그러려면 Unity 카메라가 물리 카메라여야 한다 (campaign-map.md 구현 메모)
 - 함정: 전투 HUD 는 상태가 바뀌면 통째로 다시 짓는다. 호버(칸·유닛·시체)만 바뀌면 `BattleHud.RebuildHover` 로 `Hover`·`Heads` 층만 다시 짓는다. 호버에 따라 달라지는 것(유닛·시체 패널, 머리 위 표시, 행동 막대)은 `DeployHover`/`FightHover` 에 둔다. 다른 곳에 두면 호버 때 갱신되지 않는다 (#104)
 - 함정: 적 턴은 모델이 먼저 끝나고 화면이 나중에 재생된다. 재생 중 상태(보름달 턴)는 `BattleView.Played` 배너로 안다 (`BattleFlow.OnPlayed`)
 - 함정: Synty 틀 스프라이트에는 붉은·녹색 기가 구워져 있다. Image 색으로 물들이면 곱해져 남는다
-- 함정: CanvasScaler 는 모든 씬이 같은 `App.Canvas` 로 짓기 때문에 Expand 로 바꾸면 모든 화면이 함께 바뀐다. 장 선택만 고쳐도 sweep 은 모든 화면에 돌린다. UI Toolkit `Panel.asset` 도 같이 Expand 로 바꾼다
-- 함정: 한 화면에서 uGUI(지역 표식)와 UI Toolkit(칸)을 함께 쓰면, 지도 클릭을 막는 판단(`PointerBlocked`)이 uGUI `IsPointerOverGameObject` 만 보면 UI Toolkit 칸 위 클릭이 지도로 샌다. UI Toolkit 패널의 `Pick` 도 같이 본다
+- 함정: 모든 화면이 같은 `Panel.asset`(Expand, 1920×1080)을 쓴다. 바꾸면 모든 화면이 함께 바뀌니 sweep 은 모든 화면에 돌린다. 레이아웃 전에도 패널 크기가 필요하면 `ToolkitKit.PanelSize()` 로 계산한다(첫 프레임엔 UI Toolkit 레이아웃이 아직 없다)
+- 함정: 지도·보드 클릭을 막는 판단(`PointerBlocked`, `CampFlow.PointerOverUi`)은 `ToolkitKit.PointerOverUi` 하나로 본다. 화면 전체를 덮는 뿌리·층(`.layer`)은 picking-mode Ignore 여야 한다
+- 함정: Input System 만 켠 이 프로젝트에서 UI Toolkit 런타임 패널은 EventSystem(+`InputSystemUIInputModule`)이 있어야 포인터를 받는다. 없으면 클릭·호버가 전혀 안 온다(2026-11-09 재어 봄). `ToolkitKit.Document` 가 없으면 만든다
+- 함정: USS 는 선택자 구체성으로 이긴다. `.battle Label { margin: 0 }` 같은 넓은 규칙이 `.hint { margin-left }` 를 덮어 가운데 정렬이 깨졌다. 공용 초기화 규칙은 클래스 하나짜리보다 구체적이면 안 된다
+- 함정: UI Toolkit 은 둥근 채움(Image.fillMethod Radial)이 없다. 보름달 칸은 `generateVisualContent` + Painter2D 로 쐐기를 그린다(`BattleHud.Phases`)
 - 함정: `BoardView.LateUpdate` 는 `Board` 가 남아 있으면 카메라를 보드에 다시 맞춘다(`Clear()` 뒤에도 남는다). 원정 지도가 카메라를 쓰는 동안 막아야 한다 (campaign-map.md 구현 메모)
 - 함정: `FX_*`, `SM_Bld_Base_*` 프리팹은 PolygonDarkFantasy 와 PolygonGeneric 에 같은 이름이 있다. 이름으로 찾을 때 PolygonDarkFantasy 쪽을 쓴다

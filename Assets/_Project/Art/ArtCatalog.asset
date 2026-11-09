@@ -16,8 +16,10 @@ MonoBehaviour:
   hexSize: 1
   tileHeight: 0.2
   plain: {fileID: 2100000, guid: 38f245d05f3140b42b2b8562968dda54, type: 2}
+  lit: {fileID: 2100000, guid: 5f3516fcd86fdb74bab2d1cf84342b91, type: 2}
+  sunlit: {fileID: 2100000, guid: 3c5f99006aacb2a4c907fa9908c8199c, type: 2}
+  rock: {fileID: 2100000, guid: 5d2e247adf49a984998ec2bd0b5c23f3, type: 2}
   water: {fileID: 2100000, guid: f53a37b5431a5434492b5f7a3bee1b8a, type: 2}
-  overlay: {fileID: 2100000, guid: f3e2fe53ab7b67c439d26e66384a9453, type: 2}
   rockProps:
   - {fileID: 5361431197472674691, guid: 632eee49de0562648bc267266b3016cb, type: 3}
   - {fileID: 4047619411423330996, guid: 9629320e0d4448e43aafe804522b3c22, type: 3}
@@ -130,6 +132,7 @@ MonoBehaviour:
   panel: {fileID: 11400000, guid: ceca47a7dc35164418fa5adf3bcfa3a8, type: 2}
   menuDocument: {fileID: 9197481963319205126, guid: 46e03175423c83e4bba6477d946c72a4, type: 3}
   campDocument: {fileID: 9197481963319205126, guid: d3a9163a77c4a264288e1098ae44e471, type: 3}
+  battleDocument: {fileID: 9197481963319205126, guid: c45eb353b19d79241a02c707de870971, type: 3}
   mapProps:
   - {fileID: 2688454215405826849, guid: 1ac625c3b27c0f348a524cdd539fd4dd, type: 3}
   - {fileID: 5879195395630746260, guid: 66935891f0cc76c46869337a4d1b7fd5, type: 3}

@@ -9,7 +9,7 @@
 | `SoundCatalog.cs` | `Cue` (변형 클립 + 볼륨, 차례로 돈다), `UnitSounds` (공격·맞음·죽음·걸음), `SoundCatalog` (기획서 표의 칸 = 필드 하나) |
 | `Sound.cs` | 재생기. 효과음은 한 AudioSource 의 PlayOneShot, 음악·환경음은 루프 소스 둘 (0.25 초 줄이고 0.25 초 키움), 화로는 그 칸에 3D 루프 소스 |
 | `BattleSounds.cs` | 전투 이벤트 → 칸. 배너·팝업은 Core 의 `BannerKind`·`PopupKind` enum 으로 가른다 |
-| `UiSound.cs` | 버튼 올림·누름 (uGUI `Selectable`, UI Toolkit `VisualElement`). 버튼 만드는 함수가 부른다 |
+| `UiSound.cs` | 버튼 올림·누름 (UI Toolkit `VisualElement`, `.disabled` 면 거부음). 버튼 만드는 함수(`ToolkitKit.Click`)가 부른다 |
 
 - 칸은 **필드로 고른다**: `Sound.Play(s => s.click)`. 문자열 키·이름 찾기가 없어서 칸 이름을 바꾸거나 지우면 컴파일 오류로 드러난다.
 - 카탈로그 위치: `Assets/_Project/Audio/SoundCatalog.asset`, `ArtCatalog.sound` 에 걸려 있다. 각 화면 Flow 가 `Sound.Use(art.sound)` 를 부른다 (씬에 새 참조를 걸지 않는다).

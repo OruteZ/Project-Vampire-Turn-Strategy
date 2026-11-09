@@ -2,6 +2,8 @@
     <Style src="Theme.uss" />
     <Style src="Camp.uss" />
     <ui:VisualElement name="camp" class="camp l-map" picking-mode="Ignore">
+        <ui:VisualElement name="shade" class="shade" picking-mode="Ignore" />
+        <ui:VisualElement name="markers" class="layer" picking-mode="Ignore" />
         <ui:VisualElement name="head" class="head" picking-mode="Ignore">
             <ui:VisualElement name="menu" class="btn ghost square">
                 <ui:VisualElement class="icon" picking-mode="Ignore" />

@@ -1,6 +1,17 @@
 /* docs/ui/main-menu.md. Sizes are 1920x1080 reference px (Panel.asset scales like the uGUI canvas). */
 .screen {
     flex-grow: 1;
+    background-color: var(--ink);
+}
+
+/* ui-style.md 11-1: the first stage's board, blurred (a 240x135 render target stretched) and darkened 60%. */
+.backdrop {
+    position: absolute;
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    -unity-background-image-tint-color: rgb(102, 102, 102);
 }
 
 /* main-menu.md 후속: one centre anchor. The block is 618 px tall and sat at y 120 on 1080, so its top is centre - 420. */

@@ -10,11 +10,8 @@ namespace VampireSpawn.Game.Screens
     // Build wires the fixed controls once, Fill redraws what the CampNav state shows. Every input goes out as a CampKey.
     public sealed class CampToolkit
     {
-        const string FrameBox = "SPR_DarkFantasyMenus_Frame_Box_Medium_02", FrameBack = "SPR_DarkFantasyMenus_Frame_Box_Medium_02_Background",
-            Ring = "SPR_DarkFantasyMenus_Frame_Ring_01", RingBack = "SPR_DarkFantasyMenus_Frame_Ring_01_Background", Cancel = "ICON_DarkFantasyMenus_Menu_Cancel_01_Clean",
+        const string Ring = ToolkitKit.Ring, RingBack = ToolkitKit.RingBack, Cancel = "ICON_DarkFantasyMenus_Menu_Cancel_01_Clean",
             Break = "Component_DarkFantasyMenus_Section_Break_02", Crest = "Crest_DarkFantasyMenus_Large_01";
-
-        enum Kind { Ghost, Normal, Primary, Danger, DangerOn }
 
         public readonly UIDocument Doc;
         readonly ArtCatalog art;
@@ -38,25 +35,25 @@ namespace VampireSpawn.Game.Screens
             var doc = ToolkitKit.Document(host, "Camp (UI Toolkit)", art.panel, art.campDocument);
             var ui = new CampToolkit(doc, art, send);
             var r = ui.root;
-            ui.Button(r.Q("menu"), Kind.Ghost, () => send(input(CampKey.Esc)));
+            ui.Wire(r.Q("menu"), BtnKind.Ghost, () => send(input(CampKey.Esc)));
             ToolkitKit.Picture(r.Q("menu").Q(className: "icon"), art.Ui(Kit.Icon.Leave));
             ToolkitKit.Tip(r.Q("menu"), Loc.T("camp.menu"), ui.tip, 300);
-            ui.Button(r.Q("reset"), Kind.Ghost, () => send(input(CampKey.Reset)));
-            ui.Button(r.Q("barracks"), Kind.Normal, () => send(input(CampKey.Barracks)));
+            ui.Wire(r.Q("reset"), BtnKind.Ghost, () => send(input(CampKey.Reset)));
+            ui.Wire(r.Q("barracks"), BtnKind.Normal, () => send(input(CampKey.Barracks)));
             ToolkitKit.Picture(r.Q("barracks").Q(className: "icon"), art.Ui(Kit.Icon.Up));
             foreach (var close in new[] { r.Q("info-close"), r.Q("bk-close") })
             {
-                ui.Button(close, Kind.Ghost, () => send(input(CampKey.Close)));
+                ui.Wire(close, BtnKind.Ghost, () => send(input(CampKey.Close)));
                 ToolkitKit.Picture(close.Q(className: "icon"), art.Ui(Cancel));
                 ToolkitKit.Tip(close, Loc.T("camp.toMap"), ui.tip, 300);
             }
-            foreach (var p in new[] { r.Q("info"), r.Q("barracks-panel") }) ui.Panel(p, Ui.Steel);
+            foreach (var p in new[] { r.Q("info"), r.Q("barracks-panel") }) ToolkitKit.Frame(p, art, Ui.Steel);
             ToolkitKit.Prefab(r.Q("info-break"), art.UiPrefab(Break), Ui.Line);
             ToolkitKit.Prefab(r.Q("bk-break"), art.UiPrefab(Break), Ui.Line);
             ToolkitKit.Picture(r.Q(className: "bk-icon"), art.Ui(Kit.Icon.Up), Ui.Steel);
-            ui.Panel(r.Q("buy-box"), Ui.Steel);
-            ui.Button(r.Q("buy-cancel"), Kind.Normal, () => send(input(CampKey.Close)));
-            ui.Button(r.Q("buy-ok"), Kind.Primary, () => send(input(CampKey.Enter)));
+            ToolkitKit.Frame(r.Q("buy-box"), art, Ui.Steel);
+            ui.Wire(r.Q("buy-cancel"), BtnKind.Normal, () => send(input(CampKey.Close)));
+            ui.Wire(r.Q("buy-ok"), BtnKind.Primary, () => send(input(CampKey.Enter)));
             var veil = r.Q("buy-dialog");
             veil.RegisterCallback<ClickEvent>(e => { if (e.target == veil) send(input(CampKey.Close)); });
             return ui;
@@ -76,12 +73,12 @@ namespace VampireSpawn.Game.Screens
 
             var reset = root.Q("reset");
             reset.Q<Label>(className: "btn-text").text = Loc.T(nav.ResetArmed ? "camp.resetConfirm" : "camp.reset");
-            Style(reset, nav.ResetArmed ? Kind.DangerOn : Kind.Ghost);
+            ToolkitKit.Style(reset, art, nav.ResetArmed ? BtnKind.DangerOn : BtnKind.Ghost);
 
             var barracks = root.Q("barracks");
             barracks.Q<Label>(className: "btn-text").text = Loc.T("camp.barracksName");
             barracks.EnableInClassList("on", nav.Barracks);
-            Style(barracks, nav.Barracks ? Kind.Primary : Kind.Normal);
+            ToolkitKit.Style(barracks, art, nav.Barracks ? BtnKind.Primary : BtnKind.Normal);
             var buyable = CampNav.Affordable(c);
             var badge = barracks.Q("badge");
             badge.EnableInClassList("shown", buyable > 0);
@@ -141,7 +138,7 @@ namespace VampireSpawn.Game.Screens
             var clear = c.IsCleared(s);
             var bonusGot = c.BonusDone.Contains(s.Id);
             var panel = root.Q("info");
-            Panel(panel, last ? Ui.Blood : Ui.Steel);
+            ToolkitKit.Frame(panel, art, last ? Ui.Blood : Ui.Steel);
             var crest = panel.Q("info-crest");
             crest.Clear();
             crest.style.display = last ? DisplayStyle.Flex : DisplayStyle.None;
@@ -177,15 +174,13 @@ namespace VampireSpawn.Game.Screens
             {
                 var t = GameData.Type(k);
                 var isNew = t.UnlockAt == i + 1;
-                var chip = Chip(roster, isNew ? Ui.Candle : Ui.SteelDim, art.Ui(art.Icon(k)), isNew ? Ui.Candle : Ui.Steel);
+                var chip = ToolkitKit.Chip(roster, art, isNew ? Ui.Candle : Ui.SteelDim, art.Ui(art.Icon(k)), isNew ? Ui.Candle : Ui.Steel);
                 SetTip(chip, isNew ? Loc.T("camp.new", t.Name) : Loc.Text(t.Name));
             }
 
             var march = panel.Q("info-march");
             march.Clear();
-            var btn = NewButton(march, Loc.T(clear ? "camp.marchAgain" : "camp.march"), clear ? Kind.Normal : Kind.Primary, "Enter");
-            UiSound.Add(btn);
-            btn.RegisterCallback<ClickEvent>(_ => send(input(CampKey.Enter)));
+            var btn = ToolkitKit.Btn(march, art, Loc.T(clear ? "camp.marchAgain" : "camp.march"), clear ? BtnKind.Normal : BtnKind.Primary, "Enter", () => send(input(CampKey.Enter)));
             if (clear) SetTip(btn, Loc.T(bonusGot ? "camp.allClaimed" : "camp.replayNote"));
         }
 
@@ -207,7 +202,7 @@ namespace VampireSpawn.Game.Screens
             {
                 var t = types[i];
                 var state = CampNav.TabOf(c, t.Key);
-                var chip = Chip(tabs, nav.Tab == i ? Ui.Steel : state == TabState.Open ? Ui.SteelDim : Ui.Line,
+                var chip = ToolkitKit.Chip(tabs, art, nav.Tab == i ? Ui.Steel : state == TabState.Open ? Ui.SteelDim : Ui.Line,
                     art.Ui(state == TabState.Hidden ? Kit.Icon.Lock : art.Icon(t.Key)), state == TabState.Open ? Ui.Steel : Ui.Dim, state == TabState.Hidden ? 28f : 36f);
                 chip.EnableInClassList("on", nav.Tab == i);
                 var unlockAt = Mathf.Clamp(t.UnlockAt - 1, 0, Campaign.Stages.Length - 1);
@@ -273,9 +268,9 @@ namespace VampireSpawn.Game.Screens
                 price.AddToClassList("up-price");
                 ToolkitKit.Value(price, art, Kit.Icon.Gold, up.Cost.ToString(), Ui.Candle, Ui.Candle);
                 row.Add(price);
-                var b = NewButton(act, Loc.T("camp.upgrade"), Kind.Normal, null);
-                if (!c.CanBuy(up)) { b.AddToClassList("disabled"); SetTip(b, Loc.T("camp.needGold", c.Gold, up.Cost)); }
-                else { var id = up.Id; UiSound.Add(b); b.RegisterCallback<ClickEvent>(_ => send(CampInput.Buy(id, Time.unscaledTime))); }
+                var id = up.Id;
+                var b = ToolkitKit.Btn(act, art, Loc.T("camp.upgrade"), BtnKind.Normal, null, () => send(CampInput.Buy(id, Time.unscaledTime)), c.CanBuy(up));
+                if (!c.CanBuy(up)) SetTip(b, Loc.T("camp.needGold", c.Gold, up.Cost));
                 var next = Battle.Preview(kind, c.Upgrades.Append(up.Id));
                 row.RegisterCallback<PointerEnterEvent>(_ => Stats(stats, now, next));
                 row.RegisterCallback<PointerLeaveEvent>(_ => Stats(stats, now, null));
@@ -320,25 +315,6 @@ namespace VampireSpawn.Game.Screens
             SetTip(line, tipText);
         }
 
-        VisualElement Chip(VisualElement parent, Color edge, Sprite icon, Color iconColor, float iconSize = 36f)
-        {
-            var chip = new VisualElement();
-            chip.AddToClassList("chip");
-            ToolkitKit.Picture(chip, art.Ui(FrameBack), Ui.Alpha(Ui.Panel, 0.92f));
-            var frame = new VisualElement { pickingMode = PickingMode.Ignore };
-            frame.AddToClassList("chip-frame");
-            ToolkitKit.Picture(frame, art.Ui(FrameBox), edge);
-            chip.Add(frame);
-            var i = new VisualElement { pickingMode = PickingMode.Ignore };
-            i.AddToClassList("chip-icon");
-            i.style.width = iconSize;
-            i.style.height = iconSize;
-            ToolkitKit.Picture(i, icon, iconColor);
-            chip.Add(i);
-            parent.Add(chip);
-            return chip;
-        }
-
         VisualElement Small(string cls, string icon, Color color)
         {
             var e = new VisualElement { pickingMode = PickingMode.Ignore };
@@ -347,49 +323,10 @@ namespace VampireSpawn.Game.Screens
             return e;
         }
 
-        void Panel(VisualElement panel, Color edge)
+        void Wire(VisualElement b, BtnKind kind, Action click)
         {
-            ToolkitKit.Picture(panel, art.Ui(FrameBack), Ui.Alpha(Ui.Panel, 0.92f));
-            ToolkitKit.Picture(panel.Q(className: "panel-frame"), art.Ui(FrameBox), edge);
-        }
-
-        VisualElement NewButton(VisualElement parent, string text, Kind kind, string key)
-        {
-            var b = new VisualElement();
-            b.AddToClassList("btn");
-            var frame = new VisualElement { pickingMode = PickingMode.Ignore };
-            frame.AddToClassList("btn-frame");
-            b.Add(frame);
-            var label = new Label(text) { pickingMode = PickingMode.Ignore };
-            label.AddToClassList("btn-text");
-            b.Add(label);
-            if (key != null) { var k = new Label(key) { pickingMode = PickingMode.Ignore }; k.AddToClassList("key"); b.Add(k); }
-            Style(b, kind);
-            parent.Add(b);
-            return b;
-        }
-
-        void Button(VisualElement b, Kind kind, Action click)
-        {
-            Style(b, kind);
-            UiSound.Add(b);
-            b.RegisterCallback<ClickEvent>(_ => click());
-        }
-
-        // ui-style.md 3 button table: fill and frame by kind; ghost draws neither.
-        void Style(VisualElement b, Kind kind)
-        {
-            foreach (var k in new[] { "ghost", "normal", "primary", "danger" }) b.RemoveFromClassList(k);
-            b.AddToClassList(kind == Kind.Ghost ? "ghost" : kind == Kind.Primary ? "primary" : kind is Kind.Danger or Kind.DangerOn ? "danger" : "normal");
-            var frame = b.Q(className: "btn-frame");
-            if (kind == Kind.Ghost)
-            {
-                b.style.backgroundImage = StyleKeyword.None;
-                if (frame != null) frame.style.backgroundImage = StyleKeyword.None;
-                return;
-            }
-            ToolkitKit.Picture(b, art.Ui(FrameBack), kind == Kind.Primary ? Ui.Steel : Ui.Alpha(Ui.Panel, 0.92f));
-            if (frame != null) ToolkitKit.Picture(frame, art.Ui(FrameBox), kind == Kind.Primary ? Ui.Bone : kind == Kind.Danger ? Ui.BloodDim : kind == Kind.DangerOn ? Ui.Blood : Ui.SteelDim);
+            ToolkitKit.Style(b, art, kind);
+            ToolkitKit.Click(b, click);
         }
 
         // Fill runs again on every state change, so a fixed element binds its tooltip once and reads the text from userData.
