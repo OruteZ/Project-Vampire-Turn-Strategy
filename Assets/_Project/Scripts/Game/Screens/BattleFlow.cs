@@ -103,7 +103,7 @@ namespace VampireSpawn.Game.Screens
 
             Canvas.ForceUpdateCanvases();
             FitCameraRect();
-            var battle = demo ? new Battle(s, null, formation) : Campaign.NewBattle(s, formation);
+            var battle = demo ? new Battle(s, App.DemoUpgrades, formation) : Campaign.NewBattle(s, formation);
             input.Begin(new BattleSession(battle));
             if (startNow) input.Run(x => x.Start());
         }
@@ -139,7 +139,7 @@ namespace VampireSpawn.Game.Screens
                 HoverCorpse = hoverCorpse is int cid ? b.Corpses.FirstOrDefault(c => c.Id == cid) : null,
                 Alt = altDown, EnemyPlaying = enemyPlaying, LeaveArmed = leaveArm, RulesOpen = rulesOpen, LogOpen = logOpen, Demo = demo,
                 FullMoon = fullMoon, MoonFading = moonFading,
-                Upgrades = demo ? Enumerable.Empty<string>() : Campaign.Upgrades,
+                Upgrades = (demo ? App.DemoUpgrades : Campaign.Upgrades) ?? Enumerable.Empty<string>(),
             }, actions);
         }
 
