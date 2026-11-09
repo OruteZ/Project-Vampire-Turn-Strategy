@@ -18,6 +18,9 @@
 | 에디터 작업은 전부 Unity CLI 로 한다 | 시험 중 | 2026-11-05 | CLAUDE.md |
 | UI 는 프리팹 대신 코드로 만든 uGUI, 한글 글꼴은 HTML 목록대로 OS 글꼴을 쓴다(글꼴 파일 내려받기는 사용자 허락 뒤) | 시험 중 | 2026-11-05 | 이슈 #14 |
 
+## 열린 작업
+- 전투 카메라 연출: 후보 보고서 docs/art/battle-camera-candidates.md, 사용자 선택 대기 (#97)
+
 ## 맡길 때
 - 모델: 규칙 이식(P4)은 opus xhigh, 나머지 구현은 opus low (`~/.claude/rules/pstack-models.md`)
 - 함정: 게임 수치는 데이터 에셋에서 고친다(docs/guides/data-editor.md). `Core/PrototypeData.cs` 는 HTML 에서 만든 생성 파일이고 HTML 비교 시험만 쓴다. HTML 이 바뀌면 `node tools/golden/prototype-golden.mjs data` 와 `csharp` 로 다시 만든다.
