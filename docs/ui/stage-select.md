@@ -75,9 +75,9 @@ L3 병영: 오른쪽 칸이 병영 칸(560×680)으로 바뀌고 카메라가 �
 | 가장자리 그늘 | 늘 | 화면 전체 (15-3 예외) | | | |
 
 1. 머리 안: 메인 메뉴 버튼 `btn.ghost` 56×56 (앵커 안 (0, −4)), 아이콘 `Kit.Icon.Leave` 28px `text.2`, 안쪽 오른쪽 아래 단축키 칸 "Esc" (L1 에서만 보인다. L2·L3 의 Esc 는 칸의 닫기 버튼이 보인다). 툴팁 `camp.menu`. 그 오른쪽 x 72 부터 "토벌 원정" `h.1` `text.1`, 폭 400, 세로 가운데.
-2. 진행 초기화: `btn.ghost` "진행 초기화". 한 번 누르면 같은 크기 `btn.danger` 선택됨 "정말 초기화할까요?", 2.5초 안에 한 번 더 누르면 초기화한다 (지금과 같다, upgrade.md 13).
-3. 병영 버튼: `btn.normal`. 안에 왼쪽부터 (살 수 있는 강화가 있으면) 배지, `Kit.Icon.Up` 28px `ally`, `camp.barracksName` `body`. 안쪽 오른쪽 아래 단축키 칸 "B". L3 에서는 선택됨 상태(틀 `ally` + 바깥 2px 빛)이고 누르면 닫는다.
-   - 배지: 지름 24 원, `light` 채움, 숫자 `small` Bold `bg.night`. 숫자 = 지금 금화로 살 수 있는 강화 수 (열린 병종, 아직 안 산 것, 가격 ≤ 가진 금화). 0 이면 배지가 없다. 툴팁 `camp.affordable`.
+2. 진행 초기화: `btn.ghost` "진행 초기화". 한 번 누르면 같은 크기 `btn.danger` 선택됨 "정말 초기화할까요?", 2.5초 안에 한 번 더 누르면 초기화한다 (지금과 같다, progression.md 22).
+3. 병영 버튼: `btn.normal`. 안에 왼쪽부터 (갈래를 고를 수 있는 병종이 있으면) 배지, `Kit.Icon.Up` 28px `ally`, `camp.barracksName` `body`. 안쪽 오른쪽 아래 단축키 칸 "B". L3 에서는 선택됨 상태(틀 `ally` + 바깥 2px 빛)이고 누르면 닫는다.
+   - 배지: 지름 24 원, `light` 채움, 숫자 `small` Bold `bg.night`. 숫자 = 지금 금화로 갈래를 고를 수 있는 **병종** 수 (강화가 열렸고, 아직 갈래를 고르지 않았고, 갈래 값 ≤ 가진 금화. #99 "셋 중 하나" 로 강화 수에서 병종 수로 바뀜, progression.md 10). 0 이면 배지가 없다. 툴팁 `camp.affordable`.
 4. 장 정보 칸·병영 칸은 같은 자리(오른쪽 위)를 쓴다. 한 번에 하나만 열린다.
 
 ### 2-3. 빈 곳 (카메라가 보여 줄 곳)
@@ -245,7 +245,7 @@ L3 병영: 오른쪽 칸이 병영 칸(560×680)으로 바뀌고 카메라가 �
 | 키 | 한국어 | 영어 |
 |---|---|---|
 | `camp.barracksName` | 병영 | Barracks |
-| `camp.affordable` | 살 수 있는 강화 {0} | Upgrades you can buy: {0} |
+| `camp.affordable` | 갈래를 고를 수 있는 병종 {0} (#99 바꿈) | Units ready to choose a path: {0} |
 | `camp.toMap` | 지도로 | Back to Map |
 
 계속 쓰는 키: `camp.expedition`, `camp.menu`, `camp.reset`, `camp.resetConfirm`, `camp.objective`, `camp.objectiveBoss`, `camp.bonusGoal`, `camp.got`, `camp.rewardClear`, `camp.rewardBonus`, `camp.new`, `camp.march`, `camp.marchAgain`, `camp.replayNote`, `camp.allClaimed`, `camp.lockedBy`, `battle.pop`, `battle.silver`, `battle.enemyList`, `stage.<id>.title`, `stage.<id>.brief`. 병영 칸의 키는 upgrade.md.
