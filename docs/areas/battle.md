@@ -21,6 +21,7 @@
 ## 열린 작업
 - 위협 범위 토글이 docs/design/ui.md "위협 범위는 직접 제공하지 않는다" 와 다르다. 전투 화면 기획서(docs/ui/battle-hud.md)가 아직 없다
 - 메뉴 정식 제목 (docs/ui/main-menu.md 열린 질문)
+- 전투 카메라 연출: 후보 보고서 docs/art/battle-camera-candidates.md, 사용자 선택 대기 (#97)
 
 ## 맡길 때
 - 모델: 규칙 이식(P4)은 opus xhigh, 나머지 구현은 opus low (`~/.claude/rules/pstack-models.md`)
