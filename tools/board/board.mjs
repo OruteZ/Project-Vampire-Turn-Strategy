@@ -24,6 +24,7 @@ ${goal || '<이 주제가 끝나면 무엇이 되나, 한두 줄>'}
 
 ## 관련
 - 안내서: docs/areas/<분야>.md
+- 브랜치: <세션이 시작하면 한 줄씩>
 `;
 
 // Steps are the checkboxes under "## 흐름"; "## 확인" boxes are the user's checklist and are not steps.
