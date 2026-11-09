@@ -9,7 +9,7 @@ namespace VampireSpawn.Game
     [DefaultExecutionOrder(100)]
     public sealed class BattleCamera : MonoBehaviour
     {
-        const float SmoothSeconds = 0.25f, PreviewSeconds = 0.9f;
+        const float SmoothSeconds = 0.6f, PreviewSeconds = 2f;
 
         struct Shot
         {
@@ -17,8 +17,8 @@ namespace VampireSpawn.Game
             public Shot(float pan, float zoom, float saturation = 0f, float vignette = 0f) { Pan = pan; Zoom = zoom; Saturation = saturation; Vignette = vignette; }
         }
 
-        static readonly Shot Rise = new Shot(0.6f, 0.35f, -60f, 0.35f), RiseChain = new Shot(0.6f, 0.25f, -60f, 0.35f),
-            Follow = new Shot(0.3f, 0.1f), Moon = new Shot(0.5f, 0.25f, 0f, 0.4f), MoonPreview = new Shot(0.4f, 0.15f, 0f, 0.3f);
+        static readonly Shot Rise = new Shot(0.6f, 0.35f, -60f), RiseChain = new Shot(0.6f, 0.25f, -60f),
+            Follow = new Shot(0.3f, 0.1f), Moon = new Shot(0.5f, 0.25f), MoonPreview = new Shot(0.4f, 0.15f), Drain = new Shot(0.6f, 0.35f, 0f, 0.6f);
 
         BattleView view;
         Camera cam;
@@ -30,7 +30,7 @@ namespace VampireSpawn.Game
         Vector3 focus, at, atVelocity;
         int? followId, previewedTarget, moonTargetId;
         int rises;
-        bool moonOn, riseOn;
+        bool moonOn, riseOn, drainOn, drainNext;
         float previewUntil, saturation, saturationVelocity, vignetteAmount, vignetteVelocity;
 
         Battle Battle => view.Battle;
@@ -52,6 +52,7 @@ namespace VampireSpawn.Game
             vignette = volume.profile.Add<Vignette>(true);
             vignette.color.Override(Screens.Ui.MoonBlood);
             vignette.intensity.Override(0f);
+            vignette.smoothness.Override(0.7f);
             view.Played += OnPlayed;
             Snap();
         }
@@ -72,7 +73,7 @@ namespace VampireSpawn.Game
             shot = default;
             followId = null;
             rises = 0;
-            moonOn = riseOn = false;
+            moonOn = riseOn = drainOn = drainNext = false;
         }
 
         void OnDestroy()
@@ -110,14 +111,19 @@ namespace VampireSpawn.Game
                     followId = e.UnitId;
                     shot = Follow;
                     break;
+                case BattleEventKind.Popup:
+                    drainNext = e.Style == "blood";
+                    break;
                 case BattleEventKind.Hit when IsEnemy(e.OtherId):
                     riseOn = false;
                     followId = null;
                     focus = Between(e.OtherId, e.UnitId);
-                    shot = moonOn ? Moon : Follow;
+                    drainOn = drainNext;
+                    drainNext = false;
+                    shot = drainOn ? Drain : moonOn ? Moon : Follow;
                     break;
                 case BattleEventKind.Died:
-                    moonOn = false;
+                    moonOn = drainOn = false;
                     break;
             }
         }
@@ -146,7 +152,7 @@ namespace VampireSpawn.Game
             var target = basePos + (focus - Board.BaseLook) * shot.Pan + toLook * shot.Zoom;
             var smooth = SmoothSeconds / Speed;
             at = Vector3.SmoothDamp(at, target, ref atVelocity, smooth);
-            var tinted = riseOn || moonOn || Time.time < previewUntil;
+            var tinted = riseOn || drainOn;
             saturation = Mathf.SmoothDamp(saturation, tinted ? shot.Saturation : 0f, ref saturationVelocity, smooth);
             vignetteAmount = Mathf.SmoothDamp(vignetteAmount, tinted ? shot.Vignette : 0f, ref vignetteVelocity, smooth);
             Apply();
