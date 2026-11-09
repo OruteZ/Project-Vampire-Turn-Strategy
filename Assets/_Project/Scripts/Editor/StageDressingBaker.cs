@@ -17,8 +17,15 @@ namespace VampireSpawn.Editor
         // battle-terrain.md 2.
         const float Width = 160f, Depth = 140f, HeightRange = 8f, Below = 2f;
         const int Splat = 256;
-        // battle-terrain.md 2-2: the river cells sit a step below the land, behind a steep bank.
-        const float RiverBed = -0.6f, BankWidth = 0.25f, WaterLevel = -0.45f;
+        // battle-terrain.md 2-2: the river cells sit a step below the land: bed, a gentle shelf the waterline crosses, then a steep wall.
+        // The waterline is where the flat water cuts the terrain mesh; crossing a slope one grid cell wide it zigzags along the triangles.
+        const float RiverBed = -0.6f, ShelfTop = -0.4f, Shelf = 0.5f, Wall = 0.15f, WaterLevel = -0.45f;
+
+        // Height across the bank by distance past the wall's foot (in world units), before blending into the land height y.
+        static float BankProfile(float bank, float s, float y) =>
+            bank < -Shelf * s ? RiverBed
+            : bank < 0f ? Mathf.Lerp(RiverBed, ShelfTop, (bank + Shelf * s) / (Shelf * s))
+            : Mathf.Lerp(ShelfTop, y, Mathf.SmoothStep(0f, 1f, bank / (Wall * s)));
 
         public static string Bake()
         {
@@ -76,14 +83,14 @@ namespace VampireSpawn.Editor
                     var p = new Vector2(x, z);
                     var ab = b - a;
                     var t = Mathf.Clamp01(Vector2.Dot(p - a, ab) / Mathf.Max(ab.sqrMagnitude, 1e-6f));
-                    var w = Mathf.Lerp(wa, wb, t) * (0.72f + 0.08f * Mathf.PerlinNoise(x / 4f + ox, z / 4f + oz)) * s;
+                    var w = Mathf.Lerp(wa, wb, t) * (0.8f + 0.08f * Mathf.PerlinNoise(x / 4f + ox, z / 4f + oz)) * s;
                     best = Mathf.Min(best, Vector2.Distance(p, a + ab * t) - w);
                 }
                 return best;
             }
 
             // A finer grid where there is a shoreline, or the bank shows 0.6-wide stair steps.
-            var Resolution = river.Count > 0 ? 513 : 257;
+            var Resolution = river.Count > 0 ? 1025 : 257;
             var heights = new float[Resolution, Resolution];
             for (var i = 0; i < Resolution; i++)
                 for (var j = 0; j < Resolution; j++)
@@ -101,7 +108,7 @@ namespace VampireSpawn.Editor
                     if (river.Count > 0)
                     {
                         var bank = Bank(x, z);
-                        if (bank < BankWidth * s) y = Mathf.Min(y, Mathf.Lerp(RiverBed, y, Mathf.SmoothStep(0f, 1f, bank / (BankWidth * s))));
+                        if (bank < Wall * s) y = Mathf.Min(y, BankProfile(bank, s, y));
                     }
                     heights[i, j] = (y + Below) / HeightRange;
                 }
