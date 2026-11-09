@@ -655,12 +655,6 @@ namespace VampireSpawn.Game.Screens
 
         // ---------- heads (ui-style.md 8-1, 8-3, 8-4) ----------
 
-        void BoardStat(RectTransform row, string icon, string value, Color side)
-        {
-            Ui.Size(Ui.Sprite(row, "Icon", S(icon), side), 16, 16);
-            T(row, value, 14, Ui.Bone, true).gameObject.AddComponent<Outline>().effectColor = Ui.Ink;
-        }
-
         void Head(RectTransform layer, Battle b, Unit u, bool named, bool showMov, int damage)
         {
             var per = u.MaxHp > 12 ? 2 : 1;
@@ -680,14 +674,15 @@ namespace VampireSpawn.Game.Screens
                 imgs[i] = Ui.Bg(c, i < full ? color : Ui.Deep, null, false);
                 if (i >= full - lost && i < full) blink.Add(imgs[i]);
             }
-            var stats = Ui.Row(rt, "Stats", 2, 0, null, null, TextAnchor.MiddleRight);
-            stats.anchorMin = stats.anchorMax = new Vector2(0f, 0.5f);
-            stats.pivot = new Vector2(1f, 0.5f);
-            stats.anchoredPosition = new Vector2(-6f, 0f);
-            stats.sizeDelta = new Vector2(100f, 18f);
-            stats.GetComponent<HorizontalLayoutGroup>().childForceExpandWidth = false;
-            BoardStat(stats, Kit.Icon.BoardAtk, u.Atk + (u.Bane > 0 ? "+" + u.Bane : ""), color);
-            BoardStat(stats, Kit.Icon.BoardDef, u.Def.ToString(), color);
+            if (u.Def > 0)
+            {
+                var shields = Ui.Row(rt, "Def", -3, 0, null, null, TextAnchor.MiddleCenter);
+                shields.anchorMin = shields.anchorMax = new Vector2(0.5f, 0.5f);
+                shields.pivot = new Vector2(0.5f, 0.3f);
+                shields.sizeDelta = new Vector2(w + 40f, 16f);
+                shields.GetComponent<HorizontalLayoutGroup>().childForceExpandWidth = false;
+                for (var i = 0; i < u.Def; i++) Ui.Size(Ui.Sprite(shields, "Shield", S(Kit.Icon.BoardDef), Ui.Bone), 16, 16);
+            }
             var x = 4f;
             if (per > 1)
             {
@@ -709,7 +704,7 @@ namespace VampireSpawn.Game.Screens
                     d.gameObject.AddComponent<Outline>().effectColor = Ui.Ink;
                 }
             }
-            var y = 12f;
+            var y = u.Def > 0 ? 20f : 12f;
             if (named)
             {
                 var n = T(Ui.Place(rt, "Name", new Vector2(0.5f, 1f), new Vector2(0f, y - 4f), new Vector2(240f, 18f)), Loc.Text(u.Name) + "  " + u.Hp + "/" + u.MaxHp, 14, Ui.Bone, true, false, TextAnchor.LowerCenter);

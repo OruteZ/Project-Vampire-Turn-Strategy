@@ -103,7 +103,6 @@ MonoBehaviour:
   - {fileID: 21300000, guid: 114f1cb575f45104584a68ac92fe2fbc, type: 3}
   - {fileID: 21300000, guid: 2459a755dcac837438a30dde34cc059c, type: 3}
   - {fileID: 21300000, guid: fed5860c9b7b8d24b921fc2facdf3c67, type: 3}
-  - {fileID: 21300000, guid: c57883d5c48158941be365229cf0f909, type: 3}
   - {fileID: 21300000, guid: 5170dc0b0e5797244b6c2fbbd36d0d20, type: 3}
   uiPrefabs:
   - {fileID: 4654971216602336425, guid: 8a6d5f97315c9a04f9ceb0e8317bb261, type: 3}
