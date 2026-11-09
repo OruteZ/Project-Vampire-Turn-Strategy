@@ -52,6 +52,7 @@
 - 함정: UIDocument 의 뿌리와 템플릿 칸은 화면 전체를 덮고 기본으로 클릭을 받는다. 그대로 두면 EventSystem 이 늘 "UI 위" 라고 해 지도·보드 클릭이 안 된다. `ToolkitKit.Document` 가 Ignore 로 둔다
 - 함정: 투영 옮김(`BoardView.FitCamera`)은 `p[0,2] = -(2·cx − 1)`. 부호가 반대면 화면 가운데에서 반대쪽으로 간다
 - 함정: 원정 지도 카메라는 Cinemachine 이다. 빈 곳 맞춤에 컴포저 화면 위치를 쓰면 옆으로 덜 간다. 렌즈 시프트를 쓰고, 그러려면 Unity 카메라가 물리 카메라여야 한다 (campaign-map.md 구현 메모)
+- 함정: 전투 HUD 는 상태가 바뀌면 통째로 다시 짓는다. 호버(칸·유닛·시체)만 바뀌면 `BattleHud.RebuildHover` 로 `Hover`·`Heads` 층만 다시 짓는다. 호버에 따라 달라지는 것(유닛·시체 패널, 머리 위 표시, 행동 막대)은 `DeployHover`/`FightHover` 에 둔다. 다른 곳에 두면 호버 때 갱신되지 않는다 (#104)
 - 함정: 적 턴은 모델이 먼저 끝나고 화면이 나중에 재생된다. 재생 중 상태(보름달 턴)는 `BattleView.Played` 배너로 안다 (`BattleFlow.OnPlayed`)
 - 함정: Synty 틀 스프라이트에는 붉은·녹색 기가 구워져 있다. Image 색으로 물들이면 곱해져 남는다
 - 함정: CanvasScaler 는 모든 씬이 같은 `App.Canvas` 로 짓기 때문에 Expand 로 바꾸면 모든 화면이 함께 바뀐다. 장 선택만 고쳐도 sweep 은 모든 화면에 돌린다. UI Toolkit `Panel.asset` 도 같이 Expand 로 바꾼다
