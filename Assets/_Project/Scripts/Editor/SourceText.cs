@@ -30,9 +30,10 @@ namespace VampireSpawn.Editor
                         yield return ("강화 " + up.id + " 설명", "upgrade." + up.id + ".desc", false);
                     }
                     break;
-                case EnemyData _:
-                    yield return ("이름", "skeleton.name", false);
-                    yield return ("글자", "skeleton.glyph", false);
+                case EnemyData e:
+                    yield return ("이름", e.key + ".name", false);
+                    yield return ("글자", e.key + ".glyph", false);
+                    yield return ("카드 설명", "unit.card." + e.key + "Note", true);
                     break;
                 case StageData s:
                     yield return ("번호", "stage." + s.id + ".label", false);

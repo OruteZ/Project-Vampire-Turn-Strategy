@@ -2,7 +2,7 @@ using System.Collections.Generic;
 
 namespace VampireSpawn.Core
 {
-    public enum BattleEventKind { Log, Banner, Walk, Popup, Hit, Hint, Died, CorpseLeft, Rose, Woke, HpChanged }
+    public enum BattleEventKind { Log, Banner, Walk, Popup, Hit, Hint, Died, CorpseLeft, Rose, Woke, HpChanged, Buried, MoonChanged }
 
     public readonly struct BattleEvent
     {
@@ -23,16 +23,15 @@ namespace VampireSpawn.Core
         public static BattleEvent Banner(Message text, string style) => new BattleEvent(BattleEventKind.Banner, text: text, style: style);
         public static BattleEvent Walk(int unitId, IReadOnlyList<Hex> path) => new BattleEvent(BattleEventKind.Walk, unitId, path: path);
         public static BattleEvent Popup(int unitId, Message text, string style) => new BattleEvent(BattleEventKind.Popup, unitId, text, style);
-        public static BattleEvent Hit(int unitId, int attackerId) => new BattleEvent(BattleEventKind.Hit, unitId, otherId: attackerId);
+        public static BattleEvent Hit(int unitId, int attackerId, int damage = 0) => new BattleEvent(BattleEventKind.Hit, unitId, otherId: attackerId, value: damage);
         public static BattleEvent Hint(Message text) => new BattleEvent(BattleEventKind.Hint, text: text);
         public static BattleEvent Died(int unitId, Hex at) => new BattleEvent(BattleEventKind.Died, unitId, at: at);
         public static BattleEvent CorpseLeft(int corpseId, Hex at) => new BattleEvent(BattleEventKind.CorpseLeft, corpseId, at: at);
         public static BattleEvent Rose(int unitId, int corpseId, Hex at) => new BattleEvent(BattleEventKind.Rose, unitId, otherId: corpseId, at: at);
         public static BattleEvent Woke(int unitId) => new BattleEvent(BattleEventKind.Woke, unitId);
         public static BattleEvent HpChanged(int unitId, int hp) => new BattleEvent(BattleEventKind.HpChanged, unitId, value: hp);
-
-        // Kinds the prototype emits through log/showBanner/walk/popup/hitFx/flashHint; the rest exist for the view and have no HTML twin.
-        public bool InPrototype => Kind <= BattleEventKind.Hint;
+        public static BattleEvent Buried(int corpseId, Hex at) => new BattleEvent(BattleEventKind.Buried, corpseId, at: at);
+        public static BattleEvent MoonChanged(int moon) => new BattleEvent(BattleEventKind.MoonChanged, value: moon);
 
         public override string ToString() => Format(m => m.ToString());
 
@@ -48,6 +47,8 @@ namespace VampireSpawn.Core
             BattleEventKind.CorpseLeft => "corpse|" + UnitId + "|" + At,
             BattleEventKind.Rose => "rose|" + UnitId + "|" + OtherId + "|" + At,
             BattleEventKind.Woke => "woke|" + UnitId,
+            BattleEventKind.Buried => "buried|" + UnitId + "|" + At,
+            BattleEventKind.MoonChanged => "moon|" + Value,
             _ => "hp|" + UnitId + "|" + Value,
         };
     }

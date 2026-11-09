@@ -24,6 +24,8 @@ namespace VampireSpawn.Game
     [CreateAssetMenu(fileName = "UnitLook", menuName = "VampireSpawn/Unit Look")]
     public sealed class UnitLook : ScriptableObject
     {
+        [Tooltip("병종 key 또는 하수인 key. ArtCatalog 가 이것으로 찾는다")] public string key;
+        [Tooltip("병종 아이콘 (Synty UI 스프라이트 이름, ArtCatalog.ui 에 있어야 한다)")] public string icon;
         [Tooltip("Sidekick 레시피 이름 (Assets/_Project/Art/Characters/<이름>.sk). 있으면 구운 캐릭터를 쓴다")] public string recipe;
         [Tooltip("레시피가 없을 때 쓰는 프리팹. 레시피가 있으면 굽기 전 클론의 대체 모델")] public GameObject model;
         [Tooltip("무기를 붙일 뼈 이름을 정한다")] public Rig rig;

@@ -25,11 +25,13 @@
 | UI 는 uGUI 로 만든다 (INTERFACE 패키지가 RectTransform 프리팹, UXML 없음) | 시험 중 | 2026-11-05 | #2 |
 | 보드 둘레를 장별 Synty 소품으로 꾸미고, 카메라가 화면 전체를 그린다 | 시험 중 | 2026-11-07 | #34 "synty 에셋을 사용해서 게임 스테이지처럼 보이도록 꾸며줘" |
 | 맵(칸 배치)은 테마에 맞춰 다시 짜지 않고 그대로 둔다 | 시험 중 | 2026-11-07 | #34 사용자 답 "Keep maps as is" |
+| 전투 보드 꾸미기는 장별 프리팹(`Assets/_Project/Art/Stages/<장 id>.prefab`)으로 굽고, 구운 뒤엔 프리팹이 기준(사람·에이전트가 직접 고침). 장별 조명도 프리팹 안에 두고, 베이크 조명이 필요한 장만 나중에 씬으로 | 시험 중 | 2026-11-09 | #101 "그래 뭐 그럼 그렇게 하자" |
 | 무기는 쥐는 법(`Hold`: 칼날·창·자루·그대로)으로 붙이고, 루트 모션은 모델만 움직인다(칸 자리·걷기는 코드) | 시험 중 | 2026-11-07 | #42 요청 2 "모든 유닛이 도구를 정상적으로", "Loot Motion을 키는쪽으로" |
 | 배치 때 아군은 북쪽, 적은 남쪽을 본다. 잠든 뱀파이어는 관만 보인다 | 시험 중 | 2026-11-07 | #42 요청 2 "적방향 (북쪽)", "관만 보여줄 것" |
 | 관은 석관 `SM_Prop_Tomb_01`, 색칠 없이 | 시험 중 | 2026-11-08 | #82 "A, 색칠없이" |
 
 ## 맡길 때
+- 함정: 꾸미기 프리팹 굽기는 프리팹이 없는 장만 짓는다(손맞춤 보존). 한 장을 규칙대로 다시 보려면 그 프리팹을 지우고 누른다. 맵 칸을 바꾸면 `StageDressingTests` 가 그 장을 잡는다 (docs/art/stage-dressing.md 4)
 - 함정: 애니메이션 팩마다 Sidekick 전용판 클립(`A_MOD_*`)이 따로 있다. Sidekick 캐릭터에는 그쪽을 쓴다. 무기 자리 뼈는 Sidekick `prop_r`/`prop_l`, Polygon 캐릭터 `Hand_R`/`Hand_L`
 - 함정: Sidekick 프리셋은 메시 하나라 모자 같은 부품만 끌 수 없다. 부품을 고르려면 Sidekick 도구로 새로 만든다 (위 "모델 바꾸기")
 - 함정: 구운 캐릭터는 굽기마다 GUID·fileID 가 새로 정해진다. 에셋 참조로 가리키지 말고 `UnitLook.recipe` 이름으로 찾는다
@@ -55,7 +57,7 @@
 
 ## 유닛에 쓰는 것 (#29, docs/art/unit-visuals.md)
 
-병종 하나 = `Assets/_Project/Art/Units/<병종>.asset` (`UnitLook`: 모델, 뼈대, 무기와 손·쥐는 법·미세 조정, 동작 묶음). 쥐는 법과 소켓은 docs/art/unit-visuals.md 3-1, 한눈에 보기는 도구 모음 "유닛 모습 한눈에"(`UnitLineup`). `ArtCatalog.allyLooks`(UnitKind 순서), `skeletonLook`, `vampireLook` 이 가리킨다.
+병종 하나 = `Assets/_Project/Art/Units/<병종>.asset` (`UnitLook`: 모델, 뼈대, 무기와 손·쥐는 법·미세 조정, 동작 묶음). 쥐는 법과 소켓은 docs/art/unit-visuals.md 3-1, 한눈에 보기는 도구 모음 "유닛 모습 한눈에"(`UnitLineup`). `UnitLook.key`(병종·하수인 key)와 `icon`(무기 아이콘)이 있고, `ArtCatalog.allyLooks`·`minionLooks`(순서 상관없음, key 로 찾음), `vampireLook` 이 가리킨다.
 
 | 유닛 | 모델 | 무기 | 동작 묶음 |
 |---|---|---|---|
@@ -65,7 +67,11 @@
 | 궁수 | `FantasyKnights_02` | 활 왼손 | `Units/Bow` |
 | 기사 | `FantasyKnights_06` | 검 `Sword_02` (칼날) + 방패 | `Units/SwordShield` |
 | 사냥꾼 | `SM_Chr_Hunter_Male_01` | 석궁 `SM_Wep_Rigged_CrossBow_01` | `Units/Polygon.overrideController` |
+| 장의사 (#99) | `SM_Chr_Gravedigger_Male_01` | 삽 `SM_Wep_Shovel_01` (자루) | `Units/Polygon` |
+| 역병 의사 (#99) | `SM_Chr_PlagueDoctor_01` | 지팡이 `SM_Wep_Staff_01` (자루) | `Units/Polygon` |
 | 스켈레톤 | `SM_Chr_Skeleton_01` | 검 `Sword_03` (칼날) | `Units/Polygon` |
+| 스켈레톤 궁수 (#99) | `SM_Chr_Skeleton_Ranger_01` | 왼손 활 `SM_Wep_Rigged_Bow_01` (그대로) | `Units/Polygon` |
+| 스켈레톤 중갑병 (#99) | `SM_Chr_Skeleton_HeavyArmor_01` | 철퇴 `SM_Wep_Mace_01` (칼날), 왼손 방패 `SM_Wep_Shield_01` | `Units/Polygon` |
 | 뱀파이어 | `SM_Chr_DarkLord_Male_01` (잠든 동안은 석관 `SM_Prop_Tomb_01` 만, 깨면 모델) | 낫 (자루) | `Units/Polygon` |
 | 스폰·시신 | 원래 병종 모델, 무기 없음 + 보라 고리 | | Sidekick 은 `Units/SidekickUnarmed` |
 

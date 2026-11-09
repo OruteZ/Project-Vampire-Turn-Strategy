@@ -404,10 +404,9 @@ MonoBehaviour:
       m_Items:
       - rid: 7201578077006332005
   - m_Id: 5832187899907
-    m_Localized: HP +2
+    m_Localized: HP +3
     m_Metadata:
-      m_Items:
-      - rid: 7201578077006332005
+      m_Items: []
   - m_Id: 5832187899908
     m_Localized: Pike Wall
     m_Metadata:
@@ -546,10 +545,9 @@ MonoBehaviour:
       m_Items:
       - rid: 7201578077006332005
   - m_Id: 5832187899935
-    m_Localized: DEF +1
+    m_Localized: DEF +2
     m_Metadata:
-      m_Items:
-      - rid: 7201578077006332005
+      m_Items: []
   - m_Id: 5832187899936
     m_Localized: Charge
     m_Metadata:
@@ -702,8 +700,9 @@ MonoBehaviour:
       m_Items:
       - rid: 7201578077006332005
   - m_Id: 5832192094213
-    m_Localized: A cemetery without a single light. Two narrow paths wind between
-      the gravestones toward the center. Whoever falls here rises again.
+    m_Localized: The village gravedigger has come along, shovel in hand. A cemetery
+      without a single light. Two narrow paths wind between the gravestones toward
+      the center. Whoever falls here rises again.
     m_Metadata:
       m_Items:
       - rid: 7201578077006332005
@@ -724,7 +723,8 @@ MonoBehaviour:
       - rid: 7201578077006332005
   - m_Id: 5832192094217
     m_Localized: Regular archers have joined. Torches line the mountain path. Following
-      the light is safe, but the road is long.
+      the light is safe, but the road is long. Skeleton archers watch from the top
+      of the pass.
     m_Metadata:
       m_Items:
       - rid: 7201578077006332005
@@ -744,9 +744,9 @@ MonoBehaviour:
       m_Items:
       - rid: 7201578077006332005
   - m_Id: 5832192094221
-    m_Localized: The lord's manor, taken by a vampire. The garden has two walls.
-      The outer wall has a gap at each end; the inner wall opens only at the sunlit
-      center.
+    m_Localized: A plague doctor hiding in the manor has joined. The lord's manor,
+      taken by a vampire. The garden has two walls. The outer wall has a gap at each
+      end; the inner wall opens only at the sunlit center.
     m_Metadata:
       m_Items:
       - rid: 7201578077006332005
@@ -768,6 +768,7 @@ MonoBehaviour:
   - m_Id: 5832192094225
     m_Localized: The knightly order has joined. The watchtower wall has three gaps.
       Bonfires guard both ends, but they are far; the middle path is close but dark.
+      Armored skeletons guard the watchtower.
     m_Metadata:
       m_Items:
       - rid: 7201578077006332005
@@ -1000,7 +1001,7 @@ MonoBehaviour:
       m_Items:
       - rid: 7201578077006332005
   - m_Id: 9846568841244
-    m_Localized: Skeletons {0}, {1}
+    m_Localized: Minions {0}, {1}
     m_Metadata:
       m_Items:
       - rid: 7201578077006332005
@@ -1430,12 +1431,10 @@ MonoBehaviour:
       m_Items:
       - rid: 7201578077006332005
   - m_Id: 9846568841324
-    m_Localized: "Upgrades apply to every unit of that type and cannot be undone.
-      A unit can be upgraded after you clear the chapter that unlocks it. Spawn inherit
-      only HP \xB7 ATK \xB7 MOV upgrades."
+    m_Localized: Spend gold to choose one of three paths for each unit type. It applies
+      to every unit of that type.
     m_Metadata:
-      m_Items:
-      - rid: 7201578077006332005
+      m_Items: []
   - m_Id: 9846568841325
     m_Localized: No unit types can be upgraded yet. Clear Chapter 1 to open peasant
       upgrades.
@@ -1673,9 +1672,10 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 504315978248192
-    m_Localized: 'Upgrades you can buy: {0}'
+    m_Localized: 'Units ready to choose a path: {0}'
     m_Metadata:
-      m_Items: []
+      m_Items:
+      - rid: 7201578077006332005
   - m_Id: 504315978248193
     m_Localized: Back to Map
     m_Metadata:
@@ -1692,6 +1692,242 @@ MonoBehaviour:
     m_Localized: Cancel
     m_Metadata:
       m_Items: []
+  - m_Id: 1147185399656448
+    m_Localized: Gravedigger
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1147185487736832
+    m_Localized: GD
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1147185487736833
+    m_Localized: The village gravedigger. Buries an adjacent body so it cannot rise.
+      Weak in a fight.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1147185487736834
+    m_Localized: Plague Doctor
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1147185487736835
+    m_Localized: PD
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1147185487736836
+    m_Localized: A beak-masked physician. Treats a wounded ally within 2 hexes. Frail.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1147185487736837
+    m_Localized: Close Ranks
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1147185487736838
+    m_Localized: DEF +1 while next to another Peasant Spearman
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1147185487736839
+    m_Localized: Long Hunting Bow
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1147185487736840
+    m_Localized: RNG +1
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1147185487736841
+    m_Localized: Honed Blade
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1147185487736842
+    m_Localized: ATK +1
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1147185487736843
+    m_Localized: Silver Arrowheads
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1147185487736844
+    m_Localized: +2 extra damage to vampires and spawn
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1147185487736845
+    m_Localized: Veteran
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1147185487736846
+    m_Localized: HP +4
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1147185487736847
+    m_Localized: Holy Water
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1147185487736848
+    m_Localized: Never chosen as the full moon's prey
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1147185487736849
+    m_Localized: Night Paths
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1147185487736850
+    m_Localized: MOV +1
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1147185487736851
+    m_Localized: Holy Burial
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1147185487736852
+    m_Localized: Each burial lowers the Moon by 1
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1147185487736853
+    m_Localized: All-Night Burial
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1147185487736854
+    m_Localized: Act once more after burying (once per turn)
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1147185487736855
+    m_Localized: Swift Rounds
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1147185487736856
+    m_Localized: MOV +1
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1147185487736857
+    m_Localized: Herb Pouch
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1147185487736858
+    m_Localized: Treatment +2
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1147185487736859
+    m_Localized: Waxed Coat
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1147185487736860
+    m_Localized: DEF +1
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1147185487736861
+    m_Localized: Close Ranks
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1147185487736862
+    m_Localized: Holy Water
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1147185487736863
+    m_Localized: Holy Burial
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1147185487736864
+    m_Localized: Bury
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1147185487736865
+    m_Localized: All-Night Burial
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1147185487736866
+    m_Localized: Treat
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1147185487736867
+    m_Localized: Ranks
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1147185487736868
+    m_Localized: The Moon wanes by 1 ({0}/{1}).
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 1147185487736869
+    m_Localized: '{0} buries {1}''s body. It will not rise.'
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 1147185487736870
+    m_Localized: '{0} may act once more.'
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 1147185487736871
+    m_Localized: '{0} treats {1}: HP +{2}'
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 1147185487736872
+    m_Localized: Buried
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1147185487736873
+    m_Localized: You cannot bury that body.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1147185487736874
+    m_Localized: You cannot treat that unit.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1147185491931136
+    m_Localized: Choose an ally to treat. Click elsewhere to cancel.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1147185491931137
+    m_Localized: Skeleton Archer
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1147185491931138
+    m_Localized: SA
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1147185491931139
+    m_Localized: Armored Skeleton
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1147185491931140
+    m_Localized: AS
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1147185491931141
+    m_Localized: Shoots from range. Allies it kills do not rise.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1147185491931142
+    m_Localized: Slow but sturdy. Allies it kills do not rise.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1147185491931143
+    m_Localized: Treat
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1147185491931144
+    m_Localized: Cancel Treat
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1147185491931145
+    m_Localized: Choose one of three paths. The choice is permanent.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1147185491931146
+    m_Localized: 'Path chosen: {0}.'
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 1147185491931147
+    m_Localized: 'Locked: you chose {0}.'
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 1147185491931148
+    m_Localized: '{0}''s other two paths will be locked. This cannot be undone.'
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
   references:
     version: 2
     RefIds:
@@ -1775,7 +2011,7 @@ MonoBehaviour:
         - id: 5832187899904
         - id: 5832187899905
         - id: 5832187899906
-        - id: 5832187899907
+        - id: 1147185487736869
         - id: 5832187899908
         - id: 5832187899909
         - id: 5832187899910
@@ -1803,7 +2039,7 @@ MonoBehaviour:
         - id: 5832187899932
         - id: 5832187899933
         - id: 5832187899934
-        - id: 5832187899935
+        - id: 1147185487736868
         - id: 5832187899936
         - id: 5832187899937
         - id: 5832187899938
@@ -1970,7 +2206,6 @@ MonoBehaviour:
         - id: 9846568841321
         - id: 9846568841322
         - id: 9846568841323
-        - id: 9846568841324
         - id: 9846568841325
         - id: 9846568841326
         - id: 9846568841328
@@ -1997,3 +2232,9 @@ MonoBehaviour:
         - id: 55516336025606
         - id: 55516336025614
         - id: 55516336025615
+        - id: 1147185487736870
+        - id: 1147185487736871
+        - id: 504315978248192
+        - id: 1147185491931146
+        - id: 1147185491931147
+        - id: 1147185491931148

@@ -166,7 +166,7 @@ namespace VampireSpawn.Tests
         public void TabsSkipStagesNotYetUnlockedAndStopAtTheEnds()
         {
             var c = ClearedUpTo(0);
-            var kinds = GameData.Types.Select(t => t.Kind).ToArray();
+            var kinds = GameData.Types.Select(t => t.Key).ToArray();
             var hidden = Enumerable.Range(0, kinds.Length).Where(i => CampNav.TabOf(c, kinds[i]) == TabState.Hidden).ToArray();
             Assume.That(hidden, Is.Not.Empty, "a fresh campaign has units not yet unlocked");
             var s = Press(CampNav.FromMenu(c, null), c, CampKey.Barracks);
@@ -181,7 +181,7 @@ namespace VampireSpawn.Tests
         public void TheBarracksOpensOnTheFirstTabWithSomethingToBuy()
         {
             var c = ClearedUpTo(Stages.Length);
-            var kinds = GameData.Types.Select(t => t.Kind).ToArray();
+            var kinds = GameData.Types.Select(t => t.Key).ToArray();
             var first = System.Array.FindIndex(kinds, k => CampNav.Affordable(c, k) > 0);
             Assume.That(first, Is.GreaterThanOrEqualTo(0), "the full campaign has gold for something");
             Assert.AreEqual(first, CampNav.DefaultTab(c, -1));

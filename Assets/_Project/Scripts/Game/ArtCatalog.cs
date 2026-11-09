@@ -22,10 +22,17 @@ namespace VampireSpawn.Game
             return themes[0];
         }
 
+        [Tooltip("장별 꾸미기 프리팹, 이름 = 장 id (docs/art/stage-dressing.md 4). 도구 모음 > 전투 보드 > 꾸미기 프리팹 굽기로 채운다")]
+        public GameObject[] stageDressings;
+
+        public GameObject Dressing(string stageId) => System.Array.Find(stageDressings ?? System.Array.Empty<GameObject>(), p => p != null && p.name == stageId);
+
         [Header("Units")]
-        [Tooltip("UnitKind 순서: pspear, parcher, sword, archer, knight, hunter")]
+        [Tooltip("병종 모습. 순서 상관없이 UnitLook.key (병종 key) 로 찾는다")]
         public UnitLook[] allyLooks;
-        public UnitLook skeletonLook, vampireLook;
+        [Tooltip("하수인 모습. UnitLook.key = 하수인 key")]
+        public UnitLook[] minionLooks;
+        public UnitLook vampireLook;
         [Tooltip("Polygon 캐릭터와, 묶음이 빈 UnitLook 이 쓰는 기본 애니메이터")] public RuntimeAnimatorController unitAnimator;
         [Tooltip("Sidekick 캐릭터가 스폰이 되었을 때 (맨손 근접)")] public RuntimeAnimatorController spawnAnimator;
         public Material flat;
@@ -38,6 +45,13 @@ namespace VampireSpawn.Game
         public Color vampireRing = new Color(0.78f, 0.19f, 0.29f);
         public Color spawnRing = new Color(0.65f, 0.31f, 0.77f);
         [Tooltip("잠든 뱀파이어의 관. 색칠 없이 그대로 (docs/art/unit-visuals.md 5)")] public GameObject coffin;
+
+        public UnitLook Look(string key) => Find(allyLooks, key) ?? Find(minionLooks, key);
+
+        // Weapon icon sprite name for a unit type, from its look (docs/art/unit-visuals.md).
+        public string Icon(string key) => Look(key)?.icon;
+
+        static UnitLook Find(UnitLook[] looks, string key) => System.Array.Find(looks ?? System.Array.Empty<UnitLook>(), l => l != null && l.key == key);
 
         public Color TierRing(VampireSpawn.Core.Tier tier) => tier switch
         {

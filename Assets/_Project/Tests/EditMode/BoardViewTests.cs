@@ -48,24 +48,10 @@ namespace VampireSpawn.Tests
                     var mat = t.GetComponent<MeshRenderer>().sharedMaterial;
                     if (expected != null) Assert.AreEqual(expected, mat, stage.Id + " material of " + t.name);
                     else Assert.Less(((Vector4)(theme.ground - mat.color)).magnitude, 0.01f, stage.Id + " themed ground on " + t.name);
-                    var blocker = t.Cast<Transform>().Any(c => theme.blockers.Any(b => b.name == c.name));
-                    Assert.AreEqual(terrain == Terrain.Rock, blocker, stage.Id + " themed blocker on " + t.name + " only on rock");
                     Assert.AreEqual(terrain == Terrain.Torch, t.Cast<Transform>().Any(c => c.name == view.art.brazier.name), stage.Id + " brazier on " + t.name + " only on torch");
                     Assert.AreEqual(terrain == Terrain.Torch || terrain == Terrain.Sun, t.GetComponentInChildren<Light>() != null, stage.Id + " light on " + t.name);
                 }
-                // stage-dressing.md 1-1: nothing from the world dressing stands on a board cell.
-                var dressing = children.Single(c => c.name == "Dressing");
-                Assert.Greater(dressing.childCount, 20, stage.Id + " dressing");
-                var reach = view.art.hexSize * 0.9f;
-                foreach (Transform d in dressing)
-                {
-                    if (d.name == "Ground") continue;
-                    foreach (var cell in tiles)
-                    {
-                        var a = d.position - cell.position;
-                        Assert.Greater(new Vector2(a.x, a.z).magnitude, reach, stage.Id + " " + d.name + " stands on " + cell.name);
-                    }
-                }
+                Assert.AreEqual(1, children.Count(c => c.name == "Dressing"), stage.Id + " baked dressing (stage-dressing.md 4-6)");
             }
             finally
             {

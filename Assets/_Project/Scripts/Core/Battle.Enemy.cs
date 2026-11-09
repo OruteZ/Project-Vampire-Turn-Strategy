@@ -6,7 +6,7 @@ namespace VampireSpawn.Core
 {
     public sealed partial class Battle
     {
-        static readonly Role[] ActingOrder = { Role.Skeleton, Role.Spawn, Role.Vampire };
+        static readonly Role[] ActingOrder = { Role.Minion, Role.Spawn, Role.Vampire };
 
         public bool MoonNext()
         {
@@ -54,7 +54,7 @@ namespace VampireSpawn.Core
             foreach (var u in units)
             {
                 if (u.Side == Side.Enemy) { u.JustRisen = false; u.JustWoke = false; }
-                else { u.Moved = false; u.Acted = false; u.MovedDist = 0; u.Cleaved = false; }
+                else { u.Moved = false; u.Acted = false; u.MovedDist = 0; u.ActedAgain = false; }
             }
             Turn++;
             Phase = Phase.Player;
@@ -85,8 +85,8 @@ namespace VampireSpawn.Core
             foreach (var u in Allies)
             {
                 var d = Hex.Distance(v.Pos, u.Pos);
-                if (d > Rules.EatRange || Board.Lit(u.Pos)) continue;
-                var score = d * 100 - GameData.Type(u.Type.Value).Pop;
+                if (d > Rules.EatRange || Board.Lit(u.Pos) || u.Has(Ability.Ward)) continue;
+                var score = d * 100 - GameData.Type(u.Type).Pop;
                 if (best == null || score < bestScore) { best = u; bestScore = score; }
             }
             return best;
@@ -140,7 +140,7 @@ namespace VampireSpawn.Core
         double TargetScore(Unit att, Unit t)
         {
             var d = Damage(att, t);
-            return (d >= t.Hp ? 100 : 0) + GameData.Type(t.Type.Value).Pop * 3 - t.Hp * 0.5 + d;
+            return (d >= t.Hp ? 100 : 0) + GameData.Type(t.Type).Pop * 3 - t.Hp * 0.5 + d;
         }
 
         Unit PickTarget(Unit att, List<Unit> list)
@@ -151,12 +151,13 @@ namespace VampireSpawn.Core
             return best;
         }
 
-        List<Unit> AdjacentAllies(Hex h) => Allies.Where(a => Hex.Distance(h, a.Pos) == 1).ToList();
+        // docs/systems/ai.md 2: allies within range, no line of sight.
+        List<Unit> AlliesInReach(Unit e, Hex h) => Allies.Where(a => Hex.Distance(h, a.Pos) <= e.Rng).ToList();
 
         void MeleeAct(Unit e)
         {
             if (!Allies.Any()) return;
-            var adj = AdjacentAllies(e.Pos);
+            var adj = AlliesInReach(e, e.Pos);
             if (adj.Count == 0)
             {
                 var reach = Board.Reachable(e.Pos, e.Mov, e.Side, OccupantAt);
@@ -164,7 +165,7 @@ namespace VampireSpawn.Core
                 var bestScore = -1e9;
                 foreach (var (h, steps) in reach)
                 {
-                    var near = AdjacentAllies(h);
+                    var near = AlliesInReach(e, h);
                     if (near.Count == 0) continue;
                     var s = TargetScore(e, PickTarget(e, near)) * 10 - steps;
                     if (s > bestScore) { bestScore = s; best = h; }
@@ -185,8 +186,8 @@ namespace VampireSpawn.Core
                     }
                 }
                 if (best.HasValue && best.Value != e.Pos) MoveEnemy(e, best.Value);
-                // No liveness check: an enemy the pike wall just killed still strikes, as in the prototype. docs/dev/unity-port.md
-                adj = AdjacentAllies(e.Pos);
+                if (!units.Contains(e)) return;
+                adj = AlliesInReach(e, e.Pos);
             }
             if (adj.Count > 0) ApplyHit(e, PickTarget(e, adj));
         }

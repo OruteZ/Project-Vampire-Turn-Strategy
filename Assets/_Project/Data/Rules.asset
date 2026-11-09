@@ -16,3 +16,4 @@ MonoBehaviour:
   moonMax: 6
   eatRange: 2
   moonWake: 3
+  mendRange: 2

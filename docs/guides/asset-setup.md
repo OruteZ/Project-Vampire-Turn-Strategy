@@ -4,7 +4,7 @@
 
 ## 무엇이 필요한가
 
-지금 게임이 쓰는 에셋은 18개이고 패키지 5개에 들어 있다. 목록은 `tools/assets/required.tsv`(GUID, 경로, 패키지, 쓰는 파일), 패키지 표는 `tools/assets/packages.tsv`(파일 이름, 바이트, 필요한 에셋 수)다.
+지금 게임이 쓰는 에셋은 459개이고 패키지 9개에 들어 있다. 목록은 `tools/assets/required.tsv`(GUID, 경로, 패키지, 쓰는 파일), 패키지 표는 `tools/assets/packages.tsv`(파일 이름, 바이트, 필요한 에셋 수)다.
 
 | 패키지 파일 | 필요 | 쓰는 곳 |
 |---|---|---|
@@ -13,14 +13,17 @@
 | `SIDEKICK_Fantasy_Villagers_Unity_2021_3_v1_0_1.unitypackage` | 필수 | 농민 창병·농민 궁수 모델 |
 | `ANIMATION_Base_Locomotion_Unity_2021_1_v1_1_3.unitypackage` | 필수 | 서기·걷기 애니메이션 |
 | `ANIMATION_Sword_Combat_Unity_2021_1_v1_2_0.unitypackage` | 필수 | 공격·맞기·죽기 애니메이션 |
-| `ANIMATION_Bow_Combat_…`, `INTERFACE_Dark_Fantasy_HUD_…`, `INTERFACE_Dark_Fantasy_Menus_…` | 선택 | 지금은 쓰지 않음 |
+| `POLYGON_Bow_Crossbow_Unity_2022_3_v1.2.1.unitypackage` | 필수 | 활·석궁 무기, 화살, 공용(PolygonGeneric) 소품 일부 |
+| `ANIMATION_Bow_Combat_Unity_2022_3_v1_0_0.unitypackage` | 필수 | 궁수 서기·쏘기·맞기·죽기 애니메이션 |
+| `INTERFACE_Dark_Fantasy_HUD_Unity_2022_3_v1_1_1.unitypackage` | 필수 | 전투 HUD 아이콘·프레임 |
+| `INTERFACE_Dark_Fantasy_Menus_Unity_2022_3_v1_0_1.unitypackage` | 필수 | 메뉴 UI |
 
 패키지는 Synty 를 산 계정(Synty Store 또는 Unity Asset Store)에서 받는다. 파일 이름의 판(`v1_4_1` 등)이 같아야 한다. 다른 판은 GUID 가 다를 수 있고, 그러면 아래 확인이 어느 에셋이 어긋났는지 알려 준다.
 
 ## 새 클론에서 하는 순서
 
 1. Unity 6000.3.27f2 와 Unity CLI(`unity`)를 깐다. Git Bash 와 node 가 있어야 한다.
-2. 위 패키지 다섯 개를 `UPackage/` 에 둔다. 다른 곳에 두었으면 `SYNTY_PACKAGES=<폴더>` 를 주거나 스크립트에 폴더를 넘긴다.
+2. 위 패키지 아홉 개를 `UPackage/` 에 둔다. 다른 곳에 두었으면 `SYNTY_PACKAGES=<폴더>` 를 주거나 스크립트에 폴더를 넘긴다.
 3. 무엇이 빠졌는지 에디터 없이 본다:
 
    ```bash
@@ -44,7 +47,7 @@
 
    Unity CLI 가 없으면 에디터에서 VampireSpawn > 도구 모음 (Tools) > 유료 에셋 > **Synty 다시 불러오기** 를 누른다. 빠진 패키지를 `UPackage/` 에서 임포트하고 레시피를 구운 뒤 결과를 그 창에 보인다 (처음 한 번은 굽기 도구 설치 → 컴파일 → 굽기 순서로 저절로 이어진다). 확인은 Window > General > Test Runner 에서 `SidekickRecipeTests`, `RequiredAssetsTests`. Claude Code 에서는 `/synty-reload` 스킬이 이 전체(임포트, 굽기, 확인)를 한다 (`.claude/skills/synty-reload/SKILL.md`). 굽지 않은 클론은 레시피를 쓰는 유닛을 `UnitLook.model` 의 대체 프리셋으로 그린다.
 
-   패키지 파일이 없으면 무엇을 어디에 둘지 알려 주고 멈춘다. 처음 클론은 패키지 다섯 개 임포트에 수 분 걸린다.
+   패키지 파일이 없으면 무엇을 어디에 둘지 알려 주고 멈춘다. 처음 클론은 패키지 아홉 개 임포트에 수 분 걸린다.
 5. 전체를 확인한다:
 
    ```bash
@@ -77,4 +80,4 @@
 
 - 다시 뽑지 않으면 `RequiredAssetsTests.ListCoversEverySyntyReference` 가 실패하며 빠진 경로를 알려 준다.
 - 새 패키지를 들이면 `UPackage/` 에 두고 `scan.mjs` 를 돌린다. `packages.tsv` 에 줄이 생긴다. 이 문서의 표와 `docs/areas/art-assets.md` 에도 한 줄 더한다.
-- 패키지끼리 같은 경로의 파일이 있으면 나중에 임포트한 쪽 GUID 가 이긴다(애니메이션 패키지에 3건). `required.tsv` 의 패키지 칸에 `+` 로 둘 이상이 적히면 임포트 순서를 이 문서에 적는다. 지금은 그런 에셋이 없다.
+- 패키지끼리 같은 경로의 파일이 있으면 나중에 임포트한 쪽 GUID 가 이긴다(애니메이션 패키지에 3건). `required.tsv` 의 패키지 칸에 `+` 로 둘 이상이 적힌 에셋은 여러 패키지에 같은 파일이 든 것이다(`PolygonGeneric` 은 POLYGON_Bow_Crossbow·POLYGON_Dark_Fantasy 둘 다에 있다). 어느 쪽을 임포트해도 된다.

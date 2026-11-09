@@ -13,7 +13,10 @@ MonoBehaviour:
   m_Name: 03_s3
   m_EditorClassIdentifier: VampireSpawn.Game::VampireSpawn.Game.Data.StageData
   id: s3
-  units: 000000000100000002000000
+  units:
+  - pspear
+  - parcher
+  - sword
   pop: 7
   silver: 0
   reward: 25
@@ -35,34 +38,34 @@ MonoBehaviour:
   - dddddddddd
   - dddddddddd
   enemies:
-  - kind: 1
+  - kind: vampire
     col: 5
     row: 0
-  - kind: 0
+  - kind: skeleton
     col: 1
     row: 0
-  - kind: 0
+  - kind: skeleton
     col: 8
     row: 0
-  - kind: 0
+  - kind: skeleton
     col: 4
     row: 1
-  - kind: 0
+  - kind: skeleton
     col: 0
     row: 0
   sample:
-  - kind: 0
+  - kind: pspear
     col: 3
     row: 6
-  - kind: 2
+  - kind: sword
     col: 4
     row: 6
-  - kind: 2
+  - kind: sword
     col: 5
     row: 6
-  - kind: 0
+  - kind: pspear
     col: 6
     row: 6
-  - kind: 1
+  - kind: parcher
     col: 5
     row: 7

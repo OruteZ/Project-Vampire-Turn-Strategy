@@ -18,11 +18,12 @@ namespace VampireSpawn.Game
 
         public static string[] FirstStages(int count) => Campaign.Stages.Take(count).Select(s => s.Id).ToArray();
 
-        public static string[] AllUpgrades => GameData.Upgrades.Select(u => u.Id).ToArray();
+        // progression.md 19: every unit type on its n-th branch (1-based); types without that branch get none.
+        public static string[] Branch(int n) => GameData.Types.Select(t => GameData.Branches(t.Key).ElementAtOrDefault(n - 1)?.Id).Where(id => id != null).ToArray();
 
         // Same id as the base stage so its labels and boss name still resolve; played as a demo, so nothing is saved.
         public static Stage TestStage(Stage from, bool deployAnywhere) => new Stage(from.Id,
-            (UnitKind[])Enum.GetValues(typeof(UnitKind)), NoCap, NoCap, 0, from.Bonus, from.Boss,
+            GameData.Types.Select(t => t.Key).ToArray(), NoCap, NoCap, 0, from.Bonus, from.Boss,
             deployAnywhere ? from.Map.Select(row => row.Replace('.', 'd')).ToArray() : from.Map,
             from.Enemies, from.Sample);
     }

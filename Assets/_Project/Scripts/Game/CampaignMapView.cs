@@ -7,8 +7,8 @@ using VampireSpawn.Core;
 namespace VampireSpawn.Game
 {
     // docs/art/campaign-map.md. The fixed terrain and its Cinemachine shots are baked into the Camp scene
-    // (Tools > 지도 > Camp 씬에 지도 굽기) so people can move props and tune each shot in Unity. Regions are found by name, so markers,
-    // braziers and shots follow a moved region. Show rebuilds only progress; Look picks a shot and the brain blends to it.
+    // (Tools > 지도 > Camp 씬에 지도 굽기) so people can move props, points and shots in Unity; the scene is the map's only truth at run time.
+    // Show rebuilds only progress (lit road, braziers, camp) from the baked points; Look picks a shot and the brain blends to it.
     public sealed class CampaignMapView : MonoBehaviour
     {
         public ArtCatalog art;
@@ -37,6 +37,7 @@ namespace VampireSpawn.Game
                 spot.enabled = false;
             }
             terrain.gameObject.SetActive(true);
+            fogDistance = 0f;
             if (progress != null) Kill(progress.gameObject);
             progress = new GameObject("Progress").transform;
             progress.SetParent(terrain, false);
@@ -80,7 +81,7 @@ namespace VampireSpawn.Game
         public void Look(CampLayer layer, int stage, Rect empty, Vector2 margin, bool snap = false)
         {
             var r = RegionOf(stage);
-            var chosen = layer == CampLayer.Barracks ? Shot("Shot Camp") : layer == CampLayer.Info && r != null ? Shot("Shot " + r.Stage) : Shot("Shot Wide");
+            var chosen = layer == CampLayer.Barracks ? Shot("Shot Camp") : layer == CampLayer.Info && r != null ? Shot("Shot " + Campaign.Stages[stage].Id) : Shot("Shot Wide");
             foreach (var cam in Shots()) cam.enabled = cam == chosen;
             this.empty = empty;
             if (chosen != null)
@@ -95,7 +96,7 @@ namespace VampireSpawn.Game
                 spot.enabled = layer == CampLayer.Info;
                 if (r != null)
                 {
-                    var a = AnchorOf(r);
+                    var a = r.position;
                     spot.transform.position = a + new Vector3(0f, 16f, -4f);
                     spot.transform.rotation = Quaternion.LookRotation(a - spot.transform.position);
                 }
@@ -115,7 +116,7 @@ namespace VampireSpawn.Game
         public Vector3? MarkerPoint(int stageIndex)
         {
             var r = RegionOf(stageIndex);
-            return r == null ? (Vector3?)null : AnchorOf(r) + Vector3.up * r.MarkerHeight;
+            return r == null ? (Vector3?)null : PointOr(r, "Marker", r.position);
         }
 
         // Viewport point of a region's marker, or null behind the camera.
@@ -133,18 +134,51 @@ namespace VampireSpawn.Game
             if (!Showing || viewCamera == null) return;
             foreach (var cam in Shots())
                 if (cam.enabled && !Mathf.Approximately(cam.Lens.PhysicalProperties.SensorSize.x, 24f * viewCamera.aspect)) Shift(cam);
-            var distance = Mathf.Max(1f, (viewCamera.transform.position.y - CampaignMapLayout.Origin.y) / Mathf.Sin(Pitch * Mathf.Deg2Rad));
+            var distance = Mathf.Max(1f, (viewCamera.transform.position.y - terrain.position.y) / Mathf.Sin(Pitch * Mathf.Deg2Rad));
+            if (Mathf.Approximately(distance, fogDistance)) return;
+            fogDistance = distance;
             RenderSettings.fogStartDistance = distance * 0.9f;
             RenderSettings.fogEndDistance = distance * 2.2f;
         }
 
-        static MapRegion RegionOf(int stageIndex) =>
-            stageIndex >= 0 && stageIndex < Campaign.Stages.Length ? CampaignMapLayout.Region(Campaign.Stages[stageIndex].Id) : null;
+        float fogDistance;
 
-        IEnumerable<CinemachineCamera> Shots()
+        // The running map reads only the scene: regions, their Marker/Brazier/Camp points, Paths and the Camp Template are baked
+        // objects people may move by hand. CampaignMapLayout only feeds the bake (campaign-map.md 10).
+        public const string PathsName = "Paths", StartName = "Start", CampTemplateName = "Camp Template";
+
+        Transform RegionOf(int stageIndex) =>
+            terrain != null && stageIndex >= 0 && stageIndex < Campaign.Stages.Length ? terrain.Find("Region " + Campaign.Stages[stageIndex].Id) : null;
+
+        static Vector3 PointOr(Transform parent, string name, Vector3 fallback)
         {
+            var t = parent.Find(name);
+            return t != null ? t.position : fallback;
+        }
+
+        Vector2 Local(Vector3 world)
+        {
+            var p = terrain.InverseTransformPoint(world);
+            return new Vector2(p.x, p.z);
+        }
+
+        Vector2[] PathPoints(Transform path) => path.Cast<Transform>().Select(t => Local(t.position)).ToArray();
+
+        IEnumerable<Transform> Paths(string prefix)
+        {
+            var paths = terrain.Find(PathsName);
+            return paths == null ? Enumerable.Empty<Transform>() : paths.Cast<Transform>().Where(t => t.name.StartsWith(prefix));
+        }
+
+        CinemachineCamera[] shots;
+        Transform shotsOf;
+
+        CinemachineCamera[] Shots()
+        {
+            if (shots != null && shotsOf == terrain) return shots;
+            shotsOf = terrain;
             var cams = terrain != null ? terrain.Find("Cameras") : null;
-            return cams != null ? cams.GetComponentsInChildren<CinemachineCamera>(true) : Enumerable.Empty<CinemachineCamera>();
+            return shots = cams != null ? cams.GetComponentsInChildren<CinemachineCamera>(true) : System.Array.Empty<CinemachineCamera>();
         }
 
         CinemachineCamera Shot(string name) => Shots().FirstOrDefault(c => c.name == name);
@@ -164,14 +198,7 @@ namespace VampireSpawn.Game
             var camp = CampSpot();
             if (type < 0 || camp == null) return;
             var t = GameData.Types[type];
-            campUnit = UnitView.Create(art, art.allyLooks[(int)t.Kind], camp, -1, camp.TransformPoint(CampaignMapLayout.CampUnit), 180f - camp.eulerAngles.y, art.TierRing(t.Tier), true);
-        }
-
-        // A region baked into the scene may have been moved by hand; its object is the truth, the layout table the fallback.
-        Vector3 AnchorOf(MapRegion r)
-        {
-            var root = terrain != null ? terrain.Find("Region " + r.Stage) : null;
-            return root != null ? root.position : World(r.Anchor);
+            campUnit = UnitView.Create(art, art.Look(t.Key), camp, -1, PointOr(camp, "Unit", camp.position), 180f - camp.eulerAngles.y, art.TierRing(t.Tier), true);
         }
 
         // One Cinemachine shot: follows its subject at the given distance and pitch; the composer aims it (campaign-map.md 9).
@@ -263,22 +290,79 @@ namespace VampireSpawn.Game
             var lineProps = BuildLines(terrain, art, roads);
             BuildForest(terrain, art, lineProps);
             BuildShots(terrain);
+            BuildPoints(terrain, art);
             return terrain;
+        }
+
+        // Adds the points the running map reads; ones already in the scene stay where people put them.
+        public static void BuildPoints(Transform terrain, ArtCatalog art)
+        {
+            foreach (var r in CampaignMapLayout.Regions)
+            {
+                var region = terrain.Find("Region " + r.Stage);
+                if (region == null) continue;
+                Point(region, "Marker", Vector3.up * r.MarkerHeight);
+                Point(region, "Brazier", new Vector3(r.Brazier.x, 0f, r.Brazier.y));
+                Point(region, "Camp", new Vector3(r.Camp.x - r.Anchor.x, 0f, r.Camp.y - r.Anchor.y));
+            }
+            Point(terrain, StartName, new Vector3(CampaignMapLayout.Start.x, 0f, CampaignMapLayout.Start.y));
+            var paths = Point(terrain, PathsName, Vector3.zero);
+            PathNode(paths, "Road", CampaignMapLayout.Road);
+            PathNode(paths, "River", CampaignMapLayout.River);
+            PathNode(paths, "Moat", CampaignMapLayout.Moat);
+            for (var i = 0; i < CampaignMapLayout.SideRoads.Length; i++) PathNode(paths, "Side Road " + i, CampaignMapLayout.SideRoads[i]);
+            if (terrain.Find(CampTemplateName) != null) return;
+            var camp = Point(terrain, CampTemplateName, Vector3.zero);
+            foreach (var p in CampaignMapLayout.CampProps)
+            {
+                var prefab = Prefab(art, p.Prefab);
+                if (prefab != null) BoardView.Place(prefab, camp, camp.TransformPoint(new Vector3(p.Dx, p.Lift, p.Dz)), p.Width, camp.eulerAngles.y + p.Yaw);
+            }
+            var l = CampaignMapLayout.CampLight;
+            BoardView.AddLight(camp, camp.TransformPoint(l.At), LightType.Point, art.torchLight, l.Intensity, l.Range);
+            Point(camp, "Unit", CampaignMapLayout.CampUnit);
+            camp.gameObject.SetActive(false);
+        }
+
+        static Transform Point(Transform parent, string name, Vector3 local)
+        {
+            var t = parent.Find(name);
+            if (t != null) return t;
+            t = new GameObject(name).transform;
+            t.SetParent(parent, false);
+            t.localPosition = local;
+            return t;
+        }
+
+        static void PathNode(Transform paths, string name, Vector2[] points)
+        {
+            if (paths.Find(name) != null) return;
+            var path = Point(paths, name, Vector3.zero);
+            for (var i = 0; i < points.Length; i++) Point(path, i.ToString(), new Vector3(points[i].x, 0f, points[i].y));
         }
 
         void BuildProgress()
         {
             var lastOpen = 0;
             for (var i = 0; i < Campaign.Stages.Length; i++) if (campaign.StageOpen(i)) lastOpen = i;
-            var split = RegionOf(lastOpen) is MapRegion open ? System.Array.FindIndex(CampaignMapLayout.Road, p => (p - open.Anchor).sqrMagnitude < 0.01f) : 0;
-            var lit = CampaignMapLayout.Road.Take(split + 1).ToArray();
-            var dark = CampaignMapLayout.Road.Skip(split).ToArray();
+            var roadNode = Paths("Road").FirstOrDefault();
+            var road = roadNode != null ? PathPoints(roadNode) : System.Array.Empty<Vector2>();
+            var open = RegionOf(lastOpen);
+            var split = 0;
+            if (open != null && road.Length > 0)
+            {
+                var o = Local(open.position);
+                for (var i = 1; i < road.Length; i++) if ((road[i] - o).sqrMagnitude < (road[split] - o).sqrMagnitude) split = i;
+            }
+            var lit = road.Take(split + 1).ToArray();
+            var dark = road.Skip(split).ToArray();
             if (lit.Length > 1) Ribbon(progress, "Road Lit", lit, CampaignMapLayout.RoadWidth, Tinted(CampaignMapLayout.RoadLit, "Road Lit"), 0.04f);
             if (dark.Length > 1) Ribbon(progress, "Road Dark", dark, CampaignMapLayout.RoadWidth, Tinted(CampaignMapLayout.RoadDark, "Road Dark"), 0.039f);
             for (var i = 0; i < Campaign.Stages.Length; i++)
             {
-                if (!campaign.IsCleared(Campaign.Stages[i]) || !(RegionOf(i) is MapRegion r)) continue;
-                var at = AnchorOf(r) + new Vector3(r.Brazier.x, 0f, r.Brazier.y);
+                var r = RegionOf(i);
+                if (!campaign.IsCleared(Campaign.Stages[i]) || r == null) continue;
+                var at = PointOr(r, "Brazier", r.position);
                 var brazier = art.MapProp(CampaignMapLayout.Brazier);
                 if (brazier != null) BoardView.Place(brazier, progress, at, 0.9f, 0f);
                 var fire = art.MapProp(CampaignMapLayout.Fire);
@@ -403,10 +487,10 @@ namespace VampireSpawn.Game
             var water = new GameObject("Water").transform;
             water.SetParent(terrain, false);
             var mat = art.water != null ? art.water : Tinted(CampaignMapLayout.Fog, "Water");
-            Ribbon(water, "River", CampaignMapLayout.River, CampaignMapLayout.RiverWidth, mat, 0.02f);
-            Ribbon(water, "Moat", CampaignMapLayout.Moat, CampaignMapLayout.MoatWidth, mat, 0.02f);
+            foreach (var p in Paths("River")) Ribbon(water, "River", PathPoints(p), CampaignMapLayout.RiverWidth, mat, 0.02f);
+            foreach (var p in Paths("Moat")) Ribbon(water, "Moat", PathPoints(p), CampaignMapLayout.MoatWidth, mat, 0.02f);
             var side = Tinted(CampaignMapLayout.SideRoad, "Side Road");
-            foreach (var road in CampaignMapLayout.SideRoads) Ribbon(water, "Side Road", road, CampaignMapLayout.SideRoadWidth, side, 0.035f);
+            foreach (var p in Paths("Side Road")) Ribbon(water, "Side Road", PathPoints(p), CampaignMapLayout.SideRoadWidth, side, 0.035f);
         }
 
         // 7: the camp sits at the last cleared region's camp spot (the start if none), turned toward the next region.
@@ -414,19 +498,18 @@ namespace VampireSpawn.Game
         {
             var last = -1;
             for (var i = 0; i < Campaign.Stages.Length; i++) if (campaign.IsCleared(Campaign.Stages[i])) last = i;
-            var at = RegionOf(last) is MapRegion done ? done.Camp : CampaignMapLayout.Start;
-            var face = RegionOf(last + 1) is MapRegion next ? next.Anchor - at : Vector2.up;
-            var camp = new GameObject("Camp").transform;
+            var done = RegionOf(last);
+            var start = terrain.Find(StartName);
+            var at = done != null ? PointOr(done, "Camp", done.position) : start != null ? start.position : terrain.position;
+            var next = RegionOf(last + 1);
+            var face = next != null ? Local(next.position) - Local(at) : Vector2.up;
+            var template = terrain.Find(CampTemplateName);
+            var camp = template != null ? Instantiate(template, progress).transform : new GameObject().transform;
+            camp.name = "Camp";
             camp.SetParent(progress, false);
-            camp.position = World(at);
-            camp.rotation = Quaternion.Euler(0f, Mathf.Atan2(face.x, face.y) * Mathf.Rad2Deg, 0f);
-            foreach (var p in CampaignMapLayout.CampProps)
-            {
-                var prefab = Prefab(art, p.Prefab);
-                if (prefab != null) BoardView.Place(prefab, camp, camp.TransformPoint(new Vector3(p.Dx, p.Lift, p.Dz)), p.Width, camp.eulerAngles.y + p.Yaw);
-            }
-            var l = CampaignMapLayout.CampLight;
-            BoardView.AddLight(camp, camp.TransformPoint(l.At), LightType.Point, art.torchLight, l.Intensity, l.Range);
+            camp.position = at;
+            camp.rotation = terrain.rotation * Quaternion.Euler(0f, Mathf.Atan2(face.x, face.y) * Mathf.Rad2Deg, 0f);
+            camp.gameObject.SetActive(true);
         }
 
         // Catmull-Rom through the control points, one sample per unit (5-1).
@@ -454,6 +537,7 @@ namespace VampireSpawn.Game
 
         static void Ribbon(Transform parent, string name, Vector2[] controls, float width, Material material, float y)
         {
+            if (controls.Length < 2) return;
             var path = Path(controls);
             var verts = new Vector3[path.Length * 2];
             var tris = new List<int>();

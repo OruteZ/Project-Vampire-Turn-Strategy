@@ -66,6 +66,7 @@
             </ui:VisualElement>
             <ui:VisualElement name="bk-stats" class="bk-stats" picking-mode="Ignore" />
             <ui:VisualElement name="bk-break" class="break bk-break" picking-mode="Ignore" />
+            <ui:Label name="bk-rule" class="bk-rule" picking-mode="Ignore" />
             <ui:ScrollView name="bk-ups" class="bk-ups" vertical-scroller-visibility="Auto" horizontal-scroller-visibility="Hidden" />
         </ui:VisualElement>
 
@@ -74,6 +75,7 @@
                 <ui:VisualElement class="panel-frame" picking-mode="Ignore" />
                 <ui:Label name="buy-name" class="dialog-name display" picking-mode="Ignore" />
                 <ui:Label name="buy-ask" class="dialog-ask" picking-mode="Ignore" />
+                <ui:Label name="buy-warn" class="dialog-warn" picking-mode="Ignore" />
                 <ui:VisualElement name="buy-price" class="dialog-price" picking-mode="Ignore" />
                 <ui:VisualElement name="buy-cancel" class="btn normal dialog-cancel">
                     <ui:VisualElement class="btn-frame" picking-mode="Ignore" />

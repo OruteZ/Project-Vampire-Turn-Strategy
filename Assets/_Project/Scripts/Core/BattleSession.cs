@@ -3,10 +3,9 @@ using System.Linq;
 
 namespace VampireSpawn.Core
 {
-    public enum SelectMode { Act, Execute }
+    public enum SelectMode { Act, Execute, Mend }
 
-    // One per prototype overlay class: ov-deploy, ov-threat, ov-move, ov-atk, ov-exec, ov-sel, ov-markzone, ov-mark.
-    public enum Mark { Deploy, Move, Atk, Exec, Sel, MarkZone, Target }
+    public enum Mark { Deploy, Move, Atk, Exec, Sel, MarkZone, Target, Bury, Mend }
 
     public readonly struct MarkedHex
     {
@@ -23,7 +22,7 @@ namespace VampireSpawn.Core
         public Message TargetLabel;
     }
 
-    // The prototype's click and selection state (S.selected, S.inspect, S.mode, S.deployType) and onHex. Threat cells are gone: docs/ui/battle-hud.md 1-4.
+    // Click and selection state of the battle screen. Threat cells are not drawn: docs/ui/battle-hud.md 1-4.
     public sealed class BattleSession
     {
         public readonly Battle Battle;
@@ -31,7 +30,7 @@ namespace VampireSpawn.Core
         public int? InspectUnit { get; private set; }
         public int? InspectCorpse { get; private set; }
         public SelectMode Mode { get; private set; }
-        public UnitKind DeployType { get; private set; }
+        public string DeployType { get; private set; }
         public Message Flash { get; private set; }
 
         static readonly CommandResult Nothing = CommandResult.Done(new List<BattleEvent>());
@@ -81,6 +80,12 @@ namespace VampireSpawn.Core
                     Mode = SelectMode.Act;
                     return Nothing;
                 }
+                if (Mode == SelectMode.Mend)
+                {
+                    Mode = SelectMode.Act;
+                    return Battle.CanMend(sel, u) ? After(Battle.Mend(sel.Id, u.Id)) : Nothing;
+                }
+                if (co != null && Battle.CanBury(sel, co)) return After(Battle.Bury(sel.Id, co.Id));
                 if (u != null && u.Side == Side.Enemy && !u.Asleep && Hex.Distance(sel.Pos, u.Pos) <= sel.Rng) return After(Battle.Attack(sel.Id, u.Id));
                 if (!sel.Moved && u == null && co == null && Battle.Reach(sel).ContainsKey(h)) return After(Battle.Move(sel.Id, h));
             }
@@ -100,9 +105,11 @@ namespace VampireSpawn.Core
             Mode = SelectMode.Act;
         }
 
-        public void Pick(UnitKind kind) { Flash = default; DeployType = kind; }
+        public void Pick(string kind) { Flash = default; DeployType = kind; }
 
         public void ToggleExecute() { Flash = default; Mode = Mode == SelectMode.Execute ? SelectMode.Act : SelectMode.Execute; }
+
+        public void ToggleMend() { Flash = default; Mode = Mode == SelectMode.Mend ? SelectMode.Act : SelectMode.Mend; }
 
         public CommandResult Wait()
         {
@@ -133,7 +140,7 @@ namespace VampireSpawn.Core
             return After(Battle.EndTurn());
         }
 
-        // A drop outside the board passes null; the prototype treats it like a drop outside the deploy zone.
+        // A drop outside the board passes null and counts as a drop outside the deploy zone (recall).
         public CommandResult Drop(int id, Hex? to)
         {
             Flash = default;
@@ -173,6 +180,7 @@ namespace VampireSpawn.Core
             var sel = SelectedUnit;
             if (sel == null) return new Message("hint.select");
             if (Mode == SelectMode.Execute) return new Message("hint.execute");
+            if (Mode == SelectMode.Mend) return new Message("hint.mend");
             if (sel.Acted) return new Message("hint.acted");
             return new Message(sel.Moved ? "hint.attack" : "hint.moveAttack");
         }
@@ -197,8 +205,13 @@ namespace VampireSpawn.Core
                 {
                     if (Mode == SelectMode.Execute)
                         o.AddRange(b.Allies.Where(a => a != sel && Hex.Distance(sel.Pos, a.Pos) <= sel.Rng).Select(a => new MarkedHex(Mark.Exec, a.Pos)));
+                    else if (Mode == SelectMode.Mend)
+                        o.AddRange(b.Allies.Where(a => b.CanMend(sel, a)).Select(a => new MarkedHex(Mark.Mend, a.Pos)));
                     else
+                    {
                         o.AddRange(b.Enemies.Where(e => Hex.Distance(sel.Pos, e.Pos) <= sel.Rng).Select(e => new MarkedHex(Mark.Atk, e.Pos)));
+                        o.AddRange(b.Corpses.Where(c => b.CanBury(sel, c)).Select(c => new MarkedHex(Mark.Bury, c.Pos)));
+                    }
                 }
                 o.Add(new MarkedHex(Mark.Sel, sel.Pos));
             }
