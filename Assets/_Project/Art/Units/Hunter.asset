@@ -19,10 +19,10 @@ MonoBehaviour:
   rig: 1
   weapons:
   - prefab: {fileID: 1108490044900275105, guid: 612f74c8fd471b64185d45d4daf4610b, type: 3}
-    hand: 0
+    hand: 1
     hold: 0
     position: {x: 0, y: 0, z: 0}
-    rotation: {x: 0, y: 0, z: 0}
+    rotation: {x: 0, y: 270, z: 327}
   animator: {fileID: 22100000, guid: 68fafa10a9b80a2479ec41c29d78525a, type: 2}
   sounds:
     attack:
