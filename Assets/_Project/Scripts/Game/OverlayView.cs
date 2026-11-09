@@ -41,9 +41,7 @@ namespace VampireSpawn.Game
         static readonly Style DropIn = S(Ally, 0.25f, Ally, 1f, R - 2.5f, 2.5f);
         static readonly Style DropOut = S(Enemy, 0.25f, Enemy, 1f, R - 2.5f, 2.5f);
 
-        readonly List<Vector3> verts = new List<Vector3>();
-        readonly List<Color> colors = new List<Color>();
-        readonly List<int> tris = new List<int>();
+        HexLines lines;
         Mesh mesh;
 
         public int MarkCount { get; private set; }
@@ -53,7 +51,8 @@ namespace VampireSpawn.Game
         static Color A(Color c, float a) { c.a = a; return c; }
 
         float Scale => board.art.hexSize / R;
-        float Lift => board.TileTop + 0.03f;
+        // Above the board's grid lines (battle-terrain.md 3).
+        const float Lift = 0.06f;
 
         void Awake()
         {
@@ -62,6 +61,7 @@ namespace VampireSpawn.Game
             GetComponent<MeshFilter>().sharedMesh = mesh;
             GetComponent<MeshRenderer>().sharedMaterial = material;
             GetComponent<MeshRenderer>().shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
+            lines = new HexLines(p => { var w = board.OnGround(transform.TransformPoint(p)); w.y += Lift; return transform.InverseTransformPoint(w); });
         }
 
         public void SetHover(Hex? h)
@@ -75,19 +75,15 @@ namespace VampireSpawn.Game
         {
             last = session;
             lastDrop = drop;
-            verts.Clear(); colors.Clear(); tris.Clear();
+            lines.Clear();
             var marks = session.Overlay();
             MarkCount = marks.Count;
             foreach (var m in marks) Hexagon(Center(m.Hex), Styles[m.Mark]);
             var moon = session.Moon();
-            if (moon != null && moon.Target is Hex t) Dashed(Center(moon.Vampire), Center(t), 2f * Scale, MoonBlood, 4f * Scale, 4f * Scale);
+            if (moon != null && moon.Target is Hex t) lines.Dashed(Center(moon.Vampire), Center(t), 2f * Scale, MoonBlood, 4f * Scale, 4f * Scale);
             if (hover is Hex hv && session.Battle.Board.InBounds(hv)) Hexagon(Center(hv), HoverCell);
             if (drop is Hex d && session.Battle.Board.InBounds(d)) Hexagon(Center(d), session.Battle.InDeploy(d) ? DropIn : DropOut);
-            mesh.Clear();
-            mesh.SetVertices(verts);
-            mesh.SetColors(colors);
-            mesh.SetTriangles(tris, 0);
-            mesh.RecalculateBounds();
+            lines.Apply(mesh);
         }
 
         public void Clear()
@@ -98,56 +94,13 @@ namespace VampireSpawn.Game
             MarkCount = 0;
         }
 
-        Vector3 Center(Hex h)
-        {
-            var p = transform.InverseTransformPoint(board.HexToWorld(h));
-            p.y = Lift;
-            return p;
-        }
-
-        static Vector3 Corner(Vector3 c, float r, int i)
-        {
-            var a = Mathf.Deg2Rad * 60f * (i % 6);
-            return c + new Vector3(r * Mathf.Cos(a), 0f, r * Mathf.Sin(a));
-        }
+        Vector3 Center(Hex h) => transform.InverseTransformPoint(board.HexToWorld(h));
 
         void Hexagon(Vector3 c, Style s)
         {
             var r = s.Radius * Scale;
-            if (s.Fill.a > 0f)
-            {
-                var k = verts.Count;
-                verts.Add(c); colors.Add(s.Fill.linear);
-                for (var i = 0; i < 6; i++) { verts.Add(Corner(c, r, i)); colors.Add(s.Fill.linear); }
-                for (var i = 0; i < 6; i++) tris.AddRange(new[] { k, k + 1 + (i + 1) % 6, k + 1 + i });
-            }
-            if (s.Width <= 0f || s.Stroke.a <= 0f) return;
-            for (var i = 0; i < 6; i++)
-            {
-                var a = Corner(c, r, i);
-                var b = Corner(c, r, i + 1);
-                if (s.Dash > 0f) Dashed(a, b, s.Width * Scale, s.Stroke, s.Dash * Scale, s.Gap * Scale);
-                else Segment(a, b, s.Width * Scale, s.Stroke);
-            }
-        }
-
-        void Dashed(Vector3 a, Vector3 b, float width, Color color, float dash, float gap)
-        {
-            var len = Vector3.Distance(a, b);
-            var dir = (b - a) / Mathf.Max(len, 0.0001f);
-            for (var t = 0f; t < len; t += dash + gap) Segment(a + dir * t, a + dir * Mathf.Min(len, t + dash), width, color);
-        }
-
-        void Segment(Vector3 a, Vector3 b, float width, Color color)
-        {
-            var d = b - a;
-            if (d.sqrMagnitude < 1e-8f) return;
-            var side = Vector3.Cross(Vector3.up, d.normalized) * (width * 0.5f);
-            var along = d.normalized * (width * 0.5f);
-            var k = verts.Count;
-            verts.Add(a - side - along); verts.Add(a + side - along); verts.Add(b + side + along); verts.Add(b - side + along);
-            for (var i = 0; i < 4; i++) colors.Add(color.linear);
-            tris.AddRange(new[] { k, k + 1, k + 2, k, k + 2, k + 3 });
+            if (s.Fill.a > 0f) lines.Fill(c, r, s.Fill);
+            if (s.Width > 0f && s.Stroke.a > 0f) lines.Outline(c, r, s.Width * Scale, s.Stroke, s.Dash * Scale, s.Gap * Scale);
         }
     }
 }

@@ -14,7 +14,9 @@ namespace VampireSpawn.Game
         Mesh hexMesh;
         float fittedAspect;
         Rect frame = new Rect(0f, 0f, 1f, 1f), fittedFrame;
-        Material ground;
+
+        // The stage's terrain inside its dressing prefab; null on a stage without one (flat at TileTop).
+        public UnityEngine.Terrain Ground { get; private set; }
 
         // The normalized screen rect the board must fit in; the camera itself draws the whole screen (stage-dressing.md 1-4).
         public Rect Frame => frame;
@@ -39,17 +41,26 @@ namespace VampireSpawn.Game
 
         public float TileTop => art.tileHeight;
 
+        // Every standing, drawing and picking height goes through here (battle-terrain.md 4).
+        public float Height(Vector3 world) =>
+            Ground != null ? Ground.SampleHeight(world) + Ground.transform.position.y : transform.position.y + art.tileHeight;
+
+        public Vector3 OnGround(Vector3 world) { world.y = Height(world); return world; }
+
+        public Vector3 Stand(Hex h) => OnGround(HexToWorld(h));
+
         public void Show(Stage stage)
         {
             Clear();
             Stage = stage;
             Board = new Board(stage.Map);
-            if (hexMesh == null) hexMesh = BuildHexMesh(art.hexSize * 0.97f, art.tileHeight);
+            if (hexMesh == null) hexMesh = BuildHexMesh(art.hexSize * 0.97f, 0.02f);
             UseTheme(art.Theme(stage.Id));
+            Dress(stage.Id);
             for (var r = 0; r < Board.Rows; r++)
                 for (var c = 0; c < Board.Cols; c++)
                     BuildTile(new Hex(c, r));
-            Dress(stage.Id);
+            BuildGrid();
             FitCamera();
         }
 
@@ -60,8 +71,6 @@ namespace VampireSpawn.Game
 
         void UseTheme(BoardTheme t)
         {
-            if (ground != null) Kill(ground);
-            ground = t != null ? new Material(art.plain) { color = t.ground, name = "Ground " + t.name } : null;
             if (t == null) return;
             RenderSettings.ambientMode = UnityEngine.Rendering.AmbientMode.Flat;
             RenderSettings.ambientLight = t.ambient;
@@ -88,11 +97,41 @@ namespace VampireSpawn.Game
         {
             var prefab = art.Dressing(stageId);
             if (prefab == null) { Debug.LogWarning("꾸미기 프리팹 없음: " + stageId + " (도구 모음 > 전투 보드 > 꾸미기 프리팹 굽기)"); return; }
-            Instantiate(prefab, transform, false).name = "Dressing";
+            var dressing = Instantiate(prefab, transform, false);
+            dressing.name = "Dressing";
+            Ground = dressing.GetComponentInChildren<UnityEngine.Terrain>();
         }
 
-        // stage-dressing.md 1-2, 1-3, 1-5, 3: a ground bed, a prop on every rock cell, and a ring of props up to Ring cells past the board; tall ones never on the camera (south) side.
-        public static GameObject BuildDressing(ArtCatalog art, Stage stage, Material bed)
+        // battle-terrain.md 3: a faint draped outline on every walkable cell, tinted where light falls.
+        void BuildGrid()
+        {
+            if (art.overlay == null) return;
+            var go = new GameObject("Grid");
+            go.transform.SetParent(transform, false);
+            var lines = new HexLines(p => { var w = OnGround(transform.TransformPoint(p)); w.y += 0.04f; return transform.InverseTransformPoint(w); });
+            var r = art.hexSize * 0.95f;
+            for (var row = 0; row < Board.Rows; row++)
+                for (var col = 0; col < Board.Cols; col++)
+                {
+                    var h = new Hex(col, row);
+                    if (!Board.Walkable(h)) continue;
+                    var c = Local(h, art.hexSize);
+                    if (Board.At(h) == Terrain.Sun) lines.Fill(c, r, Tint(art.sunLight, 0.18f));
+                    else if (Board.Lit(h)) lines.Fill(c, r, Tint(art.torchLight, 0.14f));
+                    lines.Outline(c, r, 0.05f * art.hexSize, Tint(Screens.Ui.Steel, 0.35f));
+                }
+            var mesh = new Mesh { name = "Grid" };
+            lines.Apply(mesh);
+            go.AddComponent<MeshFilter>().sharedMesh = mesh;
+            var mr = go.AddComponent<MeshRenderer>();
+            mr.sharedMaterial = art.overlay;
+            mr.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
+        }
+
+        static Color Tint(Color c, float a) { c.a = a; return c; }
+
+        // stage-dressing.md 1-2, 1-3, 1-5, 3: a prop on every rock cell, and a ring of props up to Ring cells past the board; tall ones never on the camera (south) side.
+        public static GameObject BuildDressing(ArtCatalog art, Stage stage)
         {
             var board = new Board(stage.Map);
             var theme = art.Theme(stage.Id);
@@ -102,17 +141,6 @@ namespace VampireSpawn.Game
             var props = new GameObject("Props").transform;
             // Sideways the ring runs twice as far, so 21:9 shows world past the HUD too.
             const int Ring = 4, RingX = 8;
-            var a = Local(new Hex(-Ring, -Ring), s);
-            var b = Local(new Hex(board.Cols + Ring, board.Rows + Ring), s);
-            var plane = GameObject.CreatePrimitive(PrimitiveType.Quad);
-            Kill(plane.GetComponent<Collider>());
-            plane.name = "Ground";
-            plane.transform.SetParent(root.transform, false);
-            plane.transform.localPosition = (a + b) * 0.5f + Vector3.down * 0.02f;
-            plane.transform.localRotation = Quaternion.Euler(90f, 0f, 0f);
-            // Far wider than the ring so its edge never shows, even at 21:9.
-            plane.transform.localScale = new Vector3(Mathf.Abs(b.x - a.x) + s * 80f, Mathf.Abs(b.z - a.z) + s * 80f, 1f);
-            plane.GetComponent<MeshRenderer>().sharedMaterial = bed;
             props.SetParent(root.transform, false);
 
             var themed = theme != null && theme.blockers != null && theme.blockers.Length > 0;
@@ -160,6 +188,7 @@ namespace VampireSpawn.Game
             // Without this LateUpdate keeps fitting viewCamera to a board that is gone.
             Board = null;
             Stage = null;
+            Ground = null;
             RenderSettings.fog = false;
         }
 
@@ -170,11 +199,16 @@ namespace VampireSpawn.Game
             var terrain = Board.At(h);
             var tile = new GameObject($"Tile {h} {terrain}");
             tile.transform.SetParent(transform, false);
-            tile.transform.position = HexToWorld(h) + (terrain == Terrain.Water ? Vector3.down * art.tileHeight * 0.6f : Vector3.zero);
-            tile.AddComponent<MeshFilter>().sharedMesh = hexMesh;
-            tile.AddComponent<MeshRenderer>().sharedMaterial = MaterialFor(h, terrain);
+            var top = Stand(h);
+            tile.transform.position = top;
+            if (terrain == Terrain.Water)
+            {
+                // battle-terrain.md 2: the water surface sits over the pit the bake carved under it.
+                tile.transform.position = HexToWorld(h) + Vector3.up * -0.14f;
+                tile.AddComponent<MeshFilter>().sharedMesh = hexMesh;
+                tile.AddComponent<MeshRenderer>().sharedMaterial = art.water;
+            }
 
-            var top = HexToWorld(h) + Vector3.up * art.tileHeight;
             switch (terrain)
             {
                 case Terrain.Torch:
@@ -191,14 +225,6 @@ namespace VampireSpawn.Game
                     break;
             }
         }
-
-        Material MaterialFor(Hex h, Terrain t) => t switch
-        {
-            Terrain.Rock => art.rock,
-            Terrain.Water => art.water,
-            Terrain.Sun => art.sunlit,
-            _ => Board.Lit(h) ? art.lit : ground != null ? ground : art.plain,
-        };
 
         // fitWidth 0 keeps the prefab's own scale (used for particle FX whose bounds are meaningless).
         // stretch: a wall piece keeps its length along the row (x) while the height cap squashes only y and z, so walls stay walls instead of shrinking to stubs.

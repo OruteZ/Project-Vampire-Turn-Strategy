@@ -25,6 +25,11 @@ namespace VampireSpawn.Tests
             var props = prefab.transform.Find("Props");
             Assert.IsNotNull(props, stage.Id + " Props");
             var s = art.hexSize;
+            var ground = prefab.GetComponentInChildren<UnityEngine.Terrain>();
+            Assert.IsNotNull(ground, stage.Id + " Terrain (battle-terrain.md 5)");
+            Assert.AreEqual(ground.terrainData, ground.GetComponent<TerrainCollider>()?.terrainData, stage.Id + " TerrainCollider uses the same data");
+            float Height(Vector3 local) => ground.terrainData.GetInterpolatedHeight((local.x - ground.transform.localPosition.x) / ground.terrainData.size.x, (local.z - ground.transform.localPosition.z) / ground.terrainData.size.z) + ground.transform.localPosition.y;
+            foreach (Transform p in props) Assert.LessOrEqual(p.localPosition.y, Height(p.localPosition) + 0.05f, stage.Id + " " + p.name + " floats above the terrain");
             var board = new Board(stage.Map);
             var spots = props.Cast<Transform>().Select(p => new Vector2(p.localPosition.x, p.localPosition.z)).ToList();
             for (var r = 0; r < board.Rows; r++)
@@ -35,7 +40,11 @@ namespace VampireSpawn.Tests
                     var near = spots.Select(p => (p - new Vector2(at.x, at.z)).magnitude).DefaultIfEmpty(float.MaxValue).Min();
                     var t = board.At(h);
                     if (t == Terrain.Rock) Assert.Less(near, 0.5f * s, stage.Id + " prop on rock " + h);
-                    else if (board.Walkable(h)) Assert.Greater(near, 0.9f * s, stage.Id + " prop stands on walkable " + h);
+                    else if (board.Walkable(h))
+                    {
+                        Assert.Greater(near, 0.9f * s, stage.Id + " prop stands on walkable " + h);
+                        Assert.That(Height(at), Is.InRange(-0.3f, 0.3f), stage.Id + " walkable " + h + " height (battle-terrain.md 1-4)");
+                    }
                 }
         }
     }
