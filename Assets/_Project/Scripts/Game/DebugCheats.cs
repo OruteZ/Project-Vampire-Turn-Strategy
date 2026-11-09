@@ -1,0 +1,30 @@
+#if UNITY_EDITOR
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using VampireSpawn.Core;
+
+namespace VampireSpawn.Game
+{
+    // Editor-only (Tools window > 디버그). Edits go through the save format so Campaign keeps its own invariants.
+    public static class DebugCheats
+    {
+        public const int NoCap = 999;
+
+        public static Campaign With(Campaign c, int? gold = null, IEnumerable<string> cleared = null, IEnumerable<string> bonus = null, IEnumerable<string> ups = null) =>
+            Campaign.Parse("{\"gold\":" + Math.Max(0, gold ?? c.Gold) + ",\"cleared\":" + Set(cleared ?? c.Cleared) + ",\"bonus\":" + Set(bonus ?? c.BonusDone) + ",\"ups\":" + Set(ups ?? c.Upgrades) + "}");
+
+        static string Set(IEnumerable<string> ids) => "{" + string.Join(",", ids.Select(id => "\"" + id + "\":true")) + "}";
+
+        public static string[] FirstStages(int count) => Campaign.Stages.Take(count).Select(s => s.Id).ToArray();
+
+        public static string[] AllUpgrades => GameData.Upgrades.Select(u => u.Id).ToArray();
+
+        // Same id as the base stage so its labels and boss name still resolve; played as a demo, so nothing is saved.
+        public static Stage TestStage(Stage from, bool deployAnywhere) => new Stage(from.Id,
+            (UnitKind[])Enum.GetValues(typeof(UnitKind)), NoCap, NoCap, 0, from.Bonus, from.Boss,
+            deployAnywhere ? from.Map.Select(row => row.Replace('.', 'd')).ToArray() : from.Map,
+            from.Enemies, from.Sample);
+    }
+}
+#endif

@@ -42,6 +42,12 @@ namespace VampireSpawn.Game.Screens
             Nav = null;
         }
 
+        public static void UseCampaign(Campaign campaign)
+        {
+            Campaign = campaign;
+            CampaignStore.Save(Campaign);
+        }
+
         public static void GoMenu() => SceneManager.LoadScene(MenuScene);
 
         public static void GoCamp(CampNav start)
@@ -50,10 +56,14 @@ namespace VampireSpawn.Game.Screens
             SceneManager.LoadScene(CampScene);
         }
 
-        public static void GoBattle(Stage stage, bool demo, IEnumerable<Placement<UnitKind>> formation = null, bool startNow = false)
+        // Upgrades for a demo battle; only the editor's test battle passes any.
+        public static IReadOnlyList<string> DemoUpgrades { get; private set; }
+
+        public static void GoBattle(Stage stage, bool demo, IEnumerable<Placement<UnitKind>> formation = null, bool startNow = false, IReadOnlyList<string> demoUpgrades = null)
         {
             BattleStage = stage;
             Demo = demo;
+            DemoUpgrades = demo ? demoUpgrades : null;
             Formation = formation;
             StartNow = startNow;
             SceneManager.LoadScene(BattleScene);

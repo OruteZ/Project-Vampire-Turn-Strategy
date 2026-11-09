@@ -18,6 +18,9 @@ namespace VampireSpawn.Editor
                 if (GUILayout.Button("데이터 에셋 선택")) Selection.activeObject = DataAssetsBuilder.Root();
             }
 
+            EditorGUILayout.LabelField("디버그", EditorStyles.boldLabel);
+            if (GUILayout.Button(new GUIContent("디버그 창", "은화·진도·강화 바꾸기, 자유 배치 테스트 전투 (#96)"))) DebugWindow.Open();
+
             EditorGUILayout.LabelField("유료 에셋", EditorStyles.boldLabel);
             using (new EditorGUILayout.HorizontalScope())
             {
