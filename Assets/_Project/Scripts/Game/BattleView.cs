@@ -111,6 +111,7 @@ namespace VampireSpawn.Game
         IEnumerator Play(BattleEvent e)
         {
             Played?.Invoke(e);
+            Sound.Play(s => BattleSounds.Of(s, e));
             switch (e.Kind)
             {
                 case BattleEventKind.Walk:
@@ -121,6 +122,7 @@ namespace VampireSpawn.Game
                         var from = walker.transform.position;
                         var to = Ground(h);
                         walker.Face(to);
+                        Sound.Play(walker.Sounds, s => s.step);
                         for (float t = 0f; t < 1f; t += Time.deltaTime / Mathf.Max(0.0001f, Wait(StepSeconds)))
                         {
                             walker.transform.position = Vector3.Lerp(from, to, t);
@@ -137,8 +139,9 @@ namespace VampireSpawn.Game
                     {
                         attacker.Face(target.transform.position);
                         attacker.Trigger("Attack");
+                        Sound.Play(attacker.Sounds, s => s.attack);
                     }
-                    if (target != null) target.Trigger("Hit");
+                    if (target != null) { target.Trigger("Hit"); Sound.Play(target.Sounds, s => s.hurt); }
                     yield return Delay(StrikeSeconds);
                     break;
                 case BattleEventKind.HpChanged:
@@ -148,7 +151,7 @@ namespace VampireSpawn.Game
                     if (units.TryGetValue(e.UnitId, out var shown)) Popup.Spawn(shown.transform.position + Vector3.up * (Art.unitHeight * Art.hexSize + 0.6f), Loc.Text(e.Text), e.Style, speed / Pace);
                     break;
                 case BattleEventKind.Died:
-                    if (units.TryGetValue(e.UnitId, out var dead)) { dead.Trigger("Death"); Remove(units, e.UnitId, Wait(1.2f)); }
+                    if (units.TryGetValue(e.UnitId, out var dead)) { dead.Trigger("Death"); Sound.Play(dead.Sounds, s => s.death); Remove(units, e.UnitId, Wait(1.2f)); }
                     break;
                 case BattleEventKind.CorpseLeft:
                     var corpse = CorpseType(e.UnitId);
@@ -203,6 +206,7 @@ namespace VampireSpawn.Game
             var yaw = u.Side == Side.Ally ? 0f : 180f;
             var view = UnitView.Create(Art, look, layer, u.Id, Ground(at ?? u.Pos), yaw, RingColor(u), u.Role != Role.Spawn, u.Asleep);
             view.SetHp(u.Hp, u.MaxHp);
+            view.Sounds = u.Role == Role.Spawn ? Art.sound?.spawn : look.sounds;
             units[u.Id] = view;
         }
 

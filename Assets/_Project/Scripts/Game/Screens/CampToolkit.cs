@@ -184,6 +184,7 @@ namespace VampireSpawn.Game.Screens
             var march = panel.Q("info-march");
             march.Clear();
             var btn = NewButton(march, Loc.T(clear ? "camp.marchAgain" : "camp.march"), clear ? Kind.Normal : Kind.Primary, "Enter");
+            UiSound.Add(btn);
             btn.RegisterCallback<ClickEvent>(_ => send(input(CampKey.Enter)));
             if (clear) SetTip(btn, Loc.T(bonusGot ? "camp.allClaimed" : "camp.replayNote"));
         }
@@ -214,6 +215,7 @@ namespace VampireSpawn.Game.Screens
                 if (CampNav.Affordable(c, t.Key) > 0) { var dot = new VisualElement { pickingMode = PickingMode.Ignore }; dot.AddToClassList("tab-dot"); chip.Add(dot); }
                 SetTip(chip, state == TabState.Open ? Loc.Text(t.Name) : Loc.T("camp.lockedBy", Loc.Text(Campaign.Stages[unlockAt].Title)));
                 var index = i;
+                UiSound.Add(chip);
                 chip.RegisterCallback<ClickEvent>(_ => send(CampInput.Tab(index, Time.unscaledTime)));
             }
 
@@ -273,11 +275,13 @@ namespace VampireSpawn.Game.Screens
                 row.Add(price);
                 var b = NewButton(act, Loc.T("camp.upgrade"), Kind.Normal, null);
                 if (!c.CanBuy(up)) { b.AddToClassList("disabled"); SetTip(b, Loc.T("camp.needGold", c.Gold, up.Cost)); }
-                else { var id = up.Id; b.RegisterCallback<ClickEvent>(_ => send(CampInput.Buy(id, Time.unscaledTime))); }
+                else { var id = up.Id; UiSound.Add(b); b.RegisterCallback<ClickEvent>(_ => send(CampInput.Buy(id, Time.unscaledTime))); }
                 var next = Battle.Preview(kind, c.Upgrades.Append(up.Id));
                 row.RegisterCallback<PointerEnterEvent>(_ => Stats(stats, now, next));
                 row.RegisterCallback<PointerLeaveEvent>(_ => Stats(stats, now, null));
             }
+            // USS has no :last-child; the gap belongs only between rows, or three rows overflow the 480 viewport by 12.
+            if (ups.contentContainer.childCount > 0) ups.contentContainer[ups.contentContainer.childCount - 1].style.marginBottom = 0;
         }
 
         // upgrade.md 3 stat row; with a hovered branch (5-5) the numbers it would change turn light.
@@ -368,6 +372,7 @@ namespace VampireSpawn.Game.Screens
         void Button(VisualElement b, Kind kind, Action click)
         {
             Style(b, kind);
+            UiSound.Add(b);
             b.RegisterCallback<ClickEvent>(_ => click());
         }
 

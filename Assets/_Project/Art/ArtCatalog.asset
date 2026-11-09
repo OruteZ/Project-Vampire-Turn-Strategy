@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1897c4f1960a35e4187e8bad16a0d925, type: 3}
   m_Name: ArtCatalog
   m_EditorClassIdentifier: VampireSpawn.Game::VampireSpawn.Game.ArtCatalog
+  sound: {fileID: 11400000, guid: aacf152a1f8029044a647b4d547beb9e, type: 2}
   hexSize: 1
   tileHeight: 0.2
   plain: {fileID: 2100000, guid: 38f245d05f3140b42b2b8562968dda54, type: 2}

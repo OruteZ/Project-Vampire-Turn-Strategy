@@ -24,6 +24,9 @@ namespace VampireSpawn.Game.Screens
         void Start()
         {
             App.Ensure(data);
+            Sound.Use(map.art.sound);
+            Sound.Music(s => s.campMusic);
+            Sound.Ambience(s => s.campAmbience);
             screen = App.Canvas(transform);
             nav = App.CampStart ?? CampNav.FromMenu(Campaign, App.Nav);
             App.CampStart = null;
@@ -48,7 +51,7 @@ namespace VampireSpawn.Game.Screens
             {
                 case CampDo.Redraw: Redraw(false); break;
                 case CampDo.Buy:
-                    if (asked != null && Campaign.Buy(asked)) CampaignStore.Save(Campaign);
+                    if (asked != null && Campaign.Buy(asked)) { CampaignStore.Save(Campaign); Sound.Play(s => s.purchase); }
                     Redraw(false);
                     break;
                 case CampDo.Reset:
@@ -57,7 +60,7 @@ namespace VampireSpawn.Game.Screens
                     map.Show(Campaign);
                     Redraw(true);
                     break;
-                case CampDo.March: App.GoBattle(Campaign.Stages[nav.Stage], demo: false); break;
+                case CampDo.March: Sound.Play(s => s.march); App.GoBattle(Campaign.Stages[nav.Stage], demo: false); break;
                 case CampDo.Menu: App.GoMenu(); break;
             }
         }

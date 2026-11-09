@@ -5,6 +5,8 @@ namespace VampireSpawn.Game
     [CreateAssetMenu(fileName = "ArtCatalog", menuName = "VampireSpawn/Art Catalog")]
     public sealed class ArtCatalog : ScriptableObject
     {
+        [Tooltip("모든 사운드 (docs/audio/sounds.md)")] public SoundCatalog sound;
+
         [Header("Board")]
         public float hexSize = 1f;
         public float tileHeight = 0.2f;

@@ -13,11 +13,11 @@
 | 검사 | Sidekick `FantasyKnights_05` | Sidekick | 검 `SM_Wep_Sword_01` | 방패 `SM_Wep_Shield_01` | 검·방패 |
 | 궁수 | Sidekick `FantasyKnights_02` | Sidekick | | 활 `SM_Wep_Rigged_Bow_01` | 활 |
 | 기사 | Sidekick `FantasyKnights_06` | Sidekick | 검 `SM_Wep_Sword_02` | 방패 `SM_Wep_Shield_01` | 검·방패 |
-| 사냥꾼 | PolygonDarkFantasy `SM_Chr_Hunter_Male_01` | Polygon | 석궁 `SM_Wep_Rigged_CrossBow_01` | | Polygon 기본 |
+| 사냥꾼 | PolygonDarkFantasy `SM_Chr_Hunter_Male_01` | Polygon | | 석궁 `SM_Wep_Rigged_CrossBow_01` (한 손 석궁, #99) | Polygon 활 (#99) |
 | 장의사 (#99) | PolygonDarkFantasy `SM_Chr_Gravedigger_Male_01` | Polygon | 삽 `SM_Wep_Shovel_01` | | Polygon 기본 |
 | 역병 의사 (#99) | PolygonDarkFantasy `SM_Chr_PlagueDoctor_01` | Polygon | 지팡이 `SM_Wep_Staff_01` | | Polygon 기본 |
 | 스켈레톤 | `SM_Chr_Skeleton_01` | Polygon | 검 `SM_Wep_Sword_03` | | Polygon 기본 |
-| 스켈레톤 궁수 (#99) | `SM_Chr_Skeleton_Ranger_01` | Polygon | | 활 `SM_Wep_Rigged_Bow_01` | Polygon 기본 |
+| 스켈레톤 궁수 (#99) | `SM_Chr_Skeleton_Ranger_01` | Polygon | | 활 `SM_Wep_Rigged_Bow_01` | Polygon 활 |
 | 스켈레톤 중갑병 (#99) | `SM_Chr_Skeleton_HeavyArmor_01` | Polygon | 철퇴 `SM_Wep_Mace_01` | 방패 `SM_Wep_Shield_01` | Polygon 기본 |
 | 뱀파이어 | `SM_Chr_DarkLord_Male_01` | Polygon | 낫 `SM_Wep_Scythe_01` | | Polygon 기본 |
 | 스폰 | 원래 병종 모델 | 원래 것 | 없음 | 없음 | 맨손 근접 (units.md "원거리 공격을 할 수 없다") |
@@ -31,6 +31,7 @@
 | 창 | `A_MOD_BL_Idle_Standing_Masc` | `A_MOD_BL_Walk_F_Masc` | `A_MOD_SWD_Attack_HeavyStab01_ReturnToIdle_Neut` | `A_MOD_SWD_Hit_F_React_Neut` | `A_MOD_SWD_Death_B_Neut` |
 | 검·방패 | 같음 | 같음 | `A_MOD_SWD_Attack_LightCombo01A_ReturnToIdle_Neut` | 같음 | 같음 |
 | 활 | `A_MOD_BOW_Stand_Idle_BowDown_Neut` | `A_MOD_BL_Walk_F_Masc` | `A_MOD_BOW_Stand_Shoot_ToBowDown_Neut` | `A_MOD_BOW_Hit_Head_F_React_Masc` | `A_MOD_BOW_Death_Stomach_F_Masc` |
+| Polygon 활 (#99, 원거리 Polygon 유닛) | `A_POLY_BOW_Stand_Idle_BowDown_Neut` | Polygon 기본 | `A_POLY_BOW_Stand_Shoot_ToBowDown_Neut` | `A_POLY_BOW_Hit_Head_F_React_Masc` | `A_POLY_BOW_Death_Stomach_F_Masc` (파일 이름) |
 | Sidekick 맨손 (스폰) | 창과 같음 | 같음 | `A_MOD_SWD_Attack_LightCombo01A_ReturnToIdle_Neut` | 같음 | 같음 |
 | Polygon 기본 | 지금 `Unit.controller` 그대로 (Polygon 판 클립) | | | | |
 
@@ -63,7 +64,7 @@
 | 칼날 `Blade` | 검, 도끼, 단검 | 날(무기 +Y)이 주먹 아래로 나와 앞으로 55도 기운다. 대기에서 칼끝이 앞 아래(바닥 위), 찌르기에서 앞 | 무기 기준점 (Synty 무기는 기준점이 손잡이) |
 | 창 `Spear` | 창, 쇠스랑 | 칼날과 같은 방향. 대기에서 창끝을 앞으로 낮게 겨누고 찌르기에서 앞을 찌른다 | 자루 길이의 아래에서 35% |
 | 자루 `Pole` | 낫, 지팡이 | 날이 주먹 위로 나온다. 대기에서 세워 든다 | 자루 길이의 아래에서 35% |
-| 그대로 `AsIs` | 활, 석궁, 방패 (그 뼈대용으로 만든 Synty 무기) | 뼈 축 그대로 | 무기 기준점 |
+| 그대로 `AsIs` | 활, 석궁, 방패 (그 뼈대용으로 만든 Synty 무기) | 뼈 축 그대로. 활 동작 묶음의 손은 뼈대·모델마다 축이 달라, 쏘는 순간 활이 서고(시위가 몸 쪽) 석궁 날개가 수평이 되게 `UnitLook` 의 미세 회전으로 맞춘다(#99, 시험 `ShootersHoldTheirWeaponUprightOnTheBowArm`) | 무기 기준점 |
 
 - Synty 무기 규칙(기준점 = 손잡이, 날 = +Y, 날 폭 = X)을 따르는 무기는 쥐는 법만 고르면 맞는다.
 - 뼈대가 달라도 같은 쥐는 법은 같은 모습이다. Polygon `Hand_R`/`Hand_L` 은 Sidekick `prop_r`/`prop_l` 과 축 순서만 다르고, 코드가 그 차이를 소켓에서 바꾼다.

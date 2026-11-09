@@ -62,6 +62,7 @@ namespace VampireSpawn.Game.Screens
             colors.disabledColor = new Color(1f, 1f, 1f, 0.4f);
             colors.fadeDuration = 0.08f;
             btn.colors = colors;
+            UiSound.Add(btn);
             if (click != null) btn.onClick.AddListener(() => click());
             if (tip != null) HoverTip.Add(rt, tip, 0f);
             return btn;
@@ -170,6 +171,7 @@ namespace VampireSpawn.Game.Screens
             colors.disabledColor = new Color(1f, 1f, 1f, 0.35f);
             colors.fadeDuration = 0.08f;
             btn.colors = colors;
+            UiSound.Add(btn);
             if (click != null) btn.onClick.AddListener(() => click());
             HoverTip.Add(rt, tip, 0.3f);
             return btn;

@@ -21,6 +21,9 @@ namespace VampireSpawn.Game.Screens
         void Start()
         {
             App.Ensure(data);
+            Sound.Use(board.art.sound);
+            Sound.Music(s => s.menuMusic);
+            Sound.Ambience(null);
             screen = App.Canvas(transform);
             LocalizationSettings.SelectedLocaleChanged += OnLocaleChanged;
             Show(true);

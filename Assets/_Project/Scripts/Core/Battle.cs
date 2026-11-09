@@ -270,7 +270,7 @@ namespace VampireSpawn.Core
             StartFormation = Allies.Select(u => new Placement(u.Type, u.Pos.Col, u.Pos.Row)).ToArray();
             Phase = Phase.Player;
             Say(new Message("log.start", Stage.BossName), "t");
-            Emit(BattleEvent.Banner(new Message("banner.playerTurn", 1), "player"));
+            Emit(BattleEvent.Banner(BannerKind.PlayerTurn, new Message("banner.playerTurn", 1)));
             return Done();
         }
 
@@ -320,7 +320,7 @@ namespace VampireSpawn.Core
             var t = Find(targetId);
             if (u == null || t == null || t.Side != Side.Ally || t == u || Hex.Distance(u.Pos, t.Pos) > u.Rng)
                 return CommandResult.Rejected(new Message("reason.cannotExecute"));
-            Emit(BattleEvent.Popup(t.Id, new Message("popup.execute"), "heal"));
+            Emit(BattleEvent.Popup(t.Id, PopupKind.Execute, new Message("popup.execute")));
             Kill(t, u, DeathCause.Execute);
             u.Acted = u.Moved = true;
             CheckEnd();
@@ -338,7 +338,7 @@ namespace VampireSpawn.Core
             if (!CanBury(u, c)) return CommandResult.Rejected(new Message("reason.cannotBury"));
             corpses.Remove(c);
             Emit(BattleEvent.Buried(c.Id, c.Pos));
-            Emit(BattleEvent.Popup(u.Id, new Message("popup.bury"), "heal"));
+            Emit(BattleEvent.Popup(u.Id, PopupKind.Bury, new Message("popup.bury")));
             Say(new Message("log.bury", u.Name, c.Name), "h");
             u.Acted = u.Moved = true;
             if (u.Has(Ability.Rite) && Moon > 0)
@@ -371,7 +371,7 @@ namespace VampireSpawn.Core
             var heal = MendAmount(u, t);
             t.Hp += heal;
             Emit(BattleEvent.HpChanged(t.Id, t.Hp));
-            Emit(BattleEvent.Popup(t.Id, new Message("popup.heal", heal), "heal"));
+            Emit(BattleEvent.Popup(t.Id, PopupKind.Heal, new Message("popup.heal", heal)));
             Say(new Message("log.mend", u.Name, t.Name, heal), "h");
             u.Acted = u.Moved = true;
             return Done();
@@ -423,7 +423,7 @@ namespace VampireSpawn.Core
             def.Hp -= d;
             Emit(BattleEvent.Hit(def.Id, att.Id, d));
             Emit(BattleEvent.HpChanged(def.Id, def.Hp));
-            Emit(BattleEvent.Popup(def.Id, new Message("popup.damage", d), "dmg"));
+            Emit(BattleEvent.Popup(def.Id, PopupKind.Damage, new Message("popup.damage", d)));
             var line = tags.Count == 0
                 ? new Message("log.hit", att.Name, def.Name, d)
                 : new Message("log.hitTags", att.Name, def.Name, d, new Message("tags." + tags.Count, tags.Cast<object>().ToArray()));

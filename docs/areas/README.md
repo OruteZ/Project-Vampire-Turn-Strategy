@@ -10,6 +10,7 @@
 | 전투 | [battle.md](battle.md) |
 | UI | [ui.md](ui.md) |
 | 다중 언어 | [localization.md](localization.md) |
+| 사운드 | [audio.md](audio.md) |
 
 ## 형식
 

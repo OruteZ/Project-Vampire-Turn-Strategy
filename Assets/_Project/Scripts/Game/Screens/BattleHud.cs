@@ -294,7 +294,7 @@ namespace VampireSpawn.Game.Screens
             var back = Ui.Node(root, "RulesBack");
             Ui.Stretch(back);
             Ui.Bg(back, Ui.Alpha(Ui.Ink, 0.85f));
-            back.gameObject.AddComponent<Button>().onClick.AddListener(() => a.ToggleRules?.Invoke());
+            UiSound.Add(back.gameObject.AddComponent<Button>()).onClick.AddListener(() => a.ToggleRules?.Invoke());
             var p = Ui.Col(back, "RulesPopup", 8, 32);
             p.anchorMin = p.anchorMax = p.pivot = new Vector2(0.5f, 0.5f);
             p.sizeDelta = new Vector2(720f, 0f);
@@ -404,7 +404,7 @@ namespace VampireSpawn.Game.Screens
             kit.Stats(col, Battle.Preview(k, upgrades), 14, Ui.SteelDim, Ui.Muted).GetComponent<HorizontalLayoutGroup>().spacing = 8;
             var btn = rt.gameObject.AddComponent<Button>();
             btn.targetGraphic = rt.GetComponentInChildren<Image>();
-            btn.onClick.AddListener(() => pick());
+            UiSound.Add(btn).onClick.AddListener(() => pick());
         }
 
         void Def(Transform parent, string icon, Color iconColor, string value, string tip)
@@ -509,7 +509,7 @@ namespace VampireSpawn.Game.Screens
             col.gameObject.AddComponent<ContentSizeFitter>().verticalFit = ContentSizeFitter.FitMode.PreferredSize;
             var head = T(col, Loc.T("battle.log") + (st.LogOpen ? " ▴" : " ▾"), 14, Ui.Dim, false, false, TextAnchor.UpperRight);
             head.raycastTarget = true;
-            head.gameObject.AddComponent<Button>().onClick.AddListener(() => a.ToggleLog?.Invoke());
+            UiSound.Add(head.gameObject.AddComponent<Button>()).onClick.AddListener(() => a.ToggleLog?.Invoke());
             if (st.LogOpen)
             {
                 var view = Ui.Scroll(col, "Lines", out var scroll);
@@ -686,7 +686,7 @@ namespace VampireSpawn.Game.Screens
                 var btn = slot.gameObject.AddComponent<Button>();
                 btn.targetGraphic = slot.GetComponentInChildren<Image>();
                 var go = act;
-                btn.onClick.AddListener(() => go?.Invoke());
+                UiSound.Add(btn).onClick.AddListener(() => go?.Invoke());
                 HoverTip.Add(slot, label, 0.2f);
             }
         }

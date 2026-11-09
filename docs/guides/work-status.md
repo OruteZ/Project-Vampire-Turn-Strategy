@@ -49,8 +49,11 @@
 ```bash
 node tools/board/board.mjs open "<제목>" ["<목표>"]       # 주제 이슈 열기 (라벨 주제, 본문 틀, 보드 미작업)
 node tools/board/board.mjs status <#> "사용자 대기"        # 미작업 | 작업 중 | 사용자 대기 | 작업 완료
-node tools/board/board.mjs sync                           # 보드에 없는 주제 올리기, 닫힌 것 작업 완료, 목록 찍기
+node tools/board/board.mjs after <#> <선행#>               # <#> 는 <선행#> 가 닫혀야 시작 (GitHub 이슈 의존 Blocked by)
+node tools/board/board.mjs sync                           # 보드에 없는 주제 올리기, 닫힌 것 작업 완료, 목록 찍기 (열린 선행은 "선행: #N")
 ```
+
+- 선행·후행: 한 주제의 결과가 있어야 다른 주제를 시작할 수 있으면 `after` 로 GitHub 이슈 의존(Blocked by)을 건다. 이슈 화면·Project 에도 보인다. 주제 안의 순서는 `## 흐름` 이 맡으니 의존은 주제끼리만 건다. 선행이 열려 있는 주제는 사용자가 맡겨도 먼저 알린다
 
 - 사용자가 결과를 보내면(체크·댓글·채팅) 에이전트가 그 단계를 체크하고 결과를 한마디 붙인 뒤 `작업 중` 으로 돌린다.
 - 막힘(사용자 몫이 아닌 것)은 라벨 `막힘` 과 댓글. Unity 에디터가 있어야 하는 주제는 라벨 `에디터 필요`.

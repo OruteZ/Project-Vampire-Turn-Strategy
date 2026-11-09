@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using VampireSpawn.Core;
@@ -43,7 +44,12 @@ namespace VampireSpawn.Game
 
         public CommandResult Run(Func<BattleSession, CommandResult> command)
         {
+            var selected = Session.Selected;
+            var allies = Session.Battle.Allies.Count();
             var r = battle.Run(_ => command(Session));
+            if (!r.Ok) Sound.Play(s => s.denied);
+            else if (Session.Battle.Phase == Phase.Deploy && Session.Battle.Allies.Count() > allies) Sound.Play(s => s.place);
+            else if (Session.Selected != null && Session.Selected != selected) Sound.Play(s => s.select);
             Redraw();
             return r;
         }

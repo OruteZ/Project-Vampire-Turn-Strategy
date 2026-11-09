@@ -114,7 +114,7 @@ namespace VampireSpawn.Game
                 BattleEventKind.Hit when drainOn => 0.8f,
                 BattleEventKind.Died when finished => 1f,
                 BattleEventKind.Died when notable.Contains(e.UnitId) => 0.5f,
-                BattleEventKind.Popup when e.Text.Key == "popup.execute" => 0.5f,
+                BattleEventKind.Popup when e.PopupKind == PopupKind.Execute => 0.5f,
                 _ => 0f,
             };
         }
@@ -132,7 +132,7 @@ namespace VampireSpawn.Game
                     focus = Board.HexToWorld(e.At);
                     shot = rises == 1 ? Rise : RiseChain;
                     break;
-                case BattleEventKind.Banner when e.Text.Key == "banner.fullMoon":
+                case BattleEventKind.Banner when e.BannerKind == BannerKind.FullMoon:
                     riseOn = false;
                     moonOn = true;
                     followId = null;
@@ -140,7 +140,7 @@ namespace VampireSpawn.Game
                     shot = Moon;
                     break;
                 case BattleEventKind.Banner:
-                    if (e.Text.Key == "banner.playerTurn") Rest();
+                    if (e.BannerKind == BannerKind.PlayerTurn) Rest();
                     else riseOn = moonOn = false;
                     break;
                 case BattleEventKind.Walk when IsEnemy(e.UnitId):
@@ -148,14 +148,14 @@ namespace VampireSpawn.Game
                     followId = e.UnitId;
                     shot = Follow;
                     break;
-                case BattleEventKind.Popup when e.Text.Key == "popup.execute":
+                case BattleEventKind.Popup when e.PopupKind == PopupKind.Execute:
                     followId = null;
                     focus = Where(e.UnitId);
                     shot = Execute;
                     Stop(ExecuteStop);
                     break;
                 case BattleEventKind.Popup:
-                    drainNext = e.Style == "blood";
+                    drainNext = e.PopupKind == PopupKind.Drain;
                     break;
                 case BattleEventKind.Hit:
                     OnHit(e);

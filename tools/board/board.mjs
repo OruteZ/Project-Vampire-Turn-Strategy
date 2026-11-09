@@ -1,6 +1,7 @@
 // Topic board (docs/guides/work-status.md): one issue per big topic, its steps in order under "## 흐름", on the GitHub Project "Vampire Spawn 작업".
 //   node tools/board/board.mjs open "<제목>" ["<목표>"]     opens a topic issue (label 주제) and puts it on the board as 미작업
 //   node tools/board/board.mjs status <#> <상태>             미작업 | 작업 중 | 사용자 대기 | 작업 완료
+//   node tools/board/board.mjs after <#> <선행#>             <#> 는 <선행#> 가 닫혀야 시작한다 (GitHub 이슈 의존 "Blocked by")
 //   node tools/board/board.mjs sync                          puts every topic issue on the board, closed → 작업 완료, prints the list
 import { execFileSync } from 'node:child_process';
 
@@ -89,6 +90,16 @@ function open(title, goal) {
   console.log(`#${number} ${title}${p ? '' : '  보드 없음: 다음 sync 때 올라간다'}`);
 }
 
+// GitHub's own issue dependency, so the Project and the issue page show it too.
+function after(number, before) {
+  const id = gh(['api', `repos/${OWNER}/${REPO}/issues/${before}`, '--jq', '.id']).trim();
+  gh(['api', '-X', 'POST', `repos/${OWNER}/${REPO}/issues/${number}/dependencies/blocked_by`, '-F', `issue_id=${id}`]);
+  console.log(`#${number} ← 선행 #${before}`);
+}
+
+const openBlockers = (number) =>
+  JSON.parse(gh(['api', `repos/${OWNER}/${REPO}/issues/${number}/dependencies/blocked_by`])).filter((b) => b.state === 'open').map((b) => b.number);
+
 function setStatus(number, state) {
   if (!STATES.includes(state)) throw new Error(`상태는 ${STATES.join(' / ')}`);
   const p = project();
@@ -109,14 +120,14 @@ export function sync() {
       if (it.status !== want) setStatusField(p, it.id, want);
       status = want;
     }
-    if (i.state === 'OPEN') rows.push({ n: i.number, title: i.title, status: status || '상태 모름', ...progress(i.body || '') });
+    if (i.state === 'OPEN') rows.push({ n: i.number, title: i.title, status: status || '상태 모름', blockers: openBlockers(i.number), ...progress(i.body || '') });
   }
   if (!p) console.log('보드 없음 (gh auth refresh -s project 전이거나 Project 가 없음). 상태 없이 이슈만 보인다');
   for (const s of ['사용자 대기', '작업 중', '미작업', '상태 모름']) {
     const mine = rows.filter((r) => r.status === s);
     if (!mine.length) continue;
     console.log(`${s} ${mine.length}개`);
-    for (const r of mine) console.log(`  #${r.n} ${r.title}  [${r.done}/${r.total}]${r.next ? `  다음: ${r.next}` : ''}`);
+    for (const r of mine) console.log(`  #${r.n} ${r.title}  [${r.done}/${r.total}]${r.blockers.length ? `  선행: ${r.blockers.map((b) => '#' + b).join(' ')}` : ''}${r.next ? `  다음: ${r.next}` : ''}`);
   }
 }
 
@@ -124,6 +135,7 @@ if (process.argv[1] && process.argv[1].replace(/\\/g, '/').endsWith('tools/board
   const [cmd, ...a] = process.argv.slice(2);
   if (cmd === 'open') open(a[0], a[1]);
   else if (cmd === 'status') setStatus(Number(String(a[0]).replace('#', '')), a[1]);
+  else if (cmd === 'after') after(Number(String(a[0]).replace('#', '')), Number(String(a[1]).replace('#', '')));
   else if (cmd === 'sync') sync();
-  else { console.log('node tools/board/board.mjs open "<제목>" ["<목표>"] | status <#> <미작업|작업 중|사용자 대기|작업 완료> | sync'); process.exit(1); }
+  else { console.log('node tools/board/board.mjs open "<제목>" ["<목표>"] | status <#> <미작업|작업 중|사용자 대기|작업 완료> | after <#> <선행#> | sync'); process.exit(1); }
 }
