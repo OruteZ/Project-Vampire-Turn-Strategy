@@ -29,7 +29,7 @@ Measured on this machine with the Editor unfocused, 2026-11-05.
 - First open of a fresh worktree imports Synty (about 390 MB). Before it, link the assets, because they are not in git: `cmd //c mklink //J "<worktree>\Assets\Synty" "C:\Unity Projects\Project Vampire Spawn\Assets\Synty"`. Before removing that worktree, unlink every junction (`cmd //c rmdir "<worktree>\Assets\Synty"`, same for `UPackage`): `git worktree remove` follows junctions on Windows and deletes the main tree's assets.
 - One Editor per project folder. Two agents never drive the same Editor. A second agent works in its own worktree with `VU_PROJECT`.
 - Opening an Editor takes one of 2 machine-wide slots (`%LOCALAPPDATA%\VampireSpawn\editor-slots`, one file per project, shared by all sessions). Running editors from `scripts/editors.ps1` count too, including the user's. Full slots → exit 3 `WAIT`. Retry in the background with `VU_WAIT=1800` (seconds) and do editor-free work meanwhile. A slot whose Editor never appeared for 10 min is reclaimed. `cleanup` returns the slot.
-- Batchmode (`unity test`, `unity build`) goes through `$V batch <unity args>`, which holds a slot for the run. A PreToolUse hook (`.claude/hooks/editor-gate.mjs`) blocks direct `unity open|test|build` and `Unity.exe -batchmode`.
+- Batchmode (`unity test`, `unity build`) goes through `$V batch <unity args>`, which holds a slot for the run. A PreToolUse hook (`.claude/hooks/guard.mjs`) blocks direct `unity open|test|build` and `Unity.exe -batchmode`.
 
 ## Doctor
 
