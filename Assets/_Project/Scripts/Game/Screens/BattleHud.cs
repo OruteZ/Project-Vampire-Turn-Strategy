@@ -579,10 +579,12 @@ namespace VampireSpawn.Game.Screens
                 else L(at, "−" + damage, "outline", u.Side == Side.Ally ? Ui.Blood : Ui.Bone);
             }
             // Stacked above the bar: name, enemy move/range (Alt), the vampire's target mark.
-            var y = boss ? (u.Def > 0 ? 36f : 20f) : u.Def > 0 ? 20f : 12f;
+            // The hp number overlaps the 8 px bar by 4 px each way, so the name clears it.
+            var y = boss ? (u.Def > 0 ? 36f : 20f) : u.Def > 0 ? 20f : named ? 16f : 12f;
             if (named)
             {
-                L(rt, Loc.Text(u.Name) + (boss ? "" : "  " + u.Hp + "/" + u.MaxHp), "head-name outline").style.bottom = y - 4f;
+                L(rt, Loc.Text(u.Name), "head-name outline").style.bottom = y - 4f;
+                Watch(L(rt, u.Hp + "/" + u.MaxHp, "head-hp outline"), "hp" + u.Id);
                 y += 18f;
             }
             if (showMov)
@@ -620,7 +622,6 @@ namespace VampireSpawn.Game.Screens
             }
             for (var hp = 5; hp < max; hp += 5) E(rt, "divider boss-tick").style.left = BossBarW * hp / max;
             Picture(E(rt, "boss-frame"), S("SPR_DarkFantasyMenus_Frame_Bar_Medium_01"), Ui.Blood);
-            Watch(L(rt, u.Hp + "/" + u.MaxHp, "boss-hp outline"), "boss");
             Icon(rt, "SPR_DarkFantasyMenus_Greeble_DemonSkull_01", Ui.Blood, "icon boss-skull");
             return fill;
         }
