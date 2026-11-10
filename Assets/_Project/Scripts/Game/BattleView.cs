@@ -166,6 +166,11 @@ namespace VampireSpawn.Game
                     if (risen != null) AddUnit(risen, e.At);
                     yield return Delay(RiseSeconds);
                     break;
+                case BattleEventKind.Arrived:
+                    var arrived = Battle.Find(e.UnitId);
+                    if (arrived != null) AddUnit(arrived, e.At);
+                    yield return Delay(RiseSeconds);
+                    break;
                 case BattleEventKind.Woke:
                     if (units.TryGetValue(e.UnitId, out var woke)) woke.StandUp();
                     yield return Delay(WakeSeconds);

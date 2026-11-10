@@ -5,7 +5,7 @@ namespace VampireSpawn.Core
 {
     public enum SelectMode { Act, Execute, Mend }
 
-    public enum Mark { Deploy, Move, Atk, Exec, Sel, MarkZone, Target, Bury, Mend, Hold, Goal }
+    public enum Mark { Deploy, Move, Atk, Exec, Sel, MarkZone, Target, Bury, Mend, Hold, Goal, Arrive }
 
     public readonly struct MarkedHex
     {
@@ -196,6 +196,7 @@ namespace VampireSpawn.Core
             var o = new List<MarkedHex>();
             var b = Battle;
             o.AddRange(b.Stage.Spots.Select(h => new MarkedHex(b.Stage.Goal == Goal.Defense ? Mark.Hold : Mark.Goal, h)));
+            o.AddRange(b.Pending.Select(p => new MarkedHex(Mark.Arrive, new Hex(p.Col, p.Row))));
             if (b.Phase == Phase.Deploy) o.AddRange(Cells().Where(b.InDeploy).Select(h => new MarkedHex(Mark.Deploy, h)));
             var sel = SelectedUnit;
             if (sel != null && b.Phase == Phase.Player)

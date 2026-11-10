@@ -12,6 +12,7 @@ namespace VampireSpawn.Game.Screens
     {
         public Unit Hover;
         public Corpse HoverCorpse;
+        public Placement? HoverArrival;
         public bool Alt, EnemyPlaying, LeaveArmed, RulesOpen, LogOpen, Demo, FullMoon, MoonFading;
         public IEnumerable<string> Upgrades = Enumerable.Empty<string>();
     }
@@ -309,7 +310,11 @@ namespace VampireSpawn.Game.Screens
             var b = s.Battle;
             var ins = s.InspectUnit is int id ? b.Find(id) : null;
             var show = st.Hover ?? ins;
-            if (show == null) return;
+            if (show == null)
+            {
+                if (st.HoverArrival is Placement pa) ArrivalPanel(root, pa);
+                return;
+            }
             var p = Panel(root, b, show, "deploy-side", true);
             if (show.Side != Side.Ally) return;
             var uid = show.Id;
@@ -382,6 +387,7 @@ namespace VampireSpawn.Game.Screens
             }
             var mendTarget = sel != null && s.Mode == SelectMode.Mend && b.CanMend(sel, st.Hover) ? st.Hover : null;
             if (st.HoverCorpse != null) CorpsePanel(root, st.HoverCorpse);
+            else if (st.HoverArrival is Placement pa) ArrivalPanel(root, pa);
             else if (mendTarget != null) Panel(root, b, mendTarget, "other-side", true, b.MendAmount(sel, mendTarget));
             else if (st.Hover != null && st.Hover.Side == Side.Enemy) Panel(root, b, st.Hover, "other-side", true);
 
@@ -484,6 +490,25 @@ namespace VampireSpawn.Game.Screens
             if (o.JustRisen) return (Loc.T("hud.warn.risen"), Ui.Spawn);
             if (o.Role == Role.Vampire && o.Asleep) return (Loc.T("hud.warn.coffin", Rules.MoonWake), Ui.Candle);
             return (null, default);
+        }
+
+        // docs/systems/waves.md 4: a reinforcement not on the board yet.
+        void ArrivalPanel(VisualElement root, Placement a)
+        {
+            var m = GameData.Minion(a.Kind);
+            var p = PanelFrame(root, "Arrival " + a.Col + "," + a.Row, "other-side", Ui.Blood);
+            var col = E(p, "unit-body col");
+            var head = E(col, "unit-head row");
+            L(head, Loc.Text(m.Name), "unit-name display");
+            L(head, Loc.T("unit.card.arrive", a.Arrive), "unit-tag");
+            var big = E(col, "big row");
+            StatCell(big, Kit.Icon.Hp, m.Hp.ToString(), Loc.T("unit.card.hp"), Ui.Blood, Ui.Bone);
+            StatCell(big, Kit.Icon.Mov, m.Mov.ToString(), Loc.T("unit.card.mov"), Ui.Blood, Ui.Bone);
+            var small = E(col, "small row");
+            StatCell(small, Kit.Icon.Atk, m.Atk.ToString(), Loc.T("unit.card.atk"), Ui.Blood, Ui.Muted);
+            StatCell(small, Kit.Icon.Def, m.Def.ToString(), Loc.T("unit.card.def"), Ui.Blood, Ui.Muted);
+            StatCell(small, Kit.Icon.Rng, m.Rng.ToString(), Loc.T("unit.card.rng"), Ui.Blood, Ui.Muted);
+            L(col, Loc.Text(m.Note), "warn", Ui.Blood);
         }
 
         void CorpsePanel(VisualElement root, Corpse c)

@@ -36,6 +36,7 @@ namespace VampireSpawn.Core
         public bool Asleep { get; internal set; }
         public bool JustRisen { get; internal set; }
         public bool JustWoke { get; internal set; }
+        public bool JustArrived { get; internal set; }
         internal readonly List<Ability> abil = new List<Ability>();
         public IReadOnlyList<Ability> Abil => abil;
 
@@ -96,6 +97,9 @@ namespace VampireSpawn.Core
         public IReadOnlyList<LogEntry> Log => log;
 
         readonly HashSet<string> upgrades;
+        readonly List<Placement> pending = new List<Placement>();
+        // Reinforcements not on the board yet, in stage order.
+        public IReadOnlyList<Placement> Pending => pending;
         readonly List<BattleEvent> events = new List<BattleEvent>();
         // Ids are never shown; only their order matters (creation order is acting order).
         int nextId = 1;
@@ -107,7 +111,9 @@ namespace VampireSpawn.Core
             upgrades = new HashSet<string>(ownedUpgrades ?? Array.Empty<string>());
             foreach (var id in upgrades)
                 if (GameData.Upgrades.All(u => u.Id != id)) throw new ArgumentException("unknown upgrade " + id);
-            foreach (var e in stage.Enemies) units.Add(MakeEnemy(e.Kind, new Hex(e.Col, e.Row)));
+            foreach (var e in stage.Enemies)
+                if (e.Arrive > 0) pending.Add(e);
+                else units.Add(MakeEnemy(e.Kind, new Hex(e.Col, e.Row)));
             if (stage.Escort is EscortStats es)
                 units.Add(new Unit
                 {
@@ -128,7 +134,7 @@ namespace VampireSpawn.Core
         public Corpse CorpseAt(Hex h) => corpses.FirstOrDefault(c => c.Pos == h);
         public Unit Find(int id) => units.FirstOrDefault(u => u.Id == id);
         public int Used(Func<UnitType, int> cost) => Allies.Sum(u => cost(GameData.Type(u.Type)));
-        public bool BonusMet => Stage.Bonus.IsMet(Turn, Stats.Drained, units.Any(u => u.Role == Role.Minion));
+        public bool BonusMet => Stage.Bonus.IsMet(Turn, Stats.Drained, units.Any(u => u.Role == Role.Minion) || pending.Count > 0);
 
         public Occupant OccupantAt(Hex h)
         {

@@ -14,11 +14,36 @@ namespace VampireSpawn.Core
             return v != null && !v.Asleep && Moon + 1 >= Rules.MoonMax;
         }
 
+        // docs/systems/waves.md 2-3: due reinforcements appear before anyone acts and wait one phase.
+        void Arrive()
+        {
+            foreach (var p in pending.Where(p => p.Arrive <= Turn).ToList())
+            {
+                var at = ArrivalHex(new Hex(p.Col, p.Row));
+                if (at == null) continue;
+                pending.Remove(p);
+                var e = MakeEnemy(p.Kind, at.Value);
+                e.JustArrived = true;
+                units.Add(e);
+                Emit(BattleEvent.Arrived(e.Id, at.Value));
+                Say(new Message("log.arrive", e.Name), "k");
+            }
+        }
+
+        Hex? ArrivalHex(Hex h)
+        {
+            var near = Board.Neighbors(h);
+            foreach (var c in new[] { h }.Concat(near).Concat(near.SelectMany(Board.Neighbors)).Distinct().OrderBy(c => Hex.Distance(h, c)))
+                if (Board.Walkable(c) && OccupantAt(c) == Occupant.Empty) return c;
+            return null;
+        }
+
         void EnemyPhase()
         {
             Phase = Phase.Enemy;
             Say(new Message("log.enemyTurn", Turn), "t");
             Emit(BattleEvent.Banner(BannerKind.EnemyTurn, new Message("banner.enemyTurn", Turn)));
+            Arrive();
             foreach (var c in corpses.ToList()) Rise(c);
 
             var v = Vampire;
@@ -44,7 +69,7 @@ namespace VampireSpawn.Core
             {
                 foreach (var e in units.Where(x => x.Role == kind).ToList())
                 {
-                    if (!units.Contains(e) || e.JustRisen || e.Asleep || e.JustWoke) continue;
+                    if (!units.Contains(e) || e.JustRisen || e.Asleep || e.JustWoke || e.JustArrived) continue;
                     if (kind == Role.Vampire && full) continue;
                     MeleeAct(e);
                     if (CheckEnd()) return;
@@ -53,7 +78,7 @@ namespace VampireSpawn.Core
 
             foreach (var u in units)
             {
-                if (u.Side == Side.Enemy) { u.JustRisen = false; u.JustWoke = false; }
+                if (u.Side == Side.Enemy) { u.JustRisen = false; u.JustWoke = false; u.JustArrived = false; }
                 else { u.Moved = false; u.Acted = false; u.MovedDist = 0; u.ActedAgain = false; }
             }
             if (CheckEnd(dawn: true)) return;

@@ -28,6 +28,7 @@ namespace VampireSpawn.Game.Screens
         VisualElement overRoot, hudRoot;
         BattleHud hud;
         int? hoverId, hoverCorpse;
+        Hex? hoverArrival;
         Label banner;
         BattleActions actions;
         readonly KeyEdges keys = new KeyEdges();
@@ -85,6 +86,7 @@ namespace VampireSpawn.Game.Screens
             Sound.Ambience(x => x.battleAmbience);
             finished = enemyPlaying = leaveArm = rulesOpen = logOpen = false;
             hoverId = hoverCorpse = null;
+            hoverArrival = null;
             over = null;
             banner.RemoveFromClassList("shown");
             hudRoot.Clear();
@@ -127,6 +129,8 @@ namespace VampireSpawn.Game.Screens
             {
                 Hover = hoverId is int id ? b.Find(id) : null,
                 HoverCorpse = hoverCorpse is int cid ? b.Corpses.FirstOrDefault(c => c.Id == cid) : null,
+                HoverArrival = hoverArrival is Hex ah && b.Pending.Any(p => p.Col == ah.Col && p.Row == ah.Row)
+                    ? b.Pending.First(p => p.Col == ah.Col && p.Row == ah.Row) : (Placement?)null,
                 Alt = altDown, EnemyPlaying = enemyPlaying, LeaveArmed = leaveArm, RulesOpen = rulesOpen, LogOpen = logOpen, Demo = demo,
                 FullMoon = fullMoon, MoonFading = moonFading,
                 Upgrades = (demo ? App.DemoUpgrades : Campaign.Upgrades) ?? Enumerable.Empty<string>(),
@@ -207,11 +211,13 @@ namespace VampireSpawn.Game.Screens
             var at = m != null && !input.PointerBlocked() ? input.HexAt(m.position.ReadValue()) : null;
             var over = at is Hex h ? Session.Battle.UnitAt(h)?.Id : null;
             var corpse = at is Hex hc && over == null ? Session.Battle.CorpseAt(hc)?.Id : null;
+            var arrival = at is Hex ha && over == null && corpse == null && Session.Battle.Pending.Any(p => p.Col == ha.Col && p.Row == ha.Row) ? at : null;
             input.overlay.SetHover(at);
-            if (over == hoverId && corpse == hoverCorpse && alt == altDown) return;
+            if (over == hoverId && corpse == hoverCorpse && arrival == hoverArrival && alt == altDown) return;
             var altChanged = alt != altDown;
             hoverId = over;
             hoverCorpse = corpse;
+            hoverArrival = arrival;
             altDown = alt;
             if (altChanged) RenderBattle();
             else hud.RebuildHover(Session, HudNow(), actions);

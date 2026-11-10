@@ -6,7 +6,7 @@ using VampireSpawn.Core;
 
 namespace VampireSpawn.Game.Data
 {
-    [Serializable] public struct EnemySpot { [Tooltip("하수인 key 또는 vampire")] public string kind; public int col, row; }
+    [Serializable] public struct EnemySpot { [Tooltip("하수인 key 또는 vampire")] public string kind; public int col, row; [Tooltip("증원 턴. 0 = 처음부터 (docs/systems/waves.md)")] public int arrive; }
     [Serializable] public struct UnitSpot { [Tooltip("병종 key")] public string kind; public int col, row; }
 
     public sealed class StageData : ScriptableObject
@@ -26,14 +26,14 @@ namespace VampireSpawn.Game.Data
         public int bonusGold;
         [Header("보스")]
         public int bossHp, bossAtk, bossDef, bossMov, bossHeal;
-        [Header("지도 (. 평지, # 바위, T 화톳불, ~ 물, S 햇빛, d 배치 구역)")]
+        [Header("지도 (. 평지, # 바위, T 화톳불, ~ 물, S 햇빛, d 배치 구역, , 거친 땅)")]
         public List<string> map = new List<string>();
         [Tooltip("목록 순서가 하수인 행동 순서")] public List<EnemySpot> enemies = new List<EnemySpot>();
         [Tooltip("배치 화면의 예시 편성. 배치 구역(d) 안에 둔다")] public List<UnitSpot> sample = new List<UnitSpot>();
 
         public Stage ToCore() => new Stage(id, units.ToArray(), pop, silver, reward, goal,
             new Bonus(bonusType, bonusValue, bonusGold), new Boss(bossHp, bossAtk, bossDef, bossMov, bossHeal), map.ToArray(),
-            enemies.Select(e => new Placement(e.kind, e.col, e.row)).ToArray(),
+            enemies.Select(e => new Placement(e.kind, e.col, e.row, e.arrive)).ToArray(),
             sample.Select(e => new Placement(e.kind, e.col, e.row)).ToArray(),
             spots.Select(p => new Hex(p.x, p.y)).ToArray(), hold,
             goal == Goal.Escort ? new EscortStats(escortHp, escortDef, escortMov, new Hex(escortAt.x, escortAt.y)) : null);

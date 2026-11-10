@@ -31,4 +31,5 @@
 
 ## 구현
 
-- 구현 전. 이슈 #113. `Board.Reachable` 을 비용 있는 탐색으로 바꾼다.
+- 이슈 #113. `Board.Flood`(이동 비용 1·2 의 칸별 줄 세우기, 거친 땅이 없으면 옛 BFS 와 같은 순서)를 `Reachable`·`PathTo`·`DistField` 가 같이 쓴다. 격자에 흙색을 옅게 칠한다(`BoardView.BuildGrid`).
+- 아직 안 함: 5번 칸 정보 문장(칸 정보 창이 아직 없다), 6번 모습(#101).

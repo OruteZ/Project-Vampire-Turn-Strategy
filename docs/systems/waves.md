@@ -21,4 +21,5 @@
 
 ## 구현
 
-- 구현 전. 이슈 #113.
+- 이슈 #113. 규칙 `Core/Battle.Enemy.cs` `Arrive`, 데이터 `EnemySpot.arrive`, 표시 `Mark.Arrive`·`BattleHud.ArrivalPanel`, 시험 `WavesTerrainTests`. 위 요구사항과 구현이 다르면 구현을 고친다.
+- 아직 안 함: 증원 칸 위 흐린 글자·"{n}턴" 표시(지금은 점선 칸 + 올렸을 때 카드에 "{n}턴 증원"), 증원 소리.

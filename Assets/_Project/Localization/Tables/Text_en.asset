@@ -2011,6 +2011,14 @@ MonoBehaviour:
     m_Metadata:
       m_Items:
       - rid: 7201578077006332005
+  - m_Id: 1609422723674112
+    m_Localized: '{0} arrives.'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1609422786588672
+    m_Localized: Arrives turn {0}
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds:

@@ -127,10 +127,12 @@ namespace VampireSpawn.Core
     {
         public readonly string Kind;
         public readonly int Col, Row;
+        // Enemy phase it appears at; 0 = there from the start (docs/systems/waves.md).
+        public readonly int Arrive;
 
-        public Placement(string kind, int col, int row)
+        public Placement(string kind, int col, int row, int arrive = 0)
         {
-            Kind = kind; Col = col; Row = row;
+            Kind = kind; Col = col; Row = row; Arrive = arrive;
         }
     }
 

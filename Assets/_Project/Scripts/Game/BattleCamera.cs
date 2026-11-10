@@ -132,6 +132,11 @@ namespace VampireSpawn.Game
                     focus = Board.HexToWorld(e.At);
                     shot = rises == 1 ? Rise : RiseChain;
                     break;
+                case BattleEventKind.Arrived:
+                    followId = null;
+                    focus = Board.HexToWorld(e.At);
+                    shot = Rise;
+                    break;
                 case BattleEventKind.Banner when e.BannerKind == BannerKind.FullMoon:
                     riseOn = false;
                     moonOn = true;
