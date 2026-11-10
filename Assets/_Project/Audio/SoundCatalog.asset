@@ -66,8 +66,8 @@ MonoBehaviour:
     volume: 0.7
   enemyTurn:
     clips:
-    - {fileID: 8300000, guid: 9b4064dfc59befe48aa1f44f3e579366, type: 3}
-    volume: 0.7
+    - {fileID: 8300000, guid: 3fd57e3674296764d92b169cc47df169, type: 3}
+    volume: 0.8
   coffin:
     clips:
     - {fileID: 8300000, guid: dc4e06074dabe0b48b744bcc217cf673, type: 3}
