@@ -8,9 +8,16 @@
         ]
       }
     ],
+    "UserPromptSubmit": [
+      {
+        "hooks": [
+          { "type": "command", "command": "node \"$CLAUDE_PROJECT_DIR/.claude/hooks/pstack-unity.mjs\"" }
+        ]
+      }
+    ],
     "PreToolUse": [
       {
-        "matcher": "Bash|PowerShell|Edit|Write|MultiEdit|NotebookEdit|mcp__unityMCP__.*",
+        "matcher": "Bash|PowerShell|Edit|Write|MultiEdit|NotebookEdit|Agent|Task|mcp__unityMCP__.*",
         "hooks": [
           { "type": "command", "command": "node \"$CLAUDE_PROJECT_DIR/.claude/hooks/guard.mjs\"" }
         ]
