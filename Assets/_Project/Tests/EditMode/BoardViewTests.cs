@@ -49,7 +49,7 @@ namespace VampireSpawn.Tests
                 // battle-terrain.md 3: one outline of 6 edges x 4 pieces per walkable cell, each piece a quad.
                 var walkable = tiles.Count(t => board.Walkable(new Hex(int.Parse(t.name.Split(' ')[1].Split(',')[0]), int.Parse(t.name.Split(' ')[1].Split(',')[1]))));
                 var grid = children.Single(c => c.name == "Grid").GetComponent<MeshFilter>().sharedMesh;
-                var fills = Enumerable.Range(0, board.Rows).SelectMany(r => Enumerable.Range(0, board.Cols).Select(c => new Hex(c, r))).Count(x => board.Walkable(x) && (board.At(x) == Terrain.Sun || board.Lit(x)));
+                var fills = Enumerable.Range(0, board.Rows).SelectMany(r => Enumerable.Range(0, board.Cols).Select(c => new Hex(c, r))).Count(x => board.Walkable(x) && (board.At(x) == Terrain.Sun || board.Lit(x) || board.At(x) == Terrain.Rough));
                 Assert.AreEqual(walkable * 6 * 4 * 4 + fills * 6 * 4 * 3, grid.vertexCount, stage.Id + " grid vertices");
                 Assert.GreaterOrEqual(grid.vertices.Min(v => v.y), BoardView.HologramRise + 0.04f - 0.001f, stage.Id + " grid never dips below the hologram floor (battle-terrain.md 3)");
             }

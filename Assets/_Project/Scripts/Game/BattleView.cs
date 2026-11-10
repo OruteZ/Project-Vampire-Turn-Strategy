@@ -166,6 +166,9 @@ namespace VampireSpawn.Game
                     if (risen != null) AddUnit(risen, e.At);
                     yield return Delay(RiseSeconds);
                     break;
+                case BattleEventKind.Opened:
+                    if (board != null) board.OpenDoor(e.At);
+                    break;
                 case BattleEventKind.Arrived:
                     var arrived = Battle.Find(e.UnitId);
                     if (arrived != null) AddUnit(arrived, e.At);

@@ -35,6 +35,9 @@ namespace VampireSpawn.Core
             _ => throw new ArgumentException("unknown map tile '" + ch + "'"),
         };
 
+        // docs/systems/triggers.md 1-4: a door becomes plain ground when its trigger takes effect.
+        public void Open(Hex h) => terrain[h.Col, h.Row] = Terrain.Plain;
+
         public bool InBounds(Hex h) => h.Col >= 0 && h.Col < Cols && h.Row >= 0 && h.Row < Rows;
         public Terrain At(Hex h) => terrain[h.Col, h.Row];
         public bool Walkable(Hex h) => At(h) != Terrain.Rock && At(h) != Terrain.Water;

@@ -35,15 +35,15 @@ namespace VampireSpawn.Game.Screens
     {
         public static string Subtitle(Stage s, bool demo) => demo ? Loc.T("battle.demo") : Loc.T("battle.campaignSub", s.Label);
 
-        public static string PrimaryLabel(Battle b, bool enemyPlaying, out bool enabled)
+        public static string PrimaryLabel(Battle b, bool enemyPlaying, out bool enabled, float speed = 1f)
         {
             enabled = true;
-            if (enemyPlaying) { enabled = false; return Loc.T("battle.enemyActing"); }
+            if (enemyPlaying) { enabled = false; return Loc.T("hud.enemyActingSpeed", speed); }
             switch (b.Phase)
             {
                 case Phase.Deploy: enabled = b.Allies.Any(); return Loc.T("battle.start");
                 case Phase.Player: return Loc.T("battle.endTurn");
-                case Phase.Enemy: enabled = false; return Loc.T("battle.enemyActing");
+                case Phase.Enemy: enabled = false; return Loc.T("hud.enemyActingSpeed", speed);
             }
             return Loc.T("battle.results");
         }

@@ -79,9 +79,12 @@ namespace VampireSpawn.Game.Screens
             Fx.FadeIn(root);
         }
 
+        const string SpeedKey = "battle.speed";
+
         public void StartBattle(Stage s, IEnumerable<Placement> formation, bool startNow)
         {
             stage = s;
+            View.speed = Mathf.Clamp(PlayerPrefs.GetFloat(SpeedKey, 1f), 1f, 4f);
             Sound.Music(x => x.battleMusic);
             Sound.Ambience(x => x.battleAmbience);
             finished = enemyPlaying = leaveArm = rulesOpen = logOpen = false;
@@ -131,6 +134,7 @@ namespace VampireSpawn.Game.Screens
                 HoverCorpse = hoverCorpse is int cid ? b.Corpses.FirstOrDefault(c => c.Id == cid) : null,
                 HoverArrival = hoverArrival is Hex ah && b.Pending.Any(p => p.Col == ah.Col && p.Row == ah.Row)
                     ? b.Pending.First(p => p.Col == ah.Col && p.Row == ah.Row) : (Placement?)null,
+                Speed = View.speed,
                 Alt = altDown, EnemyPlaying = enemyPlaying, LeaveArmed = leaveArm, RulesOpen = rulesOpen, LogOpen = logOpen, Demo = demo,
                 FullMoon = fullMoon, MoonFading = moonFading,
                 Upgrades = (demo ? App.DemoUpgrades : Campaign.Upgrades) ?? Enumerable.Empty<string>(),
@@ -193,6 +197,13 @@ namespace VampireSpawn.Game.Screens
             var two = keys.Pressed("2", kb.digit2Key.isPressed);
             var three = keys.Pressed("3", kb.digit3Key.isPressed);
             var space = keys.Pressed("space", kb.spaceKey.isPressed);
+            // docs/ui/battle-hud.md 4-5: F cycles enemy playback 1x, 2x, 4x and is remembered.
+            if (keys.Pressed("f", kb.fKey.isPressed))
+            {
+                View.speed = View.speed >= 4f ? 1f : View.speed * 2f;
+                PlayerPrefs.SetFloat(SpeedKey, View.speed);
+                RenderBattle();
+            }
             if (View.IsBusy || enemyPlaying || OverShown) return;
             var b = Session.Battle;
             var sel = Session.SelectedUnit;

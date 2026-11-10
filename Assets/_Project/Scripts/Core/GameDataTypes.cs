@@ -9,6 +9,8 @@ namespace VampireSpawn.Core
     public enum BonusType { Turns, NoEat, AllMinions }
     // What wins a battle (docs/dev/battle-goals.md). Stored as numbers in the stage assets: add new goals at the end only.
     public enum Goal { Boss, Defense, Escort }
+    public enum Stance { Charge, Guard, Hold }
+    public enum TriggerKind { Turn, Reach, Kills }
 
     public sealed class UnitType
     {
@@ -129,10 +131,47 @@ namespace VampireSpawn.Core
         public readonly int Col, Row;
         // Enemy phase it appears at; 0 = there from the start (docs/systems/waves.md).
         public readonly int Arrive;
+        // Trigger id that brings this enemy in (docs/systems/triggers.md 1-4); null = none.
+        public readonly string Wave;
+        public readonly Stance Stance;
+        public readonly int Alert;
 
-        public Placement(string kind, int col, int row, int arrive = 0)
+        public Placement(string kind, int col, int row, int arrive = 0, string wave = null, Stance stance = Stance.Charge, int alert = 0)
         {
-            Kind = kind; Col = col; Row = row; Arrive = arrive;
+            Kind = kind; Col = col; Row = row; Arrive = arrive; Wave = string.IsNullOrEmpty(wave) ? null : wave; Stance = stance; Alert = alert;
+        }
+
+        public bool Reinforcement => Arrive > 0 || Wave != null;
+    }
+
+    public sealed class Trigger
+    {
+        public readonly string Id;
+        public readonly TriggerKind Kind;
+        public readonly int Value;
+        public readonly Hex[] Hexes;
+
+        public Trigger(string id, TriggerKind kind, int value, Hex[] hexes = null)
+        {
+            Id = id; Kind = kind; Value = value; Hexes = hexes ?? Array.Empty<Hex>();
+        }
+
+        public Message Condition => Kind switch
+        {
+            TriggerKind.Turn => new Message("unit.card.arrive", Value),
+            TriggerKind.Reach => new Message("trigger.reach"),
+            _ => new Message("trigger.kills", Value),
+        };
+    }
+
+    public sealed class Door
+    {
+        public readonly Hex[] Hexes;
+        public readonly string Trigger;
+
+        public Door(Hex[] hexes, string trigger)
+        {
+            Hexes = hexes; Trigger = trigger;
         }
     }
 
@@ -157,14 +196,17 @@ namespace VampireSpawn.Core
         public readonly Hex[] Spots;
         public readonly int Hold;
         public readonly EscortStats Escort;
+        public readonly Trigger[] Triggers;
+        public readonly Door[] Doors;
 
         public Stage(string id, string[] units, int pop, int silver, int reward, Goal goal,
             Bonus bonus, Boss boss, string[] map, Placement[] enemies, Placement[] sample,
-            Hex[] spots = null, int hold = 0, EscortStats escort = null)
+            Hex[] spots = null, int hold = 0, EscortStats escort = null, Trigger[] triggers = null, Door[] doors = null)
         {
             Id = id; Units = units; Pop = pop; Silver = silver; Reward = reward; Goal = goal;
             Bonus = bonus; Boss = boss; Map = map; Enemies = enemies; Sample = sample;
             Spots = spots ?? Array.Empty<Hex>(); Hold = hold; Escort = escort;
+            Triggers = triggers ?? Array.Empty<Trigger>(); Doors = doors ?? Array.Empty<Door>();
         }
 
         public Placement[] Minions => Enemies.Where(e => e.Kind != EnemyType.Vampire).ToArray();

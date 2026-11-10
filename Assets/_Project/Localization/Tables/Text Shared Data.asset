@@ -1631,6 +1631,38 @@ MonoBehaviour:
     m_Key: unit.card.arrive
     m_Metadata:
       m_Items: []
+  - m_Id: 1626683131883520
+    m_Key: log.trigger
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1626683207380992
+    m_Key: trigger.reach
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1626683207380993
+    m_Key: trigger.kills
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1626683207380994
+    m_Key: trigger.soon
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1626683207380995
+    m_Key: trigger.fired
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1626683207380996
+    m_Key: unit.card.stance.guard
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1626683207380997
+    m_Key: unit.card.stance.hold
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1626683207380998
+    m_Key: hud.enemyActingSpeed
+    m_Metadata:
+      m_Items: []
   m_Metadata:
     m_Items: []
   m_KeyGenerator:

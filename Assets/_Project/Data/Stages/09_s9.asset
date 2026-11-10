@@ -25,7 +25,14 @@ MonoBehaviour:
   pop: 11
   silver: 2
   reward: 35
-  bonusType: 2
+  goal: 0
+  spots: []
+  hold: 0
+  escortHp: 0
+  escortDef: 0
+  escortMov: 0
+  escortAt: {x: 0, y: 0}
+  bonusType: 1
   bonusValue: 0
   bonusGold: 15
   bossHp: 38
@@ -34,58 +41,80 @@ MonoBehaviour:
   bossMov: 4
   bossHeal: 5
   map:
-  - ...........
-  - '##.#...#.##'
-  - ...........
-  - ~~~~~.~~~~.
-  - dddddTddddd
-  - d#d#ddd#d#d
-  - ddddddddddd
-  - ddddddddddd
+  - '##...T...T...'
+  - '#..#.....#..#'
+  - '#.####.####.#'
+  - '#...........#'
+  - ~~~~~~.~~~~~,
+  - ...........,,
+  - .,.#.....#.,.
+  - ...........,.
+  - ddddddddddd..
+  - ddd,ddd,ddddd
+  - ddddddddddddd
+  - ddddddddddddd
   enemies:
   - kind: vampire
-    col: 5
+    col: 6
     row: 0
+    arrive: 0
+  - kind: skeletonArcher
+    col: 4
+    row: 1
+    arrive: 0
+  - kind: skeletonArcher
+    col: 8
+    row: 1
+    arrive: 0
+  - kind: skeletonHeavy
+    col: 6
+    row: 3
+    arrive: 0
+  - kind: skeletonHeavy
+    col: 5
+    row: 3
+    arrive: 0
+  - kind: skeletonArcher
+    col: 2
+    row: 3
+    arrive: 0
+  - kind: skeletonArcher
+    col: 10
+    row: 3
+    arrive: 0
+  - kind: skeleton
+    col: 1
+    row: 1
+    arrive: 0
+  - kind: skeleton
+    col: 11
+    row: 1
+    arrive: 0
+  - kind: skeletonHeavy
+    col: 7
+    row: 3
+    arrive: 0
   - kind: skeleton
     col: 0
-    row: 0
+    row: 5
+    arrive: 5
   - kind: skeleton
-    col: 10
-    row: 0
-  - kind: skeletonArcher
-    col: 2
-    row: 1
-  - kind: skeletonArcher
-    col: 8
-    row: 1
-  - kind: skeletonHeavy
-    col: 5
-    row: 2
-  - kind: skeleton
-    col: 2
-    row: 0
-  - kind: skeletonHeavy
-    col: 4
-    row: 0
-  - kind: skeleton
-    col: 6
-    row: 0
-  - kind: skeleton
-    col: 8
-    row: 0
-  sample:
-  - kind: pspear
     col: 3
-    row: 6
-  - kind: hunter
-    col: 4
-    row: 6
+    row: 5
+    arrive: 5
+  sample:
   - kind: knight
     col: 5
-    row: 6
-  - kind: sword
+    row: 8
+  - kind: hunter
     col: 6
-    row: 6
+    row: 8
+  - kind: sword
+    col: 7
+    row: 8
+  - kind: pspear
+    col: 8
+    row: 8
   - kind: archer
-    col: 5
-    row: 7
+    col: 4
+    row: 9

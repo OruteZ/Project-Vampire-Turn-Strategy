@@ -636,9 +636,8 @@ MonoBehaviour:
       m_Items:
       - rid: 7201578077006332005
   - m_Id: 5832187899953
-    m_Localized: The mill village is raided every night. The villagers have taken
-      up spears and hunting bows. The lanes beside the bonfire are bright, but the
-      side path at the far left is dark.
+    m_Localized: Beyond the ashen fields, the first vampire sleeps in the mill. The
+      hedgerows slow the dead.
     m_Metadata:
       m_Items:
       - rid: 7201578077006332005
@@ -658,9 +657,8 @@ MonoBehaviour:
       m_Items:
       - rid: 7201578077006332005
   - m_Id: 5832187899957
-    m_Localized: The mill vampire's master waits across the stream. There are two
-      bridges. A bonfire lights the right one; the left one is dark. The mill must
-      hold until dawn.
+    m_Localized: Two bridges and a ford cross the stream. The mill must hold until
+      dawn.
     m_Metadata:
       m_Items:
       - rid: 7201578077006332005
@@ -680,8 +678,8 @@ MonoBehaviour:
       m_Items:
       - rid: 7201578077006332005
   - m_Id: 5832192094209
-    m_Localized: The lord has sent swordsmen. Two walls divide the chapel, and only
-      the middle aisle catches the dawn through a gap in the roof.
+    m_Localized: The ruined chapel has three doors. Watch only the altar and your
+      back lies open.
     m_Metadata:
       m_Items:
       - rid: 7201578077006332005
@@ -701,9 +699,8 @@ MonoBehaviour:
       m_Items:
       - rid: 7201578077006332005
   - m_Id: 5832192094213
-    m_Localized: The village gravedigger has come along, shovel in hand. A cemetery
-      without a single light. Two narrow paths wind between the gravestones toward
-      the center. Whoever falls here rises again.
+    m_Localized: Four roads meet at the graveyard, and the dead come down every one.
+      The village gravedigger has come along, shovel in hand.
     m_Metadata:
       m_Items:
       - rid: 7201578077006332005
@@ -723,9 +720,7 @@ MonoBehaviour:
       m_Items:
       - rid: 7201578077006332005
   - m_Id: 5832192094217
-    m_Localized: Regular archers have joined. Torches line the mountain path. Following
-      the light is safe, but the road is long. Skeleton archers watch from the top
-      of the pass.
+    m_Localized: Torches light the pass, but skeleton archers watch it from the slopes.
     m_Metadata:
       m_Items:
       - rid: 7201578077006332005
@@ -745,9 +740,8 @@ MonoBehaviour:
       m_Items:
       - rid: 7201578077006332005
   - m_Id: 5832192094221
-    m_Localized: A plague doctor hiding in the manor has joined. The lord's manor,
-      taken by a vampire. The garden has two walls. The outer wall has a gap at each
-      end; the inner wall opens only at the sunlit center.
+    m_Localized: A plague doctor hiding in the manor has joined. Hold the great hall
+      as the night closes in from every side.
     m_Metadata:
       m_Items:
       - rid: 7201578077006332005
@@ -767,9 +761,8 @@ MonoBehaviour:
       m_Items:
       - rid: 7201578077006332005
   - m_Id: 5832192094225
-    m_Localized: The knightly order has joined. The watchtower wall has three gaps.
-      Bonfires guard both ends, but they are far; the middle path is close but dark.
-      Armored skeletons guard the watchtower.
+    m_Localized: There is one gate into the watchtower, and armored skeletons guard
+      it.
     m_Metadata:
       m_Items:
       - rid: 7201578077006332005
@@ -789,9 +782,8 @@ MonoBehaviour:
       m_Items:
       - rid: 7201578077006332005
   - m_Id: 5832192094229
-    m_Localized: The village beneath the Count's castle already belongs to the night.
-      Two alleys and a square with a burning bonfire lead to the castle. A village
-      guide knows the drains beneath the walls. Get him there.
+    m_Localized: A village guide knows the drains beneath the walls. Choose your
+      alley and get him there.
     m_Metadata:
       m_Items:
       - rid: 7201578077006332005
@@ -811,8 +803,8 @@ MonoBehaviour:
       m_Items:
       - rid: 7201578077006332005
   - m_Id: 5832192094233
-    m_Localized: Hunters have joined with silver shot. Before the gate, the moat
-      offers only a bonfire-lit bridge and a shallow ford at the far right.
+    m_Localized: One bridge crosses the moat, and archers line the walls. A ford
+      lies far to the side.
     m_Metadata:
       m_Items:
       - rid: 7201578077006332005
@@ -832,8 +824,8 @@ MonoBehaviour:
       m_Items:
       - rid: 7201578077006332005
   - m_Id: 5832192094237
-    m_Localized: Inside the Count's castle. Past the inner courtyard stands a second
-      wall, and beyond it a single bonfire burns in the great hall.
+    m_Localized: The Count's castle. Every hall to the throne has side chambers,
+      and their doors open one by one.
     m_Metadata:
       m_Items:
       - rid: 7201578077006332005
@@ -2017,6 +2009,38 @@ MonoBehaviour:
       m_Items: []
   - m_Id: 1609422786588672
     m_Localized: Arrives turn {0}
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1626683131883520
+    m_Localized: '{0}'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1626683207380992
+    m_Localized: When an ally reaches the marked hexes
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1626683207380993
+    m_Localized: After {0} minions fall
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1626683207380994
+    m_Localized: Next enemy phase
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1626683207380995
+    m_Localized: Doors open; the dead pour in.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1626683207380996
+    m_Localized: 'Guard {0}: moves once an ally comes within {0} or it is hit'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1626683207380997
+    m_Localized: 'Holds: never moves, attacks what it can reach'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1626683207380998
+    m_Localized: "Enemy acting\u2026 \xD7{0} (F)"
     m_Metadata:
       m_Items: []
   references:

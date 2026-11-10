@@ -33,7 +33,7 @@ namespace VampireSpawn.Core
         // Branch order is list order (docs/systems/progression.md 7).
         public Upgrade[] Branches(string unit) => Upgrades.Where(u => u.Unit == unit).ToArray();
 
-        const string Tiles = ".#T~Sd";
+        const string Tiles = ".#T~Sd,";
 
         public List<string> Validate()
         {

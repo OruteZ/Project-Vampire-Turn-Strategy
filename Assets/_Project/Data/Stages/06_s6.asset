@@ -23,7 +23,17 @@ MonoBehaviour:
   pop: 9
   silver: 0
   reward: 30
-  bonusType: 2
+  goal: 1
+  spots:
+  - {x: 5, y: 5}
+  - {x: 6, y: 5}
+  - {x: 7, y: 5}
+  hold: 8
+  escortHp: 0
+  escortDef: 0
+  escortMov: 0
+  escortAt: {x: 0, y: 0}
+  bonusType: 1
   bonusValue: 0
   bonusGold: 15
   bossHp: 26
@@ -32,52 +42,87 @@ MonoBehaviour:
   bossMov: 4
   bossHeal: 4
   map:
-  - ..........
-  - '#.#.##.#.#'
-  - ..........
-  - '###.S.####'
-  - dddddddddd
-  - '#d####d###'
-  - dddddddddd
-  - dddddddddd
+  - ...,.....,...
+  - .#.,.#.#.,.#.
+  - ....#...#....
+  - ',,.#ddddd#.,,'
+  - ...ddd#ddd...
+  - .T.dd...dd.T.
+  - ...ddd#ddd...
+  - ',,.#ddddd#.,,'
+  - ....#...#....
+  - .#.,.#.#.,.#.
+  - ...,.....,...
   enemies:
   - kind: vampire
-    col: 4
-    row: 0
-  - kind: skeletonArcher
-    col: 1
-    row: 0
-  - kind: skeletonArcher
-    col: 8
-    row: 0
-  - kind: skeleton
-    col: 3
-    row: 2
-  - kind: skeleton
     col: 6
-    row: 2
-  - kind: skeleton
-    col: 0
     row: 0
-  - kind: skeleton
+    arrive: 0
+  - kind: skeletonArcher
     col: 2
     row: 0
-  sample:
-  - kind: pspear
+    arrive: 0
+  - kind: skeletonArcher
+    col: 10
+    row: 0
+    arrive: 0
+  - kind: skeleton
+    col: 4
+    row: 1
+    arrive: 0
+  - kind: skeleton
+    col: 8
+    row: 1
+    arrive: 0
+  - kind: skeleton
+    col: 0
+    row: 2
+    arrive: 0
+  - kind: skeleton
+    col: 12
+    row: 2
+    arrive: 0
+  - kind: skeleton
+    col: 0
+    row: 8
+    arrive: 3
+  - kind: skeleton
+    col: 12
+    row: 8
+    arrive: 3
+  - kind: skeleton
+    col: 6
+    row: 10
+    arrive: 3
+  - kind: skeletonArcher
+    col: 0
+    row: 5
+    arrive: 5
+  - kind: skeletonArcher
+    col: 12
+    row: 5
+    arrive: 5
+  - kind: skeleton
     col: 3
-    row: 6
+    row: 10
+    arrive: 6
+  - kind: skeleton
+    col: 9
+    row: 10
+    arrive: 6
+  sample:
+  - kind: archer
+    col: 6
+    row: 3
   - kind: sword
     col: 4
-    row: 6
+    row: 4
   - kind: sword
-    col: 5
-    row: 6
+    col: 8
+    row: 4
   - kind: pspear
-    col: 6
+    col: 4
     row: 6
   - kind: doctor
-    col: 4
-    row: 7
-  - kind: parcher
-    col: 5
+    col: 6
     row: 7

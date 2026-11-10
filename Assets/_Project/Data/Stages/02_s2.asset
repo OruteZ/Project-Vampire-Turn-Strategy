@@ -21,9 +21,9 @@ MonoBehaviour:
   reward: 20
   goal: 1
   spots:
-  - {x: 4, y: 6}
-  - {x: 5, y: 6}
-  hold: 6
+  - {x: 5, y: 8}
+  - {x: 5, y: 9}
+  hold: 7
   escortHp: 0
   escortDef: 0
   escortMov: 0
@@ -37,45 +37,73 @@ MonoBehaviour:
   bossMov: 4
   bossHeal: 3
   map:
-  - .........
-  - .#.....#.
-  - .........
-  - ~~d~~~d~~
-  - ddddddTdd
-  - ddddddddd
-  - ddddddddd
+  - ...........
+  - .#...#...#.
+  - ...........
+  - .,,.....,,.
+  - ~~.~~,~~.~~
+  - ..T........
+  - ddd.ddd.ddd
+  - ddddddddddd
+  - dd#ddddd#dd
+  - ddddddddddd
   enemies:
   - kind: vampire
-    col: 4
+    col: 5
     row: 0
+    arrive: 0
+  - kind: skeleton
+    col: 1
+    row: 0
+    arrive: 0
+  - kind: skeleton
+    col: 9
+    row: 0
+    arrive: 0
+  - kind: skeleton
+    col: 3
+    row: 2
+    arrive: 0
+  - kind: skeleton
+    col: 7
+    row: 2
+    arrive: 0
+  - kind: skeleton
+    col: 5
+    row: 2
+    arrive: 0
   - kind: skeleton
     col: 0
     row: 0
+    arrive: 3
   - kind: skeleton
-    col: 8
+    col: 10
     row: 0
+    arrive: 3
   - kind: skeleton
     col: 4
-    row: 2
-  - kind: skeleton
-    col: 2
     row: 0
+    arrive: 5
+  - kind: skeleton
+    col: 6
+    row: 0
+    arrive: 5
   sample:
   - kind: pspear
-    col: 3
-    row: 5
-  - kind: pspear
-    col: 4
-    row: 5
+    col: 2
+    row: 6
   - kind: pspear
     col: 5
-    row: 5
+    row: 6
   - kind: pspear
+    col: 8
+    row: 6
+  - kind: parcher
+    col: 4
+    row: 7
+  - kind: parcher
     col: 6
-    row: 5
-  - kind: parcher
-    col: 4
-    row: 6
-  - kind: parcher
+    row: 7
+  - kind: pspear
     col: 5
-    row: 6
+    row: 8

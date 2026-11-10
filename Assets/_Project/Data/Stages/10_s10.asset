@@ -25,6 +25,13 @@ MonoBehaviour:
   pop: 12
   silver: 2
   reward: 45
+  goal: 0
+  spots: []
+  hold: 0
+  escortHp: 0
+  escortDef: 0
+  escortMov: 0
+  escortAt: {x: 0, y: 0}
   bonusType: 1
   bonusValue: 0
   bonusGold: 15
@@ -34,58 +41,89 @@ MonoBehaviour:
   bossMov: 4
   bossHeal: 6
   map:
-  - ...........
-  - '##.#...#.##'
-  - ...#.T.#...
-  - '#.###.###.#'
-  - ...........
-  - '###d#d#d###'
-  - ddddddddddd
-  - ddddddddddd
+  - '###.......###'
+  - '##.........##'
+  - '#.T#.....#T.#'
+  - '#..###.###..#'
+  - '#...........#'
+  - '###.##.##.###'
+  - ...#.....#...
+  - ...#.ddd.#...
+  - .,.##ddd##.,.
+  - ...ddddddd...
+  - '###ddddddd###'
+  - '###ddd.ddd###'
+  - '######.######'
   enemies:
   - kind: vampire
-    col: 5
+    col: 6
     row: 0
+    arrive: 0
   - kind: skeletonArcher
     col: 2
-    row: 2
-  - kind: skeletonArcher
-    col: 8
-    row: 2
-  - kind: skeletonHeavy
-    col: 4
     row: 1
+    arrive: 0
+  - kind: skeletonArcher
+    col: 10
+    row: 1
+    arrive: 0
   - kind: skeletonHeavy
     col: 6
-    row: 1
-  - kind: skeleton
-    col: 1
+    row: 3
+    arrive: 0
+  - kind: skeletonHeavy
+    col: 6
     row: 4
+    arrive: 0
   - kind: skeleton
-    col: 9
+    col: 4
     row: 4
+    arrive: 0
+  - kind: skeleton
+    col: 8
+    row: 4
+    arrive: 0
   - kind: skeleton
     col: 0
-    row: 0
+    row: 6
+    arrive: 3
   - kind: skeleton
-    col: 2
-    row: 0
+    col: 12
+    row: 6
+    arrive: 3
+  - kind: skeletonArcher
+    col: 1
+    row: 7
+    arrive: 4
+  - kind: skeletonArcher
+    col: 11
+    row: 7
+    arrive: 4
+  - kind: skeletonHeavy
+    col: 6
+    row: 12
+    arrive: 6
   - kind: skeleton
-    col: 4
-    row: 0
+    col: 0
+    row: 8
+    arrive: 7
+  - kind: skeleton
+    col: 12
+    row: 8
+    arrive: 7
   sample:
-  - kind: sword
-    col: 3
-    row: 7
   - kind: hunter
-    col: 4
-    row: 7
-  - kind: knight
     col: 5
     row: 7
-  - kind: hunter
+  - kind: knight
     col: 6
     row: 7
-  - kind: pspear
+  - kind: sword
     col: 7
     row: 7
+  - kind: archer
+    col: 6
+    row: 8
+  - kind: doctor
+    col: 6
+    row: 9

@@ -13,6 +13,7 @@ namespace VampireSpawn.Game.Screens
         public Unit Hover;
         public Corpse HoverCorpse;
         public Placement? HoverArrival;
+        public float Speed = 1f;
         public bool Alt, EnemyPlaying, LeaveArmed, RulesOpen, LogOpen, Demo, FullMoon, MoonFading;
         public IEnumerable<string> Upgrades = Enumerable.Empty<string>();
     }
@@ -235,7 +236,7 @@ namespace VampireSpawn.Game.Screens
 
         void EndTurn(VisualElement root, Battle b, HudState st, BattleActions a)
         {
-            var label = BattleScreen.PrimaryLabel(b, st.EnemyPlaying, out var enabled);
+            var label = BattleScreen.PrimaryLabel(b, st.EnemyPlaying, out var enabled, st.Speed);
             var btn = Btn(root, label, a.Primary, BtnKind.Primary, enabled, b.Phase == Phase.Deploy && !enabled ? Loc.T("hud.needAlly") : null, "end-turn");
             Hotkey(btn, "Space");
             var left = b.Phase == Phase.Player && !st.EnemyPlaying ? b.Allies.Count(u => !u.Acted) : 0;
@@ -312,7 +313,7 @@ namespace VampireSpawn.Game.Screens
             var show = st.Hover ?? ins;
             if (show == null)
             {
-                if (st.HoverArrival is Placement pa) ArrivalPanel(root, pa);
+                if (st.HoverArrival is Placement pa) ArrivalPanel(root, b, pa);
                 return;
             }
             var p = Panel(root, b, show, "deploy-side", true);
@@ -387,7 +388,7 @@ namespace VampireSpawn.Game.Screens
             }
             var mendTarget = sel != null && s.Mode == SelectMode.Mend && b.CanMend(sel, st.Hover) ? st.Hover : null;
             if (st.HoverCorpse != null) CorpsePanel(root, st.HoverCorpse);
-            else if (st.HoverArrival is Placement pa) ArrivalPanel(root, pa);
+            else if (st.HoverArrival is Placement pa) ArrivalPanel(root, b, pa);
             else if (mendTarget != null) Panel(root, b, mendTarget, "other-side", true, b.MendAmount(sel, mendTarget));
             else if (st.Hover != null && st.Hover.Side == Side.Enemy) Panel(root, b, st.Hover, "other-side", true);
 
@@ -489,18 +490,29 @@ namespace VampireSpawn.Game.Screens
             if (o.Side == Side.Ally && b.Board.Lit(o.Pos)) return (Loc.T("hud.warn.lit"), Ui.Candle);
             if (o.JustRisen) return (Loc.T("hud.warn.risen"), Ui.Spawn);
             if (o.Role == Role.Vampire && o.Asleep) return (Loc.T("hud.warn.coffin", Rules.MoonWake), Ui.Candle);
+            if (o.Stance == Stance.Guard) return (Loc.T("unit.card.stance.guard", o.Alert), Ui.Candle);
+            if (o.Stance == Stance.Hold) return (Loc.T("unit.card.stance.hold"), Ui.Muted);
             return (null, default);
         }
 
+        // docs/systems/triggers.md 1-5.
+        static string ArrivalWhen(Battle b, Placement a)
+        {
+            if (a.Wave == null) return Loc.T("unit.card.arrive", a.Arrive);
+            if (b.Fired(a.Wave)) return Loc.T("trigger.soon");
+            var t = b.Stage.Triggers.FirstOrDefault(x => x.Id == a.Wave);
+            return t == null ? "" : Loc.Text(t.Condition);
+        }
+
         // docs/systems/waves.md 4: a reinforcement not on the board yet.
-        void ArrivalPanel(VisualElement root, Placement a)
+        void ArrivalPanel(VisualElement root, Battle b, Placement a)
         {
             var m = GameData.Minion(a.Kind);
             var p = PanelFrame(root, "Arrival " + a.Col + "," + a.Row, "other-side", Ui.Blood);
             var col = E(p, "unit-body col");
             var head = E(col, "unit-head row");
             L(head, Loc.Text(m.Name), "unit-name display");
-            L(head, Loc.T("unit.card.arrive", a.Arrive), "unit-tag");
+            L(head, ArrivalWhen(b, a), "unit-tag");
             var big = E(col, "big row");
             StatCell(big, Kit.Icon.Hp, m.Hp.ToString(), Loc.T("unit.card.hp"), Ui.Blood, Ui.Bone);
             StatCell(big, Kit.Icon.Mov, m.Mov.ToString(), Loc.T("unit.card.mov"), Ui.Blood, Ui.Bone);

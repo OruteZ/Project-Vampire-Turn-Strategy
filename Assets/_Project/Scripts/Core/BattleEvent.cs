@@ -2,7 +2,7 @@ using System.Collections.Generic;
 
 namespace VampireSpawn.Core
 {
-    public enum BattleEventKind { Log, Banner, Walk, Popup, Hit, Hint, Died, CorpseLeft, Rose, Woke, HpChanged, Buried, MoonChanged, Arrived }
+    public enum BattleEventKind { Log, Banner, Walk, Popup, Hit, Hint, Died, CorpseLeft, Rose, Woke, HpChanged, Buried, MoonChanged, Arrived, Opened }
 
     public enum BannerKind { PlayerTurn, EnemyTurn, Coffin, FullMoon }
 
@@ -41,6 +41,7 @@ namespace VampireSpawn.Core
         public static BattleEvent Woke(int unitId) => new BattleEvent(BattleEventKind.Woke, unitId);
         public static BattleEvent HpChanged(int unitId, int hp) => new BattleEvent(BattleEventKind.HpChanged, unitId, value: hp);
         public static BattleEvent Buried(int corpseId, Hex at) => new BattleEvent(BattleEventKind.Buried, corpseId, at: at);
+        public static BattleEvent Opened(Hex at) => new BattleEvent(BattleEventKind.Opened, at: at);
         public static BattleEvent Arrived(int unitId, Hex at) => new BattleEvent(BattleEventKind.Arrived, unitId, at: at);
         public static BattleEvent MoonChanged(int moon) => new BattleEvent(BattleEventKind.MoonChanged, value: moon);
 
@@ -61,6 +62,7 @@ namespace VampireSpawn.Core
             BattleEventKind.Buried => "buried|" + UnitId + "|" + At,
             BattleEventKind.MoonChanged => "moon|" + Value,
             BattleEventKind.Arrived => "arrived|" + UnitId + "|" + At,
+            BattleEventKind.Opened => "opened|" + At,
             _ => "hp|" + UnitId + "|" + Value,
         };
     }

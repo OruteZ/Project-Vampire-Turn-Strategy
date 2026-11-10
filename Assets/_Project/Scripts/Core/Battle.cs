@@ -37,6 +37,8 @@ namespace VampireSpawn.Core
         public bool JustRisen { get; internal set; }
         public bool JustWoke { get; internal set; }
         public bool JustArrived { get; internal set; }
+        public Stance Stance { get; internal set; }
+        public int Alert { get; internal set; }
         internal readonly List<Ability> abil = new List<Ability>();
         public IReadOnlyList<Ability> Abil => abil;
 
@@ -100,6 +102,27 @@ namespace VampireSpawn.Core
         readonly List<Placement> pending = new List<Placement>();
         // Reinforcements not on the board yet, in stage order.
         public IReadOnlyList<Placement> Pending => pending;
+        readonly HashSet<string> fired = new HashSet<string>();
+        public bool Fired(string trigger) => fired.Contains(trigger);
+        public int MinionsKilled { get; private set; }
+
+        Unit Placed(Placement p, Hex at)
+        {
+            var u = MakeEnemy(p.Kind, at);
+            if (u.Role == Role.Minion) { u.Stance = p.Stance; u.Alert = p.Alert; }
+            return u;
+        }
+
+        // docs/systems/triggers.md 1-1..1-2. Effects wait for the next enemy phase start (Arrive).
+        void Fire(Func<Trigger, bool> met)
+        {
+            foreach (var t in Stage.Triggers)
+            {
+                if (fired.Contains(t.Id) || !met(t)) continue;
+                fired.Add(t.Id);
+                Say(new Message("log.trigger", new Message("trigger.fired")), "k");
+            }
+        }
         readonly List<BattleEvent> events = new List<BattleEvent>();
         // Ids are never shown; only their order matters (creation order is acting order).
         int nextId = 1;
@@ -112,8 +135,8 @@ namespace VampireSpawn.Core
             foreach (var id in upgrades)
                 if (GameData.Upgrades.All(u => u.Id != id)) throw new ArgumentException("unknown upgrade " + id);
             foreach (var e in stage.Enemies)
-                if (e.Arrive > 0) pending.Add(e);
-                else units.Add(MakeEnemy(e.Kind, new Hex(e.Col, e.Row)));
+                if (e.Reinforcement) pending.Add(e);
+                else units.Add(Placed(e, new Hex(e.Col, e.Row)));
             if (stage.Escort is EscortStats es)
                 units.Add(new Unit
                 {
@@ -308,6 +331,7 @@ namespace VampireSpawn.Core
             u.MovedDist = steps;
             u.Moved = true;
             Walk(u, to);
+            Fire(t => t.Kind == TriggerKind.Reach && t.Hexes.Contains(to));
             CheckEnd();
             return Done();
         }
@@ -439,6 +463,7 @@ namespace VampireSpawn.Core
         {
             var (d, tags) = DamageParts(att, def);
             def.Hp -= d;
+            if (def.Stance == Stance.Guard) def.Stance = Stance.Charge;
             Emit(BattleEvent.Hit(def.Id, att.Id, d));
             Emit(BattleEvent.HpChanged(def.Id, def.Hp));
             Emit(BattleEvent.Popup(def.Id, PopupKind.Damage, new Message("popup.damage", d)));
@@ -458,6 +483,11 @@ namespace VampireSpawn.Core
             Emit(BattleEvent.Died(u.Id, u.Pos));
             if (u.Side == Side.Enemy)
             {
+                if (u.Role == Role.Minion)
+                {
+                    MinionsKilled++;
+                    Fire(t => t.Kind == TriggerKind.Kills && MinionsKilled >= t.Value);
+                }
                 Say(new Message("log.enemyFell", u.Name), u.Role == Role.Vampire ? "t" : "sys");
                 return;
             }

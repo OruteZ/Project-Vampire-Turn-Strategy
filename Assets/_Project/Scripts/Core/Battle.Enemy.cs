@@ -17,12 +17,22 @@ namespace VampireSpawn.Core
         // docs/systems/waves.md 2-3: due reinforcements appear before anyone acts and wait one phase.
         void Arrive()
         {
-            foreach (var p in pending.Where(p => p.Arrive <= Turn).ToList())
+            Fire(t => t.Kind == TriggerKind.Turn && t.Value <= Turn);
+            foreach (var d in Stage.Doors)
+            {
+                if (!fired.Contains(d.Trigger)) continue;
+                foreach (var h in d.Hexes.Where(h => Board.At(h) == Terrain.Rock))
+                {
+                    Board.Open(h);
+                    Emit(BattleEvent.Opened(h));
+                }
+            }
+            foreach (var p in pending.Where(p => p.Wave != null ? fired.Contains(p.Wave) : p.Arrive <= Turn).ToList())
             {
                 var at = ArrivalHex(new Hex(p.Col, p.Row));
                 if (at == null) continue;
                 pending.Remove(p);
-                var e = MakeEnemy(p.Kind, at.Value);
+                var e = Placed(p, at.Value);
                 e.JustArrived = true;
                 units.Add(e);
                 Emit(BattleEvent.Arrived(e.Id, at.Value));
@@ -188,7 +198,18 @@ namespace VampireSpawn.Core
         void MeleeAct(Unit e)
         {
             if (!Targets.Any()) return;
+            // docs/systems/triggers.md 2: a guard wakes for good once an ally comes within its alert range.
+            if (e.Stance == Stance.Guard)
+            {
+                if (!Targets.Any(a => Hex.Distance(a.Pos, e.Pos) <= e.Alert)) return;
+                e.Stance = Stance.Charge;
+            }
             var adj = AlliesInReach(e, e.Pos);
+            if (e.Stance == Stance.Hold)
+            {
+                if (adj.Count > 0) ApplyHit(e, PickTarget(e, adj));
+                return;
+            }
             var reach = Board.Reachable(e.Pos, e.Mov, e.Side, OccupantAt);
             // docs/systems/goals.md 4-1: on a defence stage an enemy first takes a defended hex it can reach.
             var spot = Stage.Goal != Goal.Defense ? null : reach.Where(r => Stage.Spots.Contains(r.hex) && UnitAt(r.hex) == null)
