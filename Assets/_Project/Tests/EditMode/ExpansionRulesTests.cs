@@ -1,6 +1,7 @@
 using System.Linq;
 using NUnit.Framework;
 using VampireSpawn.Core;
+using VampireSpawn.Game;
 
 namespace VampireSpawn.Tests
 {
@@ -11,7 +12,7 @@ namespace VampireSpawn.Tests
 
         static readonly string[] Open = Enumerable.Repeat(".......", 7).ToArray();
 
-        static Stage Field(Placement[] enemies, int bossAtk = 1) => new Stage("demo", GameData.Types.Select(t => t.Key).ToArray(), 99, 99, 0,
+        static Stage Field(Placement[] enemies, int bossAtk = 1) => new Stage("demo", GameData.Types.Select(t => t.Key).ToArray(), 99, 99, 0, Goal.Boss,
             new Bonus(BonusType.NoEat, 0, 0), new Boss(30, bossAtk, 0, 0, 0), Open, enemies, new Placement[0]);
 
         static Placement P(string kind, int col, int row) => new Placement(kind, col, row);
@@ -161,6 +162,21 @@ namespace VampireSpawn.Tests
             for (var i = 0; i < 20 && b.Phase != Phase.Over; i++) b.EndTurn();
             Assert.AreEqual(false, b.Won, "the skeleton kills the lone spearman");
             Assert.IsNotNull(b.Vampire);
+        }
+
+        [Test]
+        public void EveryGoalHasAnObjectiveAndIsJudged()
+        {
+            foreach (Goal g in System.Enum.GetValues(typeof(Goal)))
+            {
+                var s = Field(new[] { P(EnemyType.Vampire, 6, 6), P("skeleton", 3, 2) });
+                s = new Stage(s.Id, s.Units, s.Pop, s.Silver, s.Reward, g, s.Bonus, s.Boss, s.Map, s.Enemies, s.Sample);
+                Assert.IsNotEmpty(Loc.Text(s.Objective), g.ToString());
+                var b = new Battle(s, null, new[] { P("knight", 3, 3) });
+                b.Start();
+                Assert.DoesNotThrow(() => b.Move(b.Allies.First().Id, At(3, 4)), g + " judged after a move");
+                Assert.DoesNotThrow(() => b.EndTurn(), g + " judged at the end of a turn");
+            }
         }
     }
 }

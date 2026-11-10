@@ -56,6 +56,7 @@ namespace VampireSpawn.Core
                 if (u.Side == Side.Enemy) { u.JustRisen = false; u.JustWoke = false; }
                 else { u.Moved = false; u.Acted = false; u.MovedDist = 0; u.ActedAgain = false; }
             }
+            if (CheckEnd()) return;
             Turn++;
             Phase = Phase.Player;
             Say(new Message("log.playerTurn", Turn), "t");

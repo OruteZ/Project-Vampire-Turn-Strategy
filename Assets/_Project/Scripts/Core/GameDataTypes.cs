@@ -7,6 +7,8 @@ namespace VampireSpawn.Core
     // Stored as numbers in the unit assets: add new skills at the end only.
     public enum Ability { None, Pike, Ambush, Cleave, Charge, Formation, Ward, Rite, Twice, Bury, Mend }
     public enum BonusType { Turns, NoEat, AllMinions }
+    // What wins a battle (docs/dev/battle-goals.md). Stored as numbers in the stage assets: add new goals at the end only.
+    public enum Goal { Boss }
 
     public sealed class UnitType
     {
@@ -129,19 +131,26 @@ namespace VampireSpawn.Core
         public Message BossName => new Message("stage." + Id + ".boss");
         public readonly string[] Units;
         public readonly int Pop, Silver, Reward;
+        public readonly Goal Goal;
         public readonly Bonus Bonus;
         public readonly Boss Boss;
         public readonly string[] Map;
         public readonly Placement[] Enemies;
         public readonly Placement[] Sample;
 
-        public Stage(string id, string[] units, int pop, int silver, int reward,
+        public Stage(string id, string[] units, int pop, int silver, int reward, Goal goal,
             Bonus bonus, Boss boss, string[] map, Placement[] enemies, Placement[] sample)
         {
-            Id = id; Units = units; Pop = pop; Silver = silver; Reward = reward;
+            Id = id; Units = units; Pop = pop; Silver = silver; Reward = reward; Goal = goal;
             Bonus = bonus; Boss = boss; Map = map; Enemies = enemies; Sample = sample;
         }
 
         public Placement[] Minions => Enemies.Where(e => e.Kind != EnemyType.Vampire).ToArray();
+
+        public Message Objective => Goal switch
+        {
+            Goal.Boss => new Message("battle.defeatBoss", BossName),
+            _ => throw new ArgumentOutOfRangeException(nameof(Goal), Goal, null),
+        };
     }
 }

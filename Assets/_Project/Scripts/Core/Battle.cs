@@ -291,6 +291,7 @@ namespace VampireSpawn.Core
             u.MovedDist = steps;
             u.Moved = true;
             Walk(u, to);
+            CheckEnd();
             return Done();
         }
 
@@ -303,13 +304,13 @@ namespace VampireSpawn.Core
                 return CommandResult.Rejected(new Message("reason.cannotAttack"));
             ApplyHit(u, t);
             u.Acted = u.Moved = true;
-            if (!units.Contains(t) && u.Has(Ability.Cleave) && !u.ActedAgain && Vampire != null)
+            if (CheckEnd()) return Done();
+            if (!units.Contains(t) && u.Has(Ability.Cleave) && !u.ActedAgain)
             {
                 u.ActedAgain = true;
                 u.Acted = false;
                 Say(new Message("log.cleave", u.Name), "h");
             }
-            CheckEnd();
             return Done();
         }
 
@@ -462,11 +463,19 @@ namespace VampireSpawn.Core
             Say(new Message("log.willRise", u.Name), "s");
         }
 
+        // The one place a battle is won or lost (docs/dev/battle-goals.md). Null while it goes on.
+        bool? Outcome() => Stage.Goal switch
+        {
+            Goal.Boss when Vampire == null => true,
+            Goal.Boss => Allies.Any() ? (bool?)null : false,
+            _ => throw new ArgumentOutOfRangeException(nameof(Stage.Goal), Stage.Goal, null),
+        };
+
         bool CheckEnd()
         {
-            if (Vampire == null) { Finish(true); return true; }
-            if (!Allies.Any()) { Finish(false); return true; }
-            return false;
+            if (!(Outcome() is bool win)) return false;
+            Finish(win);
+            return true;
         }
 
         void Finish(bool win)

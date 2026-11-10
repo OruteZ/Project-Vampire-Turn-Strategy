@@ -14,6 +14,7 @@ namespace VampireSpawn.Game.Data
         [Tooltip("캠페인 저장이 이 id 로 클리어를 기억한다. 첫 장은 demo")] public string id;
         [Tooltip("출전 병종 key. 배치 화면 목록 순서")] public List<string> units = new List<string>();
         public int pop, silver, reward;
+        [Tooltip("이기는 조건. docs/dev/battle-goals.md")] public Goal goal;
         [Header("추가 목표")]
         public BonusType bonusType;
         [Tooltip("턴 이내 승리일 때 턴 수")] public int bonusValue;
@@ -25,7 +26,7 @@ namespace VampireSpawn.Game.Data
         [Tooltip("목록 순서가 하수인 행동 순서")] public List<EnemySpot> enemies = new List<EnemySpot>();
         [Tooltip("배치 화면의 예시 편성. 배치 구역(d) 안에 둔다")] public List<UnitSpot> sample = new List<UnitSpot>();
 
-        public Stage ToCore() => new Stage(id, units.ToArray(), pop, silver, reward,
+        public Stage ToCore() => new Stage(id, units.ToArray(), pop, silver, reward, goal,
             new Bonus(bonusType, bonusValue, bonusGold), new Boss(bossHp, bossAtk, bossDef, bossMov, bossHeal), map.ToArray(),
             enemies.Select(e => new Placement(e.kind, e.col, e.row)).ToArray(),
             sample.Select(e => new Placement(e.kind, e.col, e.row)).ToArray());

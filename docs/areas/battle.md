@@ -2,7 +2,7 @@
 
 ## 경로
 - 기획 방향: `docs/design/` (combat, vampire, units, map, campaign, progression 등). 기획서: `docs/systems/`, `docs/content/`, `docs/ui/`
-- 구현 기록: `docs/dev/unity-port.md`
+- 구현 기록: `docs/dev/unity-port.md`, 전투 목표(승패) 구조 `docs/dev/battle-goals.md`
 - 데이터: `Assets/_Project/Data/` (편집기 사용법 `docs/guides/data-editor.md`)
 - 코드: `Assets/_Project/Scripts/Core/` (규칙, Unity 참조 없음), `Assets/_Project/Scripts/Game/` (화면·입력)
 - 테스트: `Assets/_Project/Tests/EditMode/`
@@ -31,4 +31,5 @@
 - 함정: 에디터가 뒤에 있을 때 `wasPressedThisFrame` 은 에디터 입력 갱신에 속할 수 있어 놓친다. `BoardInput` 은 `isPressed` 의 바뀜으로 누름·뗌을 잡는다.
 - 함정: `VampireSpawn.Core` 는 `noEngineReferences` 다. 규칙 코드에 `UnityEngine` 을 쓰면 컴파일이 깨진다. 화면에 필요한 것은 `Game` 쪽에 둔다.
 - 함정: MonoBehaviour 에 `Reset()` 이름의 메서드를 만들지 않는다. 에디터에서 `AddComponent` 때 Unity 가 불러 필드가 비어 있는 채 실행된다 (`BattleCamera.Snap`).
+- 함정: 승패는 `Battle.Outcome()` 한 곳에서만 정한다. `Vampire == null` 을 "전투가 끝났다" 로 쓰지 않는다(목표가 보스가 아닐 수 있다). 새 목표는 docs/dev/battle-goals.md 순서대로
 - 함정: 전투 카메라의 멈춤·느린 화면은 `Time.timeScale` 을 쓴다(`BattleCamera`). 재생 대기를 새로 만들 때 `WaitForSeconds`(게임 시간)를 써야 멈춤에 같이 멈춘다. 카메라 쪽 타이머는 실제 시간(`unscaledTime`)이다.
