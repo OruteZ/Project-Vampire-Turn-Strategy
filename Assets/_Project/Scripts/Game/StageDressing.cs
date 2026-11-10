@@ -33,7 +33,7 @@ namespace VampireSpawn.Game
                     for (var i = 0; i < 6; i++)
                     {
                         var p = transform.TransformPoint(HexLines.Corner(BoardView.Local(h, art.hexSize), art.hexSize * 0.95f, i));
-                        p.y = (ground != null ? ground.SampleHeight(p) + ground.transform.position.y : transform.position.y + art.tileHeight) + 0.05f;
+                        p.y = (ground != null ? Mathf.Max(transform.position.y + BoardView.HologramRise, ground.SampleHeight(p) + ground.transform.position.y) : transform.position.y + art.tileHeight) + 0.05f;
                         corners[i] = p;
                     }
                     Gizmos.DrawLineStrip(corners, true);

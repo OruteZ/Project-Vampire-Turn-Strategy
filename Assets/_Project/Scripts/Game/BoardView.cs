@@ -48,6 +48,13 @@ namespace VampireSpawn.Game
 
         public Vector3 Stand(Hex h) => OnGround(HexToWorld(h));
 
+        // battle-terrain.md 3: the cell hologram floats on a flat floor just above the board's bumps and only rises with ground that pokes through it.
+        public const float HologramRise = 0.15f;
+
+        public float HologramFloor => transform.position.y + (Ground != null ? HologramRise : art.tileHeight);
+
+        public Vector3 OnHologram(Vector3 world, float lift) { world.y = Mathf.Max(HologramFloor, Height(world)) + lift; return world; }
+
         public void Show(Stage stage)
         {
             Clear();
@@ -106,7 +113,7 @@ namespace VampireSpawn.Game
             if (art.overlay == null) return;
             var go = new GameObject("Grid");
             go.transform.SetParent(transform, false);
-            var lines = new HexLines(p => { var w = OnGround(transform.TransformPoint(p)); w.y += 0.04f; return transform.InverseTransformPoint(w); });
+            var lines = new HexLines(p => transform.InverseTransformPoint(OnHologram(transform.TransformPoint(p), 0.04f)));
             var r = art.hexSize * 0.95f;
             for (var row = 0; row < Board.Rows; row++)
                 for (var col = 0; col < Board.Cols; col++)

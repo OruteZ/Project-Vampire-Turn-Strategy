@@ -61,7 +61,7 @@ namespace VampireSpawn.Game
             GetComponent<MeshFilter>().sharedMesh = mesh;
             GetComponent<MeshRenderer>().sharedMaterial = material;
             GetComponent<MeshRenderer>().shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
-            lines = new HexLines(p => { var w = board.OnGround(transform.TransformPoint(p)); w.y += Lift; return transform.InverseTransformPoint(w); });
+            lines = new HexLines(p => transform.InverseTransformPoint(board.OnHologram(transform.TransformPoint(p), Lift)));
         }
 
         public void SetHover(Hex? h)

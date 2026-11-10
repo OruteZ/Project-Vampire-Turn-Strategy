@@ -130,10 +130,12 @@ namespace VampireSpawn.Game
         {
             var cam = viewCamera != null ? viewCamera : Camera.main;
             var ray = cam.ScreenPointToRay(screen);
+            // Pick on the drawn hologram (battle-terrain.md 4): its floor plane, or ground that rises above it and so is hit first.
+            var floor = new Plane(Vector3.up, new Vector3(0f, Board.HologramFloor, 0f));
+            var onFloor = floor.Raycast(ray, out var t) ? t : float.MaxValue;
             var terrain = Board.Ground != null ? Board.Ground.GetComponent<TerrainCollider>() : null;
-            if (terrain != null) return terrain.Raycast(ray, out var hit, 1000f) ? hit.point : (Vector3?)null;
-            var plane = new Plane(Vector3.up, new Vector3(0f, Board.transform.position.y + Board.TileTop, 0f));
-            return plane.Raycast(ray, out var t) ? ray.GetPoint(t) : (Vector3?)null;
+            if (terrain != null && terrain.Raycast(ray, out var hit, 1000f) && hit.distance < onFloor) return hit.point;
+            return onFloor < float.MaxValue ? ray.GetPoint(onFloor) : (Vector3?)null;
         }
 
         // Prototype hexAt: nearest centre, and only if the point is within one corner radius of it.
