@@ -23,6 +23,7 @@ namespace VampireSpawn.Game.Screens
         float leaveUntil, bannerUntil;
         Vector2Int fittedSize;
         Stage stage;
+        PlayLog playLog;
         OverInfo over;
         UIDocument doc;
         VisualElement overRoot, hudRoot;
@@ -98,7 +99,8 @@ namespace VampireSpawn.Game.Screens
             FitCameraRect();
             var battle = demo ? new Battle(s, App.DemoUpgrades, formation) : Campaign.NewBattle(s, formation);
             input.Begin(new BattleSession(battle));
-            if (startNow) input.Run(x => x.Start());
+            playLog = new PlayLog(s.Id);
+            if (startNow) { playLog.Started(); input.Run(x => x.Start()); }
         }
 
         // stage-select.md 5-3 2: the stage just played; a first clear that opened the next one shows it on the map.
@@ -160,6 +162,7 @@ namespace VampireSpawn.Game.Screens
         {
             if (!View.IsBusy)
             {
+                if (enemyPlaying) playLog?.EnemyEnds(Session.Battle);
                 enemyPlaying = false;
                 if (fullMoon) { fullMoon = false; moonFading = true; }
             }
@@ -243,8 +246,8 @@ namespace VampireSpawn.Game.Screens
         {
             if (View.IsBusy) return;
             var b = Session.Battle;
-            if (b.Phase == Phase.Deploy) input.Run(s => s.Start());
-            else if (b.Phase == Phase.Player) { enemyPlaying = true; input.Run(s => s.EndTurn()); }
+            if (b.Phase == Phase.Deploy) { playLog.Started(); input.Run(s => s.Start()); }
+            else if (b.Phase == Phase.Player) { enemyPlaying = true; playLog.EnemyBegins(); input.Run(s => s.EndTurn()); }
             else if (b.Phase == Phase.Over && over != null) overRoot.AddToClassList("shown");
         }
 
@@ -265,6 +268,7 @@ namespace VampireSpawn.Game.Screens
         {
             finished = true;
             over = OverInfo.From(Session.Battle, demo, Campaign);
+            Debug.Log("플레이 기록: " + playLog.Finish(Session.Battle, over.Won));
             Sound.Music(null);
             if (over.Won) Sound.Play(x => x.victory); else Sound.Play(x => x.defeat);
             if (over.Won && !demo) CampaignStore.Save(Campaign);

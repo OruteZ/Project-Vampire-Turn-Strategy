@@ -25,7 +25,7 @@ namespace VampireSpawn.Game
         public static Stage TestStage(Stage from, bool deployAnywhere) => new Stage(from.Id,
             GameData.Types.Select(t => t.Key).ToArray(), NoCap, NoCap, 0, from.Goal, from.Bonus, from.Boss,
             deployAnywhere ? from.Map.Select(row => row.Replace('.', 'd')).ToArray() : from.Map,
-            from.Enemies, from.Sample, from.Spots, from.Hold, from.Escort);
+            from.Enemies, from.Sample, from.Spots, from.Hold, from.Escort, from.Triggers, from.Doors);
     }
 }
 #endif

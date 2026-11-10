@@ -151,7 +151,7 @@ namespace VampireSpawn.Core
         // The allies the player placed; the escort is not one of them (docs/systems/goals.md 1-2).
         public IEnumerable<Unit> Allies => units.Where(u => u.Role == Role.Ally);
         public Unit Escort => units.FirstOrDefault(u => u.Role == Role.Escort);
-        public IEnumerable<Unit> Enemies => units.Where(u => u.Role != Role.Ally);
+        public IEnumerable<Unit> Enemies => units.Where(u => u.Side == Side.Enemy);
         public Unit Vampire => units.FirstOrDefault(u => u.Role == Role.Vampire);
         public Unit UnitAt(Hex h) => units.FirstOrDefault(u => u.Pos == h);
         public Corpse CorpseAt(Hex h) => corpses.FirstOrDefault(c => c.Pos == h);

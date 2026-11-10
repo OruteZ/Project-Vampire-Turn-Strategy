@@ -50,6 +50,16 @@ namespace VampireSpawn.Tests
             Assert.AreEqual(Terrain.Plain, b.Board.At(new Hex(3, 1)));
         }
 
+        [Test]
+        public void EveryShippedStageEndsUnderTheBot()
+        {
+            foreach (var s in GameData.Stages)
+            {
+                var r = StageSim.Play(s);
+                Assert.IsTrue(r.End.HasValue, s.Id + " ends within " + StageSim.TurnCap + " turns");
+            }
+        }
+
         // docs/systems/triggers.md 2
         [Test]
         public void GuardWaitsUntilAnAllyComesNearAndHoldNeverMoves()
