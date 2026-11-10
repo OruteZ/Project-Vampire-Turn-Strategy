@@ -5,7 +5,8 @@ using System.Linq;
 namespace VampireSpawn.Core
 {
     public enum Phase { Deploy, Player, Enemy, Over }
-    public enum Role { Ally, Minion, Vampire, Spawn }
+    public enum Role { Ally, Minion, Vampire, Spawn, Escort }
+    public enum Ending { Slain, Held, Arrived, Wiped, Overrun, EscortFell }
 
     public sealed class Unit
     {
@@ -38,7 +39,7 @@ namespace VampireSpawn.Core
         internal readonly List<Ability> abil = new List<Ability>();
         public IReadOnlyList<Ability> Abil => abil;
 
-        public Side Side => Role == Role.Ally ? Side.Ally : Side.Enemy;
+        public Side Side => Role == Role.Ally || Role == Role.Escort ? Side.Ally : Side.Enemy;
         public string Kind => Role == Role.Ally ? Type : Role == Role.Minion ? Minion : Role.ToString().ToLowerInvariant();
         public bool IsUndead => Role == Role.Vampire || Role == Role.Spawn;
         public bool Has(Ability a) => abil.Contains(a);
@@ -84,6 +85,7 @@ namespace VampireSpawn.Core
         public int Moon { get; private set; }
         public int? EatTarget { get; private set; }
         public bool? Won { get; private set; }
+        public Ending? Ending { get; private set; }
         public IReadOnlyList<Placement> StartFormation { get; private set; } = Array.Empty<Placement>();
 
         readonly List<Unit> units = new List<Unit>();
@@ -106,12 +108,20 @@ namespace VampireSpawn.Core
             foreach (var id in upgrades)
                 if (GameData.Upgrades.All(u => u.Id != id)) throw new ArgumentException("unknown upgrade " + id);
             foreach (var e in stage.Enemies) units.Add(MakeEnemy(e.Kind, new Hex(e.Col, e.Row)));
+            if (stage.Escort is EscortStats es)
+                units.Add(new Unit
+                {
+                    Id = nextId++, Role = Role.Escort, Name = stage.EscortName, Glyph = new Message("escort.glyph"), Pos = es.Start,
+                    Hp = es.Hp, MaxHp = es.Hp, Def = es.Def, Mov = es.Mov,
+                });
             foreach (var a in formation ?? stage.Sample)
-                if (stage.Units.Contains(a.Kind)) units.Add(MakeAlly(a.Kind, new Hex(a.Col, a.Row)));
+                if (stage.Units.Contains(a.Kind) && UnitAt(new Hex(a.Col, a.Row)) == null) units.Add(MakeAlly(a.Kind, new Hex(a.Col, a.Row)));
             TrimToCaps();
         }
 
+        // The allies the player placed; the escort is not one of them (docs/systems/goals.md 1-2).
         public IEnumerable<Unit> Allies => units.Where(u => u.Role == Role.Ally);
+        public Unit Escort => units.FirstOrDefault(u => u.Role == Role.Escort);
         public IEnumerable<Unit> Enemies => units.Where(u => u.Role != Role.Ally);
         public Unit Vampire => units.FirstOrDefault(u => u.Role == Role.Vampire);
         public Unit UnitAt(Hex h) => units.FirstOrDefault(u => u.Pos == h);
@@ -216,7 +226,7 @@ namespace VampireSpawn.Core
         {
             if (!Begin(Phase.Deploy, out var no)) return no;
             var u = Find(id);
-            if (u == null || u.Side != Side.Ally) return CommandResult.Rejected(new Message("reason.noRecall"));
+            if (u == null || u.Role != Role.Ally) return CommandResult.Rejected(new Message("reason.noRecall"));
             units.Remove(u);
             return Done();
         }
@@ -225,7 +235,7 @@ namespace VampireSpawn.Core
         {
             if (!Begin(Phase.Deploy, out var no)) return no;
             var u = Find(id);
-            if (u == null || u.Side != Side.Ally) return CommandResult.Rejected(new Message("reason.noRelocate"));
+            if (u == null || u.Role != Role.Ally) return CommandResult.Rejected(new Message("reason.noRelocate"));
             if (!InDeploy(to))
             {
                 units.Remove(u);
@@ -234,14 +244,14 @@ namespace VampireSpawn.Core
             }
             var o = UnitAt(to);
             if (o == null) u.Pos = to;
-            else if (o.Side == Side.Ally && o != u) { var p = u.Pos; u.Pos = o.Pos; o.Pos = p; }
+            else if (o.Role == Role.Ally && o != u) { var p = u.Pos; u.Pos = o.Pos; o.Pos = p; }
             return Done();
         }
 
         public CommandResult ClearAllies()
         {
             if (!Begin(Phase.Deploy, out var no)) return no;
-            units.RemoveAll(u => u.Side == Side.Ally);
+            units.RemoveAll(u => u.Role == Role.Ally);
             return Done();
         }
 
@@ -249,8 +259,9 @@ namespace VampireSpawn.Core
         public CommandResult UseSample()
         {
             if (!Begin(Phase.Deploy, out var no)) return no;
-            units.RemoveAll(u => u.Side == Side.Ally);
-            foreach (var a in Stage.Sample) units.Add(MakeAlly(a.Kind, new Hex(a.Col, a.Row)));
+            units.RemoveAll(u => u.Role == Role.Ally);
+            foreach (var a in Stage.Sample)
+                if (UnitAt(new Hex(a.Col, a.Row)) == null) units.Add(MakeAlly(a.Kind, new Hex(a.Col, a.Row)));
             TrimToCaps();
             return Done();
         }
@@ -269,7 +280,7 @@ namespace VampireSpawn.Core
             }
             StartFormation = Allies.Select(u => new Placement(u.Type, u.Pos.Col, u.Pos.Row)).ToArray();
             Phase = Phase.Player;
-            Say(new Message("log.start", Stage.BossName), "t");
+            Say(Stage.Goal == Goal.Boss ? new Message("log.start", Stage.BossName) : new Message("log.startGoal", Stage.Objective), "t");
             Emit(BattleEvent.Banner(BannerKind.PlayerTurn, new Message("banner.playerTurn", 1)));
             return Done();
         }
@@ -291,6 +302,7 @@ namespace VampireSpawn.Core
             u.MovedDist = steps;
             u.Moved = true;
             Walk(u, to);
+            CheckEnd();
             return Done();
         }
 
@@ -303,13 +315,13 @@ namespace VampireSpawn.Core
                 return CommandResult.Rejected(new Message("reason.cannotAttack"));
             ApplyHit(u, t);
             u.Acted = u.Moved = true;
-            if (!units.Contains(t) && u.Has(Ability.Cleave) && !u.ActedAgain && Vampire != null)
+            if (CheckEnd()) return Done();
+            if (!units.Contains(t) && u.Has(Ability.Cleave) && !u.ActedAgain)
             {
                 u.ActedAgain = true;
                 u.Acted = false;
                 Say(new Message("log.cleave", u.Name), "h");
             }
-            CheckEnd();
             return Done();
         }
 
@@ -318,7 +330,7 @@ namespace VampireSpawn.Core
             if (!Begin(Phase.Player, out var no)) return no;
             var u = Ready(id);
             var t = Find(targetId);
-            if (u == null || t == null || t.Side != Side.Ally || t == u || Hex.Distance(u.Pos, t.Pos) > u.Rng)
+            if (u == null || t == null || t.Role != Role.Ally || t == u || Hex.Distance(u.Pos, t.Pos) > u.Rng)
                 return CommandResult.Rejected(new Message("reason.cannotExecute"));
             Emit(BattleEvent.Popup(t.Id, PopupKind.Execute, new Message("popup.execute")));
             Kill(t, u, DeathCause.Execute);
@@ -443,6 +455,11 @@ namespace VampireSpawn.Core
                 Say(new Message("log.enemyFell", u.Name), u.Role == Role.Vampire ? "t" : "sys");
                 return;
             }
+            if (u.Role == Role.Escort)
+            {
+                Say(new Message("log.escortFell", u.Name), "k");
+                return;
+            }
             if (cause == DeathCause.Execute)
             {
                 Stats.Executed++;
@@ -462,18 +479,43 @@ namespace VampireSpawn.Core
             Say(new Message("log.willRise", u.Name), "s");
         }
 
-        bool CheckEnd()
+        // The one place a battle is won or lost (docs/dev/battle-goals.md). Null while it goes on.
+        // dawn: the enemy phase has just ended. A win is checked before a loss (docs/systems/goals.md 1-4).
+        Ending? Outcome(bool dawn = false)
         {
-            if (Vampire == null) { Finish(true); return true; }
-            if (!Allies.Any()) { Finish(false); return true; }
-            return false;
+            if (Vampire == null) return Core.Ending.Slain;
+            var escort = Escort;
+            var goal = Stage.Goal switch
+            {
+                Goal.Boss => null,
+                Goal.Defense => dawn && Turn >= Stage.Hold ? Core.Ending.Held
+                    : Stage.Spots.Any(h => UnitAt(h)?.Side == Side.Enemy) ? Core.Ending.Overrun : (Ending?)null,
+                Goal.Escort => escort == null ? Core.Ending.EscortFell
+                    : Stage.Spots.Contains(escort.Pos) ? Core.Ending.Arrived : (Ending?)null,
+                _ => throw new ArgumentOutOfRangeException(nameof(Stage.Goal), Stage.Goal, null),
+            };
+            return goal ?? (Allies.Any() ? (Ending?)null : Core.Ending.Wiped);
         }
 
-        void Finish(bool win)
+        bool CheckEnd(bool dawn = false)
         {
+            if (!(Outcome(dawn) is Ending end)) return false;
             Phase = Phase.Over;
-            Won = win;
+            Ending = end;
+            Won = end == Core.Ending.Slain || end == Core.Ending.Held || end == Core.Ending.Arrived;
+            return true;
         }
+
+        public Message EndLine => Ending switch
+        {
+            Core.Ending.Slain => new Message("over.wonLine", Turn, Stage.BossName),
+            Core.Ending.Held => new Message("over.held", Stage.Hold, Stage.Place),
+            Core.Ending.Arrived => new Message("over.arrived", Turn, Stage.EscortName, Stage.Place),
+            Core.Ending.Overrun => new Message("over.overrun", Stage.Place),
+            Core.Ending.EscortFell => new Message("over.escortFell", Stage.EscortName),
+            Core.Ending.Wiped => new Message("over.lostLine"),
+            _ => default,
+        };
 
         public string Snapshot(Func<Message, string> text)
         {

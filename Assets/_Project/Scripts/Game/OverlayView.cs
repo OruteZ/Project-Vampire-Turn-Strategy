@@ -36,6 +36,8 @@ namespace VampireSpawn.Game
             [Mark.Sel] = S(Ally, 0f, Ally, 1f, R - 3f, 3f),
             [Mark.MarkZone] = S(MoonBlood, 0.05f, MoonBlood, 1f, R - 2f, 1f),
             [Mark.Target] = S(Enemy, 0f, Enemy, 1f, R - 1.5f, 3f),
+            [Mark.Hold] = S(Screens.Ui.Candle, 0.12f, Screens.Ui.Candle, 1f, R - 1f, 2f),
+            [Mark.Goal] = S(Ally, 0.12f, Ally, 1f, R - 1f, 2f),
         };
         static readonly Style HoverCell = S(Bone, 0f, Bone, 1f, R - 1f, 2f);
         static readonly Style DropIn = S(Ally, 0.25f, Ally, 1f, R - 2.5f, 2.5f);

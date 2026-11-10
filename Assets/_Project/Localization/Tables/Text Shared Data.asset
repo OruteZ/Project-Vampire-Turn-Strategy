@@ -1559,6 +1559,70 @@ MonoBehaviour:
     m_Key: camp.buyWarn
     m_Metadata:
       m_Items: []
+  - m_Id: 1604117910581248
+    m_Key: goal.defense
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1604117986078720
+    m_Key: goal.escort
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1604117986078721
+    m_Key: goal.alsoBoss
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1604117986078722
+    m_Key: battle.turnsLeft
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1604117986078723
+    m_Key: unit.card.escort
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1604117986078724
+    m_Key: unit.card.escortNote
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1604117986078725
+    m_Key: escort.glyph
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1604117986078726
+    m_Key: log.escortFell
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1604117986078727
+    m_Key: log.startGoal
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1604117986078728
+    m_Key: over.held
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1604117986078729
+    m_Key: over.arrived
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1604117986078730
+    m_Key: over.overrun
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1604117986078731
+    m_Key: over.escortFell
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1604117986078732
+    m_Key: stage.s2.place
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1604117986078733
+    m_Key: stage.s8.place
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1604117986078734
+    m_Key: stage.s8.escort
+    m_Metadata:
+      m_Items: []
   m_Metadata:
     m_Items: []
   m_KeyGenerator:

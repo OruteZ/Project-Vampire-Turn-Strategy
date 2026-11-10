@@ -58,6 +58,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 4e64c1817ded2194aa09ada82f761954, type: 2}
   - {fileID: 11400000, guid: 6fb984d95b018eb45b1408be3bc716a3, type: 2}
   - {fileID: 11400000, guid: cc21f896256a48649b2069d9b28d85a9, type: 2}
+  - {fileID: 11400000, guid: aaf5c49d479165e479ca494b6a104042, type: 2}
   minionLooks:
   - {fileID: 11400000, guid: bda20e5804f236b4487296b250518250, type: 2}
   - {fileID: 11400000, guid: 01e4528811aa25c4b907fb3cb7746203, type: 2}

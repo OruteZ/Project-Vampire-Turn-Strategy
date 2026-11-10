@@ -23,9 +23,9 @@ namespace VampireSpawn.Game
 
         // Same id as the base stage so its labels and boss name still resolve; played as a demo, so nothing is saved.
         public static Stage TestStage(Stage from, bool deployAnywhere) => new Stage(from.Id,
-            GameData.Types.Select(t => t.Key).ToArray(), NoCap, NoCap, 0, from.Bonus, from.Boss,
+            GameData.Types.Select(t => t.Key).ToArray(), NoCap, NoCap, 0, from.Goal, from.Bonus, from.Boss,
             deployAnywhere ? from.Map.Select(row => row.Replace('.', 'd')).ToArray() : from.Map,
-            from.Enemies, from.Sample);
+            from.Enemies, from.Sample, from.Spots, from.Hold, from.Escort);
     }
 }
 #endif

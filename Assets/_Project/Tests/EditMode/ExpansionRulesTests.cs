@@ -1,6 +1,7 @@
 using System.Linq;
 using NUnit.Framework;
 using VampireSpawn.Core;
+using VampireSpawn.Game;
 
 namespace VampireSpawn.Tests
 {
@@ -11,7 +12,7 @@ namespace VampireSpawn.Tests
 
         static readonly string[] Open = Enumerable.Repeat(".......", 7).ToArray();
 
-        static Stage Field(Placement[] enemies, int bossAtk = 1) => new Stage("demo", GameData.Types.Select(t => t.Key).ToArray(), 99, 99, 0,
+        static Stage Field(Placement[] enemies, int bossAtk = 1) => new Stage("demo", GameData.Types.Select(t => t.Key).ToArray(), 99, 99, 0, Goal.Boss,
             new Bonus(BonusType.NoEat, 0, 0), new Boss(30, bossAtk, 0, 0, 0), Open, enemies, new Placement[0]);
 
         static Placement P(string kind, int col, int row) => new Placement(kind, col, row);
@@ -136,6 +137,107 @@ namespace VampireSpawn.Tests
             CollectionAssert.AreEqual(new[] { b[2].Id }, old.Upgrades, "first one kept, unknown id dropped");
             Assert.AreEqual(5 + b[1].Cost, old.Gold, "the dropped branch is refunded");
             Assert.IsFalse(Campaign.Parse(old.ToJson()).Repaired);
+        }
+
+        [Test]
+        public void BossGoalIsWonOnceNoVampireIsLeft()
+        {
+            var b = new Battle(Field(new[] { P("skeleton", 3, 2) }), null, new[] { P("knight", 3, 3) });
+            var knight = Ally(b, 3, 3);
+            var skeleton = b.Enemies.Single();
+            b.Start();
+            for (var i = 0; i < 20 && b.Phase != Phase.Over; i++)
+            {
+                b.Attack(knight.Id, skeleton.Id);
+                if (b.Phase != Phase.Over) b.EndTurn();
+            }
+            Assert.AreEqual(true, b.Won, "a stage whose only enemy is a minion is won when it falls");
+        }
+
+        [Test]
+        public void BossGoalIsLostOnceNoAllyIsLeft()
+        {
+            var b = new Battle(Field(new[] { P(EnemyType.Vampire, 6, 6), P("skeleton", 3, 2) }), null, new[] { P("pspear", 3, 3) });
+            b.Start();
+            for (var i = 0; i < 20 && b.Phase != Phase.Over; i++) b.EndTurn();
+            Assert.AreEqual(false, b.Won, "the skeleton kills the lone spearman");
+            Assert.IsNotNull(b.Vampire);
+        }
+
+        static Stage GoalStage(Goal g, Placement[] enemies, Hex[] spots, int hold = 0, EscortStats escort = null)
+        {
+            var s = Field(enemies);
+            return new Stage(s.Id, s.Units, s.Pop, s.Silver, s.Reward, g, s.Bonus, s.Boss, s.Map, s.Enemies, s.Sample, spots, hold, escort);
+        }
+
+        [Test]
+        public void DefenceIsWonByHoldingAndLostOnceAnEnemyStandsOnTheSpot()
+        {
+            Rules(moonMax: 9, eatRange: 2, moonWake: 9);
+            var held = new Battle(GoalStage(Goal.Defense, new[] { P(EnemyType.Vampire, 6, 6) }, new[] { At(0, 0) }, hold: 2), null, new[] { P("knight", 3, 3) });
+            held.Start();
+            held.EndTurn();
+            Assert.IsNull(held.Won, "one turn held out of two");
+            held.EndTurn();
+            Assert.AreEqual(Ending.Held, held.Ending);
+            Assert.AreEqual(true, held.Won);
+
+            var lost = new Battle(GoalStage(Goal.Defense, new[] { P(EnemyType.Vampire, 6, 6), P("skeleton", 3, 1) }, new[] { At(3, 3) }, hold: 6),
+                null, new[] { P("knight", 0, 6) });
+            lost.Start();
+            lost.EndTurn();
+            Assert.AreEqual(At(3, 3), lost.Enemies.First(e => e.Kind == "skeleton").Pos, "the skeleton takes the spot before chasing the knight");
+            Assert.AreEqual(Ending.Overrun, lost.Ending);
+            Assert.AreEqual(false, lost.Won);
+        }
+
+        [Test]
+        public void EscortWinsOnArrivalAndIsNeitherPlacedNorExecuted()
+        {
+            var b = new Battle(GoalStage(Goal.Escort, new[] { P(EnemyType.Vampire, 6, 6) }, new[] { At(3, 0) }, escort: new EscortStats(6, 0, 3, At(3, 3))),
+                null, new[] { P("knight", 3, 4), P("pspear", 3, 3) });
+            var escort = b.Escort;
+            Assert.AreEqual(At(3, 3), escort.Pos);
+            Assert.AreEqual(1, b.Allies.Count(), "the spearman on the escort's hex is dropped");
+            Assert.IsFalse(b.Recall(escort.Id).Ok);
+            b.Start();
+            Assert.IsFalse(b.Execute(b.Allies.First().Id, escort.Id).Ok);
+            Assert.IsTrue(b.Move(escort.Id, At(3, 0)).Ok);
+            Assert.AreEqual(Ending.Arrived, b.Ending);
+        }
+
+        [Test]
+        public void EscortFallingLosesAndAloneItDoesNotFight()
+        {
+            var fell = new Battle(GoalStage(Goal.Escort, new[] { P(EnemyType.Vampire, 6, 6), P("skeleton", 3, 2) }, new[] { At(0, 0) }, escort: new EscortStats(1, 0, 3, At(3, 3))),
+                null, new[] { P("knight", 0, 6) });
+            fell.Start();
+            fell.EndTurn();
+            Assert.AreEqual(Ending.EscortFell, fell.Ending, "an escort that can be killed is the first target");
+            Assert.IsEmpty(fell.Corpses);
+
+            var alone = new Battle(GoalStage(Goal.Escort, new[] { P(EnemyType.Vampire, 6, 6), P("skeleton", 0, 5) }, new[] { At(0, 0) }, escort: new EscortStats(9, 0, 3, At(3, 0))),
+                null, new[] { P("pspear", 0, 6) });
+            alone.Start();
+            for (var i = 0; i < 20 && alone.Phase != Phase.Over; i++) alone.EndTurn();
+            Assert.AreEqual(Ending.Wiped, alone.Ending);
+            Assert.IsNotNull(alone.Escort);
+        }
+
+        [Test]
+        public void EveryGoalHasAnObjectiveAndIsJudged()
+        {
+            foreach (Goal g in System.Enum.GetValues(typeof(Goal)))
+            {
+                var s = Field(new[] { P(EnemyType.Vampire, 6, 6), P("skeleton", 3, 2) });
+                s = new Stage(s.Id, s.Units, s.Pop, s.Silver, s.Reward, g, s.Bonus, s.Boss, s.Map, s.Enemies, s.Sample);
+                Assert.IsNotEmpty(Loc.Text(s.Objective), g.ToString());
+                if (g != Goal.Boss) Assert.IsNotEmpty(Loc.Text(s.AlsoWins), g.ToString());
+                var b = new Battle(s, null, new[] { P("knight", 3, 3) });
+                b.Start();
+                Assert.DoesNotThrow(() => b.Move(b.Allies.First().Id, At(3, 4)), g + " judged after a move");
+                Assert.DoesNotThrow(() => b.EndTurn(), g + " judged at the end of a turn");
+            }
         }
     }
 }

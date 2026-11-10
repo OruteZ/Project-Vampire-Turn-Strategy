@@ -1,0 +1,34 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1c50f19bfd6484047b0aa7aeac3dcfae, type: 3}
+  m_Name: Guide
+  m_EditorClassIdentifier: VampireSpawn.Game::VampireSpawn.Game.UnitLook
+  key: escort
+  icon: 
+  recipe: 
+  model: {fileID: 2323011827037694792, guid: 679546d0032e80247a16b67a54cfe2eb, type: 3}
+  rig: 0
+  weapons: []
+  animator: {fileID: 22100000, guid: 1fdfeebf2685688439c5272f58b765dd, type: 2}
+  sounds:
+    attack:
+      clips: []
+      volume: 1
+    hurt:
+      clips: []
+      volume: 1
+    death:
+      clips: []
+      volume: 1
+    step:
+      clips: []
+      volume: 1

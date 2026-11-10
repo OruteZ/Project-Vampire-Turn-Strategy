@@ -156,7 +156,7 @@ namespace VampireSpawn.Game.Screens
             name.style.color = last ? Ui.Blood : Ui.Bone;
             SetTip(name, Loc.Text(s.Brief));
 
-            Line(panel.Q("info-goal"), Kit.Icon.Boss, Ui.Blood, Loc.T("camp.objectiveBoss", s.BossName), Ui.Bone, Loc.T("camp.objective"));
+            Line(panel.Q("info-goal"), Kit.Icon.Boss, Ui.Blood, Kit.Objective(s), Ui.Bone, Loc.T("camp.objective"));
             Line(panel.Q("info-bonus"), Kit.Icon.Star, bonusGot ? Ui.Candle : Ui.Muted, Loc.Text(s.Bonus.Text), bonusGot ? Ui.Candle : Ui.Bone,
                 Loc.T("camp.bonusGoal") + (bonusGot ? " · " + Loc.T("camp.got") : ""));
 
