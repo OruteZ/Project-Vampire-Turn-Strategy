@@ -79,6 +79,7 @@
 | 스켈레톤 궁수 (#99) | `SM_Chr_Skeleton_Ranger_01` | 왼손 활 `SM_Wep_Rigged_Bow_01` (그대로) | `Units/PolygonBow` |
 | 스켈레톤 중갑병 (#99) | `SM_Chr_Skeleton_HeavyArmor_01` | 철퇴 `SM_Wep_Mace_01` (칼날), 왼손 방패 `SM_Wep_Shield_01` | `Units/Polygon` |
 | 뱀파이어 | `SM_Chr_DarkLord_Male_01` (잠든 동안은 석관 `SM_Prop_Tomb_01` 만, 깨면 모델) | 낫 (자루) | `Units/Polygon` |
+| 목표 유닛 길잡이 (#102) | `FantasyVillagers_01` (`Units/Guide`, key `escort`) | 없음 | `Units/SidekickUnarmed` |
 | 스폰·시신 | 원래 병종 모델, 무기 없음 + 보라 고리 | | Sidekick 은 `Units/SidekickUnarmed` |
 
 ### 모델 바꾸기 (Sidekick 으로 새로 만든 캐릭터, #30)
