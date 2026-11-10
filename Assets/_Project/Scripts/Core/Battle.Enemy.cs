@@ -56,7 +56,7 @@ namespace VampireSpawn.Core
                 if (u.Side == Side.Enemy) { u.JustRisen = false; u.JustWoke = false; }
                 else { u.Moved = false; u.Acted = false; u.MovedDist = 0; u.ActedAgain = false; }
             }
-            if (CheckEnd()) return;
+            if (CheckEnd(dawn: true)) return;
             Turn++;
             Phase = Phase.Player;
             Say(new Message("log.playerTurn", Turn), "t");
@@ -83,11 +83,11 @@ namespace VampireSpawn.Core
         {
             Unit best = null;
             var bestScore = 0;
-            foreach (var u in Allies)
+            foreach (var u in Targets)
             {
                 var d = Hex.Distance(v.Pos, u.Pos);
                 if (d > Rules.EatRange || Board.Lit(u.Pos) || u.Has(Ability.Ward)) continue;
-                var score = d * 100 - GameData.Type(u.Type).Pop;
+                var score = d * 100 - Pop(u);
                 if (best == null || score < bestScore) { best = u; bestScore = score; }
             }
             return best;
@@ -141,8 +141,13 @@ namespace VampireSpawn.Core
         double TargetScore(Unit att, Unit t)
         {
             var d = Damage(att, t);
-            return (d >= t.Hp ? 100 : 0) + GameData.Type(t.Type).Pop * 3 - t.Hp * 0.5 + d;
+            return (d >= t.Hp ? 100 : 0) + Pop(t) * 3 - t.Hp * 0.5 + d;
         }
+
+        // docs/systems/goals.md 4-3: the escort is a target like any ally, worth no population.
+        IEnumerable<Unit> Targets => units.Where(u => u.Side == Side.Ally);
+
+        static int Pop(Unit u) => u.Role == Role.Ally ? GameData.Type(u.Type).Pop : 0;
 
         Unit PickTarget(Unit att, List<Unit> list)
         {
@@ -153,15 +158,24 @@ namespace VampireSpawn.Core
         }
 
         // docs/systems/ai.md 2: allies within range, no line of sight.
-        List<Unit> AlliesInReach(Unit e, Hex h) => Allies.Where(a => Hex.Distance(h, a.Pos) <= e.Rng).ToList();
+        List<Unit> AlliesInReach(Unit e, Hex h) => Targets.Where(a => Hex.Distance(h, a.Pos) <= e.Rng).ToList();
 
         void MeleeAct(Unit e)
         {
-            if (!Allies.Any()) return;
+            if (!Targets.Any()) return;
             var adj = AlliesInReach(e, e.Pos);
-            if (adj.Count == 0)
+            var reach = Board.Reachable(e.Pos, e.Mov, e.Side, OccupantAt);
+            // docs/systems/goals.md 4-1: on a defence stage an enemy first takes a defended hex it can reach.
+            var spot = Stage.Goal != Goal.Defense ? null : reach.Where(r => Stage.Spots.Contains(r.hex) && UnitAt(r.hex) == null)
+                .OrderBy(r => r.steps).Select(r => (Hex?)r.hex).FirstOrDefault();
+            if (spot.HasValue)
             {
-                var reach = Board.Reachable(e.Pos, e.Mov, e.Side, OccupantAt);
+                MoveEnemy(e, spot.Value);
+                if (!units.Contains(e)) return;
+                adj = AlliesInReach(e, e.Pos);
+            }
+            else if (adj.Count == 0)
+            {
                 Hex? best = null;
                 var bestScore = -1e9;
                 foreach (var (h, steps) in reach)
@@ -174,9 +188,11 @@ namespace VampireSpawn.Core
                 if (best == null)
                 {
                     var goals = new List<Hex>();
-                    foreach (var a in Allies)
+                    foreach (var a in Targets)
                         foreach (var n in Board.Neighbors(a.Pos))
                             if (!Board.Blocked(n, Side.Enemy, OccupantAt) && UnitAt(n) == null) goals.Add(n);
+                    if (Stage.Goal == Goal.Defense)
+                        goals.AddRange(Stage.Spots.Where(h => !Board.Blocked(h, Side.Enemy, OccupantAt) && UnitAt(h) == null));
                     var field = Board.DistField(goals, Side.Enemy, OccupantAt);
                     var bestDist = field.TryGetValue(e.Pos, out var here) ? here : 1_000_000_000;
                     var bestSteps = 0;
