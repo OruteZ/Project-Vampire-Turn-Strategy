@@ -137,5 +137,30 @@ namespace VampireSpawn.Tests
             Assert.AreEqual(5 + b[1].Cost, old.Gold, "the dropped branch is refunded");
             Assert.IsFalse(Campaign.Parse(old.ToJson()).Repaired);
         }
+
+        [Test]
+        public void BossGoalIsWonOnceNoVampireIsLeft()
+        {
+            var b = new Battle(Field(new[] { P("skeleton", 3, 2) }), null, new[] { P("knight", 3, 3) });
+            var knight = Ally(b, 3, 3);
+            var skeleton = b.Enemies.Single();
+            b.Start();
+            for (var i = 0; i < 20 && b.Phase != Phase.Over; i++)
+            {
+                b.Attack(knight.Id, skeleton.Id);
+                if (b.Phase != Phase.Over) b.EndTurn();
+            }
+            Assert.AreEqual(true, b.Won, "a stage whose only enemy is a minion is won when it falls");
+        }
+
+        [Test]
+        public void BossGoalIsLostOnceNoAllyIsLeft()
+        {
+            var b = new Battle(Field(new[] { P(EnemyType.Vampire, 6, 6), P("skeleton", 3, 2) }), null, new[] { P("pspear", 3, 3) });
+            b.Start();
+            for (var i = 0; i < 20 && b.Phase != Phase.Over; i++) b.EndTurn();
+            Assert.AreEqual(false, b.Won, "the skeleton kills the lone spearman");
+            Assert.IsNotNull(b.Vampire);
+        }
     }
 }
