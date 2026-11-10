@@ -29,3 +29,18 @@ MonoBehaviour:
     position: {x: 0, y: 0, z: 0}
     rotation: {x: 0, y: 0, z: 0}
   animator: {fileID: 22100000, guid: 1be2bda5d7de4af4b89a901a93e751e6, type: 2}
+  sounds:
+    attack:
+      clips:
+      - {fileID: 8300000, guid: 5ea90b144c8c44441968c7ca257c0f42, type: 3}
+      - {fileID: 8300000, guid: c33db890dd2bec941b98f33342258377, type: 3}
+      volume: 0.85
+    hurt:
+      clips: []
+      volume: 1
+    death:
+      clips: []
+      volume: 1
+    step:
+      clips: []
+      volume: 1

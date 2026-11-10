@@ -26,8 +26,9 @@ MonoBehaviour:
   animator: {fileID: 22100000, guid: df70526b63d281b4b8a562ec70988bd3, type: 2}
   sounds:
     attack:
-      clips: []
-      volume: 1
+      clips:
+      - {fileID: 8300000, guid: ac0f74a56fa188e488fb7c9a1de44e0a, type: 3}
+      volume: 0.85
     hurt:
       clips: []
       volume: 1

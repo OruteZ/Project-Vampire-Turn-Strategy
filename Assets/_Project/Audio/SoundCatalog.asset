@@ -22,8 +22,9 @@ MonoBehaviour:
     clips: []
     volume: 1
   battleAmbience:
-    clips: []
-    volume: 1
+    clips:
+    - {fileID: 8300000, guid: e48f0dac27a9434439557f1b6fedeeb1, type: 3}
+    volume: 0.35
   campAmbience:
     clips: []
     volume: 1
@@ -60,61 +61,88 @@ MonoBehaviour:
     - {fileID: 8300000, guid: 632b1c41f6a368540970d173af4f782f, type: 3}
     volume: 0.9
   playerTurn:
-    clips: []
-    volume: 1
+    clips:
+    - {fileID: 8300000, guid: 4b1e3e98dd07a5245bdb689cc5f99393, type: 3}
+    volume: 0.7
   enemyTurn:
-    clips: []
-    volume: 1
+    clips:
+    - {fileID: 8300000, guid: 9b4064dfc59befe48aa1f44f3e579366, type: 3}
+    volume: 0.7
   coffin:
-    clips: []
-    volume: 1
+    clips:
+    - {fileID: 8300000, guid: dc4e06074dabe0b48b744bcc217cf673, type: 3}
+    volume: 0.9
   fullMoon:
-    clips: []
-    volume: 1
+    clips:
+    - {fileID: 8300000, guid: 37e34c07f41ffec46b53d0523e60f891, type: 3}
+    volume: 0.9
   moonWane:
-    clips: []
-    volume: 1
+    clips:
+    - {fileID: 8300000, guid: 5527c1a6379e2c2448e4b72866a3f219, type: 3}
+    volume: 0.7
   execute:
-    clips: []
-    volume: 1
+    clips:
+    - {fileID: 8300000, guid: 21a8f414659d27e479f33e3df0c34646, type: 3}
+    volume: 0.9
   mend:
-    clips: []
-    volume: 1
+    clips:
+    - {fileID: 8300000, guid: e0565d0962d24714d81a5c6462392212, type: 3}
+    volume: 0.8
   bury:
-    clips: []
-    volume: 1
+    clips:
+    - {fileID: 8300000, guid: 12163ce30c423d041a2694809493186e, type: 3}
+    volume: 0.9
   drain:
-    clips: []
-    volume: 1
+    clips:
+    - {fileID: 8300000, guid: 24b9baa6c6d72544ebd1e1a0243fe6f4, type: 3}
+    - {fileID: 8300000, guid: 207f45e61213e0341a00a9402006b007, type: 3}
+    - {fileID: 8300000, guid: 78b23602057c8374495cd9c71fdd66ae, type: 3}
+    - {fileID: 8300000, guid: aa3786e942053a440985a7c46117f7af, type: 3}
+    volume: 0.9
   drainFailed:
-    clips: []
-    volume: 1
+    clips:
+    - {fileID: 8300000, guid: 4c60ac2394a4d154f939ff4275437bed, type: 3}
+    volume: 0.7
   rise:
-    clips: []
-    volume: 1
+    clips:
+    - {fileID: 8300000, guid: a3084035a9bd51c488afe5a320353b28, type: 3}
+    volume: 0.9
   victory:
-    clips: []
-    volume: 1
+    clips:
+    - {fileID: 8300000, guid: 4867d6669b57a7142aefc122fd09ce6c, type: 3}
+    volume: 0.8
   defeat:
-    clips: []
-    volume: 1
+    clips:
+    - {fileID: 8300000, guid: b43c09f9c07a30d44a42d0dd1cc4b2d7, type: 3}
+    volume: 0.8
   unitDefault:
     attack:
-      clips: []
-      volume: 1
+      clips:
+      - {fileID: 8300000, guid: 1ffc80f12dc9d7043ad3fdc65f4397d9, type: 3}
+      - {fileID: 8300000, guid: 533e0f17cecf0d34fb902b21f81a7a99, type: 3}
+      volume: 0.8
     hurt:
-      clips: []
-      volume: 1
+      clips:
+      - {fileID: 8300000, guid: 896d7836cdbd62548bf93e9e335163cf, type: 3}
+      - {fileID: 8300000, guid: 9ba8575a83fd6f84d84c693672b27b80, type: 3}
+      - {fileID: 8300000, guid: b065b6b7d884fee40a1268e5873983a8, type: 3}
+      volume: 0.8
     death:
-      clips: []
-      volume: 1
+      clips:
+      - {fileID: 8300000, guid: 7b38fb3e551e75b409a59411e628bd5e, type: 3}
+      volume: 0.8
     step:
-      clips: []
-      volume: 1
+      clips:
+      - {fileID: 8300000, guid: 6e1cea405f4a4f749a4c57cc978304d0, type: 3}
+      - {fileID: 8300000, guid: 550e47a1a2acc0e43b458de28b71c358, type: 3}
+      - {fileID: 8300000, guid: 00c7c363f347faf47bbdcfdcbfc84b7f, type: 3}
+      - {fileID: 8300000, guid: 95bf7c6b5681545478b5c63bded93385, type: 3}
+      volume: 0.35
   spawn:
     attack:
-      clips: []
-      volume: 1
+      clips:
+      - {fileID: 8300000, guid: ac0f74a56fa188e488fb7c9a1de44e0a, type: 3}
+      volume: 0.8
     hurt:
       clips: []
       volume: 1
