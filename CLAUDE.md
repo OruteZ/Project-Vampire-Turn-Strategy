@@ -5,7 +5,7 @@
 ## 규칙이 있는 곳
 - 강제 규칙은 훅이 막는다(`.claude/hooks/guard.mjs`). 막히면 그 안내를 따르고 우회하지 않는다: Unity 에디터·batchmode 직접 띄우기(vu.sh 슬롯, 최대 2개), Unity MCP, 씬·에셋 YAML 직접 편집, `docs/design/` 쓰기, 새 `[MenuItem]`, junction 남은 worktree 제거, 남의 트리 브랜치 바꾸기
 - 세션 시작 점검(보드 목록, gh 로그인, Unity 설정, YAMLMerge, 유료 에셋)은 SessionStart 훅이 넣어 준다. 사용자 대기 주제는 첫 보고에 알린다
-- 절차는 스킬: `topic-issue`(주제 이슈·검증 위임, 모든 작업), `design-flow`(기획 흐름·분야 안내서, 게임 기능 작업), `worktree`(작업 트리·브랜치·dev 반영), `verify-unity`(에디터 실행·확인). 일을 시작할 때 해당 스킬을 먼저 읽는다
+- 절차는 스킬: `topic-issue`(주제 이슈·검증 위임, 모든 작업), `design-flow`(기획 흐름·분야 안내서, 게임 기능 작업), `worktree`(작업 트리·브랜치·dev 반영), `verify-unity`(에디터 실행·확인), `pstack-unity`(pstack 을 쓸 때 검증·PR·커밋을 바꿔 읽기). 일을 시작할 때 해당 스킬을 먼저 읽는다
 - 분야 지식·결정·함정은 `docs/areas/<분야>.md`
 - 작업 방식 결정은 이 파일·`.claude/skills`·`.claude/hooks` 에 둔다. 규칙을 더할 때 막을 수 있으면 훅, 절차면 스킬, 어디서나 판단이 필요한 것만 이 파일
 

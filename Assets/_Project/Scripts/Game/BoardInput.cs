@@ -130,6 +130,8 @@ namespace VampireSpawn.Game
         {
             var cam = viewCamera != null ? viewCamera : Camera.main;
             var ray = cam.ScreenPointToRay(screen);
+            var terrain = Board.Ground != null ? Board.Ground.GetComponent<TerrainCollider>() : null;
+            if (terrain != null) return terrain.Raycast(ray, out var hit, 1000f) ? hit.point : (Vector3?)null;
             var plane = new Plane(Vector3.up, new Vector3(0f, Board.transform.position.y + Board.TileTop, 0f));
             return plane.Raycast(ray, out var t) ? ray.GetPoint(t) : (Vector3?)null;
         }
@@ -155,7 +157,7 @@ namespace VampireSpawn.Game
         public Vector2 ScreenOf(Hex h)
         {
             var cam = viewCamera != null ? viewCamera : Camera.main;
-            return cam.WorldToScreenPoint(Board.HexToWorld(h) + Vector3.up * Board.TileTop);
+            return cam.WorldToScreenPoint(Board.Stand(h));
         }
     }
 }

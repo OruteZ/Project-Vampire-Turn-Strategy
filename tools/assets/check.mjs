@@ -1,4 +1,4 @@
-// Checks, without Unity, that every paid asset this repo references is in Assets/Synty with the GUID the repo expects.
+// Checks, without Unity, that every paid asset this repo references is imported with the GUID the repo expects.
 // node tools/assets/check.mjs [package dir]   exit 0 = ready, 1 = something to import (the needed packages are printed).
 import fs from 'node:fs';
 import path from 'node:path';

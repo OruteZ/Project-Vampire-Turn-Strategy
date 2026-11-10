@@ -30,10 +30,12 @@
 | 관은 석관 `SM_Prop_Tomb_01`, 색칠 없이 | 시험 중 | 2026-11-08 | #82 "A, 색칠없이" |
 
 ## 맡길 때
-- 유료 에셋(`Assets/Synty/`, `UPackage/`)은 git 에 올리지 않는다(공개 저장소, 라이선스, .gitignore). 새 클론은 docs/guides/asset-setup.md 대로 `bash tools/assets/setup.sh`. Synty 참조를 더하거나 빼면 `node tools/assets/scan.mjs` 로 목록을 다시 뽑아 같이 커밋한다
+- 유료 에셋(`Assets/Synty/`, `UPackage/`)은 git 에 올리지 않는다(공개 저장소, 라이선스, .gitignore). 새 클론은 docs/guides/asset-setup.md 대로 `bash tools/assets/setup.sh`. 팀원의 패키지 받기는 NestResources(회사 드라이브)가 맡고 `setup.sh` 가 부른다. 이 프로젝트에선 nestresources 스킬의 기본 폴더(`Assets/Synty`)가 아니라 `UPackage/` 로 받는다(`.unitypackage` 는 Assets 밖에). Synty 참조를 더하거나 빼면 `node tools/assets/scan.mjs` 로 목록을 다시 뽑아 같이 커밋한다
 - 새 3D 에셋은 애니메이션에 거슬릴 부분(관절, 턱, 눈, 회전부, 튀어나오는 부분 등)을 무조건 별도 파츠로 나누고, 파츠 분해표에 분리 이유(어떤 애니메이션 때문인지)·피벗·미러·재사용 여부를 적는다
 - 생성 API 키는 환경변수(OPENAI_API_KEY, MESHY_API_KEY)에서 읽는다. 프록시가 키를 넣는 환경(클라우드)에선 헤더 없이 보낸다. 프로세스에 키가 없으면(세션 재시작 전) 실행 직전 사용자 범위 환경변수에서 읽어 넣는다(값은 출력하지 않는다)
 - 생성 API 가 모델 이름을 거부하면(예: "does not exist") 쓸 수 있는 모델을 확인해 보고한 뒤 바꾼다
+- 함정: 유닛·칸 표시·마우스 고르기 높이는 모두 `BoardView.OnGround`/`Stand` 를 거친다. 새로 칸 위에 무언가 세울 때 `TileTop` 을 더하지 말고 이것을 쓴다 (battle-terrain.md 4)
+- 함정: `TerrainData` 는 `heightmapResolution` 을 먼저 정하고 `size` 를 정한다. 거꾸로 하면 크기가 되돌아간다
 - 함정: 꾸미기 프리팹 굽기는 프리팹이 없는 장만 짓는다(손맞춤 보존). 한 장을 규칙대로 다시 보려면 그 프리팹을 지우고 누른다. 맵 칸을 바꾸면 `StageDressingTests` 가 그 장을 잡는다 (docs/art/stage-dressing.md 4)
 - 함정: 애니메이션 팩마다 Sidekick 전용판 클립(`A_MOD_*`)이 따로 있다. Sidekick 캐릭터에는 그쪽을 쓴다. 무기 자리 뼈는 Sidekick `prop_r`/`prop_l`, Polygon 캐릭터 `Hand_R`/`Hand_L`
 - 함정: Sidekick 프리셋은 메시 하나라 모자 같은 부품만 끌 수 없다. 부품을 고르려면 Sidekick 도구로 새로 만든다 (위 "모델 바꾸기")
@@ -48,15 +50,16 @@
 
 | 지형 | 표시 |
 |---|---|
-| 평지·배치 칸 | `Hex_Plain.mat` (#2e2a36), 빛 받는 칸은 `Hex_Lit.mat` |
-| 바위 `#` | `Hex_Rock.mat` + `SM_Env_Rock_01~03` (칸마다 돌려 씀) |
+| 바닥 | 장별 Unity Terrain (꾸미기 프리팹 안, `Art/Stages/<장 id> Terrain.asset`). 칠은 `Art/Stages/Layers/` Grass·Dirt·Stone (Synty `Generic_Grass`·`Generic_Dirt`·`PolygonDarkFantasy_Stone_01`), 테마의 `floor`·`patches` (docs/art/battle-terrain.md) |
+| 칸 | 지형에 붙은 홀로그램 격자 선 (`Overlay.mat`, `BoardView` 의 `Grid`). 빛 받는 칸·햇빛 칸은 채움 |
+| 바위 `#` | 테마 막힌 칸 소품 (없으면 `SM_Env_Rock_01~03`) |
 | 화톳불 `T` | `SM_Prop_Brazier_01` + `FX_Fire_01` + 점광원 |
-| 햇빛 `S` | `Hex_Sun.mat` + 위에서 비추는 스폿라이트 |
-| 물 `~` | `Hex_Water.mat`, 한 단 낮게 |
+| 햇빛 `S` | 위에서 비추는 스폿라이트 |
+| 물 `~` | 지형을 파낸 웅덩이 + `Hex_Water.mat` 수면 |
 
 장 선택 화면의 3D 원정 지도도 같은 두 팩(PolygonDarkFantasy, PolygonGeneric)만 쓴다. 지역별 프리팹·자리는 docs/art/campaign-map.md (#43, 구현 전).
 
-장마다 모습이 따로 있다 (#34, docs/art/stage-dressing.md): `Assets/_Project/Art/Themes/<테마>.asset` (`BoardTheme`: 장 id, 바닥색, 막힌 칸 소품, 둘레 높은/낮은 소품, 안개·주변광). `ArtCatalog.themes` 가 목록. 막힌 칸은 테마 소품이 바위를 대신하고, 평지 칸은 테마 바닥색이다. 둘레는 `BoardView.Dress` 가 칸 좌표로 고른다(매번 같다)
+장마다 모습이 따로 있다 (#34, docs/art/stage-dressing.md): `Assets/_Project/Art/Themes/<테마>.asset` (`BoardTheme`: 장 id, 바닥색, 막힌 칸 소품, 둘레 높은/낮은 소품, 안개·주변광). `ArtCatalog.themes` 가 목록. 막힌 칸은 테마 소품이 바위를 대신하고, 평지 칸은 테마 바닥색이다. 둘레는 굽기 때 칸 좌표로 고르고, 구운 뒤엔 장별 꾸미기 프리팹이 기준이다 (stage-dressing.md 4)
 
 ## 유닛에 쓰는 것 (#29, docs/art/unit-visuals.md)
 

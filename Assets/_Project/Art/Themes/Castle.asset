@@ -15,6 +15,9 @@ MonoBehaviour:
   stages:
   - s10
   ground: {r: 0.16470589, g: 0.13333334, b: 0.15686275, a: 1}
+  floor: {fileID: 8574412962073106934, guid: 7fe56999b42757246af61b86cd995093, type: 2}
+  patches: {fileID: 8574412962073106934, guid: 3e1567a80daf06649b934a9ab04f8208, type: 2}
+  patchShare: 0.25
   blockers:
   - {fileID: 537418705699489904, guid: aa2104b844c906c4abd5b524604c8aa8, type: 3}
   - {fileID: 8104774319747538927, guid: dbe76fd78ee88474e95604d0f3c76f0a, type: 3}

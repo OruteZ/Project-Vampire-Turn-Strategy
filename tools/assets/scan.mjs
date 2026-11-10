@@ -1,5 +1,5 @@
 // Maintainer tool: lists the paid-asset GUIDs this repo references and which .unitypackage holds each.
-// Run after adding or changing art references: node tools/assets/scan.mjs (needs Assets/Synty imported and UPackage/ present).
+// Run after adding or changing paid-asset references: node tools/assets/scan.mjs (needs the packs imported and UPackage/ present).
 import fs from 'node:fs';
 import path from 'node:path';
 import { execFileSync } from 'node:child_process';
@@ -27,11 +27,12 @@ const local = new Map();
 const walk = (d) => {
   for (const e of fs.readdirSync(d, { withFileTypes: true })) {
     const p = path.join(d, e.name);
-    if (e.isDirectory()) walk(p);
+    if (e.isDirectory() || (e.isSymbolicLink() && fs.statSync(p).isDirectory())) walk(p);
     else if (e.name.endsWith('.meta')) { const g = guidOf(p); if (refs.has(g)) local.set(g, path.relative(ROOT, p).slice(0, -5).split(path.sep).join('/')); }
   }
 };
-walk(path.join(ROOT, 'Assets', 'Synty'));
+// Paid packs import wherever their package puts them (Assets/Synty, Assets/<pack>); untracked GUIDs referenced by tracked files are the paid ones.
+walk(path.join(ROOT, 'Assets'));
 
 const pkgDir = path.join(ROOT, 'UPackage');
 const packages = fs.readdirSync(pkgDir).filter((f) => f.endsWith('.unitypackage')).sort();
@@ -50,5 +51,5 @@ fs.writeFileSync(path.join(OUT, 'required.tsv'), ['guid\tpath\tpackage\tused_by'
 const sizes = packages.map((p) => [p, fs.statSync(path.join(pkgDir, p)).size, rows.filter((r) => r[2].split('+').includes(p)).length]);
 fs.writeFileSync(path.join(OUT, 'packages.tsv'), ['file\tbytes\trequired_assets', ...sizes.map((s) => s.join('\t'))].join('\n') + '\n');
 const unresolved = [...refs.keys()].filter((g) => !local.has(g));
-console.log(`required ${rows.length}, packages ${packages.length}, not in Assets/Synty ${unresolved.length} (Unity built-ins and packages)`);
+console.log(`required ${rows.length}, packages ${packages.length}, not in Assets ${unresolved.length} (Unity built-ins and packages)`);
 for (const r of rows.filter((r) => r[2] === '?' || r[2].includes('+'))) console.log('check', r.join(' '));

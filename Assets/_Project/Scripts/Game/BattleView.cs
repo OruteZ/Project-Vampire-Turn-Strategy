@@ -125,7 +125,7 @@ namespace VampireSpawn.Game
                         Sound.Play(walker.Sounds, s => s.step);
                         for (float t = 0f; t < 1f; t += Time.deltaTime / Mathf.Max(0.0001f, Wait(StepSeconds)))
                         {
-                            walker.transform.position = Vector3.Lerp(from, to, t);
+                            walker.transform.position = board.OnGround(Vector3.Lerp(from, to, t));
                             yield return null;
                         }
                         walker.transform.position = to;
@@ -192,7 +192,7 @@ namespace VampireSpawn.Game
             if (w > 0f) yield return new WaitForSeconds(w);
         }
 
-        Vector3 Ground(Hex h) => board.HexToWorld(h) + Vector3.up * board.TileTop;
+        Vector3 Ground(Hex h) => board.Stand(h);
 
         void AddUnit(Unit u, Hex? at = null)
         {

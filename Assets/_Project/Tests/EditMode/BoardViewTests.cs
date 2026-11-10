@@ -25,12 +25,16 @@ namespace VampireSpawn.Tests
                 Assert.IsNotNull(view.art, "ArtCatalog asset");
                 view.Show(stage);
                 var children = Enumerable.Range(0, go.transform.childCount).Select(k => go.transform.GetChild(k)).ToList();
-                var tiles = children.Where(c => c.name != "Dressing").ToList();
+                Assert.AreEqual(1, children.Count(c => c.name == "Dressing"), stage.Id + " baked dressing (stage-dressing.md 4-6)");
+                Assert.IsNotNull(view.Ground, stage.Id + " terrain (battle-terrain.md 1-1)");
+                var look = view.art.Dressing(stage.Id).GetComponent<StageDressing>();
+                Assert.AreEqual(look.fog, RenderSettings.fogColor, stage.Id + " fog from the stage prefab (stage-dressing.md 4-10)");
+                Assert.AreEqual(look.ambient, RenderSettings.ambientLight, stage.Id + " ambient from the stage prefab");
+                Assert.AreEqual(stage.Map.Any(line => line.Contains("~")), view.art.Dressing(stage.Id).transform.Find("Water") != null, stage.Id + " water plane only where the stage has water (battle-terrain.md 2-2)");
+                var tiles = children.Where(c => c.name.StartsWith("Tile ")).ToList();
                 var theme = view.art.Theme(stage.Id);
-                Assert.IsNotNull(theme, stage.Id + " theme");
                 CollectionAssert.Contains(theme.stages, stage.Id, stage.Id + " has its own theme (stage-dressing.md 2)");
-                var cells = stage.Map.Sum(line => line.Length);
-                Assert.AreEqual(cells, tiles.Count, stage.Id + " tile count");
+                Assert.AreEqual(stage.Map.Sum(line => line.Length), tiles.Count, stage.Id + " tile count");
                 var board = new Board(stage.Map);
                 foreach (var t in tiles)
                 {
@@ -38,20 +42,15 @@ namespace VampireSpawn.Tests
                     var h = new Hex(int.Parse(parts[1].Split(',')[0]), int.Parse(parts[1].Split(',')[1]));
                     var terrain = board.At(h);
                     Assert.AreEqual(terrain.ToString(), parts[2], stage.Id + " " + t.name);
-                    var expected = terrain switch
-                    {
-                        Terrain.Rock => view.art.rock,
-                        Terrain.Water => view.art.water,
-                        Terrain.Sun => view.art.sunlit,
-                        _ => board.Lit(h) ? view.art.lit : null,
-                    };
-                    var mat = t.GetComponent<MeshRenderer>().sharedMaterial;
-                    if (expected != null) Assert.AreEqual(expected, mat, stage.Id + " material of " + t.name);
-                    else Assert.Less(((Vector4)(theme.ground - mat.color)).magnitude, 0.01f, stage.Id + " themed ground on " + t.name);
+                    if (terrain != Terrain.Water) Assert.AreEqual(view.Stand(h).y, t.position.y, 0.001f, stage.Id + " " + t.name + " stands on the terrain");
                     Assert.AreEqual(terrain == Terrain.Torch, t.Cast<Transform>().Any(c => c.name == view.art.brazier.name), stage.Id + " brazier on " + t.name + " only on torch");
                     Assert.AreEqual(terrain == Terrain.Torch || terrain == Terrain.Sun, t.GetComponentInChildren<Light>() != null, stage.Id + " light on " + t.name);
                 }
-                Assert.AreEqual(1, children.Count(c => c.name == "Dressing"), stage.Id + " baked dressing (stage-dressing.md 4-6)");
+                // battle-terrain.md 3: one outline of 6 edges x 4 pieces per walkable cell, each piece a quad.
+                var walkable = tiles.Count(t => board.Walkable(new Hex(int.Parse(t.name.Split(' ')[1].Split(',')[0]), int.Parse(t.name.Split(' ')[1].Split(',')[1]))));
+                var grid = children.Single(c => c.name == "Grid").GetComponent<MeshFilter>().sharedMesh;
+                var fills = Enumerable.Range(0, board.Rows).SelectMany(r => Enumerable.Range(0, board.Cols).Select(c => new Hex(c, r))).Count(x => board.Walkable(x) && (board.At(x) == Terrain.Sun || board.Lit(x)));
+                Assert.AreEqual(walkable * 6 * 4 * 4 + fills * 6 * 4 * 3, grid.vertexCount, stage.Id + " grid vertices");
             }
             finally
             {

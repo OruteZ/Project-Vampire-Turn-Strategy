@@ -47,6 +47,10 @@ process.stdin.on('data', d => (input += d)).on('end', () => {
   const { tool_name: tool = '', tool_input: ti = {} } = JSON.parse(input);
   let why;
   if (tool.startsWith('mcp__unityMCP__')) why = 'Unity MCP 는 쓰지 않는다. 에디터 작업은 Unity CLI(unity) 와 verify-unity 스킬의 vu.sh 로 한다.';
+  else if (tool === 'Agent' || tool === 'Task') {
+    if (/^pstack:/.test(ti.subagent_type ?? '') && !/pstack-unity/.test(ti.prompt ?? ''))
+      why = 'pstack 에이전트 지시에 .claude/skills/pstack-unity/SKILL.md 의 절대경로를 넣고 "pstack 보다 이 파일 먼저" 라고 쓴다 (검증·PR·커밋 방식이 이 저장소와 다르다).';
+  }
   else if (tool === 'Bash' || tool === 'PowerShell') why = checkCommand(ti.command ?? '');
   else if (ti.file_path || ti.notebook_path) {
     const text = [ti.content, ti.new_string, ...(ti.edits ?? []).map(e => e.new_string)].filter(Boolean).join('\n');

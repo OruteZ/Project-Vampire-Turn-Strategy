@@ -10,7 +10,8 @@ namespace VampireSpawn.Game
         [Header("Board")]
         public float hexSize = 1f;
         public float tileHeight = 0.2f;
-        public Material plain, lit, sunlit, rock, water;
+        public Material plain, water;
+        [Tooltip("칸 격자·칸 표시의 정점색 재질 (docs/art/battle-terrain.md 3)")] public Material overlay;
         public GameObject[] rockProps;
         public GameObject brazier, fire;
         public Color torchLight = new Color(0.89f, 0.66f, 0.29f);
