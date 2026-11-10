@@ -30,8 +30,9 @@ background_mode() {
   uj editor.playmode set_run_in_background --enabled true >/dev/null
 }
 
-# Machine-wide editor slots shared by every session and worktree (CLAUDE.md: max 2 editors). A slot is a file naming a project.
-SLOTS="$(cygpath -u "${LOCALAPPDATA:-$HOME/AppData/Local}")/VampireSpawn/editor-slots"
+# Machine-wide editor slots shared by every session, worktree and project set up from this one (max 2 editors). A slot is a file naming a project.
+# The folder name has no game name so unity-project-setup's rename keeps every project in one pool.
+SLOTS="$(cygpath -u "${LOCALAPPDATA:-$HOME/AppData/Local}")/unity-editor-slots"
 MAX_EDITORS="${VU_MAX_EDITORS:-2}"
 HERE="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 norm() { tr '\\' '/' | tr '[:upper:]' '[:lower:]' | sed 's:/*$::'; }
