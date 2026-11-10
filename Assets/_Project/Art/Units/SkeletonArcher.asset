@@ -30,8 +30,8 @@ MonoBehaviour:
       volume: 1
     hurt:
       clips:
-      - {fileID: 8300000, guid: a3084035a9bd51c488afe5a320353b28, type: 3}
-      - {fileID: 8300000, guid: b23a504c700262846adb0d37ada0720d, type: 3}
+      - {fileID: 8300000, guid: 407da2c642d44404eb566e4d7783f447, type: 3}
+      - {fileID: 8300000, guid: 9ba8575a83fd6f84d84c693672b27b80, type: 3}
       volume: 0.8
     death:
       clips:
