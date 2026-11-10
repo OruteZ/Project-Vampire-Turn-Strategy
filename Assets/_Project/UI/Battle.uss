@@ -121,13 +121,13 @@
 .slot > .icon { width: 40px; height: 40px; }
 
 /* ---------- heads (ui-style.md 8-1, 8-3, 8-4): the bar's bottom-centre sits on the unit's head point ---------- */
-.head { position: absolute; width: 72px; height: 8px; margin-left: -36px; margin-top: -8px; }
-.head-back { position: absolute; left: -2px; top: -2px; width: 76px; height: 12px; background-color: rgba(18, 19, 26, 0.85); }
+.head { position: absolute; width: 72px; height: 12px; margin-left: -36px; margin-top: -12px; }
+.head-back { position: absolute; left: -2px; top: -2px; width: 76px; height: 16px; background-color: rgba(18, 19, 26, 0.85); }
 .cell { position: absolute; top: 0; bottom: 0; }
-.divider { position: absolute; top: 0; width: 1px; height: 8px; margin-left: -0.5px; background-color: rgba(18, 19, 26, 0.55); }
-.shields { position: absolute; left: -20px; top: -7px; width: 112px; height: 16px; flex-direction: row; justify-content: center; }
+.divider { position: absolute; top: 0; width: 1px; height: 12px; margin-left: -0.5px; background-color: rgba(18, 19, 26, 0.55); }
+.shields { position: absolute; left: -20px; top: -11px; width: 112px; height: 16px; flex-direction: row; justify-content: center; }
 .shield { width: 16px; height: 16px; margin: 0 -1.5px; }
-.damage { position: absolute; left: 76px; top: -10px; width: 60px; height: 28px; flex-direction: row; align-items: center; }
+.damage { position: absolute; left: 76px; top: -8px; width: 60px; height: 28px; flex-direction: row; align-items: center; }
 .damage > Label { font-size: 18px; -unity-font-style: bold; }
 .damage > .icon { width: 24px; height: 24px; }
 .head-name { position: absolute; left: -84px; width: 240px; height: 18px; font-size: 13px; -unity-font-style: bold; color: var(--bone); -unity-text-align: lower-center; }

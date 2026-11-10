@@ -579,8 +579,7 @@ namespace VampireSpawn.Game.Screens
                 else L(at, "−" + damage, "outline", u.Side == Side.Ally ? Ui.Blood : Ui.Bone);
             }
             // Stacked above the bar: name, enemy move/range (Alt), the vampire's target mark.
-            // The hp number overlaps the 8 px bar by 4 px each way, so the name clears it.
-            var y = boss ? (u.Def > 0 ? 36f : 20f) : u.Def > 0 ? 20f : named ? 16f : 12f;
+            var y = boss ? (u.Def > 0 ? 36f : 20f) : u.Def > 0 ? 24f : 16f;
             if (named)
             {
                 L(rt, Loc.Text(u.Name), "head-name outline").style.bottom = y - 4f;
