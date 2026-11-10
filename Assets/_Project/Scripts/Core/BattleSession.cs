@@ -5,7 +5,7 @@ namespace VampireSpawn.Core
 {
     public enum SelectMode { Act, Execute, Mend }
 
-    public enum Mark { Deploy, Move, Atk, Exec, Sel, MarkZone, Target, Bury, Mend }
+    public enum Mark { Deploy, Move, Atk, Exec, Sel, MarkZone, Target, Bury, Mend, Hold, Goal }
 
     public readonly struct MarkedHex
     {
@@ -76,7 +76,7 @@ namespace VampireSpawn.Core
             {
                 if (Mode == SelectMode.Execute)
                 {
-                    if (u != null && u.Side == Side.Ally && u != sel && Hex.Distance(sel.Pos, u.Pos) <= sel.Rng) return After(Battle.Execute(sel.Id, u.Id));
+                    if (u != null && u.Role == Role.Ally && u != sel && Hex.Distance(sel.Pos, u.Pos) <= sel.Rng) return After(Battle.Execute(sel.Id, u.Id));
                     Mode = SelectMode.Act;
                     return Nothing;
                 }
@@ -107,7 +107,7 @@ namespace VampireSpawn.Core
 
         public void Pick(string kind) { Flash = default; DeployType = kind; }
 
-        public void ToggleExecute() { Flash = default; Mode = Mode == SelectMode.Execute ? SelectMode.Act : SelectMode.Execute; }
+        public void ToggleExecute() { if (SelectedUnit?.Role == Role.Escort) return; Flash = default; Mode = Mode == SelectMode.Execute ? SelectMode.Act : SelectMode.Execute; }
 
         public void ToggleMend() { Flash = default; Mode = Mode == SelectMode.Mend ? SelectMode.Act : SelectMode.Mend; }
 
@@ -195,6 +195,7 @@ namespace VampireSpawn.Core
         {
             var o = new List<MarkedHex>();
             var b = Battle;
+            o.AddRange(b.Stage.Spots.Select(h => new MarkedHex(b.Stage.Goal == Goal.Defense ? Mark.Hold : Mark.Goal, h)));
             if (b.Phase == Phase.Deploy) o.AddRange(Cells().Where(b.InDeploy).Select(h => new MarkedHex(Mark.Deploy, h)));
             var sel = SelectedUnit;
             if (sel != null && b.Phase == Phase.Player)
@@ -206,7 +207,7 @@ namespace VampireSpawn.Core
                     if (Mode == SelectMode.Execute)
                         o.AddRange(b.Allies.Where(a => a != sel && Hex.Distance(sel.Pos, a.Pos) <= sel.Rng).Select(a => new MarkedHex(Mark.Exec, a.Pos)));
                     else if (Mode == SelectMode.Mend)
-                        o.AddRange(b.Allies.Where(a => b.CanMend(sel, a)).Select(a => new MarkedHex(Mark.Mend, a.Pos)));
+                        o.AddRange(b.Units.Where(a => b.CanMend(sel, a)).Select(a => new MarkedHex(Mark.Mend, a.Pos)));
                     else
                     {
                         o.AddRange(b.Enemies.Where(e => !e.Asleep && Hex.Distance(sel.Pos, e.Pos) <= sel.Rng).Select(e => new MarkedHex(Mark.Atk, e.Pos)));

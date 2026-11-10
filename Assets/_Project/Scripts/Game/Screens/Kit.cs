@@ -21,6 +21,10 @@ namespace VampireSpawn.Game.Screens
             public static readonly string[] All = { Hp, Mov, Atk, Def, Rng, Fang, Dead, Target, Gold, Silver, Pop, Boss, Star, Skulls, Turn, Lock, Trophy, Retry, Leave, Rules, Up, Wait, Flag, Home, Sword, Heal };
         }
 
+        // docs/systems/goals.md 5-1: the goal, and under it that the vampire still wins.
+        public static string Objective(Stage s) =>
+            Loc.Text(s.Objective) + (s.AlsoWins.IsEmpty ? "" : "\n<size=80%>" + Loc.Text(s.AlsoWins) + "</size>");
+
         // docs/content/enemies.md 7: "Minions n, boss" then the count of each minion kind present.
         public static string EnemyList(Stage s)
         {

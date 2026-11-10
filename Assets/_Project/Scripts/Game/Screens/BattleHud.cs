@@ -299,7 +299,7 @@ namespace VampireSpawn.Game.Screens
             var brief = E(root, "box brief col", true);
             Frame(brief, art, Ui.SteelDim);
             Tip(brief, Loc.Text(stg.Brief), 600);
-            Def(brief, Kit.Icon.Boss, Ui.Blood, Loc.Text(stg.Objective), Loc.T("battle.objective"));
+            Def(brief, Kit.Icon.Boss, Ui.Blood, Kit.Objective(stg), Loc.T("battle.objective"));
             Def(brief, Kit.Icon.Star, Ui.Candle, Loc.Text(stg.Bonus.Text), Loc.T("battle.bonus"));
             Def(brief, Kit.Icon.Skulls, Ui.Blood, Kit.EnemyList(stg), Loc.T("battle.enemy"));
         }
@@ -357,6 +357,8 @@ namespace VampireSpawn.Game.Screens
             var stats = E(root, "fight-stats row");
             var spawns = b.Enemies.Count(e => e.Role == Role.Spawn);
             Value(stats, Kit.Icon.Turn, b.Turn.ToString(), Ui.Bone, Ui.Bone, Loc.T("battle.turn"));
+            if (b.Stage.Goal == Goal.Defense)
+                Value(stats, Kit.Icon.Flag, Loc.T("battle.turnsLeft", b.Stage.Hold - b.Turn + 1), Ui.Candle, Ui.Candle, Loc.Text(b.Stage.Objective));
             Value(stats, Kit.Icon.Pop, b.Allies.Count().ToString(), Ui.Steel, Ui.Steel, Loc.T("battle.allies"));
             Value(stats, Kit.Icon.Skulls, b.Enemies.Count(e => e.Role != Role.Spawn).ToString(), Ui.Blood, Ui.Blood, Loc.T("battle.enemies"));
             Value(stats, Kit.Icon.Fang, spawns + (b.Corpses.Count > 0 ? " +" + b.Corpses.Count : ""), Ui.Spawn, Ui.Spawn, Loc.T("unit.card.spawn"));
@@ -454,6 +456,7 @@ namespace VampireSpawn.Game.Screens
             var head = E(col, "unit-head row");
             if (o.Type != null && art.Icon(o.Type) is string wi) Icon(head, wi, color, "icon unit-weapon");
             L(head, spawn ? Loc.T("hud.spawnOf", o.Origin) : Loc.Text(o.Name), "unit-name display");
+            if (o.Role == Role.Escort) L(head, Loc.T("unit.card.escort"), "unit-tag");
             var big = E(col, "big row");
             var hp = StatCell(big, Kit.Icon.Hp, o.Hp + "/" + o.MaxHp, Loc.T("unit.card.hp"), color, o.Side == Side.Ally && o.Hp * 3 <= o.MaxHp ? Ui.Blood : Ui.Bone, "hp" + o.Id);
             if (heal > 0) L(hp, "+" + heal, "stat-value stat-heal");
@@ -517,20 +520,20 @@ namespace VampireSpawn.Game.Screens
             var mend = s.Mode == SelectMode.Mend;
             var sel = s.SelectedUnit;
             var row = E(root, "actions");
-            var key = 1;
-            foreach (var (icon, label, act, on, danger) in new[]
+            foreach (var (key, icon, label, act, on, danger) in new[]
             {
-                (Kit.Icon.Dead, Loc.T(exec ? "unit.card.cancelExec" : "unit.card.exec"), a.Exec, exec, true),
-                (Kit.Icon.Wait, Loc.T("unit.card.wait"), a.Wait, false, false),
-                (Kit.Icon.Heal, Loc.T(mend ? "hud.cancelMend" : "hud.mend"), a.Mend, mend, false),
+                (1, Kit.Icon.Dead, Loc.T(exec ? "unit.card.cancelExec" : "unit.card.exec"), a.Exec, exec, true),
+                (2, Kit.Icon.Wait, Loc.T("unit.card.wait"), a.Wait, false, false),
+                (3, Kit.Icon.Heal, Loc.T(mend ? "hud.cancelMend" : "hud.mend"), a.Mend, mend, false),
             })
             {
                 if (act == a.Mend && !sel.Has(Ability.Mend)) continue;
+                if (act == a.Exec && sel.Role == Role.Escort) continue;
                 var slot = E(row, "slot", true);
                 Frame(slot, art, on ? (danger ? Ui.Blood : Ui.Steel) : danger ? Ui.BloodDim : Ui.SteelDim);
                 slot.Q(className: "panel-frame").AddToClassList("thin");
                 Icon(slot, icon, danger ? Ui.Blood : Ui.Steel);
-                L(slot, (key++).ToString(), "key");
+                L(slot, key.ToString(), "key");
                 Click(slot, act);
                 Tip(slot, label, 200);
             }
@@ -643,7 +646,7 @@ namespace VampireSpawn.Game.Screens
             var st = o.Stats;
             var stg = o.Stage;
             var title = L(box, Loc.T(o.Won ? "over.won" : "over.lost"), "over-title display", o.Won ? Ui.Sun : Ui.Blood);
-            var titleTip = o.Won ? Loc.T("over.wonLine", o.Turn, stg.BossName) : Loc.T("over.lostLine");
+            var titleTip = Loc.Text(o.Line);
 
             var tally = E(box, "tally row");
             Value(tally, Kit.Icon.Dead, st.Lost.ToString(), Ui.Muted, Ui.Bone, Loc.T("over.fallen"));

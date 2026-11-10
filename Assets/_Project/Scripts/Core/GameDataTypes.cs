@@ -8,7 +8,7 @@ namespace VampireSpawn.Core
     public enum Ability { None, Pike, Ambush, Cleave, Charge, Formation, Ward, Rite, Twice, Bury, Mend }
     public enum BonusType { Turns, NoEat, AllMinions }
     // What wins a battle (docs/dev/battle-goals.md). Stored as numbers in the stage assets: add new goals at the end only.
-    public enum Goal { Boss }
+    public enum Goal { Boss, Defense, Escort }
 
     public sealed class UnitType
     {
@@ -85,6 +85,18 @@ namespace VampireSpawn.Core
         }
     }
 
+    // The unit to bring on an escort stage (docs/systems/goals.md 3).
+    public sealed class EscortStats
+    {
+        public readonly int Hp, Def, Mov;
+        public readonly Hex Start;
+
+        public EscortStats(int hp, int def, int mov, Hex start)
+        {
+            Hp = hp; Def = def; Mov = mov; Start = start;
+        }
+    }
+
     public sealed class Bonus
     {
         public readonly BonusType Type;
@@ -129,6 +141,8 @@ namespace VampireSpawn.Core
         public Message Title => new Message("stage." + Id + ".title");
         public Message Brief => new Message("stage." + Id + ".brief");
         public Message BossName => new Message("stage." + Id + ".boss");
+        public Message Place => new Message("stage." + Id + ".place");
+        public Message EscortName => new Message("stage." + Id + ".escort");
         public readonly string[] Units;
         public readonly int Pop, Silver, Reward;
         public readonly Goal Goal;
@@ -137,12 +151,18 @@ namespace VampireSpawn.Core
         public readonly string[] Map;
         public readonly Placement[] Enemies;
         public readonly Placement[] Sample;
+        // Defended hexes on a defence stage, destinations on an escort stage.
+        public readonly Hex[] Spots;
+        public readonly int Hold;
+        public readonly EscortStats Escort;
 
         public Stage(string id, string[] units, int pop, int silver, int reward, Goal goal,
-            Bonus bonus, Boss boss, string[] map, Placement[] enemies, Placement[] sample)
+            Bonus bonus, Boss boss, string[] map, Placement[] enemies, Placement[] sample,
+            Hex[] spots = null, int hold = 0, EscortStats escort = null)
         {
             Id = id; Units = units; Pop = pop; Silver = silver; Reward = reward; Goal = goal;
             Bonus = bonus; Boss = boss; Map = map; Enemies = enemies; Sample = sample;
+            Spots = spots ?? Array.Empty<Hex>(); Hold = hold; Escort = escort;
         }
 
         public Placement[] Minions => Enemies.Where(e => e.Kind != EnemyType.Vampire).ToArray();
@@ -150,7 +170,12 @@ namespace VampireSpawn.Core
         public Message Objective => Goal switch
         {
             Goal.Boss => new Message("battle.defeatBoss", BossName),
+            Goal.Defense => new Message("goal.defense", Place, Hold),
+            Goal.Escort => new Message("goal.escort", EscortName, Place),
             _ => throw new ArgumentOutOfRangeException(nameof(Goal), Goal, null),
         };
+
+        // docs/systems/goals.md 1-2: killing the vampire wins whatever the goal.
+        public Message AlsoWins => Goal == Goal.Boss ? default : new Message("goal.alsoBoss", BossName);
     }
 }

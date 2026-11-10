@@ -659,7 +659,8 @@ MonoBehaviour:
       - rid: 7201578077006332005
   - m_Id: 5832187899957
     m_Localized: The mill vampire's master waits across the stream. There are two
-      bridges. A bonfire lights the right one; the left one is dark.
+      bridges. A bonfire lights the right one; the left one is dark. The mill must
+      hold until dawn.
     m_Metadata:
       m_Items:
       - rid: 7201578077006332005
@@ -789,7 +790,8 @@ MonoBehaviour:
       - rid: 7201578077006332005
   - m_Id: 5832192094229
     m_Localized: The village beneath the Count's castle already belongs to the night.
-      Two alleys and a square with a burning bonfire lead to the castle.
+      Two alleys and a square with a burning bonfire lead to the castle. A village
+      guide knows the drains beneath the walls. Get him there.
     m_Metadata:
       m_Items:
       - rid: 7201578077006332005
@@ -1928,6 +1930,87 @@ MonoBehaviour:
     m_Metadata:
       m_Items:
       - rid: 7201578077006332005
+  - m_Id: 1604117910581248
+    m_Localized: Hold {0} for {1} turns
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 1604117986078720
+    m_Localized: Bring {0} to {1}
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 1604117986078721
+    m_Localized: Defeating {0} also wins
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 1604117986078722
+    m_Localized: '{0} turns left'
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 1604117986078723
+    m_Localized: Objective
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 1604117986078724
+    m_Localized: Must be brought through. Can only move and wait. If they fall, the
+      battle is lost.
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 1604117986078725
+    m_Localized: G
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 1604117986078726
+    m_Localized: '{0} has fallen.'
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 1604117986078727
+    m_Localized: 'Battle begins. Goal: {0}.'
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 1604117986078728
+    m_Localized: Held {1} for {0} turns.
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 1604117986078729
+    m_Localized: '{1} reached {2} on turn {0}.'
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 1604117986078730
+    m_Localized: '{0} has fallen to the night.'
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 1604117986078731
+    m_Localized: '{0} has fallen.'
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 1604117986078732
+    m_Localized: the mill
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 1604117986078733
+    m_Localized: the drain
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 1604117986078734
+    m_Localized: the guide
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
   references:
     version: 2
     RefIds:
@@ -2238,3 +2321,19 @@ MonoBehaviour:
         - id: 1147185491931146
         - id: 1147185491931147
         - id: 1147185491931148
+        - id: 1604117910581248
+        - id: 1604117986078720
+        - id: 1604117986078721
+        - id: 1604117986078722
+        - id: 1604117986078723
+        - id: 1604117986078724
+        - id: 1604117986078725
+        - id: 1604117986078726
+        - id: 1604117986078727
+        - id: 1604117986078728
+        - id: 1604117986078729
+        - id: 1604117986078730
+        - id: 1604117986078731
+        - id: 1604117986078732
+        - id: 1604117986078733
+        - id: 1604117986078734

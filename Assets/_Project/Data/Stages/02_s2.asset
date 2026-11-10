@@ -19,6 +19,15 @@ MonoBehaviour:
   pop: 6
   silver: 0
   reward: 20
+  goal: 1
+  spots:
+  - {x: 4, y: 6}
+  - {x: 5, y: 6}
+  hold: 6
+  escortHp: 0
+  escortDef: 0
+  escortMov: 0
+  escortAt: {x: 0, y: 0}
   bonusType: 1
   bonusValue: 0
   bonusGold: 10

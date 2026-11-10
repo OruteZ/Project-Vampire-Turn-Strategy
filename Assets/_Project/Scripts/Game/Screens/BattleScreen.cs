@@ -20,12 +20,12 @@ namespace VampireSpawn.Game.Screens
             var won = b.Won == true;
             var ok = won && b.BonusMet;
             var result = won && !demo ? c.Finish(b.Stage, true, ok) : default;
-            return new OverInfo { Won = won, Camp = !demo, Stage = b.Stage, Turn = b.Turn, Stats = b.Stats, BonusOk = ok, Result = result };
+            return new OverInfo { Won = won, Camp = !demo, Stage = b.Stage, Line = b.EndLine, Stats = b.Stats, BonusOk = ok, Result = result };
         }
 
         public bool Won, Camp;
         public Stage Stage;
-        public int Turn;
+        public Message Line;
         public BattleStats Stats;
         public bool BonusOk;
         public StageResult Result;
@@ -64,6 +64,7 @@ namespace VampireSpawn.Game.Screens
                 case Role.Ally: return Loc.Text(GameData.Type(o.Type).Desc);
                 case Role.Minion: return Loc.Text(GameData.Minion(o.Minion).Note);
                 case Role.Vampire: return Loc.T("unit.card.vampireNote", Rules.MoonWake, Rules.MoonMax, Rules.EatRange, o.Heal);
+                case Role.Escort: return Loc.T("unit.card.escortNote");
             }
             return Loc.T("unit.card.spawnNote", o.Origin);
         }

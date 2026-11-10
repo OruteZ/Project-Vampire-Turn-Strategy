@@ -24,8 +24,17 @@ MonoBehaviour:
   pop: 10
   silver: 0
   reward: 35
+  goal: 2
+  spots:
+  - {x: 0, y: 0}
+  - {x: 10, y: 0}
+  hold: 0
+  escortHp: 6
+  escortDef: 0
+  escortMov: 3
+  escortAt: {x: 5, y: 7}
   bonusType: 0
-  bonusValue: 12
+  bonusValue: 8
   bonusGold: 15
   bossHp: 31
   bossAtk: 7
@@ -80,5 +89,5 @@ MonoBehaviour:
     col: 6
     row: 6
   - kind: archer
-    col: 5
+    col: 4
     row: 7
