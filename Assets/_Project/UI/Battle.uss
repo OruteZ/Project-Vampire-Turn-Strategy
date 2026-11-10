@@ -80,14 +80,6 @@
 .alt-key.on { border-color: #c8304a; color: var(--bone); }
 .alt-icon { width: 22px; height: 22px; }
 
-.boss { position: absolute; left: 50%; top: 196px; width: 560px; height: 40px; margin-left: -280px; justify-content: center; align-items: center; -unity-slice-scale: 0.0833px; }
-.boss-fill { position: absolute; left: 24px; top: 10px; bottom: 10px; background-color: #c8304a; }
-.boss-frame { position: absolute; left: 0; top: 0; right: 0; bottom: 0; -unity-slice-scale: 0.0833px; }
-.boss-name { font-size: 15px; -unity-font-style: bold; color: var(--bone); -unity-text-outline-width: 1px; -unity-text-outline-color: #0f1016; }
-.boss-skull { position: absolute; top: -4px; width: 48px; height: 48px; }
-.boss-skull.left { left: -30px; }
-.boss-skull.right { right: -30px; }
-
 .log { position: absolute; right: 24px; top: 24px; width: 320px; }
 .log-head { font-size: 13px; color: var(--dim); -unity-text-align: upper-right; }
 .log-lines { width: 320px; height: 400px; margin-top: 4px; padding: 10px; background-color: rgba(15, 16, 22, 0.92); border-width: 1px; border-color: var(--line); }
@@ -143,6 +135,18 @@
 .head-mov > .icon { width: 20px; height: 20px; margin: 0 1px; }
 .head-mov > Label { font-size: 18px; -unity-font-style: bold; color: #c8304a; margin-right: 1px; }
 .head-target { position: absolute; left: 20px; width: 32px; height: 32px; }
+
+/* ui-style.md 8-5: the vampire's bar */
+.boss-head { width: 120px; height: 16px; margin-left: -60px; margin-top: -16px; }
+.boss-head > .head-back { left: -3px; top: -3px; width: 126px; height: 22px; }
+.boss-empty { position: absolute; left: 0; top: 0; right: 0; bottom: 0; }
+.boss-fill { position: absolute; left: 0; top: 0; bottom: 0; background-color: #c8304a; }
+.boss-tick { height: 16px; }
+.boss-frame { position: absolute; left: -3px; top: -3px; width: 126px; height: 22px; -unity-slice-scale: 0.025px; }
+.boss-hp { position: absolute; left: 0; top: -2px; right: 0; bottom: -2px; font-size: 14px; -unity-font-style: bold; color: var(--bone); -unity-text-align: middle-center; }
+.boss-skull { position: absolute; left: -18px; top: -6px; width: 28px; height: 28px; }
+.boss-head > .shields { left: 4px; top: -16px; }
+.boss-head > .damage { left: 124px; top: -6px; }
 
 /* ---------- result window (battle-hud.md 5) ---------- */
 .over { display: none; }
