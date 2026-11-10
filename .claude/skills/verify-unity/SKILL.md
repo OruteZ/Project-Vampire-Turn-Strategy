@@ -28,7 +28,7 @@ Measured on this machine with the Editor unfocused, 2026-11-05.
 - `$V launch` uses the Editor already open for this project, or opens one with `unity open` and records that it did. It waits for `unity status` state `ready` and no compile, then enables background mode. Prints `READY <path>`.
 - First open of a fresh worktree imports Synty (about 390 MB). Before it, link the assets, because they are not in git: `cmd //c mklink //J "<worktree>\Assets\Synty" "C:\Unity Projects\Project Vampire Spawn\Assets\Synty"`. Before removing that worktree, unlink every junction (`cmd //c rmdir "<worktree>\Assets\Synty"`, same for `UPackage`): `git worktree remove` follows junctions on Windows and deletes the main tree's assets.
 - One Editor per project folder. Two agents never drive the same Editor. A second agent works in its own worktree with `VU_PROJECT`.
-- Opening an Editor takes one of 2 machine-wide slots (`%LOCALAPPDATA%\VampireSpawn\editor-slots`, one file per project, shared by all sessions). Running editors from `scripts/editors.ps1` count too, including the user's. Full slots → exit 3 `WAIT`. Retry in the background with `VU_WAIT=1800` (seconds) and do editor-free work meanwhile. A slot whose Editor never appeared for 10 min is reclaimed. `cleanup` returns the slot.
+- Opening an Editor takes one of 2 machine-wide slots (`%LOCALAPPDATA%\VampireSpawn\editor-slots`, one file per project, shared by all sessions). Running editors from `scripts/editors.ps1` count too, including the user's. Full slots → the oldest idle Editor (see Cleanup) is closed and its slot taken; with none idle, exit 3 `WAIT`. Retry in the background with `VU_WAIT=1800` (seconds) and do editor-free work meanwhile. A slot whose Editor never appeared for 10 min is reclaimed. `close` returns the slot.
 - Batchmode (`unity test`, `unity build`) goes through `$V batch <unity args>`, which holds a slot for the run. A PreToolUse hook (`.claude/hooks/guard.mjs`) blocks direct `unity open|test|build` and `Unity.exe -batchmode`.
 
 ## Doctor
@@ -60,7 +60,7 @@ Build Settings scene 0 is what play mode starts in only when it is the open scen
 
 ## Cleanup
 
-`$V cleanup` stops play mode, closes the Editor only if `vu.sh launch` opened it (`unity close`, never killing processes), and prints the evidence folder, which it leaves in place. A user's own Editor stays open. Delete old `verify-artifacts/` folders by hand when they are no longer needed.
+`$V cleanup` stops play mode and, if `vu.sh launch` opened the Editor, leaves it running marked idle (`editor-slots/idle/`), so the next `launch` in the same tree skips the restart. Another session that finds the slots full closes the oldest idle Editor. Any other `vu.sh` command clears the mark. `$V close` closes it now (`unity close`, never killing processes); run it before removing the worktree. `cleanup` prints the evidence folder, which it leaves in place. A user's own Editor stays open. Delete old `verify-artifacts/` folders by hand when they are no longer needed.
 
 ## Gotchas
 

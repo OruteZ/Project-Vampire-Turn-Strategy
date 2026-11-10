@@ -10,7 +10,7 @@ const EDITOR = `Unity 에디터·batchmode 를 직접 띄우지 않는다. 이 �
 - batchmode(시험·빌드): VU_PROJECT=<작업 트리> ${VU} batch <unity 인자...>
 - 열린 에디터에 보내는 시험은 vu.sh test 를 쓴다.
 - vu.sh 가 exit 3 "WAIT" 를 내면 자리가 빌 때까지 기다린다: 같은 명령을 VU_WAIT=1800 을 붙여 run_in_background 로 돌리고, 그동안 에디터 없이 되는 일을 한다. 남의 에디터는 끄지 않는다. 끝까지 자리가 없으면 그 단계는 체크하지 않고 댓글 "에디터 대기(2개 한도)" + 라벨 에디터 필요, 보고엔 "빌드 미검증(에디터 한도)".
-- 다 쓰면 vu.sh cleanup 으로 자리를 돌려준다.`;
+- 다 쓰면 vu.sh cleanup (에디터는 켜 둔 채 "놀고 있음" 으로 두고, 자리가 필요한 세션이 끈다). 작업 트리를 지우기 전엔 vu.sh close.`;
 
 function checkCommand(cmd) {
   if (/^\s*git\s+commit\b/.test(cmd)) return;

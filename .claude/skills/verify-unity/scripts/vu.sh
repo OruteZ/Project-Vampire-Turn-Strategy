@@ -37,6 +37,9 @@ HERE="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 norm() { tr '\\' '/' | tr '[:upper:]' '[:lower:]' | sed 's:/*$::'; }
 ME="$(echo "$PROJECT" | norm)"
 SLOT_FILE="$SLOTS/$(echo "$ME" | sed 's/[^a-z0-9]/_/g')"
+# cleanup leaves a vu-opened editor running and marks it idle here; a session that finds the slots full closes the oldest idle one.
+IDLE="$SLOTS/idle"
+IDLE_FILE="$IDLE/$(basename "$SLOT_FILE")"
 
 running_projects() { powershell.exe -NoProfile -ExecutionPolicy Bypass -File "$(cygpath -w "$HERE/editors.ps1")" 2>/dev/null | tr -d '\r' | norm || true; }
 age() { echo $(( $(date +%s) - $(stat -c %Y "$1") )); }
@@ -67,11 +70,28 @@ try_take_slot() {
   echo "$ME" > "$SLOT_FILE"; echo taken
 }
 
+# Under the slot lock: claims the oldest idle editor and prints "<slot name> <project path>".
+claim_idle() {
+  local f; f="$(ls -tr "$IDLE"/* 2>/dev/null | head -1)"
+  [ -n "$f" ] || return 1
+  echo "$(basename "$f") $(cat "$f")"; rm -f "$f"
+}
+
+# ponytail: an owner that resumes between the claim and the close loses its editor; it reopens with vu.sh launch.
 acquire_slot() {
-  local deadline=$(( $(date +%s) + ${VU_WAIT:-0} )) v
+  local deadline=$(( $(date +%s) + ${VU_WAIT:-0} )) v victim now
   while :; do
-    lock_slots; v="$(try_take_slot)"; unlock_slots
+    lock_slots; v="$(try_take_slot)"; victim=""
+    case "$v" in running|taken) ;; *) victim="$(claim_idle || true)" ;; esac
+    unlock_slots
     case "$v" in running|taken) echo "$v"; return 0 ;; esac
+    if [ -n "$victim" ]; then
+      echo "closing idle editor ${victim#* } to free a slot" >&2
+      unity --no-banner close "${victim#* }" >/dev/null 2>&1 || true
+      rm -f "$SLOTS/${victim%% *}" "${victim#* }/verify-artifacts/.state/opened-by-vu"
+      now=$(date +%s); [ "$deadline" -ge $(( now + 120 )) ] || deadline=$(( now + 120 ))
+      sleep 5; continue
+    fi
     if [ "$(date +%s)" -ge "$deadline" ]; then
       echo "WAIT editor slots full ($MAX_EDITORS): $v" >&2
       echo "Do not open another editor or close someone else's. Wait: run 'VU_WAIT=1800 vu.sh $CMD' in the background and do editor-free work meanwhile, or report '에디터 대기(2개 한도)'." >&2
@@ -186,15 +206,26 @@ cmd_test() {
 cmd_cleanup() {
   [ "$(uj editor status 2>/dev/null | field playMode)" = playing ] && uj editor.playmode stop >/dev/null || true
   if [ -f "$STATE/opened-by-vu" ] && [ "$(cat "$STATE/opened-by-vu")" = "$PROJECT" ]; then
-    unity --no-banner close "$PROJECT" >/dev/null && rm -f "$STATE/opened-by-vu" && release_slot && echo "closed editor opened by vu"
+    mkdir -p "$IDLE" && echo "$PROJECT" > "$IDLE_FILE" && echo "left editor open as idle (closed when another session needs the slot, or now with vu.sh close)"
   else
     echo "left user's editor open"
   fi
   echo "artifacts kept in $ART"
 }
 
+cmd_close() {
+  [ "$(uj editor status 2>/dev/null | field playMode)" = playing ] && uj editor.playmode stop >/dev/null || true
+  rm -f "$IDLE_FILE"
+  if [ -f "$STATE/opened-by-vu" ] && [ "$(cat "$STATE/opened-by-vu")" = "$PROJECT" ]; then
+    unity --no-banner close "$PROJECT" >/dev/null && rm -f "$STATE/opened-by-vu" && release_slot && echo "closed editor opened by vu"
+  else
+    echo "left user's editor open"
+  fi
+}
+
 CMD="${1:-}"
+case "$CMD" in cleanup|close|"") ;; *) rm -f "$IDLE_FILE" ;; esac
 case "$CMD" in
-  launch|batch|doctor|play|stop|shot|window|eval|key|click|input-probe|input-read|console|test|cleanup) c="${1/-/_}"; shift; "cmd_$c" "$@" ;;
-  *) echo "usage: vu.sh launch|batch <unity args>|doctor|play|stop|shot <slug> [w h]|window <title> <slug>|eval <code>|key <Key> [press|down|up]|click <x> <y> [click|down|up|move]|input-probe|input-read|console [log|warn|error] [n]|test [editor|playmode] [filter]|cleanup" >&2; exit 2 ;;
+  launch|batch|doctor|play|stop|shot|window|eval|key|click|input-probe|input-read|console|test|cleanup|close) c="${1/-/_}"; shift; "cmd_$c" "$@" ;;
+  *) echo "usage: vu.sh launch|batch <unity args>|doctor|play|stop|shot <slug> [w h]|window <title> <slug>|eval <code>|key <Key> [press|down|up]|click <x> <y> [click|down|up|move]|input-probe|input-read|console [log|warn|error] [n]|test [editor|playmode] [filter]|cleanup|close" >&2; exit 2 ;;
 esac
