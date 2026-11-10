@@ -31,26 +31,34 @@ MonoBehaviour:
     clips: []
     volume: 1
   click:
-    clips: []
-    volume: 1
+    clips:
+    - {fileID: 8300000, guid: f44b7388dcf5dd14a981e85a3aa5a9f6, type: 3}
+    - {fileID: 8300000, guid: cb231dc76449c8e46989b1203a51c32d, type: 3}
+    volume: 0.8
   hover:
-    clips: []
-    volume: 1
+    clips:
+    - {fileID: 8300000, guid: d9c9101e75fd29e46b2eaaa92e7605ee, type: 3}
+    volume: 0.25
   denied:
-    clips: []
-    volume: 1
+    clips:
+    - {fileID: 8300000, guid: e8af9035f5758f44da37af4225a02619, type: 3}
+    volume: 0.8
   select:
-    clips: []
-    volume: 1
+    clips:
+    - {fileID: 8300000, guid: c230389cdba1a4d47bda71c4d0e2b6f9, type: 3}
+    volume: 0.8
   place:
-    clips: []
-    volume: 1
+    clips:
+    - {fileID: 8300000, guid: b7cd703bfb101f4489fce92b8bbf68e1, type: 3}
+    volume: 0.8
   purchase:
-    clips: []
-    volume: 1
+    clips:
+    - {fileID: 8300000, guid: c0bab065919cfed46a8a238b32542c5c, type: 3}
+    volume: 0.8
   march:
-    clips: []
-    volume: 1
+    clips:
+    - {fileID: 8300000, guid: 632b1c41f6a368540970d173af4f782f, type: 3}
+    volume: 0.9
   playerTurn:
     clips: []
     volume: 1
