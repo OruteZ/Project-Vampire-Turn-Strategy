@@ -200,6 +200,7 @@ namespace VampireSpawn.Game
             {
                 Role.Minion => Art.Look(u.Minion),
                 Role.Vampire => Art.vampireLook,
+                Role.Escort => Art.Look(u.Kind),
                 _ => Art.Look(u.Type),
             };
             // docs/art/unit-visuals.md 4: allies face the enemy side (north, +Z), enemies face south.
@@ -225,6 +226,7 @@ namespace VampireSpawn.Game
                 case Role.Minion: return Art.skeletonRing;
                 case Role.Vampire: return Art.vampireRing;
                 case Role.Spawn: return Art.spawnRing;
+                case Role.Escort: return Art.peasantRing;
             }
             return Art.TierRing(GameData.Type(u.Type).Tier);
         }

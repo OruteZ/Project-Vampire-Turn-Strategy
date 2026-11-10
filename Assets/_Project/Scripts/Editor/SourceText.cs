@@ -40,6 +40,8 @@ namespace VampireSpawn.Editor
                     yield return ("제목", "stage." + s.id + ".title", false);
                     yield return ("소개", "stage." + s.id + ".brief", true);
                     yield return ("보스 이름", "stage." + s.id + ".boss", false);
+                    if (s.goal != VampireSpawn.Core.Goal.Boss) yield return ("지킬 곳·목적지", "stage." + s.id + ".place", false);
+                    if (s.goal == VampireSpawn.Core.Goal.Escort) yield return ("목표 유닛 이름", "stage." + s.id + ".escort", false);
                     break;
             }
         }
