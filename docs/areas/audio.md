@@ -5,7 +5,7 @@
 - 기획서: docs/audio/sounds.md
 - 코드: Assets/_Project/Scripts/Game/Audio/ (재생), Core/BattleEvent.cs (`BannerKind`·`PopupKind`)
 - 구현 기록: docs/dev/sound.md
-- 데이터: Assets/_Project/Audio/SoundCatalog.asset (ArtCatalog.sound 에 걸려 있음), UnitLook.sounds. 사운드 파일도 Assets/_Project/Audio/ 아래에 둔다 (git 에 올리는 팩은 Packs/<팩>, Asset Store 팩은 패키지가 정한 폴더·gitignore)
+- 데이터: Assets/_Project/Audio/SoundCatalog.asset (ArtCatalog.sound 에 걸려 있음), UnitLook.sounds. 사운드 파일도 Assets/_Project/Audio/ 아래에 둔다 (팩은 모두 Packs/<팩>: 400 Sounds Pack·Free Pack·Shapeforms CASSETTE·UI SFX Mega Pack. Free UI Click Sound Effects Pack 만 UPackage 임포트 자리 Assets/ 바로 아래)
 
 ## 결정
 | 결정 | 상태(시험 중/확정 후보) | 날짜 | 출처(이슈·사용자 원문) |
