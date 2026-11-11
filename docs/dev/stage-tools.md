@@ -21,3 +21,9 @@
 
 ## 배속
 - F 로 적 차례 재생 1·2·4배(`BattleView.speed`, PlayerPrefs `battle.speed`). docs/ui/battle-hud.md 4-5.
+
+## 텍스트 플레이 (에이전트가 직접 두기)
+- 자리: `Core/StageConsole.cs`. 판을 글자로 보고 명령으로 한 턴씩 둔다. 상태는 에디터에 남는다(도메인 다시 읽기 전까지).
+- `script eval --code 'return VampireSpawn.Core.StageConsole.New("s6", "sword@6,4 doctor@9,6");'` (편성을 안 주면 예시 편성), `Do("go; m 13 6,3; a 13 2; h 16 14; b 15 21; end")` (m 이동, a 공격, x 처형, b 수습, h 치료, w 대기, p 놓기, r 회수, go 전투 개시·증원 배치 완료, end 턴 종료), `State()`, `Map()`, `Reach(id)`, `Threat()`(다음 적 차례에 각 칸을 칠 수 있는 적 수).
+- 에이전트는 이것으로 "고민이 생기는가, 할 일 없는 턴이 있는가, 길이·난이도"를 본다. 연출·손맛·실제 걸리는 시간은 사람 몫(플레이 기록).
+- 2026-11-11 6장·9장 1판을 이렇게 둬서 고쳤다(docs/content/stages.md 6-3).

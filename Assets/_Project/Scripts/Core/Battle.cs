@@ -154,7 +154,8 @@ namespace VampireSpawn.Core
         Unit Placed(Placement p, Hex at)
         {
             var u = MakeEnemy(p.Kind, at);
-            if (u.Role == Role.Minion) { u.Stance = p.Stance; u.Alert = p.Alert; }
+            u.Stance = p.Stance;
+            u.Alert = p.Alert;
             return u;
         }
 
