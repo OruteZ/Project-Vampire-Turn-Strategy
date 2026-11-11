@@ -116,7 +116,8 @@ namespace VampireSpawn.Game
             var go = new GameObject("Grid");
             go.transform.SetParent(transform, false);
             var lines = new HexLines(p => transform.InverseTransformPoint(OnHologram(transform.TransformPoint(p), 0.04f)));
-            var r = art.hexSize * 0.95f;
+            var r = art.hexSize;
+            var drawn = new HashSet<Vector2Int>();
             for (var row = 0; row < Board.Rows; row++)
                 for (var col = 0; col < Board.Cols; col++)
                 {
@@ -126,7 +127,15 @@ namespace VampireSpawn.Game
                     if (Board.At(h) == Terrain.Sun) lines.Fill(c, r, Tint(art.sunLight, 0.18f));
                     else if (Board.Lit(h)) lines.Fill(c, r, Tint(art.torchLight, 0.14f));
                     else if (Board.At(h) == Terrain.Rough) lines.Fill(c, r, new Color(0.38f, 0.30f, 0.20f, 0.22f));
-                    lines.Outline(c, r, 0.05f * art.hexSize, Tint(Screens.Ui.Steel, 0.35f));
+                    for (var i = 0; i < 6; i++)
+                    {
+                        var a = HexLines.Corner(c, r, i);
+                        var b = HexLines.Corner(c, r, i + 1);
+                        // A shared edge drawn twice doubles its alpha.
+                        var mid = (a + b) * 50f;
+                        if (drawn.Add(new Vector2Int(Mathf.RoundToInt(mid.x), Mathf.RoundToInt(mid.z))))
+                            lines.Segment(a, b, 0.05f * art.hexSize, Tint(Screens.Ui.Steel, 0.35f));
+                    }
                 }
             var mesh = new Mesh { name = "Grid" };
             lines.Apply(mesh);

@@ -14,11 +14,10 @@ namespace VampireSpawn.Game.Screens
         // Crest_*_Large_01 is a demon skull; Large_03 has none, so the hunters' menu wears it (ui-style.md 5-3).
         public const string Crest = "Crest_DarkFantasyMenus_Large_03";
 
-        public static UIDocument Build(Transform host, ArtCatalog art, Campaign campaign, RenderTexture backdrop, Action demo, Action camp, int selected, Action<int> hover)
+        public static UIDocument Build(Transform host, ArtCatalog art, Campaign campaign, Action demo, Action camp, int selected, Action<int> hover, Action settings)
         {
             var doc = ToolkitKit.Document(host, "Menu (UI Toolkit)", art.panel, art.menuDocument);
             var root = doc.rootVisualElement;
-            if (backdrop != null) root.Q("backdrop").style.backgroundImage = new StyleBackground(Background.FromRenderTexture(backdrop));
             ToolkitKit.Prefab(root.Q("crest"), art.UiPrefab(Crest));
             ToolkitKit.Prefab(root.Q("break"), art.UiPrefab("Component_DarkFantasyMenus_Section_Break_02"));
             var tip = root.Q<Label>("tip");
@@ -31,15 +30,21 @@ namespace VampireSpawn.Game.Screens
             ToolkitKit.Value(campMeta, art, Kit.Icon.Flag, Campaign.Stages.Count(campaign.IsCleared) + "/" + Campaign.Stages.Length, Ui.Steel, Ui.Bone);
             ToolkitKit.Value(campMeta, art, Kit.Icon.Gold, campaign.Gold.ToString(), Ui.Candle, Ui.Candle);
 
-            Languages(root.Q("languages"));
+            Shade(root.Q("shade"));
+            var row = root.Q("languages");
+            var open = new Label(Loc.T("settings.open"));
+            open.AddToClassList("lang");
+            UiSound.Add(open);
+            open.RegisterCallback<ClickEvent>(_ => settings?.Invoke());
+            row.Add(open);
+            Languages(row);
+            root.Q<Label>("version").text = "v" + Application.version;
             return doc;
         }
 
         static VisualElement Card(VisualElement card, ArtCatalog art, string icon, string title, string desc, Action click, bool on, Action enter, Label tip)
         {
             card.EnableInClassList("on", on);
-            ToolkitKit.Picture(card, art.Ui("SPR_DarkFantasyMenus_Frame_Box_Medium_02_Background"));
-            ToolkitKit.Picture(card.Q(className: "card-frame"), art.Ui("SPR_DarkFantasyMenus_Frame_Box_Medium_02"));
             ToolkitKit.Picture(card.Q(className: "card-icon"), art.Ui(icon));
             card.Q<Label>(className: "card-name").text = title;
             UiSound.Add(card);
@@ -47,6 +52,16 @@ namespace VampireSpawn.Game.Screens
             ToolkitKit.Tip(card, desc, tip);
             card.RegisterCallback<PointerEnterEvent>(_ => enter?.Invoke());
             return card.Q(className: "card-meta");
+        }
+
+        static Texture2D leftFade;
+
+        // main-menu.md 8: dark behind the menu column, full under the menu (to 30% of the width), clear from 62% so the castle stays bright.
+        static void Shade(VisualElement e)
+        {
+            e.style.backgroundImage = new StyleBackground(leftFade ??= ToolkitKit.FadeTexture(64, (u, _) => Mathf.Sqrt(1f - Mathf.SmoothStep(0f, 1f, Mathf.InverseLerp(0.3f, 0.62f, u)))));
+            e.style.unityBackgroundImageTintColor = Ui.Alpha(Ui.Ink, 0.85f);
+            e.style.backgroundSize = new BackgroundSize(BackgroundSizeType.Length) { x = Length.Percent(100), y = Length.Percent(100) };
         }
 
         static void Languages(VisualElement row)

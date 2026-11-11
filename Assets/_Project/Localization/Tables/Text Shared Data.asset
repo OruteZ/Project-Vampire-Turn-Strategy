@@ -1691,6 +1691,58 @@ MonoBehaviour:
     m_Key: trigger.soonAlly
     m_Metadata:
       m_Items: []
+  - m_Id: 1805115463626752
+    m_Key: settings.open
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1805115534929920
+    m_Key: settings.title
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1805115534929921
+    m_Key: settings.camera
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1805115534929922
+    m_Key: settings.cameraTip
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1805115534929923
+    m_Key: settings.shake
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1805115534929924
+    m_Key: settings.shakeTip
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1805115534929925
+    m_Key: settings.speed
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1805115534929926
+    m_Key: settings.speedTip
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1805115534929927
+    m_Key: settings.on
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1805115534929928
+    m_Key: settings.off
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1805115534929929
+    m_Key: settings.weak
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1805115534929930
+    m_Key: settings.normal
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1805115534929931
+    m_Key: settings.close
+    m_Metadata:
+      m_Items: []
   m_Metadata:
     m_Items: []
   m_KeyGenerator:

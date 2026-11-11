@@ -740,9 +740,10 @@ MonoBehaviour:
       m_Items:
       - rid: 7201578077006332005
   - m_Id: 5832192094221
-    m_Localized: A plague doctor hiding in the manor has joined. Hold the great hall
-      for twelve turns as the night closes in from every side. The lady's crypt opens
-      on turn six. Reach the chapel torch and the villagers hiding there will help.
+    m_Localized: A plague doctor hiding in the manor has joined. From the garden,
+      the stables, the chapel and the south gate, the night closes in. Hold the great
+      hall for twelve turns. Reach the torch in the stables and the villagers hiding
+      there will help.
     m_Metadata:
       m_Items:
       - rid: 7201578077006332005
@@ -804,10 +805,10 @@ MonoBehaviour:
       m_Items:
       - rid: 7201578077006332005
   - m_Id: 5832192094233
-    m_Localized: The Count's servant lurks deep in the abandoned silver mine and
-      will not come out. Three shafts lead down; the gate at the end of the middle
-      one opens only when someone draws near. The deeper you go, the emptier the
-      entrance behind you. Fell five minions and the miners join you at the entrance.
+    m_Localized: The Count's servant hides deep in the abandoned silver mine. Three
+      shafts lead down; the gate at the end of the middle one opens only when someone
+      draws near. The deeper you go, the emptier the entrance behind you. Fell eight
+      minions and the miners join you at the entrance.
     m_Metadata:
       m_Items:
       - rid: 7201578077006332005
@@ -2073,6 +2074,58 @@ MonoBehaviour:
       m_Items: []
   - m_Id: 1797914485387268
     m_Localized: Next ally phase
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1805115463626752
+    m_Localized: Settings
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1805115534929920
+    m_Localized: Settings
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1805115534929921
+    m_Localized: Camera effects
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1805115534929922
+    m_Localized: Camera moves in and tints on rises, full moon and kills
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1805115534929923
+    m_Localized: Screen shake
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1805115534929924
+    m_Localized: How hard the screen shakes on big hits
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1805115534929925
+    m_Localized: Battle speed
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1805115534929926
+    m_Localized: Enemy turn playback speed. Press F in battle
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1805115534929927
+    m_Localized: On
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1805115534929928
+    m_Localized: Off
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1805115534929929
+    m_Localized: Low
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1805115534929930
+    m_Localized: Normal
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1805115534929931
+    m_Localized: Close
     m_Metadata:
       m_Items: []
   references:

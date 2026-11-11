@@ -2,8 +2,8 @@
 
 ## 경로
 - 기획: docs/design/ui.md, docs/design/art.md
-- 기획서: docs/ui/ (화면별. 장 선택 3 레이어 docs/ui/stage-select.md, 병영 docs/ui/upgrade.md), docs/art/ui-style.md (UI 스타일: 색·글꼴·틀·버튼·배치 토큰, 15 고정 크기, 16 화면 배치 원칙), docs/art/ui-references.md (화면별 레이아웃 조사·요소별 레퍼런스), docs/art/campaign-map.md (장 선택 바탕 3D 원정 지도)
-- 코드: Assets/_Project/Scripts/Game/Screens/ (`ToolkitKit.cs` 문서 만들기·버튼·틀·칩·값·툴팁·Synty 프리팹 다시 쌓기·그늘, `Ui.cs` 색 토큰, `Kit.cs` 아이콘 이름, `BattleHud.cs` 전투 화면, `CampFlow.cs`·`CampToolkit.cs`·`CampMarkers.cs` 장 선택·병영, `MenuToolkit.cs`·`MenuFlow.cs` 메인 메뉴, `Fx.cs` 나타남·맥박·번쩍임·검은 화면, `App.cs` 씬 전환). 배치·크기는 Assets/_Project/UI/ 의 UXML·USS (`Theme.uss` 공용, `Menu`·`Camp`·`Battle` 화면별, `Panel.asset` 패널 비율). 원정 지도는 `Game/CampaignMapView.cs` + 배치 표 `Game/CampaignMapLayout.cs`, Camp 씬에 구움 (campaign-map.md 10). 구현 기록 docs/dev/unity-port.md "전투 화면 달과 피"
+- 기획서: docs/ui/ (화면별. 장 선택 3 레이어 docs/ui/stage-select.md, 병영 docs/ui/upgrade.md, 설정 창 docs/ui/settings.md), docs/art/ui-style.md (UI 스타일: 색·글꼴·틀·버튼·배치 토큰, 15 고정 크기, 16 화면 배치 원칙), docs/art/ui-references.md (화면별 레이아웃 조사·요소별 레퍼런스), docs/art/campaign-map.md (장 선택 바탕 3D 원정 지도)
+- 코드: Assets/_Project/Scripts/Game/Screens/ (`ToolkitKit.cs` 문서 만들기·버튼·틀·칩·값·툴팁·Synty 프리팹 다시 쌓기·그늘, `Ui.cs` 색 토큰, `Kit.cs` 아이콘 이름, `BattleHud.cs` 전투 화면, `CampFlow.cs`·`CampToolkit.cs`·`CampMarkers.cs` 장 선택·병영, `MenuToolkit.cs`·`MenuFlow.cs` 메인 메뉴, `SettingsToolkit.cs` 설정 창(값은 `Game/GameSettings.cs`), `Fx.cs` 나타남·맥박·번쩍임·검은 화면, `App.cs` 씬 전환). 배치·크기는 Assets/_Project/UI/ 의 UXML·USS (`Theme.uss` 공용, `Menu`·`Camp`·`Battle` 화면별, `Panel.asset` 패널 비율). 원정 지도는 `Game/CampaignMapView.cs` + 배치 표 `Game/CampaignMapLayout.cs`, Camp 씬에 구움 (campaign-map.md 10). 구현 기록 docs/dev/unity-port.md "전투 화면 달과 피"
 - UI 스프라이트: `ArtCatalog.ui`, 장식 프리팹: `ArtCatalog.uiPrefabs` (이름으로 찾는다). 새 스프라이트는 이 배열에 더하고 `node tools/assets/scan.mjs`
 - 아트: Assets/Synty/InterfaceDarkFantasyMenus, Assets/Synty/InterfaceDarkFantasyHUD, Assets/Synty/InterfaceCore (분류는 art-assets.md)
 - 화면 검사: `tools/ui-audit/sweep.sh`, `Scripts/Editor/UiAudit.cs`, 기록 docs/dev/ui-audit.md
@@ -45,6 +45,7 @@
 | 장 선택 바탕은 Synty 프리팹을 코드가 데이터 표대로 놓아 짓는 3D 원정 지도. 장마다 지역 하나, 지역 표식은 고정 크기 UI(3D 점을 따라감), 이름은 가리킨·고른 지역만. 진행은 빛(클리어한 지역의 화로)으로 보인다 (campaign-map.md) | 시험 중 | 2026-11-07 | #43 "Synty 에셋을 사용해 3D맵을 제작 … 그 지역을 클릭하면 스테이지 정보화면으로" |
 | 병영 강화 구매 확인은 두 번 누르기 대신 화면 가운데 작은 확인 창(이름·"구매하시겠습니까?"·가격·취소/구매). 산 뒤 번쩍임은 없다 (upgrade.md 6) | 시험 중 | 2026-11-08 | #87 "번쩍임 … 필요 없음. 정말 살까요 표기보다 --를 구매하시겠습니까? 하고 가운데 작은 레터박스" |
 | 장 선택 칸 나타남·사라짐은 감속(ease-out) | 시험 중 | 2026-11-08 | #87 "UI 등장에 이징이 없음" |
+| 메인 메뉴 바탕은 Synty 데모 씬 `Demo_Cathedral_01`(백작성) 실시간 장면, 메뉴는 왼쪽 세로 글자 목록 + 왼쪽 그늘. 레퍼런스 Desperados III·The Witcher 3 메인 메뉴 (main-menu.md 8~11) | 시험 중 | 2026-11-11 | #116 "싱티 데모씬 백작성 이쁘던데 그거쓰자", "UI도 바꿔" |
 | 원정 지도는 실행 중 씬만 읽는다. 배치 표(`CampaignMapLayout`)는 굽기 입력일 뿐이고, 길·물·야영지·표식·화로 자리도 씬의 점으로 구워 손으로 옮긴다 (campaign-map.md 10-2) | 시험 중 | 2026-11-09 | #104 "씬을 진실로" |
 | 원정 지도 카메라 이동은 손 코드 보간이 아니라 Cinemachine(구운 시점 + 브레인 블렌드)으로 한다. 시점은 Camp 씬에서 손으로 고친다 (campaign-map.md 구현 메모) | 시험 중 | 2026-11-08 | #57 "그 코드 밀어버리고 Cinemachine 패키지 설치해서 처리해줘" |
 
@@ -64,5 +65,6 @@
 - 함정: Input System 만 켠 이 프로젝트에서 UI Toolkit 런타임 패널은 EventSystem(+`InputSystemUIInputModule`)이 있어야 포인터를 받는다. 없으면 클릭·호버가 전혀 안 온다(2026-11-09 재어 봄). `ToolkitKit.Document` 가 없으면 만든다
 - 함정: USS 는 선택자 구체성으로 이긴다. `.battle Label { margin: 0 }` 같은 넓은 규칙이 `.hint { margin-left }` 를 덮어 가운데 정렬이 깨졌다. 공용 초기화 규칙은 클래스 하나짜리보다 구체적이면 안 된다
 - 함정: UI Toolkit 은 둥근 채움(Image.fillMethod Radial)이 없다. 보름달 칸은 `generateVisualContent` + Painter2D 로 쐐기를 그린다(`BattleHud.Phases`)
+- 함정: 다른 씬을 겹쳐(additive) 불러도 하늘·안개·주변광은 활성 씬 것만 쓴다. 메인 메뉴는 데모 씬을 `SetActiveScene` 한다. UI Toolkit 화면 뿌리에 `background-color` 가 있으면 뒤의 3D 가 전부 가려진다(USS 를 바꾼 뒤 에디터가 다시 읽지 않으면 `AssetDatabase.Refresh`)
 - 함정: `BoardView.LateUpdate` 는 `Board` 가 남아 있으면 카메라를 보드에 다시 맞춘다(`Clear()` 뒤에도 남는다). 원정 지도가 카메라를 쓰는 동안 막아야 한다 (campaign-map.md 구현 메모)
 - 함정: `FX_*`, `SM_Bld_Base_*` 프리팹은 PolygonDarkFantasy 와 PolygonGeneric 에 같은 이름이 있다. 이름으로 찾을 때 PolygonDarkFantasy 쪽을 쓴다
