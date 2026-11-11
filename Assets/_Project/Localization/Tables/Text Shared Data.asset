@@ -1667,6 +1667,30 @@ MonoBehaviour:
     m_Key: stage.s6.place
     m_Metadata:
       m_Items: []
+  - m_Id: 1797914418278400
+    m_Key: banner.reinforce
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1797914485387264
+    m_Key: log.reinforce
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1797914485387265
+    m_Key: log.reinforced
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1797914485387266
+    m_Key: battle.reinforceDone
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1797914485387267
+    m_Key: unit.card.reinforce
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1797914485387268
+    m_Key: trigger.soonAlly
+    m_Metadata:
+      m_Items: []
   m_Metadata:
     m_Items: []
   m_KeyGenerator:

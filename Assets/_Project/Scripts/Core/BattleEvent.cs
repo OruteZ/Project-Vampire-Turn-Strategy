@@ -4,7 +4,7 @@ namespace VampireSpawn.Core
 {
     public enum BattleEventKind { Log, Banner, Walk, Popup, Hit, Hint, Died, CorpseLeft, Rose, Woke, HpChanged, Buried, MoonChanged, Arrived, Opened }
 
-    public enum BannerKind { PlayerTurn, EnemyTurn, Coffin, FullMoon }
+    public enum BannerKind { PlayerTurn, EnemyTurn, Coffin, FullMoon, Reinforce }
 
     // Feed is the vampire's own heal after a drain, kept apart from a Mend heal so the view can tell them apart.
     public enum PopupKind { Damage, Heal, Feed, Execute, Bury, Drain, DrainFailed }

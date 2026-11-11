@@ -136,6 +136,7 @@ namespace VampireSpawn.Game.Screens
                 HoverCorpse = hoverCorpse is int cid ? b.Corpses.FirstOrDefault(c => c.Id == cid) : null,
                 HoverArrival = hoverArrival is Hex ah && b.Pending.Any(p => p.Col == ah.Col && p.Row == ah.Row)
                     ? b.Pending.First(p => p.Col == ah.Col && p.Row == ah.Row) : (Placement?)null,
+                HoverReinforce = hoverArrival is Hex rh && !b.Reinforcing ? b.Upcoming.FirstOrDefault(r => r.Hexes.Contains(rh)) : null,
                 Speed = View.speed,
                 Alt = altDown, EnemyPlaying = enemyPlaying, LeaveArmed = leaveArm, RulesOpen = rulesOpen, LogOpen = logOpen, Demo = demo,
                 FullMoon = fullMoon, MoonFading = moonFading,
@@ -214,7 +215,7 @@ namespace VampireSpawn.Game.Screens
             if (one && canAct) actions.Exec();
             if (two && canAct) actions.Wait();
             if (three && canAct && sel.Has(Ability.Mend)) actions.Mend();
-            if (space && (b.Phase == Phase.Deploy ? b.Allies.Any() : b.Phase == Phase.Player)) Primary();
+            if (space && (b.Phase == Phase.Deploy ? b.Reinforcing || b.Allies.Any() : b.Phase == Phase.Player)) Primary();
         }
 
         void TrackHover()
@@ -225,7 +226,8 @@ namespace VampireSpawn.Game.Screens
             var at = m != null && !input.PointerBlocked() ? input.HexAt(m.position.ReadValue()) : null;
             var over = at is Hex h ? Session.Battle.UnitAt(h)?.Id : null;
             var corpse = at is Hex hc && over == null ? Session.Battle.CorpseAt(hc)?.Id : null;
-            var arrival = at is Hex ha && over == null && corpse == null && Session.Battle.Pending.Any(p => p.Col == ha.Col && p.Row == ha.Row) ? at : null;
+            var arrival = at is Hex ha && over == null && corpse == null && (Session.Battle.Pending.Any(p => p.Col == ha.Col && p.Row == ha.Row)
+                || (!Session.Battle.Reinforcing && Session.Battle.Upcoming.Any(r => r.Hexes.Contains(ha)))) ? at : null;
             input.overlay.SetHover(at);
             if (over == hoverId && corpse == hoverCorpse && arrival == hoverArrival && alt == altDown) return;
             var altChanged = alt != altDown;
@@ -246,7 +248,7 @@ namespace VampireSpawn.Game.Screens
         {
             if (View.IsBusy) return;
             var b = Session.Battle;
-            if (b.Phase == Phase.Deploy) { playLog.Started(); input.Run(s => s.Start()); }
+            if (b.Phase == Phase.Deploy) { if (!b.Reinforcing) playLog.Started(); input.Run(s => s.Start()); }
             else if (b.Phase == Phase.Player) { enemyPlaying = true; playLog.EnemyBegins(); input.Run(s => s.EndTurn()); }
             else if (b.Phase == Phase.Over && over != null) overRoot.AddToClassList("shown");
         }

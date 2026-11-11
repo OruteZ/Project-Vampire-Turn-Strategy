@@ -76,6 +76,12 @@ namespace VampireSpawn.Core
                 if (s.Triggers.All(t => t.Id != d.Trigger)) p.Add($"{at}: 문의 트리거 {d.Trigger} 가 없다");
                 foreach (var h in d.Hexes) if (tile(h.Col, h.Row) != '#') p.Add($"{at}: 문 칸 {h} 은(는) 지도에서 # 이어야 한다");
             }
+            foreach (var r in s.Reinforcements)
+            {
+                if (s.Triggers.All(t => t.Id != r.Trigger)) p.Add($"{at}: 아군 증원의 트리거 {r.Trigger} 가 없다");
+                if (r.Pop < 1 || r.Silver < 0) p.Add($"{at}: 아군 증원 인구는 1 이상, 은은 0 이상");
+                if (r.Hexes.Length == 0 || r.Hexes.Any(h => "#~\0".IndexOf(tile(h.Col, h.Row)) >= 0)) p.Add($"{at}: 아군 증원 칸은 걸을 수 있는 칸 하나 이상");
+            }
             var board = new Board(s.Map);
             foreach (var h in s.Doors.SelectMany(d => d.Hexes)) if (board.InBounds(h)) board.Open(h);
             var cells = Enumerable.Range(0, board.Rows).SelectMany(r => Enumerable.Range(0, board.Cols).Select(c => new Hex(c, r))).ToList();
