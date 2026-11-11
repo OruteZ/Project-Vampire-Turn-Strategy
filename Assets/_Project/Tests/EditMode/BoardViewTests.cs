@@ -46,11 +46,12 @@ namespace VampireSpawn.Tests
                     Assert.AreEqual(terrain == Terrain.Torch, t.Cast<Transform>().Any(c => c.name == view.art.brazier.name), stage.Id + " brazier on " + t.name + " only on torch");
                     Assert.AreEqual(terrain == Terrain.Torch || terrain == Terrain.Sun, t.GetComponentInChildren<Light>() != null, stage.Id + " light on " + t.name);
                 }
-                // battle-terrain.md 3: one outline of 6 edges x 4 pieces per walkable cell, each piece a quad.
-                var walkable = tiles.Count(t => board.Walkable(new Hex(int.Parse(t.name.Split(' ')[1].Split(',')[0]), int.Parse(t.name.Split(' ')[1].Split(',')[1]))));
+                // battle-terrain.md 3: 6 edges per walkable cell, an edge shared by two walkable cells drawn once, 4 quad pieces per edge.
+                var cells = Enumerable.Range(0, board.Rows).SelectMany(r => Enumerable.Range(0, board.Cols).Select(c => new Hex(c, r))).Where(board.Walkable).ToList();
+                var shared = cells.Sum(x => board.Neighbors(x).Count(board.Walkable)) / 2;
                 var grid = children.Single(c => c.name == "Grid").GetComponent<MeshFilter>().sharedMesh;
-                var fills = Enumerable.Range(0, board.Rows).SelectMany(r => Enumerable.Range(0, board.Cols).Select(c => new Hex(c, r))).Count(x => board.Walkable(x) && (board.At(x) == Terrain.Sun || board.Lit(x) || board.At(x) == Terrain.Rough));
-                Assert.AreEqual(walkable * 6 * 4 * 4 + fills * 6 * 4 * 3, grid.vertexCount, stage.Id + " grid vertices");
+                var fills = cells.Count(x => board.At(x) == Terrain.Sun || board.Lit(x) || board.At(x) == Terrain.Rough);
+                Assert.AreEqual((cells.Count * 6 - shared) * 4 * 4 + fills * 6 * 4 * 3, grid.vertexCount, stage.Id + " grid vertices");
                 Assert.GreaterOrEqual(grid.vertices.Min(v => v.y), BoardView.HologramRise + 0.04f - 0.001f, stage.Id + " grid never dips below the hologram floor (battle-terrain.md 3)");
             }
             finally
