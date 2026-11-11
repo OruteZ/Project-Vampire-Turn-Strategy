@@ -1743,6 +1743,10 @@ MonoBehaviour:
     m_Key: settings.close
     m_Metadata:
       m_Items: []
+  - m_Id: 1848099521490944
+    m_Key: battle.enemyListNoBoss
+    m_Metadata:
+      m_Items: []
   m_Metadata:
     m_Items: []
   m_KeyGenerator:

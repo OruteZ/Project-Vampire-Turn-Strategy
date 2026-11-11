@@ -179,6 +179,8 @@ namespace VampireSpawn.Game.Screens
         // full: the full-moon enemy turn is playing (7-2); fading: it just ended, so the blood drains away over 0.4 s.
         void Moon(VisualElement root, Battle b, bool hot, bool full, bool fading)
         {
+            moonDisk = null;
+            if (!b.Stage.HasBoss) return;
             var box = E(root, "moon");
             Tip(box, Loc.T("battle.moon") + " · " + Loc.T("battle.rule.moon", Rules.MoonMax), 400);
             Picture(E(box, "fill"), S(RingBack), Ui.Deep);

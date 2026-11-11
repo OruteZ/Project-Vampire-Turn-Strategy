@@ -17,6 +17,36 @@ namespace VampireSpawn.Tests
         static Stage Staged(string[] map, Placement[] enemies, Trigger[] triggers, Door[] doors = null) => new Stage("demo", GameData.Types.Select(t => t.Key).ToArray(), 99, 99, 0, Goal.Boss,
             new Bonus(BonusType.AllMinions, 0, 0), new Boss(30, 1, 0, 0, 0), map, enemies, new Placement[0], triggers: triggers, doors: doors);
 
+        // docs/systems/goals.md 1-2, 1-7
+        [Test]
+        public void AStageWithoutAVampireEndsOnlyOnItsOwnGoal()
+        {
+            var stage = new Stage("demo", GameData.Types.Select(t => t.Key).ToArray(), 99, 99, 0, Goal.Defense, new Bonus(BonusType.NoEat, 0, 0), new Boss(1, 1, 0, 0, 0), Open,
+                new[] { new Placement("skeleton", 6, 0, stance: Stance.Hold) }, new Placement[0], spots: new[] { new Hex(3, 6) }, hold: 2);
+            Assert.IsFalse(stage.HasBoss);
+            var b = new Battle(stage, null, new[] { new Placement("pspear", 3, 6) });
+            b.Start();
+            Assert.AreEqual(Phase.Player, b.Phase, "no vampire is not a win");
+            b.EndTurn();
+            b.EndTurn();
+            Assert.AreEqual(Ending.Held, b.Ending);
+        }
+
+        [Test]
+        public void KillingTheVampireDoesNotEndADefence()
+        {
+            var stage = new Stage("demo", GameData.Types.Select(t => t.Key).ToArray(), 99, 99, 0, Goal.Defense, new Bonus(BonusType.NoEat, 0, 0), new Boss(1, 1, 0, 0, 0), Open,
+                new[] { new Placement(EnemyType.Vampire, 3, 2) }, new Placement[0], spots: new[] { new Hex(3, 6) }, hold: 9);
+            GameData.Use(new DataSet(new RuleSet(GameData.Current.Rules.DrainHeal, 6, 2, 1, 2), GameData.Types, GameData.Upgrades, GameData.Minions, GameData.Stages));
+            var b = new Battle(stage, null, new[] { new Placement("knight", 3, 3), new Placement("pspear", 3, 6) });
+            b.Start();
+            b.EndTurn();
+            var knight = b.Allies.First(a => a.Type == "knight");
+            if (b.Vampire != null && Hex.Distance(knight.Pos, b.Vampire.Pos) == 1) b.Attack(knight.Id, b.Vampire.Id);
+            Assert.IsNull(b.Vampire, "boss with 1 hp falls to the knight");
+            Assert.IsNull(b.Ending, "the defence goes on");
+        }
+
         // docs/systems/reinforce.md
         [Test]
         public void ReachingTheGoalOpensAMidBattleDeployOnlyForNewcomers()

@@ -106,7 +106,8 @@ namespace VampireSpawn.Core
             }
             char Tile(int c, int r) => r >= 0 && r < s.Map.Length && c >= 0 && c < s.Map[r].Length ? s.Map[r][c] : '\0';
             foreach (var k in s.Units) if (Types.All(t => t.Key != k)) p.Add($"{at}: 없는 병종 {k}");
-            if (s.Enemies.Count(e => e.Kind == EnemyType.Vampire) != 1) p.Add(at + ": 뱀파이어는 하나여야 한다");
+            var vampires = s.Enemies.Count(e => e.Kind == EnemyType.Vampire);
+            if (vampires > 1 || (s.Goal == Goal.Boss && vampires != 1)) p.Add(at + ": 뱀파이어는 보스 처치 장에 하나, 다른 목표의 장엔 없거나 하나");
             var taken = new HashSet<(int, int)>();
             foreach (var e in s.Enemies)
             {

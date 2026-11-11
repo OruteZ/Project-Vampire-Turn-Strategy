@@ -575,7 +575,8 @@ namespace VampireSpawn.Core
         // dawn: the enemy phase has just ended. A win is checked before a loss (docs/systems/goals.md 1-4).
         Ending? Outcome(bool dawn = false)
         {
-            if (Vampire == null) return Core.Ending.Slain;
+            // docs/systems/goals.md 1-2: only a boss stage is won by killing the vampire; other goals end on their own terms.
+            if (Stage.Goal == Goal.Boss && Vampire == null) return Core.Ending.Slain;
             var escort = Escort;
             var goal = Stage.Goal switch
             {

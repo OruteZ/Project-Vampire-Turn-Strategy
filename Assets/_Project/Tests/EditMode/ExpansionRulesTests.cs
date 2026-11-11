@@ -232,7 +232,6 @@ namespace VampireSpawn.Tests
                 var s = Field(new[] { P(EnemyType.Vampire, 6, 6), P("skeleton", 3, 2) });
                 s = new Stage(s.Id, s.Units, s.Pop, s.Silver, s.Reward, g, s.Bonus, s.Boss, s.Map, s.Enemies, s.Sample);
                 Assert.IsNotEmpty(Loc.Text(s.Objective), g.ToString());
-                if (g != Goal.Boss) Assert.IsNotEmpty(Loc.Text(s.AlsoWins), g.ToString());
                 var b = new Battle(s, null, new[] { P("knight", 3, 3) });
                 b.Start();
                 Assert.DoesNotThrow(() => b.Move(b.Allies.First().Id, At(3, 4)), g + " judged after a move");

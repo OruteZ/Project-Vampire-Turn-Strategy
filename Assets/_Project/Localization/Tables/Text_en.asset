@@ -2127,6 +2127,10 @@ MonoBehaviour:
     m_Localized: Close
     m_Metadata:
       m_Items: []
+  - m_Id: 1848099521490944
+    m_Localized: Minions {0}
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds:

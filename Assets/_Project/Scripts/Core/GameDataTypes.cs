@@ -234,7 +234,7 @@ namespace VampireSpawn.Core
             _ => throw new ArgumentOutOfRangeException(nameof(Goal), Goal, null),
         };
 
-        // docs/systems/goals.md 1-2: killing the vampire wins whatever the goal.
-        public Message AlsoWins => Goal == Goal.Boss ? default : new Message("goal.alsoBoss", BossName);
+        // docs/systems/goals.md 1-7: a stage may have no vampire at all.
+        public bool HasBoss => Enemies.Any(e => e.Kind == EnemyType.Vampire);
     }
 }
