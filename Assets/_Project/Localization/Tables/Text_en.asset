@@ -740,10 +740,9 @@ MonoBehaviour:
       m_Items:
       - rid: 7201578077006332005
   - m_Id: 5832192094221
-    m_Localized: A plague doctor hiding in the manor has joined. From the garden,
-      the stables, the chapel and the south gate, the night closes in. Hold the great
-      hall for twelve turns. Reach the torch in the stables and the villagers hiding
-      there will help.
+    m_Localized: A plague doctor hiding in the manor has joined. Hold the great hall
+      for twelve turns as the night closes in from every side. The lady's crypt opens
+      on turn six. Reach the chapel torch and the villagers hiding there will help.
     m_Metadata:
       m_Items:
       - rid: 7201578077006332005
@@ -805,10 +804,10 @@ MonoBehaviour:
       m_Items:
       - rid: 7201578077006332005
   - m_Id: 5832192094233
-    m_Localized: The Count's servant hides deep in the abandoned silver mine. Three
-      shafts lead down; the gate at the end of the middle one opens only when someone
-      draws near. The deeper you go, the emptier the entrance behind you. Fell eight
-      minions and the miners join you at the entrance.
+    m_Localized: The Count's servant lurks deep in the abandoned silver mine and
+      will not come out. Three shafts lead down; the gate at the end of the middle
+      one opens only when someone draws near. The deeper you go, the emptier the
+      entrance behind you. Fell five minions and the miners join you at the entrance.
     m_Metadata:
       m_Items:
       - rid: 7201578077006332005
