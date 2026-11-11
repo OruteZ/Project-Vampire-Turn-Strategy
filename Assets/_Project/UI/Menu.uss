@@ -118,9 +118,83 @@
     border-bottom-width: 0;
 }
 
+.lang:hover {
+    color: var(--bone);
+}
+
+/* docs/ui/settings.md 9-12. */
+.settings-veil {
+    position: absolute;
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(18, 19, 26, 0.6);
+}
+
+.settings {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: 640px;
+    translate: -50% -50%;
+    padding: 32px;
+    -unity-slice-scale: 0.111px;
+}
+
+.settings-title {
+    height: 40px;
+    margin: 0 0 16px 0;
+    padding: 0;
+    font-size: 26px;
+    color: var(--bone);
+    -unity-text-align: middle-center;
+}
+
+.settings-row {
+    height: 56px;
+    margin-bottom: 12px;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.settings-name {
+    margin: 0;
+    padding: 0;
+    font-size: 17px;
+    color: var(--bone);
+}
+
+.settings-values {
+    flex-direction: row;
+}
+
+.settings-value {
+    height: 40px;
+    min-width: 96px;
+    margin-left: 8px;
+    padding: 0 12px;
+}
+
+.settings-close {
+    align-self: center;
+    width: 180px;
+    height: 44px;
+    margin-top: 12px;
+}
+
 .lang.current {
     color: var(--bone);
     -unity-font-style: bold;
     border-bottom-width: 2px;
     border-bottom-color: var(--steel);
+}
+
+.version {
+    position: absolute;
+    bottom: 16px;
+    right: 24px;
+    font-size: 12px;
+    color: var(--dim);
 }

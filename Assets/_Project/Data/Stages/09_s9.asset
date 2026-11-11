@@ -22,11 +22,18 @@ MonoBehaviour:
   - hunter
   - gravedigger
   - doctor
-  pop: 11
+  pop: 13
   silver: 2
   reward: 35
-  bonusType: 2
-  bonusValue: 0
+  goal: 0
+  spots: []
+  hold: 0
+  escortHp: 0
+  escortDef: 0
+  escortMov: 0
+  escortAt: {x: 0, y: 0}
+  bonusType: 0
+  bonusValue: 14
   bonusGold: 15
   bossHp: 38
   bossAtk: 7
@@ -34,58 +41,272 @@ MonoBehaviour:
   bossMov: 4
   bossHeal: 5
   map:
-  - ...........
-  - '##.#...#.##'
-  - ...........
-  - ~~~~~.~~~~.
-  - dddddTddddd
-  - d#d#ddd#d#d
-  - ddddddddddd
-  - ddddddddddd
+  - '###....,....,....###'
+  - '##..T..........T..##'
+  - '#....#........#....#'
+  - '#..,..............,#'
+  - .##################.
+  - ..,..##......##.,...
+  - .,...##......##..#..
+  - ..#,.#........#..,..
+  - .,...##..##..##.#.,.
+  - ..,..##......##.....
+  - ...,.##......##.,...
+  - .,.....,....,.....,.
+  - '##.####.####.####.##'
+  - ..dddddddddddddddd..
+  - ..ddddddd,,ddddddd..
+  - ...dddddddddddddd...
   enemies:
   - kind: vampire
-    col: 5
-    row: 0
+    col: 10
+    row: 1
+    arrive: 0
+    wave: 
+    stance: 0
+    alert: 0
+  - kind: skeletonHeavy
+    col: 9
+    row: 3
+    arrive: 0
+    wave: 
+    stance: 2
+    alert: 0
+  - kind: skeletonHeavy
+    col: 10
+    row: 3
+    arrive: 0
+    wave: 
+    stance: 2
+    alert: 0
+  - kind: skeleton
+    col: 3
+    row: 3
+    arrive: 0
+    wave: 
+    stance: 1
+    alert: 3
+  - kind: skeleton
+    col: 16
+    row: 3
+    arrive: 0
+    wave: 
+    stance: 1
+    alert: 3
+  - kind: skeleton
+    col: 1
+    row: 6
+    arrive: 0
+    wave: 
+    stance: 1
+    alert: 3
+  - kind: skeleton
+    col: 3
+    row: 9
+    arrive: 0
+    wave: 
+    stance: 1
+    alert: 3
+  - kind: skeleton
+    col: 2
+    row: 8
+    arrive: 0
+    wave: 
+    stance: 1
+    alert: 3
+  - kind: skeletonHeavy
+    col: 9
+    row: 9
+    arrive: 0
+    wave: 
+    stance: 1
+    alert: 2
+  - kind: skeleton
+    col: 8
+    row: 6
+    arrive: 0
+    wave: 
+    stance: 0
+    alert: 0
+  - kind: skeleton
+    col: 11
+    row: 6
+    arrive: 0
+    wave: 
+    stance: 0
+    alert: 0
+  - kind: skeletonArcher
+    col: 10
+    row: 7
+    arrive: 0
+    wave: 
+    stance: 2
+    alert: 0
+  - kind: skeletonArcher
+    col: 16
+    row: 6
+    arrive: 0
+    wave: 
+    stance: 2
+    alert: 0
+  - kind: skeletonArcher
+    col: 18
+    row: 8
+    arrive: 0
+    wave: 
+    stance: 2
+    alert: 0
+  - kind: skeleton
+    col: 16
+    row: 9
+    arrive: 0
+    wave: 
+    stance: 0
+    alert: 0
+  - kind: skeleton
+    col: 18
+    row: 10
+    arrive: 0
+    wave: 
+    stance: 0
+    alert: 0
   - kind: skeleton
     col: 0
-    row: 0
+    row: 11
+    arrive: 5
+    wave: 
+    stance: 0
+    alert: 0
   - kind: skeleton
-    col: 10
-    row: 0
+    col: 19
+    row: 11
+    arrive: 5
+    wave: 
+    stance: 0
+    alert: 0
   - kind: skeletonArcher
-    col: 2
-    row: 1
-  - kind: skeletonArcher
-    col: 8
-    row: 1
-  - kind: skeletonHeavy
-    col: 5
-    row: 2
+    col: 18
+    row: 5
+    arrive: 0
+    wave: kills8
+    stance: 0
+    alert: 0
   - kind: skeleton
-    col: 2
-    row: 0
-  - kind: skeletonHeavy
-    col: 4
-    row: 0
-  - kind: skeleton
-    col: 6
-    row: 0
-  - kind: skeleton
-    col: 8
-    row: 0
-  sample:
-  - kind: pspear
-    col: 3
-    row: 6
-  - kind: hunter
-    col: 4
-    row: 6
-  - kind: knight
-    col: 5
-    row: 6
-  - kind: sword
-    col: 6
-    row: 6
-  - kind: archer
-    col: 5
+    col: 19
     row: 7
+    arrive: 0
+    wave: kills8
+    stance: 0
+    alert: 0
+  - kind: skeleton
+    col: 19
+    row: 5
+    arrive: 0
+    wave: kills8
+    stance: 0
+    alert: 0
+  - kind: skeleton
+    col: 0
+    row: 15
+    arrive: 0
+    wave: deep
+    stance: 0
+    alert: 0
+  - kind: skeleton
+    col: 19
+    row: 15
+    arrive: 0
+    wave: deep
+    stance: 0
+    alert: 0
+  - kind: skeleton
+    col: 1
+    row: 14
+    arrive: 0
+    wave: deep
+    stance: 0
+    alert: 0
+  triggers:
+  - id: deep
+    kind: 1
+    value: 0
+    hexes:
+    - {x: 9, y: 5}
+    - {x: 10, y: 5}
+  - id: kills8
+    kind: 2
+    value: 8
+    hexes: []
+  doors:
+  - hexes:
+    - {x: 9, y: 4}
+    - {x: 10, y: 4}
+    trigger: deep
+  reinforcements:
+  - trigger: kills8
+    pop: 4
+    silver: 0
+    hexes:
+    - {x: 2, y: 13}
+    - {x: 3, y: 13}
+    - {x: 4, y: 13}
+    - {x: 5, y: 13}
+    - {x: 6, y: 13}
+    - {x: 7, y: 13}
+    - {x: 8, y: 13}
+    - {x: 9, y: 13}
+    - {x: 10, y: 13}
+    - {x: 11, y: 13}
+    - {x: 12, y: 13}
+    - {x: 13, y: 13}
+    - {x: 14, y: 13}
+    - {x: 15, y: 13}
+    - {x: 16, y: 13}
+    - {x: 17, y: 13}
+    - {x: 2, y: 14}
+    - {x: 3, y: 14}
+    - {x: 4, y: 14}
+    - {x: 5, y: 14}
+    - {x: 6, y: 14}
+    - {x: 7, y: 14}
+    - {x: 8, y: 14}
+    - {x: 11, y: 14}
+    - {x: 12, y: 14}
+    - {x: 13, y: 14}
+    - {x: 14, y: 14}
+    - {x: 15, y: 14}
+    - {x: 16, y: 14}
+    - {x: 17, y: 14}
+    - {x: 3, y: 15}
+    - {x: 4, y: 15}
+    - {x: 5, y: 15}
+    - {x: 6, y: 15}
+    - {x: 7, y: 15}
+    - {x: 8, y: 15}
+    - {x: 9, y: 15}
+    - {x: 10, y: 15}
+    - {x: 11, y: 15}
+    - {x: 12, y: 15}
+    - {x: 13, y: 15}
+    - {x: 14, y: 15}
+    - {x: 15, y: 15}
+    - {x: 16, y: 15}
+  sample:
+  - kind: knight
+    col: 9
+    row: 13
+  - kind: hunter
+    col: 10
+    row: 13
+  - kind: sword
+    col: 8
+    row: 13
+  - kind: archer
+    col: 8
+    row: 14
+  - kind: doctor
+    col: 11
+    row: 14
+  - kind: pspear
+    col: 7
+    row: 13

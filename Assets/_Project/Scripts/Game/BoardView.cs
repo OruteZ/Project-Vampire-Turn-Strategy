@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using VampireSpawn.Core;
 using Terrain = VampireSpawn.Core.Terrain;
@@ -125,6 +126,7 @@ namespace VampireSpawn.Game
                     var c = Local(h, art.hexSize);
                     if (Board.At(h) == Terrain.Sun) lines.Fill(c, r, Tint(art.sunLight, 0.18f));
                     else if (Board.Lit(h)) lines.Fill(c, r, Tint(art.torchLight, 0.14f));
+                    else if (Board.At(h) == Terrain.Rough) lines.Fill(c, r, new Color(0.38f, 0.30f, 0.20f, 0.22f));
                     for (var i = 0; i < 6; i++)
                     {
                         var a = HexLines.Corner(c, r, i);
@@ -146,6 +148,20 @@ namespace VampireSpawn.Game
         static Color Tint(Color c, float a) { c.a = a; return c; }
 
         // stage-dressing.md 1-2, 1-3, 1-5, 3: a prop on every rock cell, and a ring of props up to Ring cells past the board; tall ones never on the camera (south) side.
+        static bool IsDoor(Stage stage, Hex h) => stage.Doors.Any(d => d.Hexes.Contains(h));
+
+        readonly Dictionary<Hex, GameObject> doors = new Dictionary<Hex, GameObject>();
+
+        // docs/systems/triggers.md 1-4: doors are live props, not baked, so they can open.
+        public void OpenDoor(Hex h)
+        {
+            Board.Open(h);
+            if (doors.TryGetValue(h, out var door)) { Kill(door); doors.Remove(h); }
+            var grid = transform.Find("Grid");
+            if (grid != null) Kill(grid.gameObject);
+            BuildGrid();
+        }
+
         public static GameObject BuildDressing(ArtCatalog art, Stage stage)
         {
             var board = new Board(stage.Map);
@@ -166,7 +182,7 @@ namespace VampireSpawn.Game
                 for (var c = 0; c < board.Cols; c++)
                 {
                     var h = new Hex(c, r);
-                    if (board.At(h) != Terrain.Rock || blockers == null || blockers.Length == 0) continue;
+                    if (board.At(h) != Terrain.Rock || blockers == null || blockers.Length == 0 || IsDoor(stage, h)) continue;
                     var yaw = themed && theme.alignBlockers ? (c + r) % 2 * 180f : (c * 53 + r * 97) % 360;
                     Place(blockers[(c * 7 + r * 13) % blockers.Length], props, Local(h, s) + Vector3.up * art.tileHeight, (themed ? theme.blockerWidth : 1.5f) * s, yaw, (themed ? 1.3f : 99f) * s, themed && theme.alignBlockers);
                 }
@@ -205,6 +221,7 @@ namespace VampireSpawn.Game
             // Without this LateUpdate keeps fitting viewCamera to a board that is gone.
             Board = null;
             Stage = null;
+            doors.Clear();
             Ground = null;
             RenderSettings.fog = false;
         }
@@ -218,6 +235,12 @@ namespace VampireSpawn.Game
             tile.transform.SetParent(transform, false);
             var top = Stand(h);
             tile.transform.position = top;
+            if (IsDoor(Stage, h) && art.rockProps != null && art.rockProps.Length > 0)
+            {
+                Prop(art.rockProps[0], tile.transform, top, 1.2f, 0f);
+                doors[h] = tile;
+                return;
+            }
             switch (terrain)
             {
                 case Terrain.Torch:

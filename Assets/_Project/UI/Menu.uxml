@@ -22,6 +22,7 @@
             </ui:VisualElement>
         </ui:VisualElement>
         <ui:VisualElement name="languages" class="languages" />
+        <ui:Label name="version" class="version" picking-mode="Ignore" />
         <ui:Label name="tip" class="tip" picking-mode="Ignore" />
     </ui:VisualElement>
 </ui:UXML>

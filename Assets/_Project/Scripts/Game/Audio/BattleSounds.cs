@@ -10,6 +10,7 @@ namespace VampireSpawn.Game
             BattleEventKind.Banner => e.BannerKind switch
             {
                 BannerKind.PlayerTurn => s.playerTurn,
+                BannerKind.Reinforce => s.playerTurn,
                 BannerKind.EnemyTurn => s.enemyTurn,
                 BannerKind.Coffin => s.coffin,
                 _ => s.fullMoon,

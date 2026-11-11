@@ -20,6 +20,13 @@ MonoBehaviour:
   pop: 7
   silver: 0
   reward: 25
+  goal: 0
+  spots: []
+  hold: 0
+  escortHp: 0
+  escortDef: 0
+  escortMov: 0
+  escortAt: {x: 0, y: 0}
   bonusType: 2
   bonusValue: 0
   bonusGold: 10
@@ -29,43 +36,66 @@ MonoBehaviour:
   bossMov: 4
   bossHeal: 4
   map:
-  - ..........
-  - ..#....#..
-  - '###.##.###'
-  - ....SS....
-  - ddd#dd#ddd
-  - '##d##d##d#'
-  - dddddddddd
-  - dddddddddd
+  - '##........##'
+  - '#...T..T...#'
+  - '#..#....#..#'
+  - '#..........#'
+  - '###.#..#.###'
+  - '#....,,....#'
+  - .dddddddddd#
+  - '#dddd..dddd#'
+  - '#..#....#..#'
+  - '####....####'
   enemies:
   - kind: vampire
     col: 5
     row: 0
+    arrive: 0
   - kind: skeleton
-    col: 1
-    row: 0
+    col: 2
+    row: 2
+    arrive: 0
   - kind: skeleton
-    col: 8
-    row: 0
+    col: 9
+    row: 2
+    arrive: 0
   - kind: skeleton
     col: 4
-    row: 1
+    row: 3
+    arrive: 0
+  - kind: skeleton
+    col: 7
+    row: 3
+    arrive: 0
   - kind: skeleton
     col: 0
-    row: 0
+    row: 6
+    arrive: 3
+  - kind: skeleton
+    col: 1
+    row: 8
+    arrive: 3
+  - kind: skeleton
+    col: 5
+    row: 9
+    arrive: 4
+  - kind: skeleton
+    col: 6
+    row: 9
+    arrive: 4
   sample:
   - kind: pspear
-    col: 3
-    row: 6
-  - kind: sword
-    col: 4
+    col: 1
     row: 6
   - kind: sword
     col: 5
     row: 6
-  - kind: pspear
+  - kind: sword
     col: 6
     row: 6
   - kind: parcher
-    col: 5
+    col: 3
+    row: 7
+  - kind: parcher
+    col: 8
     row: 7

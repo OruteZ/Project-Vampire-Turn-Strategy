@@ -23,11 +23,13 @@ namespace VampireSpawn.Game.Screens
         float leaveUntil, bannerUntil;
         Vector2Int fittedSize;
         Stage stage;
+        PlayLog playLog;
         OverInfo over;
         UIDocument doc;
         VisualElement overRoot, hudRoot;
         BattleHud hud;
         int? hoverId, hoverCorpse;
+        Hex? hoverArrival;
         Label banner;
         BattleActions actions;
         readonly KeyEdges keys = new KeyEdges();
@@ -81,10 +83,12 @@ namespace VampireSpawn.Game.Screens
         public void StartBattle(Stage s, IEnumerable<Placement> formation, bool startNow)
         {
             stage = s;
+            View.speed = GameSettings.Speed;
             Sound.Music(x => x.battleMusic);
             Sound.Ambience(x => x.battleAmbience);
             finished = enemyPlaying = leaveArm = rulesOpen = logOpen = false;
             hoverId = hoverCorpse = null;
+            hoverArrival = null;
             over = null;
             banner.RemoveFromClassList("shown");
             hudRoot.Clear();
@@ -93,7 +97,8 @@ namespace VampireSpawn.Game.Screens
             FitCameraRect();
             var battle = demo ? new Battle(s, App.DemoUpgrades, formation) : Campaign.NewBattle(s, formation);
             input.Begin(new BattleSession(battle));
-            if (startNow) input.Run(x => x.Start());
+            playLog = new PlayLog(s.Id);
+            if (startNow) { playLog.Started(); input.Run(x => x.Start()); }
         }
 
         // stage-select.md 5-3 2: the stage just played; a first clear that opened the next one shows it on the map.
@@ -127,6 +132,10 @@ namespace VampireSpawn.Game.Screens
             {
                 Hover = hoverId is int id ? b.Find(id) : null,
                 HoverCorpse = hoverCorpse is int cid ? b.Corpses.FirstOrDefault(c => c.Id == cid) : null,
+                HoverArrival = hoverArrival is Hex ah && b.Pending.Any(p => p.Col == ah.Col && p.Row == ah.Row)
+                    ? b.Pending.First(p => p.Col == ah.Col && p.Row == ah.Row) : (Placement?)null,
+                HoverReinforce = hoverArrival is Hex rh && !b.Reinforcing ? b.Upcoming.FirstOrDefault(r => r.Hexes.Contains(rh)) : null,
+                Speed = View.speed,
                 Alt = altDown, EnemyPlaying = enemyPlaying, LeaveArmed = leaveArm, RulesOpen = rulesOpen, LogOpen = logOpen, Demo = demo,
                 FullMoon = fullMoon, MoonFading = moonFading,
                 Upgrades = (demo ? App.DemoUpgrades : Campaign.Upgrades) ?? Enumerable.Empty<string>(),
@@ -152,6 +161,7 @@ namespace VampireSpawn.Game.Screens
         {
             if (!View.IsBusy)
             {
+                if (enemyPlaying) playLog?.EnemyEnds(Session.Battle);
                 enemyPlaying = false;
                 if (fullMoon) { fullMoon = false; moonFading = true; }
             }
@@ -189,6 +199,13 @@ namespace VampireSpawn.Game.Screens
             var two = keys.Pressed("2", kb.digit2Key.isPressed);
             var three = keys.Pressed("3", kb.digit3Key.isPressed);
             var space = keys.Pressed("space", kb.spaceKey.isPressed);
+            // docs/ui/battle-hud.md 4-5: F cycles enemy playback 1x, 2x, 4x and is remembered.
+            if (keys.Pressed("f", kb.fKey.isPressed))
+            {
+                View.speed = View.speed >= 4f ? 1f : View.speed * 2f;
+                GameSettings.Speed = View.speed;
+                RenderBattle();
+            }
             if (View.IsBusy || enemyPlaying || OverShown) return;
             var b = Session.Battle;
             var sel = Session.SelectedUnit;
@@ -196,7 +213,7 @@ namespace VampireSpawn.Game.Screens
             if (one && canAct) actions.Exec();
             if (two && canAct) actions.Wait();
             if (three && canAct && sel.Has(Ability.Mend)) actions.Mend();
-            if (space && (b.Phase == Phase.Deploy ? b.Allies.Any() : b.Phase == Phase.Player)) Primary();
+            if (space && (b.Phase == Phase.Deploy ? b.Reinforcing || b.Allies.Any() : b.Phase == Phase.Player)) Primary();
         }
 
         void TrackHover()
@@ -207,11 +224,14 @@ namespace VampireSpawn.Game.Screens
             var at = m != null && !input.PointerBlocked() ? input.HexAt(m.position.ReadValue()) : null;
             var over = at is Hex h ? Session.Battle.UnitAt(h)?.Id : null;
             var corpse = at is Hex hc && over == null ? Session.Battle.CorpseAt(hc)?.Id : null;
+            var arrival = at is Hex ha && over == null && corpse == null && (Session.Battle.Pending.Any(p => p.Col == ha.Col && p.Row == ha.Row)
+                || (!Session.Battle.Reinforcing && Session.Battle.Upcoming.Any(r => r.Hexes.Contains(ha)))) ? at : null;
             input.overlay.SetHover(at);
-            if (over == hoverId && corpse == hoverCorpse && alt == altDown) return;
+            if (over == hoverId && corpse == hoverCorpse && arrival == hoverArrival && alt == altDown) return;
             var altChanged = alt != altDown;
             hoverId = over;
             hoverCorpse = corpse;
+            hoverArrival = arrival;
             altDown = alt;
             if (altChanged) RenderBattle();
             else hud.RebuildHover(Session, HudNow(), actions);
@@ -226,8 +246,8 @@ namespace VampireSpawn.Game.Screens
         {
             if (View.IsBusy) return;
             var b = Session.Battle;
-            if (b.Phase == Phase.Deploy) input.Run(s => s.Start());
-            else if (b.Phase == Phase.Player) { enemyPlaying = true; input.Run(s => s.EndTurn()); }
+            if (b.Phase == Phase.Deploy) { if (!b.Reinforcing) playLog.Started(); input.Run(s => s.Start()); }
+            else if (b.Phase == Phase.Player) { enemyPlaying = true; playLog.EnemyBegins(); input.Run(s => s.EndTurn()); }
             else if (b.Phase == Phase.Over && over != null) overRoot.AddToClassList("shown");
         }
 
@@ -248,6 +268,7 @@ namespace VampireSpawn.Game.Screens
         {
             finished = true;
             over = OverInfo.From(Session.Battle, demo, Campaign);
+            Debug.Log("플레이 기록: " + playLog.Finish(Session.Battle, over.Won));
             Sound.Music(null);
             if (over.Won) Sound.Play(x => x.victory); else Sound.Play(x => x.defeat);
             if (over.Won && !demo) CampaignStore.Save(Campaign);

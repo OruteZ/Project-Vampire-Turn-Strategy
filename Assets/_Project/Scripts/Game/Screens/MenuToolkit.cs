@@ -14,7 +14,7 @@ namespace VampireSpawn.Game.Screens
         // Crest_*_Large_01 is a demon skull; Large_03 has none, so the hunters' menu wears it (ui-style.md 5-3).
         public const string Crest = "Crest_DarkFantasyMenus_Large_03";
 
-        public static UIDocument Build(Transform host, ArtCatalog art, Campaign campaign, Action demo, Action camp, int selected, Action<int> hover)
+        public static UIDocument Build(Transform host, ArtCatalog art, Campaign campaign, Action demo, Action camp, int selected, Action<int> hover, Action settings)
         {
             var doc = ToolkitKit.Document(host, "Menu (UI Toolkit)", art.panel, art.menuDocument);
             var root = doc.rootVisualElement;
@@ -31,7 +31,14 @@ namespace VampireSpawn.Game.Screens
             ToolkitKit.Value(campMeta, art, Kit.Icon.Gold, campaign.Gold.ToString(), Ui.Candle, Ui.Candle);
 
             Shade(root.Q("shade"));
-            Languages(root.Q("languages"));
+            var row = root.Q("languages");
+            var open = new Label(Loc.T("settings.open"));
+            open.AddToClassList("lang");
+            UiSound.Add(open);
+            open.RegisterCallback<ClickEvent>(_ => settings?.Invoke());
+            row.Add(open);
+            Languages(row);
+            root.Q<Label>("version").text = "v" + Application.version;
             return doc;
         }
 

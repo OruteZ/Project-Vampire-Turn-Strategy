@@ -20,10 +20,20 @@ MonoBehaviour:
   - archer
   - gravedigger
   - doctor
-  pop: 9
+  pop: 11
   silver: 0
   reward: 30
-  bonusType: 2
+  goal: 1
+  spots:
+  - {x: 8, y: 6}
+  - {x: 9, y: 6}
+  - {x: 9, y: 7}
+  hold: 12
+  escortHp: 0
+  escortDef: 0
+  escortMov: 0
+  escortAt: {x: 0, y: 0}
+  bonusType: 1
   bonusValue: 0
   bonusGold: 15
   bossHp: 26
@@ -32,52 +42,219 @@ MonoBehaviour:
   bossMov: 4
   bossHeal: 4
   map:
-  - ..........
-  - '#.#.##.#.#'
-  - ..........
-  - '###.S.####'
-  - dddddddddd
-  - '#d####d###'
-  - dddddddddd
-  - dddddddddd
+  - ..,,......,..,,...
+  - .#....,#..#,....#.
+  - ..,..,........,...
+  - '#...##.####.##...#'
+  - .#..#dddddddd#..,.
+  - ....#dd#dd#dd#.#..
+  - .T...dddddddd#..T.
+  - ..,.#dddddddd...,.
+  - ....#dd#dd#dd#.#..
+  - .#..#dddddddd#..,.
+  - '#...##.####.##...#'
+  - ..,......,......,.
+  - '##################'
+  - ..................
   enemies:
   - kind: vampire
+    col: 9
+    row: 0
+    arrive: 0
+    wave: 
+    stance: 0
+    alert: 0
+  - kind: skeleton
     col: 4
     row: 0
+    arrive: 0
+    wave: 
+    stance: 0
+    alert: 0
+  - kind: skeleton
+    col: 13
+    row: 0
+    arrive: 0
+    wave: 
+    stance: 0
+    alert: 0
+  - kind: skeleton
+    col: 11
+    row: 0
+    arrive: 0
+    wave: 
+    stance: 0
+    alert: 0
   - kind: skeletonArcher
+    col: 2
+    row: 0
+    arrive: 0
+    wave: 
+    stance: 0
+    alert: 0
+  - kind: skeletonArcher
+    col: 15
+    row: 0
+    arrive: 0
+    wave: 
+    stance: 0
+    alert: 0
+  - kind: skeleton
+    col: 0
+    row: 4
+    arrive: 0
+    wave: 
+    stance: 1
+    alert: 3
+  - kind: skeleton
+    col: 0
+    row: 7
+    arrive: 0
+    wave: 
+    stance: 1
+    alert: 3
+  - kind: skeleton
     col: 1
-    row: 0
+    row: 3
+    arrive: 0
+    wave: 
+    stance: 1
+    alert: 3
+  - kind: skeleton
+    col: 15
+    row: 4
+    arrive: 0
+    wave: 
+    stance: 1
+    alert: 2
+  - kind: skeleton
+    col: 17
+    row: 8
+    arrive: 0
+    wave: 
+    stance: 1
+    alert: 2
   - kind: skeletonArcher
-    col: 8
-    row: 0
+    col: 14
+    row: 9
+    arrive: 0
+    wave: 
+    stance: 2
+    alert: 0
   - kind: skeleton
-    col: 3
-    row: 2
-  - kind: skeleton
-    col: 6
-    row: 2
+    col: 16
+    row: 3
+    arrive: 4
+    wave: 
+    stance: 0
+    alert: 0
+  - kind: skeletonArcher
+    col: 16
+    row: 11
+    arrive: 4
+    wave: 
+    stance: 0
+    alert: 0
   - kind: skeleton
     col: 0
     row: 0
+    arrive: 0
+    wave: north2
+    stance: 0
+    alert: 0
   - kind: skeleton
-    col: 2
+    col: 17
     row: 0
+    arrive: 0
+    wave: north2
+    stance: 0
+    alert: 0
+  - kind: skeleton
+    col: 8
+    row: 1
+    arrive: 0
+    wave: north2
+    stance: 0
+    alert: 0
+  - kind: skeleton
+    col: 8
+    row: 13
+    arrive: 0
+    wave: gate
+    stance: 0
+    alert: 0
+  - kind: skeleton
+    col: 9
+    row: 13
+    arrive: 0
+    wave: gate
+    stance: 0
+    alert: 0
+  - kind: skeletonArcher
+    col: 6
+    row: 13
+    arrive: 0
+    wave: gate
+    stance: 0
+    alert: 0
+  - kind: skeletonArcher
+    col: 11
+    row: 13
+    arrive: 0
+    wave: gate
+    stance: 0
+    alert: 0
+  triggers:
+  - id: north2
+    kind: 2
+    value: 6
+    hexes: []
+  - id: gate
+    kind: 0
+    value: 8
+    hexes: []
+  - id: stable
+    kind: 1
+    value: 0
+    hexes:
+    - {x: 1, y: 6}
+    - {x: 2, y: 6}
+    - {x: 2, y: 7}
+  doors:
+  - hexes:
+    - {x: 8, y: 12}
+    - {x: 9, y: 12}
+    trigger: gate
+  reinforcements:
+  - trigger: stable
+    pop: 4
+    silver: 0
+    hexes:
+    - {x: 2, y: 4}
+    - {x: 3, y: 4}
+    - {x: 2, y: 5}
+    - {x: 3, y: 5}
+    - {x: 3, y: 6}
+    - {x: 3, y: 7}
   sample:
+  - kind: sword
+    col: 8
+    row: 6
+  - kind: sword
+    col: 9
+    row: 6
   - kind: pspear
-    col: 3
-    row: 6
-  - kind: sword
-    col: 4
-    row: 6
-  - kind: sword
-    col: 5
-    row: 6
+    col: 9
+    row: 7
+  - kind: archer
+    col: 8
+    row: 7
+  - kind: doctor
+    col: 10
+    row: 7
   - kind: pspear
     col: 6
-    row: 6
-  - kind: doctor
-    col: 4
-    row: 7
+    row: 4
   - kind: parcher
-    col: 5
-    row: 7
+    col: 11
+    row: 4
