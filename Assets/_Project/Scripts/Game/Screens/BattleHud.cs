@@ -86,6 +86,7 @@ namespace VampireSpawn.Game.Screens
             Moon(root, b, hot, st.FullMoon, st.MoonFading);
             if (b.Phase == Phase.Deploy) Deploy(root, s, st, a);
             else Fight(root, s, st, a);
+            Frame(E(root, "action-bar"), art, Ui.Steel);
             hoverLayer = E(root, "layer");
             Hover(s, st, a);
             EndTurn(root, b, st, a);
@@ -569,24 +570,21 @@ namespace VampireSpawn.Game.Screens
 
         void CornerBadge(VisualElement p, string icon, Color c) => Icon(E(p, "overhang decor"), icon, c, "icon corner-badge");
 
-        // battle-hud.md 3-4: basic actions left of the round button, the unit's own actions and skills right of it.
+        // battle-hud.md 3-4: the selected unit's actions in one row inside the wide bar under the round button.
         void Actions(VisualElement root, BattleSession s, BattleActions a)
         {
-            var left = E(root, "actions left");
-            var right = E(root, "actions right");
+            var row = E(root, "action-row");
             foreach (var x in BattleScreen.Slots(s, a))
             {
-                var slot = E(x.Right ? right : left, x.Key == 0 ? "slot passive" : "slot", true);
+                var slot = E(row, x.Key == 0 ? "slot passive" : "slot", true);
                 var danger = x.Color == Ui.Blood;
                 Frame(slot, art, x.On ? x.Color : danger ? Ui.BloodDim : Ui.SteelDim);
                 slot.Q(className: "panel-frame").AddToClassList("thin");
                 Icon(slot, x.Icon, x.Color);
-                if (x.Key > 0)
-                {
-                    L(slot, x.Key.ToString(), "key");
-                    Click(slot, x.Act, x.Ready);
-                }
-                Tip(slot, x.Label, 200);
+                L(slot, x.Label, "slot-name", x.Key == 0 ? Ui.Muted : Ui.Bone);
+                if (x.Key == 0) continue;
+                L(slot, x.Key.ToString(), "key");
+                Click(slot, x.Act, x.Ready);
             }
         }
 
