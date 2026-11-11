@@ -1,13 +1,14 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.InputSystem.Controls;
 using UnityEngine.Rendering;
 using UnityEngine.Rendering.Universal;
 using VampireSpawn.Core;
 
 namespace VampireSpawn.Game
 {
-    // docs/art/battle-camera.md: slides the fixed board view toward what is playing and back. Runs after BoardView so its fitted pose is the base.
+    // docs/art/battle-camera.md: the player's view (11) plus shots that slide toward what is playing and back. Runs after BoardView so its fitted pose is the base.
     [DefaultExecutionOrder(100)]
     public sealed class BattleCamera : MonoBehaviour
     {
@@ -27,12 +28,18 @@ namespace VampireSpawn.Game
         const float Shake = 0.006f, ShakeSeconds = 0.4f, BigStop = 0.09f, ExecuteStop = 0.12f;
         // A big hit (battle-camera.md 6-2): ordinary damage in the data is 1-3.
         const int BigDamage = 4;
+        // Player view, battle-camera.md 11: distance is a fraction of the fitted distance.
+        const float ViewSeconds = 0.12f, WheelStep = 0.85f, NearDistance = 0.3f, TurnDegrees = 90f, PanRate = 0.8f;
 
         BattleView view;
         Camera cam;
         Volume volume;
         ColorAdjustments color;
         Vignette vignette;
+        BoardInput input;
+
+        float viewDistance = 1f, viewYaw, distanceNow = 1f, yawNow, distanceVelocity, yawVelocity;
+        Vector3 viewPan, panNow, panVelocity;
 
         Shot shot;
         Vector3 focus, at, atVelocity;
@@ -64,11 +71,22 @@ namespace VampireSpawn.Game
             vignette.color.Override(Screens.Ui.MoonBlood);
             vignette.intensity.Override(0f);
             vignette.smoothness.Override(0.7f);
+            input = FindAnyObjectByType<BoardInput>();
             view.Played += OnPlayed;
             Snap();
         }
 
         public void Snap()
+        {
+            viewDistance = distanceNow = 1f;
+            viewYaw = yawNow = 0f;
+            viewPan = panNow = Vector3.zero;
+            distanceVelocity = yawVelocity = 0f;
+            panVelocity = Vector3.zero;
+            Settle();
+        }
+
+        void Settle()
         {
             Rest();
             finished = false;
@@ -77,7 +95,7 @@ namespace VampireSpawn.Game
             previewUntil = stopUntil = slowUntil = openingUntil = 0f;
             shakeStart = -1f;
             Time.timeScale = 1f;
-            at = Board.BasePosition;
+            at = Vector3.zero;
             atVelocity = Vector3.zero;
             saturation = vignetteAmount = 0f;
             Learn();
@@ -86,7 +104,7 @@ namespace VampireSpawn.Game
                 openingUntil = Now + OpeningSeconds / Speed;
                 focus = Where(vampireId);
                 shot = Opening;
-                at = Aim();
+                at = Offset();
             }
         }
 
@@ -239,16 +257,64 @@ namespace VampireSpawn.Game
             return hasA ? Where(a) : Where(b);
         }
 
-        Vector3 Aim()
+        Vector3 Look => Board.BaseLook + panNow;
+        Vector3 Eye => Look + Quaternion.Euler(0f, yawNow, 0f) * (Board.BasePosition - Board.BaseLook) * distanceNow;
+
+        // The shot as an offset from the player view.
+        Vector3 Offset() => (focus - Look) * shot.Pan + (Look - Eye) * shot.Zoom;
+
+        void Steer()
         {
-            var basePos = Board.BasePosition;
-            return basePos + (focus - Board.BaseLook) * shot.Pan + (Board.BaseLook - basePos) * shot.Zoom;
+            var dt = Time.unscaledDeltaTime;
+            var kb = Keyboard.current;
+            if (kb != null)
+            {
+                if (kb.rKey.isPressed)
+                {
+                    viewDistance = 1f;
+                    viewYaw = 0f;
+                    viewPan = Vector3.zero;
+                }
+                viewYaw += (Held(kb.eKey) - Held(kb.qKey)) * TurnDegrees * dt;
+                var x = Held(kb.dKey, kb.rightArrowKey) - Held(kb.aKey, kb.leftArrowKey);
+                var y = Held(kb.wKey, kb.upArrowKey) - Held(kb.sKey, kb.downArrowKey);
+                var turn = Quaternion.Euler(0f, viewYaw, 0f);
+                var rate = PanRate * (Board.BaseLook - Board.BasePosition).magnitude * viewDistance * dt;
+                viewPan += turn * new Vector3(x, 0f, y) * rate;
+            }
+            var m = Mouse.current;
+            var wheel = m != null ? m.scroll.ReadValue().y : 0f;
+            if (wheel != 0f && !(input != null && input.PointerBlocked()))
+            {
+                var next = Mathf.Clamp(viewDistance * (wheel > 0f ? WheelStep : 1f / WheelStep), NearDistance, 1f);
+                // Scaling the view about the ground under the cursor keeps that point still on screen.
+                var ray = cam.ScreenPointToRay(m.position.ReadValue());
+                if (new Plane(Vector3.up, Board.BaseLook).Raycast(ray, out var hit))
+                {
+                    var p = ray.GetPoint(hit);
+                    viewPan = p + (Board.BaseLook + viewPan - p) * (next / viewDistance) - Board.BaseLook;
+                }
+                viewDistance = next;
+            }
+            var a = Board.HexToWorld(new Hex(0, 0));
+            var b = Board.HexToWorld(new Hex(Board.Board.Cols - 1, Board.Board.Rows - 1));
+            var look = Board.BaseLook + viewPan;
+            look.x = Mathf.Clamp(look.x, Mathf.Min(a.x, b.x), Mathf.Max(a.x, b.x));
+            look.z = Mathf.Clamp(look.z, Mathf.Min(a.z, b.z), Mathf.Max(a.z, b.z));
+            viewPan = look - Board.BaseLook;
+
+            distanceNow = Mathf.SmoothDamp(distanceNow, viewDistance, ref distanceVelocity, ViewSeconds, Mathf.Infinity, dt);
+            yawNow = Mathf.SmoothDamp(yawNow, viewYaw, ref yawVelocity, ViewSeconds, Mathf.Infinity, dt);
+            panNow = Vector3.SmoothDamp(panNow, viewPan, ref panVelocity, ViewSeconds, Mathf.Infinity, dt);
         }
+
+        static float Held(KeyControl a, KeyControl b = null) => a.isPressed || (b != null && b.isPressed) ? 1f : 0f;
 
         void LateUpdate()
         {
             if (cam == null || Battle == null) return;
-            if (Speed <= 0f) { Snap(); Apply(Vector3.zero); return; }
+            Steer();
+            if (Speed <= 0f) { Settle(); Apply(Vector3.zero); return; }
             // settings.md 5: with camera effects off no shot, stop or slow motion shows; shake keeps its own setting.
             var fx = GameSettings.CameraFx;
             Time.timeScale = !fx ? 1f : Now < stopUntil ? 0f : Now < slowUntil ? SlowScale : 1f;
@@ -257,7 +323,7 @@ namespace VampireSpawn.Game
             if (!fx) shot = default;
 
             var smooth = SmoothSeconds / Speed;
-            at = Vector3.SmoothDamp(at, Aim(), ref atVelocity, smooth);
+            at = Vector3.SmoothDamp(at, Offset(), ref atVelocity, smooth);
             var tinted = fx && (riseOn || drainOn);
             saturation = Mathf.SmoothDamp(saturation, tinted ? shot.Saturation : 0f, ref saturationVelocity, smooth);
             vignetteAmount = Mathf.SmoothDamp(vignetteAmount, tinted ? shot.Vignette : 0f, ref vignetteVelocity, smooth);
@@ -269,7 +335,7 @@ namespace VampireSpawn.Game
             if (shakeStart < 0f) return Vector3.zero;
             if (Now >= shakeUntil) { shakeStart = -1f; return Vector3.zero; }
             var t = Now - shakeStart;
-            var a = Shake * GameSettings.Shake * (Board.BaseLook - Board.BasePosition).magnitude * (Now - shakeUntil) / (shakeStart - shakeUntil);
+            var a = Shake * GameSettings.Shake * (Look - Eye).magnitude * (Now - shakeUntil) / (shakeStart - shakeUntil);
             return cam.transform.right * (Mathf.Sin(t * 55f) * a) + cam.transform.up * (Mathf.Sin(t * 43f + 1f) * a * 0.6f);
         }
 
@@ -306,7 +372,8 @@ namespace VampireSpawn.Game
 
         void Apply(Vector3 shake)
         {
-            cam.transform.position = at + shake;
+            var eye = Eye;
+            cam.transform.SetPositionAndRotation(eye + at + shake, Quaternion.LookRotation(Look - eye));
             color.saturation.Override(saturation);
             vignette.intensity.Override(vignetteAmount);
         }
