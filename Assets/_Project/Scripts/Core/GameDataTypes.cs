@@ -164,6 +164,19 @@ namespace VampireSpawn.Core
         };
     }
 
+    // docs/systems/reinforce.md 1: when the trigger takes effect the next ally phase opens a deploy step.
+    public sealed class Reinforcement
+    {
+        public readonly string Trigger;
+        public readonly int Pop, Silver;
+        public readonly Hex[] Hexes;
+
+        public Reinforcement(string trigger, int pop, int silver, Hex[] hexes)
+        {
+            Trigger = trigger; Pop = pop; Silver = silver; Hexes = hexes ?? Array.Empty<Hex>();
+        }
+    }
+
     public sealed class Door
     {
         public readonly Hex[] Hexes;
@@ -198,15 +211,17 @@ namespace VampireSpawn.Core
         public readonly EscortStats Escort;
         public readonly Trigger[] Triggers;
         public readonly Door[] Doors;
+        public readonly Reinforcement[] Reinforcements;
 
         public Stage(string id, string[] units, int pop, int silver, int reward, Goal goal,
             Bonus bonus, Boss boss, string[] map, Placement[] enemies, Placement[] sample,
-            Hex[] spots = null, int hold = 0, EscortStats escort = null, Trigger[] triggers = null, Door[] doors = null)
+            Hex[] spots = null, int hold = 0, EscortStats escort = null, Trigger[] triggers = null, Door[] doors = null, Reinforcement[] reinforcements = null)
         {
             Id = id; Units = units; Pop = pop; Silver = silver; Reward = reward; Goal = goal;
             Bonus = bonus; Boss = boss; Map = map; Enemies = enemies; Sample = sample;
             Spots = spots ?? Array.Empty<Hex>(); Hold = hold; Escort = escort;
             Triggers = triggers ?? Array.Empty<Trigger>(); Doors = doors ?? Array.Empty<Door>();
+            Reinforcements = reinforcements ?? Array.Empty<Reinforcement>();
         }
 
         public Placement[] Minions => Enemies.Where(e => e.Kind != EnemyType.Vampire).ToArray();

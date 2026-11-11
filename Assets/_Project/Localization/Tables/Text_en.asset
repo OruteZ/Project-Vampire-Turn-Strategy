@@ -742,7 +742,8 @@ MonoBehaviour:
   - m_Id: 5832192094221
     m_Localized: A plague doctor hiding in the manor has joined. From the garden,
       the stables, the chapel and the south gate, the night closes in. Hold the great
-      hall for twelve turns.
+      hall for twelve turns. Reach the torch in the stables and the villagers hiding
+      there will help.
     m_Metadata:
       m_Items:
       - rid: 7201578077006332005
@@ -806,7 +807,8 @@ MonoBehaviour:
   - m_Id: 5832192094233
     m_Localized: The Count's servant hides deep in the abandoned silver mine. Three
       shafts lead down; the gate at the end of the middle one opens only when someone
-      draws near. The deeper you go, the emptier the entrance behind you.
+      draws near. The deeper you go, the emptier the entrance behind you. Fell eight
+      minions and the miners join you at the entrance.
     m_Metadata:
       m_Items:
       - rid: 7201578077006332005
@@ -2049,56 +2051,29 @@ MonoBehaviour:
     m_Localized: the great hall
     m_Metadata:
       m_Items: []
-  - m_Id: 1803760334336000
-    m_Localized: Settings
+  - m_Id: 1797914418278400
+    m_Localized: Reinforcements
     m_Metadata:
       m_Items: []
-  - m_Id: 1803760434999296
-    m_Localized: Settings
+  - m_Id: 1797914485387264
+    m_Localized: 'Reinforcements arrive. +{0} population: deploy them on the marked
+      hexes.'
     m_Metadata:
       m_Items: []
-  - m_Id: 1803760434999297
-    m_Localized: Camera effects
+  - m_Id: 1797914485387265
+    m_Localized: '{0} reinforcements join.'
     m_Metadata:
       m_Items: []
-  - m_Id: 1803760434999298
-    m_Localized: Camera moves in and tints on rises, full moon and kills
+  - m_Id: 1797914485387266
+    m_Localized: Done deploying
     m_Metadata:
       m_Items: []
-  - m_Id: 1803760434999299
-    m_Localized: Screen shake
+  - m_Id: 1797914485387267
+    m_Localized: "Reinforcements \xB7 +{0} population"
     m_Metadata:
       m_Items: []
-  - m_Id: 1803760434999300
-    m_Localized: How hard the screen shakes on big hits
-    m_Metadata:
-      m_Items: []
-  - m_Id: 1803760434999301
-    m_Localized: Battle speed
-    m_Metadata:
-      m_Items: []
-  - m_Id: 1803760434999302
-    m_Localized: Enemy turn playback speed. Press F in battle
-    m_Metadata:
-      m_Items: []
-  - m_Id: 1803760434999303
-    m_Localized: On
-    m_Metadata:
-      m_Items: []
-  - m_Id: 1803760434999304
-    m_Localized: Off
-    m_Metadata:
-      m_Items: []
-  - m_Id: 1803760434999305
-    m_Localized: Low
-    m_Metadata:
-      m_Items: []
-  - m_Id: 1803760434999306
-    m_Localized: Normal
-    m_Metadata:
-      m_Items: []
-  - m_Id: 1803760434999307
-    m_Localized: Close
+  - m_Id: 1797914485387268
+    m_Localized: Next ally phase
     m_Metadata:
       m_Items: []
   references:
