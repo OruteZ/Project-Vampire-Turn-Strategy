@@ -559,23 +559,23 @@ MonoBehaviour:
       m_Items:
       - rid: 7201578077006332005
   - m_Id: 5832187899938
-    m_Localized: Hunter
+    m_Localized: Alchemist
     m_Metadata:
       m_Items:
       - rid: 7201578077006332005
   - m_Id: 5832187899939
-    m_Localized: HU
+    m_Localized: AL
     m_Metadata:
       m_Items:
       - rid: 7201578077006332005
   - m_Id: 5832187899940
-    m_Localized: Vampire hunter (working name). Extra damage to vampires and spawn.
-      Costs 1 silver.
+    m_Localized: A beak-masked alchemist. Hurls flasks of molten silver that sear
+      vampires and spawn.
     m_Metadata:
       m_Items:
       - rid: 7201578077006332005
   - m_Id: 5832187899941
-    m_Localized: Refined Silver Shot
+    m_Localized: Refined Silver Solution
     m_Metadata:
       m_Items:
       - rid: 7201578077006332005
@@ -1703,15 +1703,16 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 1147185487736834
-    m_Localized: Plague Doctor
+    m_Localized: Saintess
     m_Metadata:
       m_Items: []
   - m_Id: 1147185487736835
-    m_Localized: PD
+    m_Localized: ST
     m_Metadata:
       m_Items: []
   - m_Id: 1147185487736836
-    m_Localized: A beak-masked physician. Treats a wounded ally within 2 hexes. Frail.
+    m_Localized: A cross-bearing saintess. Heals a wounded ally within 2 hexes by
+      prayer. Frail.
     m_Metadata:
       m_Items: []
   - m_Id: 1147185487736837
@@ -1787,7 +1788,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 1147185487736855
-    m_Localized: Swift Rounds
+    m_Localized: Pilgrim's Stride
     m_Metadata:
       m_Items: []
   - m_Id: 1147185487736856
@@ -1795,7 +1796,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 1147185487736857
-    m_Localized: Herb Pouch
+    m_Localized: Blessed Oil
     m_Metadata:
       m_Items: []
   - m_Id: 1147185487736858
@@ -1803,7 +1804,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 1147185487736859
-    m_Localized: Waxed Coat
+    m_Localized: Consecrated Vestments
     m_Metadata:
       m_Items: []
   - m_Id: 1147185487736860

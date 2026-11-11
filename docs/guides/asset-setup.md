@@ -17,6 +17,7 @@
 | `ANIMATION_Bow_Combat_Unity_2022_3_v1_0_0.unitypackage` | 필수 | 궁수 서기·쏘기·맞기·죽기 애니메이션 |
 | `INTERFACE_Dark_Fantasy_HUD_Unity_2022_3_v1_1_1.unitypackage` | 필수 | 전투 HUD 아이콘·프레임 |
 | `INTERFACE_Dark_Fantasy_Menus_Unity_2022_3_v1_0_1.unitypackage` | 필수 | 메뉴 UI |
+| `POLYGON_Werewolf_2022_3_v1_3_1.unitypackage` | 선택 | 웨어울프 모델 (#111, 아직 게임이 쓰지 않음. 다른 팩과 겹치는 공용 에셋만 목록에 있다) |
 | `Free_UI_Click_Sound_Pack.unitypackage` | 필수 | UI 사운드 (Asset Store SwishSwoosh "Free UI Click Sound Pack" 을 받아 이 이름으로 바꿔 둔다. 공백 없는 이름이어야 setup.sh 가 읽는다) |
 
 팀원은 회사 드라이브 받기 도구 NestResources 로 받는다(팀원에게만 배포, `NestResources.exe install-skill` 을 한 번 돌려 두면 `setup.sh` 가 빠진 패키지를 저절로 받는다). 그 밖의 사람은 Synty 를 산 계정(Synty Store 또는 Unity Asset Store)에서 받는다. 드라이브의 9개는 2026-11-09 에 파일 이름·바이트 크기가 위 표와 같음을 확인했다. 파일 이름의 판(`v1_4_1` 등)이 같아야 한다. 다른 판은 GUID 가 다를 수 있고, 그러면 아래 확인이 어느 에셋이 어긋났는지 알려 준다.
