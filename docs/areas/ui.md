@@ -2,8 +2,8 @@
 
 ## 경로
 - 기획: docs/design/ui.md, docs/design/art.md
-- 기획서: docs/ui/ (화면별. 장 선택 3 레이어 docs/ui/stage-select.md, 병영 docs/ui/upgrade.md), docs/art/ui-style.md (UI 스타일: 색·글꼴·틀·버튼·배치 토큰, 15 고정 크기, 16 화면 배치 원칙), docs/art/ui-references.md (화면별 레이아웃 조사·요소별 레퍼런스), docs/art/campaign-map.md (장 선택 바탕 3D 원정 지도)
-- 코드: Assets/_Project/Scripts/Game/Screens/ (`ToolkitKit.cs` 문서 만들기·버튼·틀·칩·값·툴팁·Synty 프리팹 다시 쌓기·그늘, `Ui.cs` 색 토큰, `Kit.cs` 아이콘 이름, `BattleHud.cs` 전투 화면, `CampFlow.cs`·`CampToolkit.cs`·`CampMarkers.cs` 장 선택·병영, `MenuToolkit.cs`·`MenuFlow.cs` 메인 메뉴, `Fx.cs` 나타남·맥박·번쩍임·검은 화면, `App.cs` 씬 전환). 배치·크기는 Assets/_Project/UI/ 의 UXML·USS (`Theme.uss` 공용, `Menu`·`Camp`·`Battle` 화면별, `Panel.asset` 패널 비율). 원정 지도는 `Game/CampaignMapView.cs` + 배치 표 `Game/CampaignMapLayout.cs`, Camp 씬에 구움 (campaign-map.md 10). 구현 기록 docs/dev/unity-port.md "전투 화면 달과 피"
+- 기획서: docs/ui/ (화면별. 장 선택 3 레이어 docs/ui/stage-select.md, 병영 docs/ui/upgrade.md, 설정 창 docs/ui/settings.md), docs/art/ui-style.md (UI 스타일: 색·글꼴·틀·버튼·배치 토큰, 15 고정 크기, 16 화면 배치 원칙), docs/art/ui-references.md (화면별 레이아웃 조사·요소별 레퍼런스), docs/art/campaign-map.md (장 선택 바탕 3D 원정 지도)
+- 코드: Assets/_Project/Scripts/Game/Screens/ (`ToolkitKit.cs` 문서 만들기·버튼·틀·칩·값·툴팁·Synty 프리팹 다시 쌓기·그늘, `Ui.cs` 색 토큰, `Kit.cs` 아이콘 이름, `BattleHud.cs` 전투 화면, `CampFlow.cs`·`CampToolkit.cs`·`CampMarkers.cs` 장 선택·병영, `MenuToolkit.cs`·`MenuFlow.cs` 메인 메뉴, `SettingsToolkit.cs` 설정 창(값은 `Game/GameSettings.cs`), `Fx.cs` 나타남·맥박·번쩍임·검은 화면, `App.cs` 씬 전환). 배치·크기는 Assets/_Project/UI/ 의 UXML·USS (`Theme.uss` 공용, `Menu`·`Camp`·`Battle` 화면별, `Panel.asset` 패널 비율). 원정 지도는 `Game/CampaignMapView.cs` + 배치 표 `Game/CampaignMapLayout.cs`, Camp 씬에 구움 (campaign-map.md 10). 구현 기록 docs/dev/unity-port.md "전투 화면 달과 피"
 - UI 스프라이트: `ArtCatalog.ui`, 장식 프리팹: `ArtCatalog.uiPrefabs` (이름으로 찾는다). 새 스프라이트는 이 배열에 더하고 `node tools/assets/scan.mjs`
 - 아트: Assets/Synty/InterfaceDarkFantasyMenus, Assets/Synty/InterfaceDarkFantasyHUD, Assets/Synty/InterfaceCore (분류는 art-assets.md)
 - 화면 검사: `tools/ui-audit/sweep.sh`, `Scripts/Editor/UiAudit.cs`, 기록 docs/dev/ui-audit.md

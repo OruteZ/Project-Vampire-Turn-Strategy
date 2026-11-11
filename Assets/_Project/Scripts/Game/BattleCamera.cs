@@ -81,7 +81,7 @@ namespace VampireSpawn.Game
             atVelocity = Vector3.zero;
             saturation = vignetteAmount = 0f;
             Learn();
-            if (Speed > 0f && vampireId.HasValue && cam != null)
+            if (Speed > 0f && GameSettings.CameraFx && vampireId.HasValue && cam != null)
             {
                 openingUntil = Now + OpeningSeconds / Speed;
                 focus = Where(vampireId);
@@ -108,7 +108,7 @@ namespace VampireSpawn.Game
         // Extra playback seconds (before pace) the view waits after an event so its shot can be seen (battle-camera.md 5, 7, 9, 10).
         public float HoldFor(BattleEvent e)
         {
-            if (Battle == null || cam == null || Speed <= 0f) return 0f;
+            if (Battle == null || cam == null || Speed <= 0f || !GameSettings.CameraFx) return 0f;
             return e.Kind switch
             {
                 BattleEventKind.Hit when drainOn => 0.8f,
@@ -249,13 +249,16 @@ namespace VampireSpawn.Game
         {
             if (cam == null || Battle == null) return;
             if (Speed <= 0f) { Snap(); Apply(Vector3.zero); return; }
-            Time.timeScale = Now < stopUntil ? 0f : Now < slowUntil ? SlowScale : 1f;
+            // settings.md 5: with camera effects off no shot, stop or slow motion shows; shake keeps its own setting.
+            var fx = GameSettings.CameraFx;
+            Time.timeScale = !fx ? 1f : Now < stopUntil ? 0f : Now < slowUntil ? SlowScale : 1f;
             if (!view.IsBusy) Idle();
             if (followId.HasValue) focus = Where(followId);
+            if (!fx) shot = default;
 
             var smooth = SmoothSeconds / Speed;
             at = Vector3.SmoothDamp(at, Aim(), ref atVelocity, smooth);
-            var tinted = riseOn || drainOn;
+            var tinted = fx && (riseOn || drainOn);
             saturation = Mathf.SmoothDamp(saturation, tinted ? shot.Saturation : 0f, ref saturationVelocity, smooth);
             vignetteAmount = Mathf.SmoothDamp(vignetteAmount, tinted ? shot.Vignette : 0f, ref vignetteVelocity, smooth);
             Apply(ShakeOffset());
@@ -266,7 +269,7 @@ namespace VampireSpawn.Game
             if (shakeStart < 0f) return Vector3.zero;
             if (Now >= shakeUntil) { shakeStart = -1f; return Vector3.zero; }
             var t = Now - shakeStart;
-            var a = Shake * (Board.BaseLook - Board.BasePosition).magnitude * (Now - shakeUntil) / (shakeStart - shakeUntil);
+            var a = Shake * GameSettings.Shake * (Board.BaseLook - Board.BasePosition).magnitude * (Now - shakeUntil) / (shakeStart - shakeUntil);
             return cam.transform.right * (Mathf.Sin(t * 55f) * a) + cam.transform.up * (Mathf.Sin(t * 43f + 1f) * a * 0.6f);
         }
 

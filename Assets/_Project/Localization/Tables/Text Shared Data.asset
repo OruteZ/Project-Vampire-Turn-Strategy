@@ -1667,6 +1667,58 @@ MonoBehaviour:
     m_Key: stage.s6.place
     m_Metadata:
       m_Items: []
+  - m_Id: 1803760334336000
+    m_Key: settings.open
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1803760434999296
+    m_Key: settings.title
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1803760434999297
+    m_Key: settings.camera
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1803760434999298
+    m_Key: settings.cameraTip
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1803760434999299
+    m_Key: settings.shake
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1803760434999300
+    m_Key: settings.shakeTip
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1803760434999301
+    m_Key: settings.speed
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1803760434999302
+    m_Key: settings.speedTip
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1803760434999303
+    m_Key: settings.on
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1803760434999304
+    m_Key: settings.off
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1803760434999305
+    m_Key: settings.weak
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1803760434999306
+    m_Key: settings.normal
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1803760434999307
+    m_Key: settings.close
+    m_Metadata:
+      m_Items: []
   m_Metadata:
     m_Items: []
   m_KeyGenerator:

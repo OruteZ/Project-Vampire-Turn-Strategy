@@ -80,12 +80,10 @@ namespace VampireSpawn.Game.Screens
             Fx.FadeIn(root);
         }
 
-        const string SpeedKey = "battle.speed";
-
         public void StartBattle(Stage s, IEnumerable<Placement> formation, bool startNow)
         {
             stage = s;
-            View.speed = Mathf.Clamp(PlayerPrefs.GetFloat(SpeedKey, 1f), 1f, 4f);
+            View.speed = GameSettings.Speed;
             Sound.Music(x => x.battleMusic);
             Sound.Ambience(x => x.battleAmbience);
             finished = enemyPlaying = leaveArm = rulesOpen = logOpen = false;
@@ -204,7 +202,7 @@ namespace VampireSpawn.Game.Screens
             if (keys.Pressed("f", kb.fKey.isPressed))
             {
                 View.speed = View.speed >= 4f ? 1f : View.speed * 2f;
-                PlayerPrefs.SetFloat(SpeedKey, View.speed);
+                GameSettings.Speed = View.speed;
                 RenderBattle();
             }
             if (View.IsBusy || enemyPlaying || OverShown) return;
