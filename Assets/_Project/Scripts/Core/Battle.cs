@@ -205,7 +205,7 @@ namespace VampireSpawn.Core
         public Corpse CorpseAt(Hex h) => corpses.FirstOrDefault(c => c.Pos == h);
         public Unit Find(int id) => units.FirstOrDefault(u => u.Id == id);
         public int Used(Func<UnitType, int> cost) => Allies.Sum(u => cost(GameData.Type(u.Type)));
-        public bool BonusMet => Stage.Bonus.IsMet(Turn, Stats.Drained, units.Any(u => u.Role == Role.Minion) || pending.Count > 0);
+        public bool BonusMet => Stage.Bonus.IsMet(Turn, Stats.Drained, units.Any(u => u.Role == Role.Minion) || pending.Count > 0, Stats.Lost);
 
         public Occupant OccupantAt(Hex h)
         {

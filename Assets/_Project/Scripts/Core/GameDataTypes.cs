@@ -6,7 +6,7 @@ namespace VampireSpawn.Core
     public enum Tier { Peasant, Regular, Knight, Hunter }
     // Stored as numbers in the unit assets: add new skills at the end only.
     public enum Ability { None, Pike, Ambush, Cleave, Charge, Formation, Ward, Rite, Twice, Bury, Mend }
-    public enum BonusType { Turns, NoEat, AllMinions }
+    public enum BonusType { Turns, NoEat, AllMinions, Losses }
     // What wins a battle (docs/dev/battle-goals.md). Stored as numbers in the stage assets: add new goals at the end only.
     public enum Goal { Boss, Defense, Escort }
     public enum Stance { Charge, Guard, Hold }
@@ -109,10 +109,11 @@ namespace VampireSpawn.Core
             Type = type; Value = value; Gold = gold;
         }
 
-        public bool IsMet(int turn, int drained, bool minionsLeft) => Type switch
+        public bool IsMet(int turn, int drained, bool minionsLeft, int lost = 0) => Type switch
         {
             BonusType.Turns => turn <= Value,
             BonusType.NoEat => drained == 0,
+            BonusType.Losses => lost <= Value,
             _ => !minionsLeft,
         };
 
@@ -120,6 +121,7 @@ namespace VampireSpawn.Core
         {
             BonusType.Turns => new Message("bonus.turns", Value),
             BonusType.NoEat => new Message("bonus.noEat"),
+            BonusType.Losses => new Message("bonus.losses", Value),
             _ => new Message("bonus.allMinions"),
         };
     }

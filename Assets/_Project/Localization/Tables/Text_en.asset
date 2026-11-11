@@ -740,9 +740,9 @@ MonoBehaviour:
       m_Items:
       - rid: 7201578077006332005
   - m_Id: 5832192094221
-    m_Localized: A plague doctor hiding in the manor has joined. Hold the great hall
-      for twelve turns as the night closes in from every side. The lady's crypt opens
-      on turn six. Reach the chapel torch and the villagers hiding there will help.
+    m_Localized: 'A plague doctor hiding in the manor has joined. North, east, west,
+      south: the dead come from every side in turn. Hold the great hall for twelve
+      turns. Reach the chapel torch and the villagers hiding there will help.'
     m_Metadata:
       m_Items:
       - rid: 7201578077006332005
@@ -2129,6 +2129,10 @@ MonoBehaviour:
       m_Items: []
   - m_Id: 1848099521490944
     m_Localized: Minions {0}
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1851480008880128
+    m_Localized: Lose no more than {0} allies
     m_Metadata:
       m_Items: []
   references:
