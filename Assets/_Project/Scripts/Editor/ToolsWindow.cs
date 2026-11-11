@@ -40,8 +40,13 @@ namespace VampireSpawn.Editor
                 Debug.Log(CampaignMapBaker.Bake());
 
             EditorGUILayout.LabelField("전투 보드", EditorStyles.boldLabel);
-            if (GUILayout.Button(new GUIContent("꾸미기 프리팹 굽기", "프리팹이 없는 장만 규칙대로 Assets/_Project/Art/Stages/<장 id>.prefab 을 짓는다. 있는 프리팹은 그대로 (docs/art/stage-dressing.md 4)")))
-                Debug.Log(StageDressingBaker.Bake());
+            using (new EditorGUILayout.HorizontalScope())
+            {
+                if (GUILayout.Button(new GUIContent("꾸미기 프리팹 굽기", "프리팹이 없는 장만 규칙대로 Assets/_Project/Art/Stages/<장 id>.prefab 을 짓는다. 있는 프리팹은 그대로 (docs/art/stage-dressing.md 4)")))
+                    Debug.Log(StageDressingBaker.Bake());
+                if (GUILayout.Button(new GUIContent("세트피스 뽑기 (묘지)", "Synty Demo_Graveyard_01 의 소품 무리를 Assets/_Project/Art/Setpieces/Cemetery 프리팹으로. 있는 파일은 그대로 (docs/art/stage-dressing.md 5-1)")))
+                    Debug.Log(SetpieceExtractor.Extract("Assets/Synty/PolygonDarkFantasy/Scenes/Demo_Graveyard_01.unity", "Cemetery"));
+            }
 
             EditorGUILayout.LabelField("유닛 모습", EditorStyles.boldLabel);
             if (GUILayout.Button(new GUIContent("유닛 모습 한눈에", "모든 UnitLook 을 앞 대기·옆 대기·옆 공격으로 찍어 verify-artifacts/unit-lineup.png 로 연다 (docs/art/unit-visuals.md 6)")))
