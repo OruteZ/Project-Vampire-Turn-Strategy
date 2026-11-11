@@ -92,6 +92,13 @@ MonoBehaviour:
     wave: 
     stance: 0
     alert: 0
+  - kind: skeletonHeavy
+    col: 8
+    row: 2
+    arrive: 0
+    wave: 
+    stance: 0
+    alert: 0
   - kind: skeleton
     col: 15
     row: 4
@@ -123,77 +130,77 @@ MonoBehaviour:
   - kind: skeleton
     col: 16
     row: 3
-    arrive: 4
+    arrive: 3
     wave: 
     stance: 0
     alert: 0
   - kind: skeletonArcher
     col: 16
     row: 11
-    arrive: 4
+    arrive: 3
     wave: 
     stance: 0
     alert: 0
   - kind: skeletonHeavy
     col: 17
     row: 11
-    arrive: 4
+    arrive: 3
     wave: 
     stance: 0
     alert: 0
   - kind: skeleton
     col: 0
     row: 0
-    arrive: 5
+    arrive: 4
     wave: 
     stance: 0
     alert: 0
   - kind: skeleton
     col: 17
     row: 0
-    arrive: 5
+    arrive: 4
     wave: 
     stance: 0
     alert: 0
   - kind: skeletonArcher
     col: 6
     row: 1
-    arrive: 5
+    arrive: 4
     wave: 
     stance: 0
     alert: 0
   - kind: skeletonHeavy
     col: 9
     row: 2
-    arrive: 5
+    arrive: 4
     wave: 
     stance: 0
     alert: 0
   - kind: skeleton
     col: 0
     row: 4
-    arrive: 6
+    arrive: 5
     wave: 
     stance: 0
     alert: 0
   - kind: skeleton
     col: 0
     row: 7
-    arrive: 6
+    arrive: 5
     wave: 
     stance: 0
     alert: 0
   - kind: skeletonArcher
     col: 1
     row: 3
-    arrive: 6
+    arrive: 5
     wave: 
     stance: 0
     alert: 0
   - kind: skeletonHeavy
     col: 0
     row: 5
-    arrive: 6
+    arrive: 5
     wave: 
     stance: 0
     alert: 0
@@ -239,6 +246,34 @@ MonoBehaviour:
     wave: gate
     stance: 0
     alert: 0
+  - kind: skeleton
+    col: 17
+    row: 2
+    arrive: 8
+    wave: 
+    stance: 0
+    alert: 0
+  - kind: skeletonHeavy
+    col: 17
+    row: 9
+    arrive: 8
+    wave: 
+    stance: 0
+    alert: 0
+  - kind: skeleton
+    col: 0
+    row: 9
+    arrive: 8
+    wave: 
+    stance: 0
+    alert: 0
+  - kind: skeletonArcher
+    col: 0
+    row: 2
+    arrive: 8
+    wave: 
+    stance: 0
+    alert: 0
   - kind: skeletonHeavy
     col: 4
     row: 0
@@ -277,7 +312,7 @@ MonoBehaviour:
   triggers:
   - id: gate
     kind: 0
-    value: 8
+    value: 7
     hexes: []
   - id: chapel
     kind: 1
