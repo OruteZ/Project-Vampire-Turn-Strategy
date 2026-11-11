@@ -2328,6 +2328,14 @@ MonoBehaviour:
       +{1}"
     m_Metadata:
       m_Items: []
+  - m_Id: 1980499945648128
+    m_Localized: "\uC774\uB3D9"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1980500012756992
+    m_Localized: "\uACF5\uACA9"
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds:

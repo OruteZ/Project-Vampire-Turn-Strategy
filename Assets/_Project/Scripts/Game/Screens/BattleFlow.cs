@@ -68,6 +68,7 @@ namespace VampireSpawn.Game.Screens
                 Exec = () => input.Act(s => s.ToggleExecute()),
                 Mend = () => input.Act(s => s.ToggleMend()),
                 Wait = () => input.Run(s => s.Wait()),
+                Aim = () => input.Act(s => s.ClearMode()),
                 ToggleRules = () => { rulesOpen = !rulesOpen; RenderBattle(); },
                 ToggleLog = () => { logOpen = !logOpen; RenderBattle(); },
                 Retry = () => StartBattle(stage, Session.Battle.StartFormation, true),
@@ -195,9 +196,9 @@ namespace VampireSpawn.Game.Screens
         {
             var kb = UnityEngine.InputSystem.Keyboard.current;
             if (kb == null) return;
-            var one = keys.Pressed("1", kb.digit1Key.isPressed);
-            var two = keys.Pressed("2", kb.digit2Key.isPressed);
-            var three = keys.Pressed("3", kb.digit3Key.isPressed);
+            var digits = new[] { kb.digit1Key, kb.digit2Key, kb.digit3Key, kb.digit4Key, kb.digit5Key };
+            var digit = 0;
+            for (var i = 0; i < digits.Length; i++) if (keys.Pressed((i + 1).ToString(), digits[i].isPressed)) digit = i + 1;
             var space = keys.Pressed("space", kb.spaceKey.isPressed);
             // docs/ui/battle-hud.md 4-5: F cycles enemy playback 1x, 2x, 4x and is remembered.
             if (keys.Pressed("f", kb.fKey.isPressed))
@@ -208,11 +209,7 @@ namespace VampireSpawn.Game.Screens
             }
             if (View.IsBusy || enemyPlaying || OverShown) return;
             var b = Session.Battle;
-            var sel = Session.SelectedUnit;
-            var canAct = b.Phase == Phase.Player && sel != null && !sel.Acted;
-            if (one && canAct) actions.Exec();
-            if (two && canAct) actions.Wait();
-            if (three && canAct && sel.Has(Ability.Mend)) actions.Mend();
+            if (digit > 0) BattleScreen.Slots(Session, actions).FirstOrDefault(x => x.Key == digit && x.Ready)?.Act?.Invoke();
             if (space && (b.Phase == Phase.Deploy ? b.Reinforcing || b.Allies.Any() : b.Phase == Phase.Player)) Primary();
         }
 

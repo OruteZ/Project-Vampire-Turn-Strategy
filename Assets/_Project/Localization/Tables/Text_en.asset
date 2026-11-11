@@ -2205,6 +2205,14 @@ MonoBehaviour:
     m_Localized: '{0} feasts: HP +{1}'
     m_Metadata:
       m_Items: []
+  - m_Id: 1980499945648128
+    m_Localized: Move
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1980500012756992
+    m_Localized: Attack
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds:

@@ -68,12 +68,6 @@ namespace VampireSpawn.Game.Screens
             return b;
         }
 
-        static void Hotkey(VisualElement b, string key)
-        {
-            L(b, key, "key");
-            KeepClearOfKey(b, key);
-        }
-
         public void Build(VisualElement root, BattleSession s, HudState st, BattleActions a)
         {
             root.Clear();
@@ -237,14 +231,20 @@ namespace VampireSpawn.Game.Screens
             }
         }
 
+        // battle-hud.md 3-6: one round button for start, done deploying, end turn and results.
         void EndTurn(VisualElement root, Battle b, HudState st, BattleActions a)
         {
             var label = BattleScreen.PrimaryLabel(b, st.EnemyPlaying, out var enabled, st.Speed);
-            var btn = Btn(root, label, a.Primary, BtnKind.Primary, enabled, b.Phase == Phase.Deploy && !enabled ? Loc.T("hud.needAlly") : null, "end-turn");
-            Hotkey(btn, "Space");
+            var btn = E(root, "end-turn", true);
+            Picture(E(btn, "ring-fill"), S(RingBack), enabled ? Ui.Steel : Ui.Panel2);
+            var hot = b.Phase == Phase.Player && !st.EnemyPlaying && b.Stage.HasBoss && b.MoonNext();
+            Picture(E(btn, "ring"), S(Ring), hot ? Ui.MoonBlood : enabled ? Ui.Bone : Ui.Line);
+            L(btn, label, "end-turn-text", enabled ? Ui.Ink : Ui.Muted);
+            L(btn, "Space", "key");
+            Click(btn, a.Primary, enabled);
+            if (b.Phase == Phase.Deploy && !enabled) Tip(btn, Loc.T("hud.needAlly"), 0);
             var left = b.Phase == Phase.Player && !st.EnemyPlaying ? b.Allies.Count(u => !u.Acted) : 0;
-            // ui-style.md 14-3-3: inside the button, left of the label.
-            if (left > 0) Tip(RingBadge(btn, art, left.ToString(), 28, Ui.Steel, Ui.Ink, Ui.Bone), Loc.T("battle.allyPhase"), 300);
+            if (left > 0) Tip(RingBadge(btn, art, left.ToString(), 32, Ui.Steel, Ui.Ink, Ui.Bone), Loc.T("battle.allyPhase"), 300);
         }
 
         void Corner(VisualElement root, HudState st, BattleActions a)
@@ -569,28 +569,24 @@ namespace VampireSpawn.Game.Screens
 
         void CornerBadge(VisualElement p, string icon, Color c) => Icon(E(p, "overhang decor"), icon, c, "icon corner-badge");
 
+        // battle-hud.md 3-4: basic actions left of the round button, the unit's own actions and skills right of it.
         void Actions(VisualElement root, BattleSession s, BattleActions a)
         {
-            var exec = s.Mode == SelectMode.Execute;
-            var mend = s.Mode == SelectMode.Mend;
-            var sel = s.SelectedUnit;
-            var row = E(root, "actions");
-            foreach (var (key, icon, label, act, on, danger) in new[]
+            var left = E(root, "actions left");
+            var right = E(root, "actions right");
+            foreach (var x in BattleScreen.Slots(s, a))
             {
-                (1, Kit.Icon.Dead, Loc.T(exec ? "unit.card.cancelExec" : "unit.card.exec"), a.Exec, exec, true),
-                (2, Kit.Icon.Wait, Loc.T("unit.card.wait"), a.Wait, false, false),
-                (3, Kit.Icon.Heal, Loc.T(mend ? "hud.cancelMend" : "hud.mend"), a.Mend, mend, false),
-            })
-            {
-                if (act == a.Mend && !sel.Has(Ability.Mend)) continue;
-                if (act == a.Exec && sel.Role == Role.Escort) continue;
-                var slot = E(row, "slot", true);
-                Frame(slot, art, on ? (danger ? Ui.Blood : Ui.Steel) : danger ? Ui.BloodDim : Ui.SteelDim);
+                var slot = E(x.Right ? right : left, x.Key == 0 ? "slot passive" : "slot", true);
+                var danger = x.Color == Ui.Blood;
+                Frame(slot, art, x.On ? x.Color : danger ? Ui.BloodDim : Ui.SteelDim);
                 slot.Q(className: "panel-frame").AddToClassList("thin");
-                Icon(slot, icon, danger ? Ui.Blood : Ui.Steel);
-                L(slot, key.ToString(), "key");
-                Click(slot, act);
-                Tip(slot, label, 200);
+                Icon(slot, x.Icon, x.Color);
+                if (x.Key > 0)
+                {
+                    L(slot, x.Key.ToString(), "key");
+                    Click(slot, x.Act, x.Ready);
+                }
+                Tip(slot, x.Label, 200);
             }
         }
 

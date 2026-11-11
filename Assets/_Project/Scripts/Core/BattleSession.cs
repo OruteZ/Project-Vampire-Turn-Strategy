@@ -111,6 +111,8 @@ namespace VampireSpawn.Core
 
         public void ToggleMend() { Flash = default; Mode = Mode == SelectMode.Mend ? SelectMode.Act : SelectMode.Mend; }
 
+        public void ClearMode() { Flash = default; Mode = SelectMode.Act; }
+
         public CommandResult Wait()
         {
             Flash = default;
