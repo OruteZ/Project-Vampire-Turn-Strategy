@@ -17,6 +17,7 @@
 | 검 전투 애니메이션 | Assets/Synty/AnimationSwordCombat | ANIMATION_Sword_Combat | |
 | HUD | Assets/Synty/InterfaceDarkFantasyHUD | INTERFACE_Dark_Fantasy_HUD | uGUI 프리팹 327 |
 | 메뉴 UI | Assets/Synty/InterfaceDarkFantasyMenus | INTERFACE_Dark_Fantasy_Menus | uGUI 프리팹 228 |
+| 메인 메뉴 바탕 | Assets/Synty/PolygonDarkFantasy/Scenes/Demo_Cathedral_01.unity | POLYGON_Dark_Fantasy | 백작성·큰 달 데모 씬. Build Settings 에 있고 `MenuFlow` 가 겹쳐 불러 그 씬 카메라로 그린다 (#116) |
 | UI 공용 스프라이트·셰이더 | Assets/Synty/InterfaceCore | INTERFACE 둘 다 | |
 
 ## 결정

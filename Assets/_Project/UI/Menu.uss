@@ -1,90 +1,75 @@
 /* docs/ui/main-menu.md. Sizes are 1920x1080 reference px (Panel.asset scales like the uGUI canvas). */
 .screen {
     flex-grow: 1;
-    background-color: var(--ink);
 }
 
-/* ui-style.md 11-1: the first stage's board, blurred (a 240x135 render target stretched) and darkened 60%. */
-.backdrop {
-    position: absolute;
-    left: 0;
-    top: 0;
-    right: 0;
-    bottom: 0;
-    -unity-background-image-tint-color: rgb(102, 102, 102);
-}
-
-/* main-menu.md 후속: one centre anchor. The block is 618 px tall and sat at y 120 on 1080, so its top is centre - 420. */
+/* main-menu.md 9: one left-centre anchor; the block is about 600 px tall and 680 wide (Korean display font sets the title about 620 wide). The castle keeps the rest of the screen. */
 .block {
     position: absolute;
-    left: 0;
-    right: 0;
+    left: 144px;
     top: 50%;
-    margin-top: -420px;
-    align-items: center;
+    margin-top: -300px;
+    width: 680px;
+    align-items: flex-start;
 }
 
-/* Vertical stops measured on the uGUI menu at 1920x1080: title centre 352, break 402, cards from 465. */
 .crest {
-    width: 200px;
-    height: 170px;
+    width: 118px;
+    height: 100px;
+    margin-left: -10px;
+}
+
+.kicker {
+    margin-top: 20px;
+    font-size: 20px;
+    letter-spacing: 12px;
+    color: var(--muted);
 }
 
 .title {
-    margin-top: 22px;
-    height: 72px;
-    /* TextCore draws about 10% larger than uGUI Text at the same size; 50 here matches uGUI 56. */
-    font-size: 50px;
+    margin-top: 2px;
+    width: 100%;
+    font-size: 64px;
     color: var(--bone);
-    -unity-text-align: middle-center;
     -unity-text-outline-width: 1px;
     -unity-text-outline-color: var(--ink);
 }
 
 .break {
-    margin-top: 6px;
-    width: 600px;
-    height: 24px;
+    margin-top: 10px;
+    margin-left: -20px;
+    width: 460px;
+    height: 20px;
 }
 
 .cards {
-    margin-top: 44px;
-    flex-direction: row;
+    margin-top: 40px;
 }
 
+/* A row, not a card: the selected one gets a steel bar on the left and a dark band behind. */
 .card {
-    width: 360px;
-    height: 280px;
-    margin: 0 20px;
-    align-items: center;
-    -unity-slice-scale: 0.111px;
-    -unity-background-image-tint-color: var(--panel);
+    width: 480px;
+    height: 92px;
+    margin-bottom: 8px;
+    border-left-width: 3px;
+    border-left-color: rgba(0, 0, 0, 0);
+    transition-property: background-color, border-left-color;
+    transition-duration: 0.08s;
 }
 
-.card:hover {
-    -unity-background-image-tint-color: rgba(31, 33, 44, 0.95);
-}
-
-.card-frame {
-    position: absolute;
-    left: 0;
-    top: 0;
-    right: 0;
-    bottom: 0;
-    -unity-slice-scale: 0.111px;
-    -unity-background-image-tint-color: var(--steel-dim);
-}
-
-.card.on .card-frame {
-    -unity-background-image-tint-color: var(--steel);
+.card.on {
+    border-left-color: var(--steel);
+    background-color: rgba(18, 19, 26, 0.7);
 }
 
 .card-icon {
-    margin-top: 36px;
-    width: 104px;
-    height: 104px;
+    position: absolute;
+    left: 26px;
+    top: 22px;
+    width: 48px;
+    height: 48px;
     -unity-background-scale-mode: scale-to-fit;
-    -unity-background-image-tint-color: var(--muted);
+    -unity-background-image-tint-color: var(--dim);
 }
 
 .card.on .card-icon {
@@ -92,26 +77,30 @@
 }
 
 .card-name {
-    margin-top: 16px;
+    position: absolute;
+    left: 96px;
+    top: 10px;
     height: 44px;
-    font-size: 29px;
+    font-size: 32px;
+    color: var(--muted);
+    -unity-text-align: middle-left;
+}
+
+.card.on .card-name {
     color: var(--bone);
-    -unity-text-align: middle-center;
 }
 
 .card-meta {
     position: absolute;
-    left: 24px;
-    right: 24px;
-    bottom: 26px;
-    height: 34px;
+    left: 96px;
+    top: 54px;
+    height: 28px;
     flex-direction: row;
-    justify-content: center;
     align-items: center;
 }
 
 .card-meta > .value {
-    margin: 0 10px;
+    margin: 0 20px 0 0;
 }
 
 .languages {
