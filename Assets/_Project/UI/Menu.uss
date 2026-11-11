@@ -135,3 +135,11 @@
     border-bottom-width: 2px;
     border-bottom-color: var(--steel);
 }
+
+.version {
+    position: absolute;
+    bottom: 16px;
+    right: 24px;
+    font-size: 12px;
+    color: var(--dim);
+}

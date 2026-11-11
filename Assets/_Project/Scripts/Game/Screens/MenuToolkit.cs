@@ -32,6 +32,7 @@ namespace VampireSpawn.Game.Screens
             ToolkitKit.Value(campMeta, art, Kit.Icon.Gold, campaign.Gold.ToString(), Ui.Candle, Ui.Candle);
 
             Languages(root.Q("languages"));
+            root.Q<Label>("version").text = "v" + Application.version;
             return doc;
         }
 
