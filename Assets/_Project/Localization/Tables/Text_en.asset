@@ -2076,6 +2076,58 @@ MonoBehaviour:
     m_Localized: Next ally phase
     m_Metadata:
       m_Items: []
+  - m_Id: 1805115463626752
+    m_Localized: Settings
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1805115534929920
+    m_Localized: Settings
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1805115534929921
+    m_Localized: Camera effects
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1805115534929922
+    m_Localized: Camera moves in and tints on rises, full moon and kills
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1805115534929923
+    m_Localized: Screen shake
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1805115534929924
+    m_Localized: How hard the screen shakes on big hits
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1805115534929925
+    m_Localized: Battle speed
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1805115534929926
+    m_Localized: Enemy turn playback speed. Press F in battle
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1805115534929927
+    m_Localized: On
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1805115534929928
+    m_Localized: Off
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1805115534929929
+    m_Localized: Low
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1805115534929930
+    m_Localized: Normal
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1805115534929931
+    m_Localized: Close
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds:
