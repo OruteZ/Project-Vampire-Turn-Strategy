@@ -36,6 +36,7 @@ namespace VampireSpawn.Game
         [Tooltip("하수인 모습. UnitLook.key = 하수인 key")]
         public UnitLook[] minionLooks;
         public UnitLook vampireLook;
+        [Tooltip("달의 피로 변신한 웨어울프 (docs/content/units.md 판타지 직업 개편 C)")] public UnitLook wolfLook;
         [Tooltip("Polygon 캐릭터와, 묶음이 빈 UnitLook 이 쓰는 기본 애니메이터")] public RuntimeAnimatorController unitAnimator;
         [Tooltip("Sidekick 캐릭터가 스폰이 되었을 때 (맨손 근접)")] public RuntimeAnimatorController spawnAnimator;
         public Material flat;

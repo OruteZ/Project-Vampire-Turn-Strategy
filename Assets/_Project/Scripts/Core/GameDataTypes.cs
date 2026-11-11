@@ -5,7 +5,7 @@ namespace VampireSpawn.Core
 {
     public enum Tier { Peasant, Regular, Knight, Hunter }
     // Stored as numbers in the unit assets: add new skills at the end only.
-    public enum Ability { None, Pike, Ambush, Cleave, Charge, Formation, Ward, Rite, Twice, Bury, Mend }
+    public enum Ability { None, Pike, Ambush, Cleave, Charge, Formation, Ward, Rite, Twice, Bury, Mend, Splash, Moonblood, Feast, Crescent }
     public enum BonusType { Turns, NoEat, AllMinions, Losses }
     // What wins a battle (docs/dev/battle-goals.md). Stored as numbers in the stage assets: add new goals at the end only.
     public enum Goal { Boss, Defense, Escort }

@@ -23,7 +23,7 @@ MonoBehaviour:
   rng: 2
   bane: 3
   heal: 0
-  skills: 
+  skills: 0b000000
   unlockAt: 9
   upgrades:
   - id: hunter_mov

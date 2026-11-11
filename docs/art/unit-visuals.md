@@ -16,6 +16,7 @@
 | 연금술사 (key `hunter`, #111) | PolygonDarkFantasy `SM_Chr_PlagueDoctor_01` | Polygon | 약병 `SM_Prop_Bottle_01` | | Polygon 기본 |
 | 장의사 (#99) | PolygonDarkFantasy `SM_Chr_Gravedigger_Male_01` | Polygon | 삽 `SM_Wep_Shovel_01` | | Polygon 기본 |
 | 성녀 (key `doctor`, #111) | PolygonDarkFantasy `SM_Chr_Priest_Female_01` | Polygon | 십자가 `SM_Wep_Cross_01` | | Polygon 기본 |
+| 웨어울프 (key `werewolf`, #111) | 사람 PolygonDarkFantasy `SM_Chr_Hunter_Male_01` / 늑대 PolygonWerewolf `SM_Chr_Werewolf_01` | Polygon | 맨손 | | Polygon 기본 |
 | 스켈레톤 | `SM_Chr_Skeleton_01` | Polygon | 검 `SM_Wep_Sword_03` | | Polygon 기본 |
 | 스켈레톤 궁수 (#99) | `SM_Chr_Skeleton_Ranger_01` | Polygon | | 활 `SM_Wep_Rigged_Bow_01` | Polygon 활 |
 | 스켈레톤 중갑병 (#99) | `SM_Chr_Skeleton_HeavyArmor_01` | Polygon | 철퇴 `SM_Wep_Mace_01` | 방패 `SM_Wep_Shield_01` | Polygon 기본 |

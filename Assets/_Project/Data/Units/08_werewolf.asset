@@ -1,0 +1,58 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 17bd5ddb0e5d89541abe42a0b4789540, type: 3}
+  m_Name: 08_werewolf
+  m_EditorClassIdentifier: VampireSpawn.Game::VampireSpawn.Game.Data.UnitTypeData
+  key: werewolf
+  tier: 2
+  pop: 3
+  silver: 0
+  hp: 12
+  atk: 3
+  def: 0
+  mov: 4
+  rng: 1
+  bane: 0
+  heal: 0
+  skills: 0c000000
+  unlockAt: 8
+  upgrades:
+  - id: werewolf_hp
+    cost: 90
+    hp: 3
+    atk: 0
+    def: 0
+    mov: 0
+    rng: 0
+    bane: 0
+    heal: 0
+    ability: 0
+  - id: werewolf_feast
+    cost: 90
+    hp: 0
+    atk: 0
+    def: 0
+    mov: 0
+    rng: 0
+    bane: 0
+    heal: 0
+    ability: 13
+  - id: werewolf_early
+    cost: 90
+    hp: 0
+    atk: 0
+    def: 0
+    mov: 0
+    rng: 0
+    bane: 0
+    heal: 0
+    ability: 14

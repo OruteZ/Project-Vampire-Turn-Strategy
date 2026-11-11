@@ -11,7 +11,7 @@
 | 기사 캐릭터 | Assets/Synty/SidekickCharacters/Characters/FantasyKnights | SIDEKICK_Fantasy_Knights | `FantasyKnights_01`~`06` 완성 프리팹 |
 | 마을 사람 캐릭터 | Assets/Synty/SidekickCharacters/Characters/FantasyVillagers | SIDEKICK_Fantasy_Villagers | `FantasyVillagers_01`~`05` 완성 프리팹 |
 | 사람 몸 바탕 | Assets/Synty/SidekickCharacters/Characters/HumanSpecies | SIDEKICK 둘 다 | `HumanSpecies_01`~`04` |
-| 웨어울프 캐릭터 | Assets/Synty/PolygonWerewolf | POLYGON_Werewolf | `SM_Chr_Werewolf_01`·`SM_Chr_Werewolf_Undead_01`, 꼬리 부착물. 사람 모습 캐릭터는 없다. 아직 게임이 쓰지 않음 (#111 웨어울프 초안) |
+| 웨어울프 캐릭터 | Assets/Synty/PolygonWerewolf | POLYGON_Werewolf | `SM_Chr_Werewolf_01`·`SM_Chr_Werewolf_Undead_01`, 꼬리 부착물. 사람 모습 캐릭터는 없다. 웨어울프(#111)의 늑대 모습 `Units/WerewolfWolf` (`ArtCatalog.wolfLook`). 사람 모습은 `Units/Werewolf` = `SM_Chr_Hunter_Male_01` |
 | 활·석궁 무기 | Assets/Synty/PolygonBowCrossbow | POLYGON_Bow_Crossbow | 리깅된 활 `SM_Wep_Rigged_Bow_01`·`_NativeAmerican_01`(시위 뼈 `bowString`), 화살 `SM_Prop_Arrow_01`, 리깅된 석궁 `SM_Wep_Rigged_CrossBow_01`, 석궁 화살 |
 | 기본 이동 애니메이션 | Assets/Synty/AnimationBaseLocomotion | ANIMATION_Base_Locomotion | |
 | 활 전투 애니메이션 | Assets/Synty/AnimationBowCombat | ANIMATION_Bow_Combat | |
@@ -78,6 +78,7 @@
 | 연금술사 (key `hunter`, `Units/Hunter`, #111) | `SM_Chr_PlagueDoctor_01` | 오른손 약병 `SM_Prop_Bottle_01` (그대로) | `Units/Polygon` (던지는 동작이 없다) |
 | 장의사 (#99) | `SM_Chr_Gravedigger_Male_01` | 삽 `SM_Wep_Shovel_01` (자루) | `Units/Polygon` |
 | 성녀 (key `doctor`, `Units/PlagueDoctor`, #111) | `SM_Chr_Priest_Female_01` | 십자가 `SM_Wep_Cross_01` (자루) | `Units/Polygon` |
+| 웨어울프 (key `werewolf`, `Units/Werewolf` · 늑대 `Units/WerewolfWolf`, #111) | 사람 `SM_Chr_Hunter_Male_01`, 달 3 이상 `SM_Chr_Werewolf_01` (`UnitView.Shift` 가 모델을 바꾼다) | 맨손 | `Units/Polygon` |
 | 스켈레톤 | `SM_Chr_Skeleton_01` | 검 `Sword_03` (칼날) | `Units/Polygon` |
 | 스켈레톤 궁수 (#99) | `SM_Chr_Skeleton_Ranger_01` | 왼손 활 `SM_Wep_Rigged_Bow_01` (그대로) | `Units/PolygonBow` |
 | 스켈레톤 중갑병 (#99) | `SM_Chr_Skeleton_HeavyArmor_01` | 철퇴 `SM_Wep_Mace_01` (칼날), 왼손 방패 `SM_Wep_Shield_01` | `Units/Polygon` |

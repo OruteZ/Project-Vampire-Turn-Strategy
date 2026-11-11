@@ -398,9 +398,11 @@ namespace VampireSpawn.Game.Screens
             else if (st.Hover != null && st.Hover.Side == Side.Enemy) Panel(root, b, st.Hover, "other-side", true);
 
             var atk = new HashSet<Hex>(s.Overlay().Where(m => m.Mark == Mark.Atk).Select(m => m.Hex));
+            var aimed = sel != null && st.Hover != null && atk.Contains(st.Hover.Pos);
+            var splash = aimed ? b.Splashed(sel, st.Hover).ToList() : null;
             foreach (var u in b.Units)
             {
-                var dmg = sel != null && st.Hover == u && atk.Contains(u.Pos) ? b.Damage(sel, u) : 0;
+                var dmg = aimed && st.Hover == u ? b.Damage(sel, u) : splash != null && splash.Contains(u) ? 1 : 0;
                 Head(headLayer, b, u, u == st.Hover || u == sel, st.Alt && u.Side == Side.Enemy, dmg);
             }
             if (st.Hover != null && heads.TryGetValue(st.Hover.Id, out var top)) top.Root.BringToFront();

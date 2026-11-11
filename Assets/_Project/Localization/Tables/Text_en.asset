@@ -569,8 +569,8 @@ MonoBehaviour:
       m_Items:
       - rid: 7201578077006332005
   - m_Id: 5832187899940
-    m_Localized: A beak-masked alchemist. Hurls flasks of molten silver that sear
-      vampires and spawn.
+    m_Localized: 'A beak-masked alchemist. Hurls flasks of molten silver that sear
+      vampires and spawn. The flask bursts: enemies next to the target take 1.'
     m_Metadata:
       m_Items:
       - rid: 7201578077006332005
@@ -2134,6 +2134,75 @@ MonoBehaviour:
       m_Items: []
   - m_Id: 1851480008880128
     m_Localized: Lose no more than {0} allies
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1911882109480960
+    m_Localized: Werewolf
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1911882184978432
+    m_Localized: WW
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1911882184978433
+    m_Localized: 'A drifter with moon-blood. At Moon 3 or more turns wolf: +2 attack,
+      +1 move. Unarmoured and quick to fall.'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1911882184978434
+    m_Localized: Tough Hide
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1911882184978435
+    m_Localized: HP +3
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1911882184978436
+    m_Localized: Feast
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1911882184978437
+    m_Localized: Restores 2 HP on felling an enemy
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1911882184978438
+    m_Localized: Crescent Call
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1911882184978439
+    m_Localized: Turns wolf from Moon 2
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1911882184978440
+    m_Localized: Splash
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1911882184978441
+    m_Localized: Moon-Blood
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1911882184978442
+    m_Localized: Feast
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1911882184978443
+    m_Localized: Crescent Call
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1911882184978444
+    m_Localized: Splash
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1911882189172736
+    m_Localized: The Moon swells. {0} turns wolf!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1911882189172737
+    m_Localized: '{0} turns back to human form.'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1911882189172738
+    m_Localized: '{0} feasts: HP +{1}'
     m_Metadata:
       m_Items: []
   references:

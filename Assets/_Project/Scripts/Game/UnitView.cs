@@ -20,7 +20,7 @@ namespace VampireSpawn.Game
         public bool Done { get; private set; }
         GameObject coffin;
         ArtCatalog art;
-        UnitLook look;
+        UnitLook look, own;
         bool armed;
         float yaw;
 
@@ -34,7 +34,7 @@ namespace VampireSpawn.Game
             var view = root.AddComponent<UnitView>();
             view.Id = id;
             view.art = art;
-            view.look = look;
+            view.look = view.own = look;
             view.armed = armed;
             view.yaw = yaw;
 
@@ -50,6 +50,16 @@ namespace VampireSpawn.Game
             view.ring = r.GetComponent<MeshRenderer>();
             view.ringColor = ring * 0.55f;
             return view;
+        }
+
+        // null: back to its own look.
+        public void Shift(UnitLook to)
+        {
+            look = to != null ? to : own;
+            if (model == null) return;
+            yaw = model.localEulerAngles.y;
+            if (Application.isPlaying) Destroy(model.gameObject); else DestroyImmediate(model.gameObject);
+            BuildModel();
         }
 
         void BuildModel()

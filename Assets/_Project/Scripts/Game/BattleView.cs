@@ -190,6 +190,10 @@ namespace VampireSpawn.Game
                     if (arrived != null) AddUnit(arrived, e.At);
                     yield return Delay(RiseSeconds);
                     break;
+                case BattleEventKind.Shifted:
+                    if (units.TryGetValue(e.UnitId, out var shifted)) shifted.Shift(e.Value == 1 ? Art.wolfLook : null);
+                    yield return Delay(WakeSeconds);
+                    break;
                 case BattleEventKind.Woke:
                     if (units.TryGetValue(e.UnitId, out var woke)) woke.StandUp();
                     yield return Delay(WakeSeconds);
@@ -230,6 +234,7 @@ namespace VampireSpawn.Game
             // docs/art/unit-visuals.md 4: allies face the enemy side (north, +Z), enemies face south.
             var yaw = u.Side == Side.Ally ? 0f : 180f;
             var view = UnitView.Create(Art, look, layer, u.Id, Ground(at ?? u.Pos), yaw, RingColor(u), u.Role != Role.Spawn, u.Asleep);
+            if (u.Wolf) view.Shift(Art.wolfLook);
             view.SetHp(u.Hp, u.MaxHp);
             view.Sounds = u.Role == Role.Spawn ? Art.sound?.spawn : look.sounds;
             units[u.Id] = view;
