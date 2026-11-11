@@ -97,6 +97,7 @@ namespace VampireSpawn.Core
             Say(new Message("log.playerTurn", Turn), "t");
             Emit(BattleEvent.Banner(BannerKind.PlayerTurn, new Message("banner.playerTurn", Turn)));
             FixEatTarget();
+            OpenReinforcements();
         }
 
         void Rise(Corpse c)

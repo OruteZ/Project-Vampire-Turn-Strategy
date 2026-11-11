@@ -41,7 +41,9 @@ namespace VampireSpawn.Game.Screens
             if (enemyPlaying) { enabled = false; return Loc.T("hud.enemyActingSpeed", speed); }
             switch (b.Phase)
             {
-                case Phase.Deploy: enabled = b.Allies.Any(); return Loc.T("battle.start");
+                case Phase.Deploy:
+                    enabled = b.Reinforcing || b.Allies.Any();
+                    return Loc.T(b.Reinforcing ? "battle.reinforceDone" : "battle.start");
                 case Phase.Player: return Loc.T("battle.endTurn");
                 case Phase.Enemy: enabled = false; return Loc.T("hud.enemyActingSpeed", speed);
             }

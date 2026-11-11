@@ -106,6 +106,51 @@ namespace VampireSpawn.Core
         public bool Fired(string trigger) => fired.Contains(trigger);
         public int MinionsKilled { get; private set; }
 
+        // docs/systems/reinforce.md: caps grow with each reinforcement; used population stays "allies alive now".
+        public int PopCap { get; private set; }
+        public int SilverCap { get; private set; }
+        public bool Reinforcing { get; private set; }
+        readonly HashSet<Hex> zone = new HashSet<Hex>();
+        readonly HashSet<int> newcomers = new HashSet<int>();
+        readonly HashSet<Reinforcement> opened = new HashSet<Reinforcement>();
+        readonly Dictionary<string, int> numbered = new Dictionary<string, int>();
+        public IEnumerable<Reinforcement> Upcoming => Stage.Reinforcements.Where(r => !opened.Contains(r));
+        public bool IsNewcomer(Unit u) => u != null && newcomers.Contains(u.Id);
+
+        void OpenReinforcements()
+        {
+            var due = Upcoming.Where(r => fired.Contains(r.Trigger)).ToList();
+            if (due.Count == 0) return;
+            foreach (var r in due)
+            {
+                opened.Add(r);
+                PopCap += r.Pop;
+                SilverCap += r.Silver;
+                foreach (var h in r.Hexes) zone.Add(h);
+            }
+            newcomers.Clear();
+            Reinforcing = true;
+            Phase = Phase.Deploy;
+            Emit(BattleEvent.Banner(BannerKind.Reinforce, new Message("banner.reinforce")));
+            Say(new Message("log.reinforce", due.Sum(r => r.Pop)), "t");
+        }
+
+        CommandResult FinishReinforcing()
+        {
+            foreach (var u in Allies.Where(IsNewcomer))
+            {
+                var n = numbered.TryGetValue(u.Type, out var k) ? k + 1 : 1;
+                numbered[u.Type] = n;
+                if (n > 1) u.Name = new Message("name.numbered", GameData.Type(u.Type).Name, n);
+            }
+            if (newcomers.Count > 0) Say(new Message("log.reinforced", newcomers.Count), "t");
+            newcomers.Clear();
+            zone.Clear();
+            Reinforcing = false;
+            Phase = Phase.Player;
+            return Done();
+        }
+
         Unit Placed(Placement p, Hex at)
         {
             var u = MakeEnemy(p.Kind, at);
@@ -143,6 +188,8 @@ namespace VampireSpawn.Core
                     Id = nextId++, Role = Role.Escort, Name = stage.EscortName, Glyph = new Message("escort.glyph"), Pos = es.Start,
                     Hp = es.Hp, MaxHp = es.Hp, Def = es.Def, Mov = es.Mov,
                 });
+            PopCap = stage.Pop;
+            SilverCap = stage.Silver;
             foreach (var a in formation ?? stage.Sample)
                 if (stage.Units.Contains(a.Kind) && UnitAt(new Hex(a.Col, a.Row)) == null) units.Add(MakeAlly(a.Kind, new Hex(a.Col, a.Row)));
             TrimToCaps();
@@ -169,7 +216,7 @@ namespace VampireSpawn.Core
         public Dictionary<Hex, int> Reach(Unit u) =>
             Board.Reachable(u.Pos, u.Mov, u.Side, OccupantAt).ToDictionary(r => r.hex, r => r.steps);
 
-        public bool InDeploy(Hex h) => Board.InBounds(h) && Board.At(h) == Terrain.Deploy;
+        public bool InDeploy(Hex h) => Reinforcing ? zone.Contains(h) && Board.InBounds(h) && Board.Walkable(h) : Board.InBounds(h) && Board.At(h) == Terrain.Deploy;
 
         Unit MakeAlly(string kind, Hex at)
         {
@@ -215,7 +262,7 @@ namespace VampireSpawn.Core
 
         void TrimToCaps()
         {
-            while (Used(t => t.Pop) > Stage.Pop || Used(t => t.Silver) > Stage.Silver)
+            while (Used(t => t.Pop) > PopCap || Used(t => t.Silver) > SilverCap)
                 units.Remove(Allies.Last());
         }
 
@@ -245,9 +292,11 @@ namespace VampireSpawn.Core
             if (!Stage.Units.Contains(kind)) return CommandResult.Rejected(new Message("reason.typeNotAllowed"));
             if (!InDeploy(at) || UnitAt(at) != null) return CommandResult.Rejected(new Message("reason.cannotPlace"));
             var t = GameData.Type(kind);
-            if (Used(x => x.Pop) + t.Pop > Stage.Pop) return CommandResult.Rejected(new Message("reason.noPop"));
-            if (Used(x => x.Silver) + t.Silver > Stage.Silver) return CommandResult.Rejected(new Message("reason.noSilver"));
-            units.Add(MakeAlly(kind, at));
+            if (Used(x => x.Pop) + t.Pop > PopCap) return CommandResult.Rejected(new Message("reason.noPop"));
+            if (Used(x => x.Silver) + t.Silver > SilverCap) return CommandResult.Rejected(new Message("reason.noSilver"));
+            var made = MakeAlly(kind, at);
+            units.Add(made);
+            if (Reinforcing) newcomers.Add(made.Id);
             return Done();
         }
 
@@ -255,8 +304,9 @@ namespace VampireSpawn.Core
         {
             if (!Begin(Phase.Deploy, out var no)) return no;
             var u = Find(id);
-            if (u == null || u.Role != Role.Ally) return CommandResult.Rejected(new Message("reason.noRecall"));
+            if (u == null || u.Role != Role.Ally || (Reinforcing && !IsNewcomer(u))) return CommandResult.Rejected(new Message("reason.noRecall"));
             units.Remove(u);
+            newcomers.Remove(u.Id);
             return Done();
         }
 
@@ -264,23 +314,25 @@ namespace VampireSpawn.Core
         {
             if (!Begin(Phase.Deploy, out var no)) return no;
             var u = Find(id);
-            if (u == null || u.Role != Role.Ally) return CommandResult.Rejected(new Message("reason.noRelocate"));
+            if (u == null || u.Role != Role.Ally || (Reinforcing && !IsNewcomer(u))) return CommandResult.Rejected(new Message("reason.noRelocate"));
             if (!InDeploy(to))
             {
                 units.Remove(u);
+                newcomers.Remove(u.Id);
                 Emit(BattleEvent.Hint(new Message("hint.recalled", u.Name)));
                 return Done();
             }
             var o = UnitAt(to);
             if (o == null) u.Pos = to;
-            else if (o.Role == Role.Ally && o != u) { var p = u.Pos; u.Pos = o.Pos; o.Pos = p; }
+            else if (o.Role == Role.Ally && o != u && (!Reinforcing || IsNewcomer(o))) { var p = u.Pos; u.Pos = o.Pos; o.Pos = p; }
             return Done();
         }
 
         public CommandResult ClearAllies()
         {
             if (!Begin(Phase.Deploy, out var no)) return no;
-            units.RemoveAll(u => u.Role == Role.Ally);
+            units.RemoveAll(u => u.Role == Role.Ally && (!Reinforcing || newcomers.Contains(u.Id)));
+            newcomers.Clear();
             return Done();
         }
 
@@ -288,6 +340,7 @@ namespace VampireSpawn.Core
         public CommandResult UseSample()
         {
             if (!Begin(Phase.Deploy, out var no)) return no;
+            if (Reinforcing) return CommandResult.Rejected(new Message("reason.cannotPlace"));
             units.RemoveAll(u => u.Role == Role.Ally);
             foreach (var a in Stage.Sample)
                 if (UnitAt(new Hex(a.Col, a.Row)) == null) units.Add(MakeAlly(a.Kind, new Hex(a.Col, a.Row)));
@@ -298,8 +351,10 @@ namespace VampireSpawn.Core
         public CommandResult Start()
         {
             if (!Begin(Phase.Deploy, out var no)) return no;
+            if (Reinforcing) return FinishReinforcing();
             if (!Allies.Any()) return CommandResult.Rejected(new Message("reason.noAllies"));
             var count = Allies.GroupBy(u => u.Type).ToDictionary(g => g.Key, g => g.Count());
+            foreach (var kv in count) numbered[kv.Key] = kv.Value;
             var index = new Dictionary<string, int>();
             foreach (var u in Allies)
             {

@@ -213,11 +213,29 @@ MonoBehaviour:
     kind: 0
     value: 8
     hexes: []
+  - id: stable
+    kind: 1
+    value: 0
+    hexes:
+    - {x: 1, y: 6}
+    - {x: 2, y: 6}
+    - {x: 2, y: 7}
   doors:
   - hexes:
     - {x: 8, y: 12}
     - {x: 9, y: 12}
     trigger: gate
+  reinforcements:
+  - trigger: stable
+    pop: 4
+    silver: 0
+    hexes:
+    - {x: 2, y: 4}
+    - {x: 3, y: 4}
+    - {x: 2, y: 5}
+    - {x: 3, y: 5}
+    - {x: 3, y: 6}
+    - {x: 3, y: 7}
   sample:
   - kind: sword
     col: 8

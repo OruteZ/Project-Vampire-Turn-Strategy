@@ -17,6 +17,51 @@ namespace VampireSpawn.Tests
         static Stage Staged(string[] map, Placement[] enemies, Trigger[] triggers, Door[] doors = null) => new Stage("demo", GameData.Types.Select(t => t.Key).ToArray(), 99, 99, 0, Goal.Boss,
             new Bonus(BonusType.AllMinions, 0, 0), new Boss(30, 1, 0, 0, 0), map, enemies, new Placement[0], triggers: triggers, doors: doors);
 
+        // docs/systems/reinforce.md
+        [Test]
+        public void ReachingTheGoalOpensAMidBattleDeployOnlyForNewcomers()
+        {
+            var map = new[] { ".......", ".......", ".......", ".......", ".......", "ddddddd", "ddddddd" };
+            var stage = new Stage("demo", GameData.Types.Select(t => t.Key).ToArray(), 2, 0, 0, Goal.Boss, new Bonus(BonusType.NoEat, 0, 0), new Boss(30, 1, 0, 0, 0), map,
+                new[] { new Placement(EnemyType.Vampire, 6, 0) }, new Placement[0],
+                triggers: new[] { new Trigger("bell", TriggerKind.Reach, 0, new[] { new Hex(3, 3) }) },
+                reinforcements: new[] { new Reinforcement("bell", 3, 0, new[] { new Hex(0, 0), new Hex(1, 0), new Hex(2, 0) }) });
+            var b = new Battle(stage, null, new[] { new Placement("pspear", 3, 5), new Placement("pspear", 4, 5) });
+            b.Start();
+            var first = b.Allies.First();
+            Assert.IsTrue(b.Move(first.Id, new Hex(3, 3)).Ok);
+            b.EndTurn();
+            Assert.AreEqual(Phase.Deploy, b.Phase);
+            Assert.IsTrue(b.Reinforcing);
+            Assert.AreEqual(5, b.PopCap, "2 + 3");
+            Assert.IsFalse(b.Place("pspear", new Hex(3, 6)).Ok, "the old deploy zone is closed");
+            Assert.IsTrue(b.Place("sword", new Hex(0, 0)).Ok);
+            Assert.IsTrue(b.Place("pspear", new Hex(1, 0)).Ok);
+            Assert.IsFalse(b.Place("pspear", new Hex(2, 0)).Ok, "pop 2 + 2 + 1 = 5, full");
+            Assert.IsFalse(b.Recall(first.Id).Ok, "allies already fighting stay");
+            Assert.IsFalse(b.UseSample().Ok);
+            Assert.IsTrue(b.Start().Ok);
+            Assert.AreEqual(Phase.Player, b.Phase);
+            var sword = b.Allies.Single(a => a.Type == "sword");
+            Assert.IsTrue(b.Move(sword.Id, new Hex(0, 1)).Ok, "a newcomer acts on the turn it lands");
+        }
+
+        [Test]
+        public void LostUnitsFreeTheirPopulation()
+        {
+            var stage = new Stage("demo", GameData.Types.Select(t => t.Key).ToArray(), 2, 0, 0, Goal.Boss, new Bonus(BonusType.NoEat, 0, 0), new Boss(30, 1, 0, 0, 0), Open,
+                new[] { new Placement(EnemyType.Vampire, 6, 6) }, new Placement[0],
+                triggers: new[] { new Trigger("t", TriggerKind.Turn, 1) },
+                reinforcements: new[] { new Reinforcement("t", 1, 0, new[] { new Hex(0, 0) }) });
+            var b = new Battle(stage, null, new[] { new Placement("pspear", 3, 3), new Placement("pspear", 3, 4) });
+            b.Start();
+            Assert.IsTrue(b.Execute(b.Allies.First().Id, b.Allies.Last().Id).Ok);
+            b.EndTurn();
+            Assert.IsTrue(b.Reinforcing);
+            Assert.AreEqual(1, b.Used(t => t.Pop));
+            Assert.IsTrue(b.Place("sword", new Hex(0, 0)).Ok, "cap 3, one spearman alive: room for a sword");
+        }
+
         // docs/systems/triggers.md 1
         [Test]
         public void ReachingAMarkedHexBringsTheWaveNextEnemyPhase()

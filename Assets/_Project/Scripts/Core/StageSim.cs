@@ -39,8 +39,9 @@ namespace VampireSpawn.Core
             var b = new Battle(stage);
             b.Start();
             var peak = b.Enemies.Count();
-            while (b.Phase == Phase.Player && b.Turn <= TurnCap)
+            while ((b.Phase == Phase.Player || b.Reinforcing) && b.Turn <= TurnCap)
             {
+                if (b.Reinforcing) Reinforce(b);
                 foreach (var u in b.Units.Where(x => x.Side == Side.Ally).ToList())
                     if (b.Phase == Phase.Player && b.Units.Contains(u)) Act(b, u);
                 if (b.Phase != Phase.Player) break;
@@ -49,6 +50,18 @@ namespace VampireSpawn.Core
             }
             var won = b.Won == true;
             return new Run(stage.Id, won, b.Ending, b.Turn, b.Stats.Lost, b.Stats.Risen, b.MinionsKilled, peak);
+        }
+
+        // docs/systems/reinforce.md: fill the open hexes with the dearest type that still fits, then carry on.
+        static void Reinforce(Battle b)
+        {
+            var cells = Enumerable.Range(0, b.Board.Rows).SelectMany(r => Enumerable.Range(0, b.Board.Cols).Select(c => new Hex(c, r))).Where(b.InDeploy);
+            foreach (var h in cells)
+            {
+                var kind = b.Stage.Units.Select(GameData.Type).OrderByDescending(t => t.Pop).Select(t => t.Key).FirstOrDefault(k => b.UnitAt(h) == null && b.Place(k, h).Ok);
+                if (kind == null && b.UnitAt(h) == null) break;
+            }
+            b.Start();
         }
 
         // Attack what it can reach, else walk toward the nearest awake enemy (the escort walks to its nearest destination), then attack again if now in reach.
