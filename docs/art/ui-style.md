@@ -99,7 +99,7 @@
 | `btn.normal` | `Frame_Box_Medium_02` + `_Background`, `bg.panel` 채움 + `ally.dim` 틀 | `body`, `text.1` | 보통 행동 | `Normal`, `Choice` |
 | `btn.ghost` | 틀 없음 | `body`, `text.2` | 나가기, 접기·펼치기, 취소 | `Ghost` |
 | `btn.danger` | `Frame_Box_Medium_02` + `_Background`, `bg.panel` 채움 + `enemy.dim` 틀 | `body`, `enemy` | 아군 직접 처치 | `Danger` |
-| `btn.slot` | `Frame_Box_Medium_02` + `_Background` 최대 150×102, 아이콘 60px | 아이콘 아래 `body` Bold 행동 이름, 왼쪽 위 단축키 | 행동 줄 | — |
+| `btn.slot` | `Frame_Box_Medium_02` + `_Background` 172×128, 아이콘 80px | 아이콘 아래 `body` Bold 행동 이름, 왼쪽 위 단축키 | 행동 줄 | — |
 | `btn.roster` | `frame.ally` 축소판, 초상 + 이름 | `small` | 배치 화면 유닛 목록 | `Roster` |
 
 ### 상태
@@ -236,7 +236,7 @@
 | 오른쪽 위 | 전투 기록: 접힌 상태 최근 3줄, 펼치면 320×400 `frame.tip`. 글자는 `body` `text.2`, 줄마다 한 줄로 넘치면 말줄임. 진영 색은 줄 앞 아이콘 16px 에만 | 폭 320 | 2·3 |
 | 왼쪽 아래 | 아군 패널: 선택한(없으면 호버한) 아군. 이름 `h.2`, 체력·이동력 `num.1`, 공격·방어·사거리 `num.2`, 경고 줄 | 340×190 | 1 |
 | 오른쪽 아래 | 적 패널: 호버한 적(뱀파이어 포함). 같은 구성, `frame.enemy`. 스폰은 `frame.spawn` | 340×190 | 1 |
-| 아래 | 행동 바 판(화면 폭 10~90%, 높이 156) 안에 `btn.slot` 한 줄, 원형 주 버튼(턴 종료·전투 개시·배치 완료) 지름 136 이 판 윗변 가운데에 걸친다 (battle-hud.md 3-4·3-6, #118) | 칸 최대 150×102, 간격 12 | 1 |
+| 아래 | 행동 바 판(화면 폭 10~90%, 높이 204) 안에 `btn.slot` 한 줄, 원형 주 버튼(턴 종료·전투 개시·배치 완료) 지름 136 이 판 윗변 가운데에 걸친다 (battle-hud.md 3-4·3-6, #118) | 칸 172×128, 간격 12 | 1 |
 | 왼쪽 아래 끝 | 규칙 요약 `btn.ghost` "?" (펼치면 `frame.popup`), 나가기 `btn.ghost` | | 3 |
 | 아래 가운데 위 | 안내 문구 한 줄 `small` `text.3` (지금 화면 맨 아래 문구) | | 3 |
 
