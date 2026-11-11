@@ -19,8 +19,15 @@ MonoBehaviour:
   pop: 5
   silver: 0
   reward: 20
+  goal: 0
+  spots: []
+  hold: 0
+  escortHp: 0
+  escortDef: 0
+  escortMov: 0
+  escortAt: {x: 0, y: 0}
   bonusType: 0
-  bonusValue: 9
+  bonusValue: 10
   bonusGold: 10
   bossHp: 13
   bossAtk: 3
@@ -28,39 +35,53 @@ MonoBehaviour:
   bossMov: 4
   bossHeal: 3
   map:
-  - .........
-  - ..#...#..
-  - .........
-  - d##dTd###
-  - ddddddddd
-  - d#ddddd#d
-  - ddddddddd
+  - ...........
+  - ..,,...,,..
+  - .#.......#.
+  - ',,,.###.,,,'
+  - ....#T#....
+  - ',,.......,,'
+  - ddddddddddd
+  - dd,ddddd,dd
+  - ddddddddddd
   enemies:
   - kind: vampire
-    col: 4
+    col: 5
     row: 0
+    arrive: 0
   - kind: skeleton
-    col: 1
+    col: 2
     row: 1
+    arrive: 0
   - kind: skeleton
-    col: 7
+    col: 8
     row: 1
+    arrive: 0
+  - kind: skeleton
+    col: 4
+    row: 2
+    arrive: 0
+  - kind: skeleton
+    col: 6
+    row: 2
+    arrive: 0
   - kind: skeleton
     col: 0
     row: 0
+    arrive: 0
   sample:
-  - kind: parcher
-    col: 2
-    row: 6
-  - kind: pspear
-    col: 3
-    row: 5
   - kind: pspear
     col: 4
-    row: 5
+    row: 6
   - kind: pspear
     col: 5
-    row: 5
-  - kind: parcher
+    row: 6
+  - kind: pspear
     col: 6
     row: 6
+  - kind: parcher
+    col: 3
+    row: 7
+  - kind: parcher
+    col: 7
+    row: 7

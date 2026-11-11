@@ -1,9 +1,10 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace VampireSpawn.Core
 {
-    public enum Terrain { Plain, Rock, Torch, Water, Sun, Deploy }
+    public enum Terrain { Plain, Rock, Torch, Water, Sun, Deploy, Rough }
     public enum Side { Ally, Enemy }
     public enum Occupant { Empty, Ally, Enemy, Corpse }
 
@@ -30,8 +31,12 @@ namespace VampireSpawn.Core
             '~' => Terrain.Water,
             'S' => Terrain.Sun,
             'd' => Terrain.Deploy,
+            ',' => Terrain.Rough,
             _ => throw new ArgumentException("unknown map tile '" + ch + "'"),
         };
+
+        // docs/systems/triggers.md 1-4: a door becomes plain ground when its trigger takes effect.
+        public void Open(Hex h) => terrain[h.Col, h.Row] = Terrain.Plain;
 
         public bool InBounds(Hex h) => h.Col >= 0 && h.Col < Cols && h.Row >= 0 && h.Row < Rows;
         public Terrain At(Hex h) => terrain[h.Col, h.Row];
@@ -62,71 +67,61 @@ namespace VampireSpawn.Core
                 || (o == Occupant.Enemy && side != Side.Enemy);
         }
 
-        public List<(Hex hex, int steps)> Reachable(Hex from, int mov, Side side, Func<Hex, Occupant> occupant)
-        {
-            var result = new List<(Hex, int)>();
-            var seen = new HashSet<Hex> { from };
-            var queue = new Queue<(Hex hex, int steps)>();
-            queue.Enqueue((from, 0));
-            while (queue.Count > 0)
-            {
-                var (h, d) = queue.Dequeue();
-                if (h == from || occupant(h) == Occupant.Empty) result.Add((h, d));
-                if (d >= mov) continue;
-                foreach (var n in Neighbors(h))
-                {
-                    if (seen.Contains(n) || Blocked(n, side, occupant)) continue;
-                    seen.Add(n);
-                    queue.Enqueue((n, d + 1));
-                }
-            }
-            return result;
-        }
+        public int Cost(Hex h) => At(h) == Terrain.Rough ? 2 : 1;
+
+        public List<(Hex hex, int steps)> Reachable(Hex from, int mov, Side side, Func<Hex, Occupant> occupant) =>
+            Flood(new[] { from }, mov, side, occupant, false, null)
+                .Where(r => r.hex == from || occupant(r.hex) == Occupant.Empty).ToList();
 
         // An unreachable goal returns just the goal.
         public List<Hex> PathTo(Hex from, Hex to, Side side, Func<Hex, Occupant> occupant)
         {
-            var prev = new Dictionary<Hex, Hex> { [from] = from };
-            var queue = new Queue<Hex>();
-            queue.Enqueue(from);
-            while (queue.Count > 0)
-            {
-                var h = queue.Dequeue();
+            var prev = new Dictionary<Hex, Hex>();
+            foreach (var (h, _) in Flood(new[] { from }, int.MaxValue, side, occupant, false, prev))
                 if (h == to) break;
-                foreach (var n in Neighbors(h))
-                {
-                    if (prev.ContainsKey(n) || Blocked(n, side, occupant)) continue;
-                    prev[n] = h;
-                    queue.Enqueue(n);
-                }
-            }
             if (!prev.ContainsKey(to)) return new List<Hex> { to };
             var path = new List<Hex>();
             for (var k = to; k != from; k = prev[k]) path.Insert(0, k);
             return path;
         }
 
-        public Dictionary<Hex, int> DistField(IEnumerable<Hex> sources, Side side, Func<Hex, Occupant> occupant)
+        // Cost of walking from each hex to the nearest source.
+        public Dictionary<Hex, int> DistField(IEnumerable<Hex> sources, Side side, Func<Hex, Occupant> occupant) =>
+            Flood(sources, int.MaxValue, side, occupant, true, null).ToDictionary(r => r.hex, r => r.steps);
+
+        // Costs are 1 or 2, so FIFO buckets by cost (Dial) keep the old BFS tie order when there is no rough ground.
+        IEnumerable<(Hex hex, int steps)> Flood(IEnumerable<Hex> starts, int limit, Side side, Func<Hex, Occupant> occupant, bool toStarts, Dictionary<Hex, Hex> prev)
         {
-            var field = new Dictionary<Hex, int>();
-            var queue = new Queue<Hex>();
-            foreach (var s in sources)
+            var dist = new Dictionary<Hex, int>();
+            var buckets = new List<Queue<Hex>>();
+            void Push(Hex h, int d)
             {
-                if (field.ContainsKey(s)) continue;
-                field[s] = 0;
-                queue.Enqueue(s);
+                while (buckets.Count <= d) buckets.Add(new Queue<Hex>());
+                buckets[d].Enqueue(h);
             }
-            while (queue.Count > 0)
+            foreach (var s in starts)
             {
-                var h = queue.Dequeue();
-                foreach (var n in Neighbors(h))
+                if (dist.ContainsKey(s)) continue;
+                dist[s] = 0;
+                if (prev != null) prev[s] = s;
+                Push(s, 0);
+            }
+            for (var d = 0; d < buckets.Count; d++)
+                while (buckets[d].Count > 0)
                 {
-                    if (field.ContainsKey(n) || Blocked(n, side, occupant)) continue;
-                    field[n] = field[h] + 1;
-                    queue.Enqueue(n);
+                    var h = buckets[d].Dequeue();
+                    if (dist[h] != d) continue;
+                    yield return (h, d);
+                    foreach (var n in Neighbors(h))
+                    {
+                        if (Blocked(n, side, occupant)) continue;
+                        var nd = d + Cost(toStarts ? h : n);
+                        if (nd > limit || (dist.TryGetValue(n, out var old) && old <= nd)) continue;
+                        dist[n] = nd;
+                        if (prev != null) prev[n] = h;
+                        Push(n, nd);
+                    }
                 }
-            }
-            return field;
         }
     }
 }

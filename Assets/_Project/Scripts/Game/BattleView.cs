@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using VampireSpawn.Core;
 
@@ -86,8 +87,23 @@ namespace VampireSpawn.Game
             }
         }
 
+        readonly HashSet<int> reinforceViews = new HashSet<int>();
+
         public void SyncDeploy()
         {
+            // docs/systems/reinforce.md: mid-battle only the newly placed allies follow the model; the rest is still playing back.
+            if (Battle.Reinforcing)
+            {
+                foreach (var id in new List<int>(reinforceViews))
+                    if (Battle.Find(id) == null) { Remove(units, id, 0f); reinforceViews.Remove(id); }
+                foreach (var u in Battle.Allies.Where(Battle.IsNewcomer))
+                {
+                    if (!units.ContainsKey(u.Id)) { AddUnit(u); reinforceViews.Add(u.Id); }
+                    units[u.Id].transform.position = Ground(u.Pos);
+                }
+                return;
+            }
+            reinforceViews.Clear();
             foreach (var id in new List<int>(units.Keys))
                 if (Battle.Find(id) == null) Remove(units, id, 0f);
             foreach (var u in Battle.Units)
@@ -164,6 +180,14 @@ namespace VampireSpawn.Game
                     Remove(corpses, e.OtherId, 0f);
                     var risen = Battle.Find(e.UnitId);
                     if (risen != null) AddUnit(risen, e.At);
+                    yield return Delay(RiseSeconds);
+                    break;
+                case BattleEventKind.Opened:
+                    if (board != null) board.OpenDoor(e.At);
+                    break;
+                case BattleEventKind.Arrived:
+                    var arrived = Battle.Find(e.UnitId);
+                    if (arrived != null) AddUnit(arrived, e.At);
                     yield return Delay(RiseSeconds);
                     break;
                 case BattleEventKind.Woke:

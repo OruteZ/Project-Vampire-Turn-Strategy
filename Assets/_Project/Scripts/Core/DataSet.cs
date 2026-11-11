@@ -33,7 +33,7 @@ namespace VampireSpawn.Core
         // Branch order is list order (docs/systems/progression.md 7).
         public Upgrade[] Branches(string unit) => Upgrades.Where(u => u.Unit == unit).ToArray();
 
-        const string Tiles = ".#T~Sd";
+        const string Tiles = ".#T~Sd,";
 
         public List<string> Validate()
         {
@@ -61,6 +61,39 @@ namespace VampireSpawn.Core
             return p;
         }
 
+        // #113 plan 6: map checks a hand-drawn large stage needs (connectivity with every door open, triggers, doors, deploy room, sample cost).
+        void ValidateLayout(Stage s, List<string> p, Func<int, int, char> tile)
+        {
+            var at = s.Id;
+            foreach (var d in s.Triggers.GroupBy(t => t.Id).Where(g => g.Count() > 1)) p.Add($"{at}: 트리거 id {d.Key} 가 겹친다");
+            foreach (var t in s.Triggers)
+            {
+                if (t.Kind == TriggerKind.Reach && (t.Hexes.Length == 0 || t.Hexes.Any(h => "#~\0".IndexOf(tile(h.Col, h.Row)) >= 0))) p.Add($"{at}: 트리거 {t.Id} 의 칸은 걸을 수 있는 칸 하나 이상");
+                if (t.Kind != TriggerKind.Reach && t.Value < 1) p.Add($"{at}: 트리거 {t.Id} 의 값은 1 이상");
+            }
+            foreach (var d in s.Doors)
+            {
+                if (s.Triggers.All(t => t.Id != d.Trigger)) p.Add($"{at}: 문의 트리거 {d.Trigger} 가 없다");
+                foreach (var h in d.Hexes) if (tile(h.Col, h.Row) != '#') p.Add($"{at}: 문 칸 {h} 은(는) 지도에서 # 이어야 한다");
+            }
+            foreach (var r in s.Reinforcements)
+            {
+                if (s.Triggers.All(t => t.Id != r.Trigger)) p.Add($"{at}: 아군 증원의 트리거 {r.Trigger} 가 없다");
+                if (r.Pop < 1 || r.Silver < 0) p.Add($"{at}: 아군 증원 인구는 1 이상, 은은 0 이상");
+                if (r.Hexes.Length == 0 || r.Hexes.Any(h => "#~\0".IndexOf(tile(h.Col, h.Row)) >= 0)) p.Add($"{at}: 아군 증원 칸은 걸을 수 있는 칸 하나 이상");
+            }
+            var board = new Board(s.Map);
+            foreach (var h in s.Doors.SelectMany(d => d.Hexes)) if (board.InBounds(h)) board.Open(h);
+            var cells = Enumerable.Range(0, board.Rows).SelectMany(r => Enumerable.Range(0, board.Cols).Select(c => new Hex(c, r))).ToList();
+            var deploy = cells.Where(h => board.At(h) == Terrain.Deploy).ToList();
+            if (deploy.Count < s.Pop) p.Add($"{at}: 배치 칸 {deploy.Count} 이(가) 인구 {s.Pop} 보다 적다");
+            var field = board.DistField(deploy, Side.Ally, h => Occupant.Empty);
+            var cut = cells.Count(h => board.Walkable(h) && !field.ContainsKey(h));
+            if (cut > 0) p.Add($"{at}: 배치 구역과 이어지지 않은 칸 {cut}개");
+            var cost = s.Sample.Where(a => Types.Any(t => t.Key == a.Kind)).Sum(a => Type(a.Kind).Pop);
+            if (cost > s.Pop) p.Add($"{at}: 예시 편성 인구 {cost} 이(가) {s.Pop} 을(를) 넘는다");
+        }
+
         void ValidateStage(Stage s, List<string> p)
         {
             var at = s.Id;
@@ -80,7 +113,11 @@ namespace VampireSpawn.Core
                 if (e.Kind != EnemyType.Vampire && Minions.All(m => m.Key != e.Kind)) p.Add($"{at}: 없는 적 {e.Kind}");
                 var t = Tile(e.Col, e.Row);
                 if (t == '\0' || t == '#' || t == '~') p.Add($"{at}: 적 {e.Kind} 이(가) 설 수 없는 칸 {e.Col},{e.Row}");
-                if (!taken.Add((e.Col, e.Row))) p.Add($"{at}: {e.Col},{e.Row} 에 유닛이 겹친다");
+                if (!e.Reinforcement && !taken.Add((e.Col, e.Row))) p.Add($"{at}: {e.Col},{e.Row} 에 유닛이 겹친다");
+                if (e.Arrive < 0 || (e.Reinforcement && e.Kind == EnemyType.Vampire)) p.Add($"{at}: 증원 턴 {e.Arrive} 은(는) 하수인만, 1 이상");
+                if (e.Arrive > 0 && e.Wave != null) p.Add($"{at}: {e.Kind} {e.Col},{e.Row} 은(는) 증원 턴과 트리거 중 하나만");
+                if (e.Wave != null && s.Triggers.All(x => x.Id != e.Wave)) p.Add($"{at}: 없는 트리거 {e.Wave}");
+                if (e.Stance == Stance.Guard && e.Alert < 1) p.Add($"{at}: 경계 {e.Kind} {e.Col},{e.Row} 의 깨는 거리는 1 이상");
             }
             foreach (var a in s.Sample)
             {
@@ -88,6 +125,7 @@ namespace VampireSpawn.Core
                 if (!taken.Add((a.Col, a.Row))) p.Add($"{at}: {a.Col},{a.Row} 에 유닛이 겹친다");
                 if (!s.Units.Contains(a.Kind)) p.Add($"{at}: 예시 편성의 {a.Kind} 은(는) 이 장에서 쓸 수 없는 병종");
             }
+            ValidateLayout(s, p, Tile);
             if (s.Units.Length == 0) p.Add(at + ": 쓸 수 있는 병종이 없다");
             if (s.Pop < 1) p.Add(at + ": 인구는 1 이상");
         }

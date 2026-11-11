@@ -15,6 +15,7 @@ namespace VampireSpawn.Game.Screens
 
         RenderTexture backdropTex;
         UIDocument menu;
+        bool settingsOpen;
         readonly KeyEdges keys = new KeyEdges();
 
         void Start()
@@ -41,7 +42,9 @@ namespace VampireSpawn.Game.Screens
             if (menu != null) Destroy(menu.gameObject);
             Backdrop(Campaign.Stages[0]);
             System.Action<int> hover = i => { if (App.MenuSel != i) { App.MenuSel = i; Show(false); } };
-            menu = MenuToolkit.Build(transform, board.art, App.Campaign, backdropTex, Demo, Camp, App.MenuSel, hover);
+            menu = MenuToolkit.Build(transform, board.art, App.Campaign, backdropTex, Demo, Camp, App.MenuSel, hover, () => Settings(true));
+            var root = menu.rootVisualElement;
+            if (settingsOpen) SettingsToolkit.Build(root.Q("menu"), board.art, root.Q<Label>("tip"), () => Settings(false), () => Show(false));
             if (fade) Fx.FadeIn(menu.rootVisualElement);
         }
 
@@ -58,10 +61,14 @@ namespace VampireSpawn.Game.Screens
 
         void Camp() => App.GoCamp(CampNav.FromMenu(App.Campaign, App.Nav));
 
+        void Settings(bool open) { settingsOpen = open; Show(false); }
+
         void Update()
         {
             var kb = UnityEngine.InputSystem.Keyboard.current;
             if (kb == null) return;
+            var esc = keys.Pressed("esc", kb.escapeKey.isPressed);
+            if (settingsOpen) { if (esc) Settings(false); return; }
             var left = keys.Pressed("left", kb.leftArrowKey.isPressed);
             var right = keys.Pressed("right", kb.rightArrowKey.isPressed);
             var enter = keys.Pressed("enter", kb.enterKey.isPressed || kb.numpadEnterKey.isPressed);

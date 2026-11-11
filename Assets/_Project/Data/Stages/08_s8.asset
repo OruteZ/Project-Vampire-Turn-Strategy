@@ -27,14 +27,14 @@ MonoBehaviour:
   goal: 2
   spots:
   - {x: 0, y: 0}
-  - {x: 10, y: 0}
+  - {x: 12, y: 0}
   hold: 0
   escortHp: 6
   escortDef: 0
   escortMov: 3
-  escortAt: {x: 5, y: 7}
+  escortAt: {x: 6, y: 11}
   bonusType: 0
-  bonusValue: 8
+  bonusValue: 9
   bonusGold: 15
   bossHp: 31
   bossAtk: 7
@@ -42,52 +42,84 @@ MonoBehaviour:
   bossMov: 4
   bossHeal: 5
   map:
-  - ...........
-  - .##..#..##.
-  - ...#...#...
-  - '##.#.T.#.##'
-  - ddd#ddd#ddd
-  - d#ddd#ddd#d
-  - ddddddddddd
-  - ddddddddddd
+  - ...#.....#...
+  - .,.#.#.#.#.,.
+  - .....,.,.....
+  - '##.###.###.##'
+  - ...#.....#...
+  - .,.#.#T#.#.,.
+  - ...........,.
+  - '##.##.,.##.##'
+  - ...#.....#...
+  - ...#ddddd#...
+  - ..,.ddddd.,..
+  - dddddddddddd.
   enemies:
   - kind: vampire
-    col: 5
+    col: 6
     row: 0
+    arrive: 0
+  - kind: skeleton
+    col: 1
+    row: 0
+    arrive: 0
+  - kind: skeleton
+    col: 11
+    row: 0
+    arrive: 0
+  - kind: skeletonArcher
+    col: 4
+    row: 4
+    arrive: 0
+  - kind: skeletonArcher
+    col: 8
+    row: 4
+    arrive: 0
+  - kind: skeletonHeavy
+    col: 6
+    row: 3
+    arrive: 0
   - kind: skeleton
     col: 0
-    row: 0
+    row: 4
+    arrive: 0
   - kind: skeleton
-    col: 10
-    row: 0
+    col: 12
+    row: 4
+    arrive: 0
+  - kind: skeleton
+    col: 0
+    row: 8
+    arrive: 3
+  - kind: skeleton
+    col: 12
+    row: 8
+    arrive: 3
   - kind: skeletonArcher
-    col: 3
-    row: 1
-  - kind: skeletonArcher
-    col: 7
-    row: 1
-  - kind: skeletonHeavy
     col: 5
-    row: 2
+    row: 0
+    arrive: 5
   - kind: skeleton
     col: 2
     row: 0
+    arrive: 6
   - kind: skeleton
-    col: 4
+    col: 10
     row: 0
+    arrive: 6
   sample:
-  - kind: pspear
-    col: 3
-    row: 6
   - kind: sword
     col: 4
-    row: 6
+    row: 9
   - kind: knight
-    col: 5
-    row: 6
-  - kind: sword
     col: 6
-    row: 6
+    row: 9
+  - kind: pspear
+    col: 8
+    row: 9
+  - kind: doctor
+    col: 5
+    row: 10
   - kind: archer
-    col: 4
-    row: 7
+    col: 6
+    row: 10

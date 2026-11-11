@@ -14,7 +14,7 @@ namespace VampireSpawn.Editor
 
         const float R = 20f;
         static readonly float Sqrt3 = Mathf.Sqrt(3f);
-        static readonly (char ch, string label)[] Tiles = { ('.', "평지"), ('#', "바위"), ('T', "화톳불"), ('~', "물"), ('S', "햇빛"), ('d', "배치 구역") };
+        static readonly (char ch, string label)[] Tiles = { ('.', "평지"), ('#', "바위"), ('T', "화톳불"), ('~', "물"), ('S', "햇빛"), ('d', "배치 구역"), (',', "거친 땅") };
 
         GameDataAsset root;
         Object selected;
@@ -204,7 +204,7 @@ namespace VampireSpawn.Editor
             Handles.DrawAAPolyLine(1.5f, pts.Append(pts[0]).ToArray());
         }
 
-        // Board palette: plain, rock, candle, water, sun, and steel for the deploy zone.
+        // Board palette: plain, rock, candle, water, sun, steel for the deploy zone, mud for rough ground.
         static Color TileColor(char ch) => ch switch
         {
             '#' => new Color(0.45f, 0.42f, 0.48f),
@@ -212,6 +212,7 @@ namespace VampireSpawn.Editor
             '~' => new Color(0.24f, 0.34f, 0.44f),
             'S' => new Color(0.92f, 0.86f, 0.68f),
             'd' => new Color(0.36f, 0.46f, 0.55f),
+            ',' => new Color(0.38f, 0.30f, 0.20f),
             '.' => new Color(0.16f, 0.15f, 0.19f),
             _ => Color.magenta,
         };

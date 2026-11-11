@@ -24,8 +24,15 @@ MonoBehaviour:
   pop: 10
   silver: 0
   reward: 30
-  bonusType: 1
-  bonusValue: 0
+  goal: 0
+  spots: []
+  hold: 0
+  escortHp: 0
+  escortDef: 0
+  escortMov: 0
+  escortAt: {x: 0, y: 0}
+  bonusType: 0
+  bonusValue: 12
   bonusGold: 15
   bossHp: 28
   bossAtk: 6
@@ -33,55 +40,76 @@ MonoBehaviour:
   bossMov: 4
   bossHeal: 5
   map:
-  - ...........
-  - ..#.....#..
-  - ...........
-  - '#.T##.##T.#'
-  - ddddddddddd
-  - d##d#d#d##d
-  - ddddddddddd
-  - ddddddddddd
+  - '#..........#'
+  - '#.########.#'
+  - '#.#......#.#'
+  - '#.#......#.#'
+  - '#.#......#..'
+  - '#.###..###,,'
+  - '#...,..,...,'
+  - ',,.........,'
+  - ',.T.......T.'
+  - dddddddddddd
+  - dddddddddddd
+  - ddd,dddd,ddd
   enemies:
   - kind: vampire
     col: 5
-    row: 0
+    row: 2
+    arrive: 0
+  - kind: skeletonArcher
+    col: 3
+    row: 2
+    arrive: 0
+  - kind: skeletonArcher
+    col: 8
+    row: 2
+    arrive: 0
+  - kind: skeleton
+    col: 4
+    row: 3
+    arrive: 0
+  - kind: skeleton
+    col: 7
+    row: 3
+    arrive: 0
+  - kind: skeletonHeavy
+    col: 5
+    row: 5
+    arrive: 0
+  - kind: skeletonHeavy
+    col: 6
+    row: 5
+    arrive: 0
   - kind: skeleton
     col: 1
-    row: 1
+    row: 0
+    arrive: 0
   - kind: skeleton
-    col: 9
-    row: 1
-  - kind: skeletonHeavy
-    col: 4
-    row: 2
-  - kind: skeletonHeavy
-    col: 6
-    row: 2
-  - kind: skeletonArcher
-    col: 5
-    row: 1
+    col: 10
+    row: 0
+    arrive: 0
   - kind: skeleton
     col: 0
-    row: 0
+    row: 7
+    arrive: 4
   - kind: skeleton
-    col: 2
-    row: 0
+    col: 11
+    row: 6
+    arrive: 4
   sample:
   - kind: pspear
-    col: 3
-    row: 7
-  - kind: sword
     col: 4
-    row: 7
+    row: 9
   - kind: knight
     col: 5
-    row: 7
-  - kind: archer
+    row: 9
+  - kind: sword
     col: 6
-    row: 7
-  - kind: parcher
-    col: 7
-    row: 7
-  - kind: pspear
+    row: 9
+  - kind: archer
     col: 5
-    row: 6
+    row: 10
+  - kind: doctor
+    col: 6
+    row: 10
