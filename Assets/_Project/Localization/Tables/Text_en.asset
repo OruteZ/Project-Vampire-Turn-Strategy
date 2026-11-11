@@ -740,8 +740,9 @@ MonoBehaviour:
       m_Items:
       - rid: 7201578077006332005
   - m_Id: 5832192094221
-    m_Localized: A plague doctor hiding in the manor has joined. Hold the great hall
-      as the night closes in from every side.
+    m_Localized: A plague doctor hiding in the manor has joined. From the garden,
+      the stables, the chapel and the south gate, the night closes in. Hold the great
+      hall for twelve turns.
     m_Metadata:
       m_Items:
       - rid: 7201578077006332005
@@ -798,13 +799,14 @@ MonoBehaviour:
       m_Items:
       - rid: 7201578077006332005
   - m_Id: 5832192094232
-    m_Localized: Gate Over the Moat
+    m_Localized: The Abandoned Silver Mine
     m_Metadata:
       m_Items:
       - rid: 7201578077006332005
   - m_Id: 5832192094233
-    m_Localized: One bridge crosses the moat, and archers line the walls. A ford
-      lies far to the side.
+    m_Localized: The Count's servant hides deep in the abandoned silver mine. Three
+      shafts lead down; the gate at the end of the middle one opens only when someone
+      draws near. The deeper you go, the emptier the entrance behind you.
     m_Metadata:
       m_Items:
       - rid: 7201578077006332005
@@ -2041,6 +2043,10 @@ MonoBehaviour:
       m_Items: []
   - m_Id: 1626683207380998
     m_Localized: "Enemy acting\u2026 \xD7{0} (F)"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1793766033518592
+    m_Localized: the great hall
     m_Metadata:
       m_Items: []
   references:

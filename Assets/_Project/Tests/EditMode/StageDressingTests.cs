@@ -39,7 +39,9 @@ namespace VampireSpawn.Tests
                     var at = BoardView.Local(h, s);
                     var near = spots.Select(p => (p - new Vector2(at.x, at.z)).magnitude).DefaultIfEmpty(float.MaxValue).Min();
                     var t = board.At(h);
-                    if (t == Terrain.Rock) Assert.Less(near, 0.5f * s, stage.Id + " prop on rock " + h);
+                    var door = stage.Doors.Any(d => d.Hexes.Contains(h));
+                    if (t == Terrain.Rock && !door) Assert.Less(near, 0.5f * s, stage.Id + " prop on rock " + h);
+                    if (door) Assert.Greater(near, 0.9f * s, stage.Id + " door " + h + " is a live prop, not baked (triggers.md 1-4)");
                     else if (board.Walkable(h))
                     {
                         Assert.Greater(near, 0.9f * s, stage.Id + " prop stands on walkable " + h);

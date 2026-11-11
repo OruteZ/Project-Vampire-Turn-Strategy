@@ -64,12 +64,15 @@ namespace VampireSpawn.Core
             var foe = b.Enemies.Where(e => !e.Asleep).OrderBy(e => Hex.Distance(u.Pos, e.Pos)).FirstOrDefault()
                 ?? b.Enemies.OrderBy(e => Hex.Distance(u.Pos, e.Pos)).FirstOrDefault();
             if (foe == null) return;
-            var goal = foe.Pos;
-            if (b.Stage.Goal == Goal.Defense && b.Stage.Spots.Length > 0 && Hex.Distance(u.Pos, b.Stage.Spots[0]) >= 3)
-                goal = b.Stage.Spots[0];
-            Step(b, u, goal);
+            Step(b, u, foe.Pos);
             if (b.Phase == Phase.Player && b.Units.Contains(u)) TryHit(b, u);
         }
+
+        // On a defence stage the bot never strays more than this from the defended hexes.
+        const int Leash = 3;
+
+        static bool Allowed(Battle b, Hex h) =>
+            b.Stage.Goal != Goal.Defense || b.Stage.Spots.Length == 0 || b.Stage.Spots.Min(s => Hex.Distance(s, h)) <= Leash;
 
         static bool TryHit(Battle b, Unit u)
         {
@@ -82,8 +85,10 @@ namespace VampireSpawn.Core
         {
             if (u.Moved) return;
             var reach = b.Reach(u);
-            var best = reach.Keys.OrderBy(h => Hex.Distance(h, goal)).ThenBy(h => reach[h]).FirstOrDefault();
-            if (reach.Count > 0 && best != u.Pos && Hex.Distance(best, goal) < Hex.Distance(u.Pos, goal)) b.Move(u.Id, best);
+            var ok = reach.Keys.Where(h => u.Role == Role.Escort || Allowed(b, h)).ToList();
+            if (ok.Count == 0) return;
+            var best = ok.OrderBy(h => Hex.Distance(h, goal)).ThenBy(h => reach[h]).First();
+            if (best != u.Pos && Hex.Distance(best, goal) < Hex.Distance(u.Pos, goal)) b.Move(u.Id, best);
         }
     }
 }
