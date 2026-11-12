@@ -127,6 +127,13 @@ namespace VampireSpawn.Game
                     if (Board.At(h) == Terrain.Sun) lines.Fill(c, r, Tint(art.sunLight, 0.18f));
                     else if (Board.Lit(h)) lines.Fill(c, r, Tint(art.torchLight, 0.14f));
                     else if (Board.At(h) == Terrain.Rough) lines.Fill(c, r, new Color(0.38f, 0.30f, 0.20f, 0.22f));
+                    // ui-style.md 8-2: colour alone did not tell light cells apart (#101).
+                    if (Board.At(h) == Terrain.Sun)
+                    {
+                        lines.Fill(c, 0.14f * r, Tint(art.sunLight, 0.85f));
+                        for (var i = 0; i < 6; i++) lines.Segment(Vector3.Lerp(c, HexLines.Corner(c, r, i), 0.2f), Vector3.Lerp(c, HexLines.Corner(c, r, i), 0.32f), 0.04f * r, Tint(art.sunLight, 0.85f));
+                    }
+                    else if (Board.Lit(h)) lines.Fill(c, 0.14f * r, Tint(art.torchLight, 0.85f));
                     for (var i = 0; i < 6; i++)
                     {
                         var a = HexLines.Corner(c, r, i);

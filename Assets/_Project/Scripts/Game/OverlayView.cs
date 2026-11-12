@@ -42,6 +42,17 @@ namespace VampireSpawn.Game
             [Mark.Reinforce] = S(Ally, 0.06f, Ally, 1f, R - 2f, 2f, 4f, 4f),
             [Mark.Trigger] = S(Screens.Ui.Candle, 0.08f, Screens.Ui.Candle, 1f, R - 2f, 2f, 4f, 4f),
         };
+        // ui-style.md 8-2 role icons: colour alone did not tell these cells apart (#101).
+        static readonly Dictionary<Mark, (string Icon, Color Tint)> Icons = new Dictionary<Mark, (string, Color)>
+        {
+            [Mark.Deploy] = (Screens.Kit.Icon.Pop, Ally),
+            [Mark.Reinforce] = (Screens.Kit.Icon.Up, Ally),
+            [Mark.Arrive] = (Screens.Kit.Icon.Skulls, Enemy),
+            [Mark.Hold] = (Screens.Kit.Icon.Home, Screens.Ui.Candle),
+            [Mark.Goal] = (Screens.Kit.Icon.Flag, Ally),
+            [Mark.Trigger] = (Screens.Kit.Icon.Star, Screens.Ui.Candle),
+        };
+        readonly List<SpriteRenderer> icons = new List<SpriteRenderer>();
         static readonly Style HoverCell = S(Bone, 0f, Bone, 1f, R - 1f, 2f);
         static readonly Style DropIn = S(Ally, 0.25f, Ally, 1f, R - 2.5f, 2.5f);
         static readonly Style DropOut = S(Enemy, 0.25f, Enemy, 1f, R - 2.5f, 2.5f);
@@ -83,7 +94,13 @@ namespace VampireSpawn.Game
             lines.Clear();
             var marks = session.Overlay();
             MarkCount = marks.Count;
-            foreach (var m in marks) Hexagon(Center(m.Hex), Styles[m.Mark]);
+            var shown = 0;
+            foreach (var m in marks)
+            {
+                Hexagon(Center(m.Hex), Styles[m.Mark]);
+                if (Icons.TryGetValue(m.Mark, out var ic)) Icon(shown++, m.Hex, ic.Icon, ic.Tint);
+            }
+            for (var i = shown; i < icons.Count; i++) icons[i].enabled = false;
             var moon = session.Moon();
             if (moon != null && moon.Target is Hex t) lines.Dashed(Center(moon.Vampire), Center(t), 2f * Scale, MoonBlood, 4f * Scale, 4f * Scale);
             if (hover is Hex hv && session.Battle.Board.InBounds(hv)) Hexagon(Center(hv), HoverCell);
@@ -96,10 +113,32 @@ namespace VampireSpawn.Game
             last = null;
             hover = null;
             mesh.Clear();
+            foreach (var ic in icons) ic.enabled = false;
             MarkCount = 0;
         }
 
         Vector3 Center(Hex h) => transform.InverseTransformPoint(board.HexToWorld(h));
+
+        void Icon(int i, Hex h, string name, Color tint)
+        {
+            if (i == icons.Count)
+            {
+                var go = new GameObject("Icon");
+                go.transform.SetParent(transform, false);
+                icons.Add(go.AddComponent<SpriteRenderer>());
+            }
+            var sr = icons[i];
+            sr.sprite = board.art.Ui(name);
+            sr.color = A(tint, 0.85f);
+            sr.enabled = sr.sprite != null;
+            if (!sr.enabled) return;
+            var size = 0.9f * board.art.hexSize;
+            var t = sr.transform;
+            t.position = board.OnHologram(board.HexToWorld(h), Lift + 0.01f);
+            t.rotation = Quaternion.Euler(90f, 0f, 0f);
+            var b = sr.sprite.bounds.size;
+            t.localScale = Vector3.one * (size / Mathf.Max(b.x, b.y)) / transform.lossyScale.x;
+        }
 
         void Hexagon(Vector3 c, Style s)
         {
