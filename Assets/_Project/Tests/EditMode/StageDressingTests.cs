@@ -54,5 +54,16 @@ namespace VampireSpawn.Tests
                     }
                 }
         }
+
+        // docs/art/battle-camera.md 13.
+        [Test]
+        public void APropCountsAsBlockingOnlyBetweenTheCameraAndTheUnit()
+        {
+            var eye = new Vector3(0f, 10f, -10f);
+            var unit = Vector3.zero;
+            Assert.IsTrue(BattleCamera.Blocks(new Bounds(new Vector3(0f, 5f, -5f), Vector3.one * 2f), eye, unit));
+            Assert.IsFalse(BattleCamera.Blocks(new Bounds(new Vector3(0f, 0f, 3f), Vector3.one * 2f), eye, unit));
+            Assert.IsFalse(BattleCamera.Blocks(new Bounds(new Vector3(5f, 5f, -5f), Vector3.one * 2f), eye, unit));
+        }
     }
 }

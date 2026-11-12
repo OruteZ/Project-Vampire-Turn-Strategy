@@ -376,6 +376,45 @@ namespace VampireSpawn.Game
             cam.transform.SetPositionAndRotation(eye + at + shake, Quaternion.LookRotation(Look - eye));
             color.saturation.Override(saturation);
             vignette.intensity.Override(vignetteAmount);
+            Unblock();
+        }
+
+        const float UnitChest = 0.8f;
+        Transform props;
+        Renderer[] propRenderers = System.Array.Empty<Renderer>();
+        ShadowCastingMode[] propShadows;
+        readonly List<Vector3> unitPoints = new List<Vector3>();
+
+        // battle-camera.md 13: props between the camera and a living unit cast shadows only.
+        void Unblock()
+        {
+            var now = Board.transform.Find("Dressing/Props");
+            if (now != props)
+            {
+                props = now;
+                propRenderers = now != null ? now.GetComponentsInChildren<Renderer>() : System.Array.Empty<Renderer>();
+                propShadows = System.Array.ConvertAll(propRenderers, r => r.shadowCastingMode);
+            }
+            unitPoints.Clear();
+            foreach (var u in Battle.Units)
+                if (view.ViewOf(u.Id) is UnitView v) unitPoints.Add(v.transform.position + Vector3.up * UnitChest);
+            var eye = cam.transform.position;
+            for (var i = 0; i < propRenderers.Length; i++)
+            {
+                var r = propRenderers[i];
+                if (r == null) continue;
+                var hides = false;
+                foreach (var p in unitPoints) if (Blocks(r.bounds, eye, p)) { hides = true; break; }
+                r.shadowCastingMode = hides ? ShadowCastingMode.ShadowsOnly : propShadows[i];
+            }
+        }
+
+        // Stops short of the unit so a prop whose bounds just reach the unit's cell does not count.
+        public static bool Blocks(Bounds b, Vector3 eye, Vector3 unit)
+        {
+            var to = unit - eye;
+            var length = to.magnitude - 0.3f;
+            return length > 0f && b.IntersectRay(new Ray(eye, to), out var d) && d <= length;
         }
     }
 }
