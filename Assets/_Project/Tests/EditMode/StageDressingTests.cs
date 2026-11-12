@@ -41,7 +41,12 @@ namespace VampireSpawn.Tests
                     var t = board.At(h);
                     var door = stage.Doors.Any(d => d.Hexes.Contains(h));
                     if (t == Terrain.Rock && !door) Assert.Less(near, 0.5f * s, stage.Id + " prop on rock " + h);
-                    if (door) Assert.Greater(near, 0.9f * s, stage.Id + " door " + h + " is a live prop, not baked (triggers.md 1-4)");
+                    if (t == Terrain.Void)
+                    {
+                        Assert.Greater(near, 0.9f * s, stage.Id + " prop on void " + h);
+                        Assert.Less(Height(at), -1f, stage.Id + " void " + h + " is a pit");
+                    }
+                    else if (door) Assert.Greater(near, 0.9f * s, stage.Id + " door " + h + " is a live prop, not baked (triggers.md 1-4)");
                     else if (board.Walkable(h))
                     {
                         Assert.Greater(near, 0.9f * s, stage.Id + " prop stands on walkable " + h);

@@ -14,7 +14,7 @@ namespace VampireSpawn.Editor
 
         const float R = 20f;
         static readonly float Sqrt3 = Mathf.Sqrt(3f);
-        static readonly (char ch, string label)[] Tiles = { ('.', "평지"), ('#', "바위"), ('T', "화톳불"), ('~', "물"), ('S', "햇빛"), ('d', "배치 구역"), (',', "거친 땅") };
+        static readonly (char ch, string label)[] Tiles = { ('.', "평지"), ('#', "바위"), ('T', "화톳불"), ('~', "물"), ('S', "햇빛"), ('d', "배치 구역"), (',', "거친 땅"), ('_', "빈 칸") };
 
         GameDataAsset root;
         Object selected;
@@ -214,6 +214,7 @@ namespace VampireSpawn.Editor
             'd' => new Color(0.36f, 0.46f, 0.55f),
             ',' => new Color(0.38f, 0.30f, 0.20f),
             '.' => new Color(0.16f, 0.15f, 0.19f),
+            '_' => Color.black,
             _ => Color.magenta,
         };
 

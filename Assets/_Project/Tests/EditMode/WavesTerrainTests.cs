@@ -130,6 +130,25 @@ namespace VampireSpawn.Tests
             Assert.AreEqual(Terrain.Plain, b.Board.At(new Hex(3, 1)));
         }
 
+        // docs/content/stages.md 1-3: '_' is a missing cell, not a wall. Nothing stands on it, but shots fly over it.
+        [Test]
+        public void AVoidCellHoldsNothingButShotsCrossIt()
+        {
+            var map = new[] { ".......", ".......", ".......", "..._...", ".......", "ddddddd", "ddd_ddd" };
+            var b = new Battle(Staged(map, new[] { new Placement(EnemyType.Vampire, 6, 0), new Placement("skeleton", 3, 2, stance: Stance.Hold) }, new Trigger[0]), null, new[] { new Placement("parcher", 3, 5) });
+            Assert.AreEqual(Terrain.Void, b.Board.At(new Hex(3, 3)));
+            Assert.IsFalse(b.Board.Walkable(new Hex(3, 3)));
+            Assert.IsFalse(b.InDeploy(new Hex(3, 6)), "no deploying onto a void");
+            Assert.IsFalse(b.Place("pspear", new Hex(3, 6)).Ok);
+            b.Start();
+            var archer = b.Allies.Single();
+            Assert.IsFalse(b.Move(archer.Id, new Hex(3, 3)).Ok, "no walking onto a void");
+            Assert.IsTrue(b.Board.Reachable(archer.Pos, 9, Side.Ally, b.OccupantAt).All(r => b.Board.At(r.hex) != Terrain.Void));
+            Assert.IsTrue(b.Move(archer.Id, new Hex(3, 4)).Ok);
+            var skeleton = b.Enemies.Single(e => e.Kind == "skeleton");
+            Assert.IsTrue(b.Attack(archer.Id, skeleton.Id).Ok, "range 2 over the void");
+        }
+
         [Test]
         public void EveryShippedStageEndsUnderTheBot()
         {
