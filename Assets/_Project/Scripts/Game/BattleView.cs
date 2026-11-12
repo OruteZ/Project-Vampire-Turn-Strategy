@@ -79,15 +79,6 @@ namespace VampireSpawn.Game
 
         public UnitView ViewOf(int id) => units.TryGetValue(id, out var v) ? v : null;
 
-        public void ShowDone()
-        {
-            foreach (var kv in units)
-            {
-                var u = Battle.Find(kv.Key);
-                kv.Value.SetDone(u != null && u.Side == Side.Ally && Battle.Phase == Phase.Player && u.Acted);
-            }
-        }
-
         readonly HashSet<int> reinforceViews = new HashSet<int>();
 
         public void SyncDeploy()
@@ -244,7 +235,7 @@ namespace VampireSpawn.Game
             };
             // docs/art/unit-visuals.md 4: allies face the enemy side (north, +Z), enemies face south.
             var yaw = u.Side == Side.Ally ? 0f : 180f;
-            var view = UnitView.Create(Art, look, layer, u.Id, Ground(at ?? u.Pos), yaw, RingColor(u), u.Role != Role.Spawn, u.Asleep);
+            var view = UnitView.Create(Art, look, layer, u.Id, Ground(at ?? u.Pos), yaw, u.Role != Role.Spawn, u.Asleep);
             if (u.Wolf) view.Shift(Art.wolfLook);
             view.SetHp(u.Hp, u.MaxHp);
             view.Sounds = u.Role == Role.Spawn ? Art.sound?.spawn : look.sounds;
@@ -253,22 +244,10 @@ namespace VampireSpawn.Game
 
         void AddCorpse(int id, string type, Hex at)
         {
-            var view = UnitView.Create(Art, Art.Look(type), layer, -id, Ground(at), 20f, Art.spawnRing * 0.6f, false);
+            var view = UnitView.Create(Art, Art.Look(type), layer, -id, Ground(at), 20f, false);
             view.name = "Corpse " + id;
             view.LieDown();
             corpses[id] = view;
-        }
-
-        Color RingColor(Unit u)
-        {
-            switch (u.Role)
-            {
-                case Role.Minion: return Art.skeletonRing;
-                case Role.Vampire: return Art.vampireRing;
-                case Role.Spawn: return Art.spawnRing;
-                case Role.Escort: return Art.peasantRing;
-            }
-            return Art.TierRing(GameData.Type(u.Type).Tier);
         }
 
         static void Remove(Dictionary<int, UnitView> from, int id, float after)

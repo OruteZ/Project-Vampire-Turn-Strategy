@@ -14,7 +14,8 @@ namespace VampireSpawn.Game
         [Tooltip("칸 격자·칸 표시의 정점색 재질 (docs/art/battle-terrain.md 3)")] public Material overlay;
         public GameObject[] rockProps;
         public GameObject brazier, fire;
-        [Tooltip("화톳불 강조 불티 (docs/art/battle-terrain.md 3-1)")] public GameObject embers;
+        [Tooltip("화톳불 강조 불티, 햇빛 칸 먼지 (docs/art/battle-terrain.md 3-1)")] public GameObject embers, dust;
+        [Tooltip("햇빛 칸 빛기둥 (docs/art/battle-terrain.md 3-1)")] public Shader lightBeam;
         public Color torchLight = new Color(0.89f, 0.66f, 0.29f);
         public Color sunLight = new Color(0.92f, 0.86f, 0.68f);
         [Tooltip("장별 모습 (docs/art/stage-dressing.md). 장 id 가 어느 테마에도 없으면 맨 앞 테마")] public BoardTheme[] themes;
@@ -40,15 +41,7 @@ namespace VampireSpawn.Game
         [Tooltip("달의 피로 변신한 웨어울프 (docs/content/units.md 판타지 직업 개편 C)")] public UnitLook wolfLook;
         [Tooltip("Polygon 캐릭터와, 묶음이 빈 UnitLook 이 쓰는 기본 애니메이터")] public RuntimeAnimatorController unitAnimator;
         [Tooltip("Sidekick 캐릭터가 스폰이 되었을 때 (맨손 근접)")] public RuntimeAnimatorController spawnAnimator;
-        public Material flat;
         public float unitHeight = 1.5f;
-        public Color peasantRing = new Color(0.72f, 0.61f, 0.45f);
-        public Color regularRing = new Color(0.56f, 0.69f, 0.80f);
-        public Color knightRing = new Color(0.85f, 0.87f, 0.89f);
-        public Color hunterRing = new Color(0.53f, 0.72f, 0.65f);
-        public Color skeletonRing = new Color(0.71f, 0.66f, 0.56f);
-        public Color vampireRing = new Color(0.78f, 0.19f, 0.29f);
-        public Color spawnRing = new Color(0.65f, 0.31f, 0.77f);
         [Tooltip("잠든 뱀파이어의 관. 색칠 없이 그대로 (docs/art/unit-visuals.md 5)")] public GameObject coffin;
 
         public UnitLook Look(string key) => Find(allyLooks, key) ?? Find(minionLooks, key);
@@ -57,14 +50,6 @@ namespace VampireSpawn.Game
         public string Icon(string key) => Look(key)?.icon;
 
         static UnitLook Find(UnitLook[] looks, string key) => System.Array.Find(looks ?? System.Array.Empty<UnitLook>(), l => l != null && l.key == key);
-
-        public Color TierRing(VampireSpawn.Core.Tier tier) => tier switch
-        {
-            VampireSpawn.Core.Tier.Peasant => peasantRing,
-            VampireSpawn.Core.Tier.Knight => knightRing,
-            VampireSpawn.Core.Tier.Hunter => hunterRing,
-            _ => regularRing,
-        };
 
         [Header("UI")]
         [Tooltip("Synty UI 스프라이트. 이름으로 찾는다 (docs/art/ui-style.md)")]

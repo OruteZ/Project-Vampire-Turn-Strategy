@@ -257,7 +257,65 @@ namespace VampireSpawn.Game
                     sun.spotAngle = 2f * Mathf.Atan(sunDisc / sunHeight) * Mathf.Rad2Deg;
                     sun.innerSpotAngle = sun.spotAngle * 0.85f;
                     sun.shadows = LightShadows.Soft;
+                    SunBeam(tile.transform, top, sunHeight, sunDisc);
                     break;
+            }
+        }
+
+        // battle-terrain.md 3-1: a see-through cone along the spot, brightest a third of the way down, with dust drifting in it.
+        void SunBeam(Transform parent, Vector3 ground, float height, float disc)
+        {
+            const int sides = 24;
+            float[] at = { 1f, 0.7f, 0f }, alpha = { 0f, 1f, 0.55f };
+            if (art.lightBeam != null)
+            {
+                var verts = new List<Vector3>(); var normals = new List<Vector3>(); var colors = new List<Color>(); var tris = new List<int>();
+                var slope = disc / height;
+                for (var ring = 0; ring < at.Length; ring++)
+                    for (var i = 0; i <= sides; i++)
+                    {
+                        var a = i * Mathf.PI * 2f / sides;
+                        var dir = new Vector3(Mathf.Cos(a), 0f, Mathf.Sin(a));
+                        var h = at[ring] * height;
+                        verts.Add((dir * (disc - h * slope + 0.12f) + Vector3.up * h) * art.hexSize);
+                        normals.Add((dir + Vector3.up * slope).normalized);
+                        colors.Add(new Color(1f, 1f, 1f, alpha[ring]));
+                    }
+                for (var ring = 0; ring + 1 < at.Length; ring++)
+                    for (var i = 0; i < sides; i++)
+                    {
+                        int a = ring * (sides + 1) + i, b = a + sides + 1;
+                        tris.AddRange(new[] { a, b, a + 1, a + 1, b, b + 1 });
+                    }
+                var mesh = new Mesh { name = "Sun Beam" };
+                mesh.SetVertices(verts); mesh.SetNormals(normals); mesh.SetColors(colors); mesh.SetTriangles(tris, 0);
+                var go = new GameObject("Sun Beam");
+                go.transform.SetParent(parent, false);
+                go.transform.position = ground;
+                go.AddComponent<MeshFilter>().sharedMesh = mesh;
+                var mr = go.AddComponent<MeshRenderer>();
+                mr.sharedMaterial = new Material(art.lightBeam) { color = new Color(art.sunLight.r, art.sunLight.g, art.sunLight.b, 0.35f) };
+                mr.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
+                mr.receiveShadows = false;
+            }
+            if (art.dust == null) return;
+            // The pack's dust fills a 10x10x30 box at 100 a second with motes ~0.01 wide; squeezed into the beam and 5x larger they read from the battle camera.
+            var dust = Prop(art.dust, parent, ground + Vector3.up * art.hexSize * height * 0.4f, 0f, 0f);
+            foreach (var ps in dust.GetComponentsInChildren<ParticleSystem>())
+            {
+                var shape = ps.shape;
+                shape.shapeType = ParticleSystemShapeType.Cone;
+                shape.rotation = new Vector3(90f, 0f, 0f);
+                shape.position = Vector3.zero;
+                shape.scale = Vector3.one;
+                shape.angle = 0f;
+                shape.radius = art.hexSize * disc * 0.6f;
+                shape.length = art.hexSize * height * 0.4f;
+                var emission = ps.emission;
+                emission.rateOverTime = 8f;
+                var main = ps.main;
+                main.maxParticles = 40;
+                main.startSizeMultiplier = 5f;
             }
         }
 

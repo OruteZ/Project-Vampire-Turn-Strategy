@@ -25,6 +25,8 @@ MonoBehaviour:
   brazier: {fileID: 8371062267507710030, guid: 887ca6f05d8eb0940be8f3d4916be6b1, type: 3}
   fire: {fileID: 5879195395630746260, guid: 66935891f0cc76c46869337a4d1b7fd5, type: 3}
   embers: {fileID: 1028970867693538119, guid: ad0ae052968bc3b45a7809f7f3b2fcda, type: 3}
+  dust: {fileID: 1963974882115008307, guid: 9cb0af795e4b4574caa233d8b5c23272, type: 3}
+  lightBeam: {fileID: 4800000, guid: 863dacce3da22984aad4dd38cb8e4cec, type: 3}
   torchLight: {r: 0.89, g: 0.66, b: 0.29, a: 1}
   sunLight: {r: 0.92, g: 0.86, b: 0.68, a: 1}
   themes:
@@ -69,15 +71,7 @@ MonoBehaviour:
   wolfLook: {fileID: 11400000, guid: 08ece1f2a992b884081d58ac45ad02e2, type: 2}
   unitAnimator: {fileID: 9100000, guid: 2b7b31fac4d09d24bab28abb943acab0, type: 2}
   spawnAnimator: {fileID: 22100000, guid: 1fdfeebf2685688439c5272f58b765dd, type: 2}
-  flat: {fileID: 2100000, guid: 2024b0488a33d814a987b2e5a4be5fbd, type: 2}
   unitHeight: 1.5
-  peasantRing: {r: 0.72, g: 0.61, b: 0.45, a: 1}
-  regularRing: {r: 0.56, g: 0.69, b: 0.8, a: 1}
-  knightRing: {r: 0.85, g: 0.87, b: 0.89, a: 1}
-  hunterRing: {r: 0.53, g: 0.72, b: 0.65, a: 1}
-  skeletonRing: {r: 0.71, g: 0.66, b: 0.56, a: 1}
-  vampireRing: {r: 0.78, g: 0.19, b: 0.29, a: 1}
-  spawnRing: {r: 0.65, g: 0.31, b: 0.77, a: 1}
   coffin: {fileID: 7416434307688326560, guid: bdf4e270f5d02034ab8ecb736e89b28e, type: 3}
   ui:
   - {fileID: 21300000, guid: 5190468f75372b34c9ce4e588be76293, type: 3}
