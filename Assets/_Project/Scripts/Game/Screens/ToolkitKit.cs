@@ -37,10 +37,18 @@ namespace VampireSpawn.Game.Screens
 
         // ui-style.md 15-1 on Panel.asset (Scale With Screen Size, Expand, 1920x1080): the panel never shrinks below 1920x1080, the spare axis grows.
         // Computed, not read from layout, so the first frame (before UI Toolkit lays out) already knows it.
-        public static Vector2 PanelSize()
+        public static Vector2 PanelSize(float zoom = 1f)
         {
-            var scale = Mathf.Min(Screen.width / 1920f, Screen.height / 1080f);
-            return scale > 0f ? new Vector2(Screen.width / scale, Screen.height / scale) : new Vector2(1920f, 1080f);
+            var scale = Mathf.Min(Screen.width / 1920f, Screen.height / 1080f) * zoom;
+            return scale > 0f ? new Vector2(Screen.width / scale, Screen.height / scale) : new Vector2(1920f, 1080f) / zoom;
+        }
+
+        // A runtime copy lets one screen draw smaller without touching the shared Panel.asset; a bigger reference resolution shrinks every px.
+        public static PanelSettings Zoomed(PanelSettings panel, float zoom)
+        {
+            var p = UnityEngine.Object.Instantiate(panel);
+            p.referenceResolution = new Vector2Int(Mathf.RoundToInt(panel.referenceResolution.x / zoom), Mathf.RoundToInt(panel.referenceResolution.y / zoom));
+            return p;
         }
 
         // True when the mouse is over an element that takes clicks; the screen-wide root and layers are Ignore.

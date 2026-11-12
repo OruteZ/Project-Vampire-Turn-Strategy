@@ -21,19 +21,19 @@
 .coffin { position: absolute; left: -2.5px; top: -55px; width: 5px; height: 26px; background-color: var(--line); }
 .moon-skull { position: absolute; left: -14px; top: -76px; width: 28px; height: 28px; }
 .moon-label { position: absolute; left: 50%; top: 142px; width: 300px; margin-left: -150px; align-items: center; }
-.moon-count { font-size: 18px; -unity-font-style: bold; color: var(--bone); }
-.moon-state { font-size: 13px; color: var(--muted); }
+.moon-count { font-size: 26px; -unity-font-style: bold; color: var(--bone); }
+.moon-state { font-size: 26px; color: var(--muted); }
 .moon-state.hot { -unity-font-style: bold; }
 
 /* ---------- corners ---------- */
 /* battle-hud.md 3-4, 3-6: the wide action bar along the bottom, the round primary button inside its right end. */
-.action-bar, .action-row { position: absolute; left: 10%; right: 10%; bottom: 12px; height: 204px; }
+.action-bar, .action-row { position: absolute; left: 28%; right: 28%; bottom: 12px; height: 204px; }
 .action-bar { -unity-slice-scale: 0.111px; }
 .action-row { padding: 38px 184px 38px 24px; flex-direction: row; justify-content: center; }
-.end-turn { position: absolute; right: 10%; bottom: 46px; width: 136px; height: 136px; margin-right: 24px; justify-content: center; align-items: center; }
+.end-turn { position: absolute; right: 28%; bottom: 46px; width: 136px; height: 136px; margin-right: 24px; justify-content: center; align-items: center; }
 .end-turn.deploy { right: auto; left: 50%; bottom: 40px; width: 176px; height: 176px; margin-right: 0; margin-left: -88px; }
-.end-turn.deploy > .end-turn-text { width: 144px; font-size: 24px; }
-.end-turn-text { width: 112px; font-size: 17px; -unity-font-style: bold; white-space: normal; -unity-text-align: middle-center; padding: 0; margin: 0; }
+.end-turn.deploy > .end-turn-text { width: 144px; font-size: 26px; }
+.end-turn-text { width: 112px; font-size: 26px; -unity-font-style: bold; white-space: normal; -unity-text-align: middle-center; padding: 0; margin: 0; }
 .end-turn > .key { right: auto; left: 50%; bottom: 18px; translate: -50% 0; }
 .end-turn > .ring-badge { position: absolute; left: 2px; top: 2px; }
 .end-turn:hover { scale: 1.04 1.04; }
@@ -41,14 +41,14 @@
 .corner { position: absolute; left: 12px; bottom: 18px; height: 40px; flex-direction: row; align-items: flex-end; }
 .corner > * { margin-right: 4px; }
 .corner > .btn { width: 220px; height: 40px; }
-.hint { position: absolute; left: 50%; bottom: 228px; width: 1000px; height: 24px; margin-left: -500px; font-size: 15px; color: var(--muted); -unity-text-align: middle-center; }
+.hint { position: absolute; left: 50%; bottom: 228px; width: 1400px; height: 34px; margin-left: -700px; font-size: 26px; color: var(--muted); -unity-text-align: middle-center; }
 
 /* ---------- rules window (battle-hud.md 6) ---------- */
 .veil { position: absolute; left: 0; top: 0; right: 0; bottom: 0; background-color: rgba(18, 19, 26, 0.85); }
 .window { position: absolute; left: 50%; top: 50%; translate: -50% -50%; padding: 32px; -unity-slice-scale: 0.111px; }
 .rules { width: 720px; }
 .rules-title { font-size: 29px; -unity-font-style: bold; color: var(--bone); margin-bottom: 8px; }
-.rules-line { font-size: 15px; color: var(--muted); white-space: normal; margin-bottom: 8px; }
+.rules-line { font-size: 26px; color: var(--muted); white-space: normal; margin-bottom: 8px; }
 .rules-close { flex-direction: row; justify-content: flex-end; }
 .rules-close > .btn { width: 100px; height: 36px; }
 
@@ -60,18 +60,18 @@
 .res { margin-top: 8px; }
 .res > .value { margin-right: 24px; }
 .res .value-icon, .fight-stats .value-icon { width: 28px; height: 28px; }
-.res .value-text, .fight-stats .value-text { font-size: 20px; }
+.res .value-text, .fight-stats .value-text { font-size: 26px; }
 
 .box { position: absolute; width: 340px; padding: 16px; -unity-slice-scale: 0.111px; }
 .roster { left: 24px; top: 154px; }
-.box-title { font-size: 20px; -unity-font-style: bold; color: var(--bone); }
+.box-title { font-size: 26px; -unity-font-style: bold; color: var(--bone); }
 .roster-row { margin-top: 8px; min-height: 64px; padding: 6px 10px; -unity-slice-scale: 0.0714px; }
 .roster-icon { width: 40px; height: 40px; margin-right: 10px; flex-shrink: 0; }
 .roster-info { flex-grow: 1; flex-shrink: 1; }
-.roster-name { flex-grow: 1; font-size: 15px; -unity-font-style: bold; color: var(--bone); }
+.roster-name { flex-grow: 1; font-size: 26px; -unity-font-style: bold; color: var(--bone); }
 .roster-info .value { margin-left: 10px; }
 .roster-info .value-icon { width: 21px; height: 21px; }
-.roster-info .value-text { font-size: 13px; }
+.roster-info .value-text { font-size: 26px; }
 .unit-stats { margin-top: 4px; }
 .unit-stats > .value { margin-left: 0; margin-right: 8px; }
 .unit-stats .value-icon { width: 20px; height: 20px; }
@@ -81,22 +81,22 @@
 .brief { right: 24px; top: 24px; }
 .def { margin-top: 10px; align-items: flex-start; }
 .def-icon { width: 24px; height: 24px; margin-right: 10px; flex-shrink: 0; }
-.def-text { width: 274px; font-size: 13px; color: var(--bone); white-space: normal; }
+.def-text { width: 274px; font-size: 26px; color: var(--bone); white-space: normal; }
 
 /* ---------- fight (battle-hud.md 3, 4) ---------- */
 .fight-stats { position: absolute; left: 24px; top: 24px; height: 48px; }
 .fight-stats > .value { margin-right: 28px; }
-.alt-key { width: 34px; height: 22px; margin-right: 4px; background-color: rgba(15, 16, 22, 0.85); border-width: 1px; border-color: var(--line); font-size: 13px; color: var(--muted); -unity-text-align: middle-center; }
+.alt-key { width: 52px; height: 32px; margin-right: 4px; background-color: rgba(15, 16, 22, 0.85); border-width: 1px; border-color: var(--line); font-size: 26px; color: var(--muted); -unity-text-align: middle-center; }
 .alt-key.on { border-color: #c8304a; color: var(--bone); }
 .alt-icon { width: 22px; height: 22px; }
 
 .log { position: absolute; right: 24px; top: 24px; width: 320px; }
-.log-head { font-size: 13px; color: var(--dim); -unity-text-align: upper-right; }
+.log-head { font-size: 26px; color: var(--dim); -unity-text-align: upper-right; }
 .log-lines { width: 320px; height: 400px; margin-top: 4px; padding: 10px; background-color: rgba(15, 16, 22, 0.92); border-width: 1px; border-color: var(--line); }
 .log-line { margin-top: 4px; justify-content: flex-end; }
 .log-lines .log-line { justify-content: flex-start; align-items: flex-start; }
 .log-icon { width: 16px; height: 16px; margin-right: 6px; flex-shrink: 0; }
-.log-text { font-size: 15px; color: var(--muted); flex-shrink: 1; overflow: hidden; text-overflow: ellipsis; }
+.log-text { font-size: 26px; color: var(--muted); flex-shrink: 1; overflow: hidden; text-overflow: ellipsis; }
 .log-lines .log-text { white-space: normal; width: 270px; }
 
 /* ---------- unit panels (ui-style.md 8-2) ---------- */
@@ -108,17 +108,17 @@
 .unit-body > * { margin-bottom: 6px; }
 .unit-head { align-items: flex-end; }
 .unit-weapon { width: 26px; height: 26px; margin-right: 10px; flex-shrink: 0; }
-.unit-name { font-size: 20px; -unity-font-style: bold; color: var(--bone); flex-shrink: 1; overflow: hidden; text-overflow: ellipsis; margin-right: 10px; }
-.unit-tag { font-size: 13px; color: #a650c4; }
+.unit-name { font-size: 26px; -unity-font-style: bold; color: var(--bone); flex-shrink: 1; overflow: hidden; text-overflow: ellipsis; margin-right: 10px; }
+.unit-tag { font-size: 26px; color: #a650c4; }
 .stat { flex-direction: row; align-items: flex-end; }
 .stat-icon { width: 24px; height: 24px; margin-right: 6px; }
 .big > .stat { margin-right: 22px; }
 .big .stat-value { font-size: 31px; -unity-font-style: bold; }
 .small > .stat { margin-right: 18px; }
-.small .stat-value { font-size: 18px; -unity-font-style: bold; }
+.small .stat-value { font-size: 26px; -unity-font-style: bold; }
 .stat-heal { margin-left: 6px; color: var(--steel); }
-.warn { font-size: 13px; -unity-font-style: bold; }
-.skills { font-size: 13px; color: var(--muted); }
+.warn { font-size: 26px; -unity-font-style: bold; }
+.skills { font-size: 26px; color: var(--muted); }
 .overhang { position: absolute; left: 0; top: 0; right: 0; bottom: 0; }
 .spike { position: absolute; top: -10px; width: 32px; height: 32px; }
 .spike.left { left: -10px; }
@@ -128,7 +128,7 @@
 
 .slot { width: 128px; flex-shrink: 1; margin: 0 6px; justify-content: center; align-items: center; -unity-slice-scale: 0.0714px; }
 .slot > .icon { width: 88px; height: 88px; }
-.slot > .key { right: auto; bottom: auto; left: 8px; top: 8px; height: 22px; font-size: 15px; }
+.slot > .key { right: auto; bottom: auto; left: 8px; top: 8px; height: 22px; font-size: 26px; }
 .slot.disabled { opacity: 0.35; }
 .slot.passive > .icon { width: 60px; height: 60px; }
 
@@ -140,13 +140,13 @@
 .shields { position: absolute; left: -20px; top: -11px; width: 112px; height: 16px; flex-direction: row; justify-content: center; }
 .shield { width: 16px; height: 16px; margin: 0 -1.5px; }
 .damage { position: absolute; left: 76px; top: -8px; width: 60px; height: 28px; flex-direction: row; align-items: center; }
-.damage > Label { font-size: 18px; -unity-font-style: bold; }
+.damage > Label { font-size: 26px; -unity-font-style: bold; }
 .damage > .icon { width: 24px; height: 24px; }
-.head-name { position: absolute; left: -84px; width: 240px; height: 18px; font-size: 13px; -unity-font-style: bold; color: var(--bone); -unity-text-align: lower-center; }
-.head-hp { position: absolute; left: 0; right: 0; top: 50%; height: 20px; margin-top: -10px; padding: 0; font-size: 14px; -unity-font-style: bold; color: var(--bone); -unity-text-align: middle-center; }
+.head-name { position: absolute; left: -84px; width: 240px; height: 18px; font-size: 26px; -unity-font-style: bold; color: var(--bone); -unity-text-align: lower-center; }
+.head-hp { position: absolute; left: 0; right: 0; top: 50%; height: 20px; margin-top: -10px; padding: 0; font-size: 26px; -unity-font-style: bold; color: var(--bone); -unity-text-align: middle-center; }
 .head-mov { position: absolute; left: -64px; width: 200px; height: 24px; flex-direction: row; justify-content: center; align-items: flex-end; }
 .head-mov > .icon { width: 20px; height: 20px; margin: 0 1px; }
-.head-mov > Label { font-size: 18px; -unity-font-style: bold; color: #c8304a; margin-right: 1px; }
+.head-mov > Label { font-size: 26px; -unity-font-style: bold; color: #c8304a; margin-right: 1px; }
 .head-target { position: absolute; left: 20px; width: 32px; height: 32px; }
 
 /* ui-style.md 8-5: the vampire's bar */
@@ -164,7 +164,7 @@
 .over { display: none; }
 .over.shown { display: flex; }
 .over > .veil { background-color: rgba(18, 19, 26, 0.7); }
-.over-box { width: 640px; padding: 36px; align-items: center; }
+.over-box { width: 960px; padding: 36px; align-items: center; }
 .over-box > * { margin-bottom: 16px; }
 /* uGUI fitted the crest to 150 px wide; Prefab fits the whole box, so the box is 150 wide. */
 .emblem { width: 150px; height: 170px; }
@@ -173,11 +173,14 @@
 .tally, .reward, .unlocked, .over-acts { justify-content: center; }
 .tally > .value, .reward > .value { margin: 0 18px; }
 .tally .value-icon { width: 30px; height: 30px; }
-.tally .value-text { font-size: 22px; }
+.tally .value-text { font-size: 26px; }
 .reward .value-icon { width: 34px; height: 34px; }
-.reward .value-text { font-size: 25px; }
+.reward .value-text { font-size: 26px; }
 .unlocked > * { margin: 0 5px; }
 .unlocked > .icon { width: 28px; height: 28px; }
 .unlocked > .new { width: 32px; height: 32px; }
-.unlocked > Label { font-size: 18px; -unity-font-style: bold; color: var(--bone); }
+.unlocked > Label { font-size: 26px; -unity-font-style: bold; color: var(--bone); }
 .over-acts > .btn { height: 52px; margin: 0 5px; }
+
+/* battle-hud.md 1: the HUD draws at 0.55 (BattleFlow.HudZoom); 26 px here is the 14 px floor on screen, also for the Theme.uss text classes. */
+.value-text, .tip, .btn-text, .key, .ring-text { font-size: 26px; }
