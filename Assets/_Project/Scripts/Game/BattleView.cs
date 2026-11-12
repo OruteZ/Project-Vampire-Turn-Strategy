@@ -24,6 +24,7 @@ namespace VampireSpawn.Game
 
         readonly Dictionary<int, UnitView> units = new Dictionary<int, UnitView>();
         readonly Dictionary<int, UnitView> corpses = new Dictionary<int, UnitView>();
+        readonly Dictionary<Hex, UnitView> falling = new Dictionary<Hex, UnitView>();
         readonly Queue<IReadOnlyList<BattleEvent>> pending = new Queue<IReadOnlyList<BattleEvent>>();
         Transform layer;
         bool playing;
@@ -167,11 +168,13 @@ namespace VampireSpawn.Game
                     if (units.TryGetValue(e.UnitId, out var shown)) Popup.Spawn(shown.transform.position + Vector3.up * (Art.unitHeight * Art.hexSize + 0.6f), Loc.Text(e.Text), e.Style, speed / Pace);
                     break;
                 case BattleEventKind.Died:
-                    if (units.TryGetValue(e.UnitId, out var dead)) { dead.Trigger("Death"); Sound.Play(dead.Sounds, s => s.death); Remove(units, e.UnitId, Wait(1.2f)); }
+                    if (units.TryGetValue(e.UnitId, out var dead)) { dead.Trigger("Death"); Sound.Play(dead.Sounds, s => s.death); falling[e.At] = dead; Remove(units, e.UnitId, Wait(1.2f)); }
                     break;
                 case BattleEventKind.CorpseLeft:
                     var corpse = CorpseType(e.UnitId);
                     if (corpse != null) AddCorpse(e.UnitId, corpse, e.At);
+                    if (corpse != null && falling.TryGetValue(e.At, out var fell) && fell != null) StartCoroutine(ShowAfter(corpses[e.UnitId], fell));
+                    falling.Remove(e.At);
                     break;
                 case BattleEventKind.Buried:
                     Remove(corpses, e.UnitId, 0f);
@@ -203,6 +206,14 @@ namespace VampireSpawn.Game
                     break;
             }
             if (director != null) yield return Delay(director.HoldFor(e));
+        }
+
+        // The falling model and the lying corpse are two views; the corpse shows only once the fall is destroyed (#119).
+        static IEnumerator ShowAfter(UnitView corpse, UnitView fell)
+        {
+            corpse.gameObject.SetActive(false);
+            while (fell != null) yield return null;
+            if (corpse != null) corpse.gameObject.SetActive(true);
         }
 
         static int MaxHpOf(UnitView v, int hp) => v.HpFraction > 0f ? Mathf.RoundToInt(hp / v.HpFraction) : hp;
