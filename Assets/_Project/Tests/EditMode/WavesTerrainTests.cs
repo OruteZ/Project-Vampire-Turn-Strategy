@@ -83,7 +83,7 @@ namespace VampireSpawn.Tests
                 new[] { new Placement(EnemyType.Vampire, 6, 6) }, new Placement[0],
                 triggers: new[] { new Trigger("t", TriggerKind.Turn, 1) },
                 reinforcements: new[] { new Reinforcement("t", 1, 0, new[] { new Hex(0, 0) }) });
-            var b = new Battle(stage, null, new[] { new Placement("pspear", 3, 3), new Placement("pspear", 4, 3), new Placement("parcher", 3, 4) });
+            var b = new Battle(stage, null, new[] { new Placement("pspear", 3, 2), new Placement("pspear", 3, 4), new Placement("parcher", 3, 3) });
             b.Start();
             var archer = b.Allies.Single(a => a.Type == "parcher");
             foreach (var spear in b.Allies.Where(a => a.Type == "pspear").ToList())
