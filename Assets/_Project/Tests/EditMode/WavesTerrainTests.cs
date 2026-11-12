@@ -79,17 +79,22 @@ namespace VampireSpawn.Tests
         [Test]
         public void LostUnitsFreeTheirPopulation()
         {
-            var stage = new Stage("demo", GameData.Types.Select(t => t.Key).ToArray(), 2, 0, 0, Goal.Boss, new Bonus(BonusType.NoEat, 0, 0), new Boss(30, 1, 0, 0, 0), Open,
+            var stage = new Stage("demo", GameData.Types.Select(t => t.Key).ToArray(), 3, 0, 0, Goal.Boss, new Bonus(BonusType.NoEat, 0, 0), new Boss(30, 1, 0, 0, 0), Open,
                 new[] { new Placement(EnemyType.Vampire, 6, 6) }, new Placement[0],
                 triggers: new[] { new Trigger("t", TriggerKind.Turn, 1) },
                 reinforcements: new[] { new Reinforcement("t", 1, 0, new[] { new Hex(0, 0) }) });
-            var b = new Battle(stage, null, new[] { new Placement("pspear", 3, 3), new Placement("pspear", 3, 4) });
+            var b = new Battle(stage, null, new[] { new Placement("pspear", 3, 3), new Placement("pspear", 4, 3), new Placement("parcher", 3, 4) });
             b.Start();
-            Assert.IsTrue(b.Execute(b.Allies.First().Id, b.Allies.Last().Id).Ok);
+            var archer = b.Allies.Single(a => a.Type == "parcher");
+            foreach (var spear in b.Allies.Where(a => a.Type == "pspear").ToList())
+                Assert.IsTrue(b.Execute(spear.Id, archer.Id).Ok);
+            Assert.IsFalse(b.Allies.Contains(archer), "2 + 2 against 4 hp");
+            Assert.AreEqual(1, b.Stats.Executed);
+            Assert.AreEqual(0, b.Corpses.Count, "an ally killed by an ally leaves no corpse");
             b.EndTurn();
             Assert.IsTrue(b.Reinforcing);
-            Assert.AreEqual(1, b.Used(t => t.Pop));
-            Assert.IsTrue(b.Place("sword", new Hex(0, 0)).Ok, "cap 3, one spearman alive: room for a sword");
+            Assert.AreEqual(2, b.Used(t => t.Pop));
+            Assert.IsTrue(b.Place("sword", new Hex(0, 0)).Ok, "cap 4, two spearmen alive: room for a sword");
         }
 
         // docs/systems/triggers.md 1
