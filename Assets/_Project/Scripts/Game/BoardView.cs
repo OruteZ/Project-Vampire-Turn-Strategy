@@ -109,7 +109,7 @@ namespace VampireSpawn.Game
             Light(dressing.GetComponent<StageDressing>());
         }
 
-        // battle-terrain.md 3: a faint draped outline on every walkable cell, tinted where light falls.
+        // battle-terrain.md 3: a faint draped outline on every walkable cell; light is left to the light sources (3-1).
         void BuildGrid()
         {
             if (art.overlay == null) return;
@@ -124,16 +124,7 @@ namespace VampireSpawn.Game
                     var h = new Hex(col, row);
                     if (!Board.Walkable(h)) continue;
                     var c = Local(h, art.hexSize);
-                    if (Board.At(h) == Terrain.Sun) lines.Fill(c, r, Tint(art.sunLight, 0.18f));
-                    else if (Board.Lit(h)) lines.Fill(c, r, Tint(art.torchLight, 0.14f));
-                    else if (Board.At(h) == Terrain.Rough) lines.Fill(c, r, new Color(0.38f, 0.30f, 0.20f, 0.22f));
-                    // ui-style.md 8-2: colour alone did not tell light cells apart (#101).
-                    if (Board.At(h) == Terrain.Sun)
-                    {
-                        lines.Fill(c, 0.14f * r, Tint(art.sunLight, 0.85f));
-                        for (var i = 0; i < 6; i++) lines.Segment(Vector3.Lerp(c, HexLines.Corner(c, r, i), 0.2f), Vector3.Lerp(c, HexLines.Corner(c, r, i), 0.32f), 0.04f * r, Tint(art.sunLight, 0.85f));
-                    }
-                    else if (Board.Lit(h)) lines.Fill(c, 0.14f * r, Tint(art.torchLight, 0.85f));
+                    if (Board.At(h) == Terrain.Rough) lines.Fill(c, r, new Color(0.38f, 0.30f, 0.20f, 0.22f));
                     for (var i = 0; i < 6; i++)
                     {
                         var a = HexLines.Corner(c, r, i);
@@ -253,6 +244,7 @@ namespace VampireSpawn.Game
                 case Terrain.Torch:
                     if (art.brazier != null) Prop(art.brazier, tile.transform, top, 0.9f, 0f);
                     if (art.fire != null) Prop(art.fire, tile.transform, top + Vector3.up * art.hexSize * 0.55f, 0f, 0f);
+                    if (art.embers != null) Prop(art.embers, tile.transform, top + Vector3.up * art.hexSize * 0.7f, 0f, 0f);
                     // ponytail: guessed distances (full volume within 6 hexes, silent past 25); retune once the battle camera's height is heard.
                     Sound.Loop(tile, s => s.brazier, art.hexSize * 6f, art.hexSize * 25f);
                     AddLight(tile.transform, top + Vector3.up * art.hexSize * 1.2f, LightType.Point, art.torchLight, 2.5f, art.hexSize * 4f);
@@ -261,6 +253,7 @@ namespace VampireSpawn.Game
                     var sun = AddLight(tile.transform, top + Vector3.up * art.hexSize * 4f, LightType.Spot, art.sunLight, 4f, art.hexSize * 8f);
                     sun.transform.rotation = Quaternion.LookRotation(Vector3.down);
                     sun.spotAngle = 28f;
+                    if (art.sunBeam != null) Prop(art.sunBeam, tile.transform, top, 0f, 0f);
                     break;
             }
         }

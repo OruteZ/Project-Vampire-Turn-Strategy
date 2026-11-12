@@ -45,15 +45,14 @@ namespace VampireSpawn.Tests
                     if (terrain != Terrain.Water) Assert.AreEqual(view.Stand(h).y, t.position.y, 0.001f, stage.Id + " " + t.name + " stands on the terrain");
                     Assert.AreEqual(terrain == Terrain.Torch, t.Cast<Transform>().Any(c => c.name == view.art.brazier.name), stage.Id + " brazier on " + t.name + " only on torch");
                     Assert.AreEqual(terrain == Terrain.Torch || terrain == Terrain.Sun, t.GetComponentInChildren<Light>() != null, stage.Id + " light on " + t.name);
+                    Assert.AreEqual(terrain == Terrain.Sun, t.Cast<Transform>().Any(c => c.name == view.art.sunBeam.name), stage.Id + " sunbeam on " + t.name + " only on sun (battle-terrain.md 3-1)");
                 }
                 // battle-terrain.md 3: 6 edges per walkable cell, an edge shared by two walkable cells drawn once, 4 quad pieces per edge.
                 var cells = Enumerable.Range(0, board.Rows).SelectMany(r => Enumerable.Range(0, board.Cols).Select(c => new Hex(c, r))).Where(board.Walkable).ToList();
                 var shared = cells.Sum(x => board.Neighbors(x).Count(board.Walkable)) / 2;
                 var grid = children.Single(c => c.name == "Grid").GetComponent<MeshFilter>().sharedMesh;
-                var fills = cells.Count(x => board.At(x) == Terrain.Sun || board.Lit(x) || board.At(x) == Terrain.Rough);
-                // ui-style.md 8-2: a small hex on each light cell, plus 6 one-piece rays on sun cells.
-                var glyphs = cells.Count(x => board.At(x) == Terrain.Sun || board.Lit(x)) * 6 * 4 * 3 + cells.Count(x => board.At(x) == Terrain.Sun) * 6 * 4;
-                Assert.AreEqual((cells.Count * 6 - shared) * 4 * 4 + fills * 6 * 4 * 3 + glyphs, grid.vertexCount, stage.Id + " grid vertices");
+                var fills = cells.Count(x => board.At(x) == Terrain.Rough);
+                Assert.AreEqual((cells.Count * 6 - shared) * 4 * 4 + fills * 6 * 4 * 3, grid.vertexCount, stage.Id + " grid vertices");
                 Assert.GreaterOrEqual(grid.vertices.Min(v => v.y), BoardView.HologramRise + 0.04f - 0.001f, stage.Id + " grid never dips below the hologram floor (battle-terrain.md 3)");
             }
             finally
