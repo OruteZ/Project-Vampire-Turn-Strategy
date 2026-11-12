@@ -253,14 +253,19 @@ namespace VampireSpawn.Game
                     var sun = AddLight(tile.transform, top + Vector3.up * art.hexSize * 4f, LightType.Spot, art.sunLight, 4f, art.hexSize * 8f);
                     sun.transform.rotation = Quaternion.LookRotation(Vector3.down);
                     sun.spotAngle = 28f;
-                    if (art.sunBeam != null) Prop(art.sunBeam, tile.transform, top, 0f, 0f);
+                    if (art.sunBeam != null)
+                    {
+                        // The pack's beam is a crossed-plane mesh whose X shows from above; one upright billboard has no cross (#101).
+                        foreach (var pr in Prop(art.sunBeam, tile.transform, top, 0f, 0f).GetComponentsInChildren<ParticleSystemRenderer>())
+                            pr.renderMode = ParticleSystemRenderMode.VerticalBillboard;
+                    }
                     break;
             }
         }
 
         // fitWidth 0 keeps the prefab's own scale (used for particle FX whose bounds are meaningless).
         // stretch: a wall piece keeps its length along the row (x) while the height cap squashes only y and z, so walls stay walls instead of shrinking to stubs.
-        void Prop(GameObject prefab, Transform parent, Vector3 at, float fitWidth, float yaw, float maxHeight = 99f, bool stretch = false) =>
+        GameObject Prop(GameObject prefab, Transform parent, Vector3 at, float fitWidth, float yaw, float maxHeight = 99f, bool stretch = false) =>
             Place(prefab, parent, at, fitWidth * art.hexSize, yaw, maxHeight * art.hexSize, stretch);
 
         // Shared with CampaignMapView (campaign-map.md 2-5): sizes are in world units.
