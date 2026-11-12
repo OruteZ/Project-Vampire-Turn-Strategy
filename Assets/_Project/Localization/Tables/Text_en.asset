@@ -131,12 +131,12 @@ MonoBehaviour:
       m_Items:
       - rid: 7201578077006332005
   - m_Id: 3991484035091
-    m_Localized: You cannot mercy kill that unit.
+    m_Localized: You cannot attack that ally.
     m_Metadata:
       m_Items:
       - rid: 7201578077006332005
   - m_Id: 3991484035092
-    m_Localized: Mercy Kill
+    m_Localized: Ally Attack
     m_Metadata:
       m_Items:
       - rid: 7201578077006332005
@@ -323,7 +323,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 3991484035129
-    m_Localized: Click an ally in a white dashed ring to mercy kill it. Click elsewhere
+    m_Localized: Click an ally in a white dashed ring to attack it. Click elsewhere
       to cancel.
     m_Metadata:
       m_Items:
@@ -1160,12 +1160,12 @@ MonoBehaviour:
       m_Items:
       - rid: 7201578077006332005
   - m_Id: 9846568841275
-    m_Localized: Cancel Mercy Kill
+    m_Localized: Cancel Ally Attack
     m_Metadata:
       m_Items:
       - rid: 7201578077006332005
   - m_Id: 9846568841276
-    m_Localized: Mercy Kill
+    m_Localized: Attack Ally
     m_Metadata:
       m_Items:
       - rid: 7201578077006332005
