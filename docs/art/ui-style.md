@@ -7,6 +7,7 @@
 ## 1. 기준
 
 1. 기준 해상도 **1920×1080**. CanvasScaler 는 Scale With Screen Size, Screen Match Mode **Expand** (15-1). Match 값은 쓰지 않는다.
+   - 전투 화면만 예외 (#118): HUD 전체를 0.55 배로 그린다 (`BattleFlow.HudZoom`, 전투 전용 PanelSettings 사본의 기준 해상도 3491×1964). 전투 HUD 의 px 은 그 판 기준이고 화면에선 ×0.55, 글자 하한은 화면 14px (판 기준 26px). 자세한 값은 docs/ui/battle-hud.md 1.
 2. 화면 가장자리 안전 여백 **24px**. 이 안에만 UI 를 둔다.
 3. 보드 영역: 위 **150px**, 아래 **190px**, 왼쪽·오른쪽 **360px** 를 뺀 가운데. 전투 화면 UI 는 보드 영역을 가리지 않는다. 툴팁·미리 보기·머리 위 표시만 예외다.
 4. 모든 수치는 1920×1080 기준 px 이다.
