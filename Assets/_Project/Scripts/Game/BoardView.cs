@@ -250,15 +250,13 @@ namespace VampireSpawn.Game
                     AddLight(tile.transform, top + Vector3.up * art.hexSize * 1.2f, LightType.Point, art.torchLight, 2.5f, art.hexSize * 4f);
                     break;
                 case Terrain.Sun:
-                    var sun = AddLight(tile.transform, top + Vector3.up * art.hexSize * 4f, LightType.Spot, art.sunLight, 4f, art.hexSize * 8f);
+                    // battle-terrain.md 3-1: a narrow spot from high above whose hard-edged disc covers just this cell.
+                    const float sunHeight = 6f, sunDisc = 0.95f;
+                    var sun = AddLight(tile.transform, top + Vector3.up * art.hexSize * sunHeight, LightType.Spot, art.sunLight, 40f, art.hexSize * (sunHeight + 2f));
                     sun.transform.rotation = Quaternion.LookRotation(Vector3.down);
-                    sun.spotAngle = 28f;
-                    if (art.sunBeam != null)
-                    {
-                        // The pack's beam is a crossed-plane mesh whose X shows from above; one upright billboard has no cross (#101).
-                        foreach (var pr in Prop(art.sunBeam, tile.transform, top, 0f, 0f).GetComponentsInChildren<ParticleSystemRenderer>())
-                            pr.renderMode = ParticleSystemRenderMode.VerticalBillboard;
-                    }
+                    sun.spotAngle = 2f * Mathf.Atan(sunDisc / sunHeight) * Mathf.Rad2Deg;
+                    sun.innerSpotAngle = sun.spotAngle * 0.85f;
+                    sun.shadows = LightShadows.Soft;
                     break;
             }
         }

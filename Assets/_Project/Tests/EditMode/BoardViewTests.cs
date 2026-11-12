@@ -45,7 +45,6 @@ namespace VampireSpawn.Tests
                     if (terrain != Terrain.Water) Assert.AreEqual(view.Stand(h).y, t.position.y, 0.001f, stage.Id + " " + t.name + " stands on the terrain");
                     Assert.AreEqual(terrain == Terrain.Torch, t.Cast<Transform>().Any(c => c.name == view.art.brazier.name), stage.Id + " brazier on " + t.name + " only on torch");
                     Assert.AreEqual(terrain == Terrain.Torch || terrain == Terrain.Sun, t.GetComponentInChildren<Light>() != null, stage.Id + " light on " + t.name);
-                    Assert.AreEqual(terrain == Terrain.Sun, t.Cast<Transform>().Any(c => c.name == view.art.sunBeam.name), stage.Id + " sunbeam on " + t.name + " only on sun (battle-terrain.md 3-1)");
                 }
                 // battle-terrain.md 3: 6 edges per walkable cell, an edge shared by two walkable cells drawn once, 4 quad pieces per edge.
                 var cells = Enumerable.Range(0, board.Rows).SelectMany(r => Enumerable.Range(0, board.Cols).Select(c => new Hex(c, r))).Where(board.Walkable).ToList();

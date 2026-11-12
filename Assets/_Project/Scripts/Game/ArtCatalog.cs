@@ -14,7 +14,7 @@ namespace VampireSpawn.Game
         [Tooltip("칸 격자·칸 표시의 정점색 재질 (docs/art/battle-terrain.md 3)")] public Material overlay;
         public GameObject[] rockProps;
         public GameObject brazier, fire;
-        [Tooltip("화톳불 강조 불티, 햇빛 칸 빛줄기 (docs/art/battle-terrain.md 3-1)")] public GameObject embers, sunBeam;
+        [Tooltip("화톳불 강조 불티 (docs/art/battle-terrain.md 3-1)")] public GameObject embers;
         public Color torchLight = new Color(0.89f, 0.66f, 0.29f);
         public Color sunLight = new Color(0.92f, 0.86f, 0.68f);
         [Tooltip("장별 모습 (docs/art/stage-dressing.md). 장 id 가 어느 테마에도 없으면 맨 앞 테마")] public BoardTheme[] themes;
