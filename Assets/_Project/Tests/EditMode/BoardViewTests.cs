@@ -51,7 +51,9 @@ namespace VampireSpawn.Tests
                 var shared = cells.Sum(x => board.Neighbors(x).Count(board.Walkable)) / 2;
                 var grid = children.Single(c => c.name == "Grid").GetComponent<MeshFilter>().sharedMesh;
                 var fills = cells.Count(x => board.At(x) == Terrain.Sun || board.Lit(x) || board.At(x) == Terrain.Rough);
-                Assert.AreEqual((cells.Count * 6 - shared) * 4 * 4 + fills * 6 * 4 * 3, grid.vertexCount, stage.Id + " grid vertices");
+                // ui-style.md 8-2: a small hex on each light cell, plus 6 one-piece rays on sun cells.
+                var glyphs = cells.Count(x => board.At(x) == Terrain.Sun || board.Lit(x)) * 6 * 4 * 3 + cells.Count(x => board.At(x) == Terrain.Sun) * 6 * 4;
+                Assert.AreEqual((cells.Count * 6 - shared) * 4 * 4 + fills * 6 * 4 * 3 + glyphs, grid.vertexCount, stage.Id + " grid vertices");
                 Assert.GreaterOrEqual(grid.vertices.Min(v => v.y), BoardView.HologramRise + 0.04f - 0.001f, stage.Id + " grid never dips below the hologram floor (battle-terrain.md 3)");
             }
             finally
