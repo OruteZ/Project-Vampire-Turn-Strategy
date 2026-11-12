@@ -86,7 +86,7 @@ namespace VampireSpawn.Game.Screens
             Moon(root, b, hot, st.FullMoon, st.MoonFading);
             if (b.Phase == Phase.Deploy) Deploy(root, s, st, a);
             else Fight(root, s, st, a);
-            Frame(E(root, "action-bar"), art, Ui.Steel);
+            if (b.Phase != Phase.Deploy) Frame(E(root, "action-bar"), art, Ui.Steel);
             hoverLayer = E(root, "layer");
             Hover(s, st, a);
             EndTurn(root, b, st, a);
@@ -236,7 +236,7 @@ namespace VampireSpawn.Game.Screens
         void EndTurn(VisualElement root, Battle b, HudState st, BattleActions a)
         {
             var label = BattleScreen.PrimaryLabel(b, st.EnemyPlaying, out var enabled, st.Speed);
-            var btn = E(root, "end-turn", true);
+            var btn = E(root, b.Phase == Phase.Deploy ? "end-turn deploy" : "end-turn", true);
             Picture(E(btn, "ring-fill"), S(RingBack), enabled ? Ui.Steel : Ui.Panel2);
             var hot = b.Phase == Phase.Player && !st.EnemyPlaying && b.Stage.HasBoss && b.MoonNext();
             Picture(E(btn, "ring"), S(Ring), hot ? Ui.MoonBlood : enabled ? Ui.Bone : Ui.Line);
@@ -570,7 +570,7 @@ namespace VampireSpawn.Game.Screens
 
         void CornerBadge(VisualElement p, string icon, Color c) => Icon(E(p, "overhang decor"), icon, c, "icon corner-badge");
 
-        // battle-hud.md 3-4: the selected unit's actions in one row inside the wide bar under the round button.
+        // battle-hud.md 3-4: the selected unit's actions as icons in one row inside the wide bar, left of the round button.
         void Actions(VisualElement root, BattleSession s, BattleActions a)
         {
             var row = E(root, "action-row");
@@ -581,7 +581,7 @@ namespace VampireSpawn.Game.Screens
                 Frame(slot, art, x.On ? x.Color : danger ? Ui.BloodDim : Ui.SteelDim);
                 slot.Q(className: "panel-frame").AddToClassList("thin");
                 Icon(slot, x.Icon, x.Color);
-                L(slot, x.Label, "slot-name", x.Key == 0 ? Ui.Muted : Ui.Bone);
+                Tip(slot, x.Label, 200);
                 if (x.Key == 0) continue;
                 L(slot, x.Key.ToString(), "key");
                 Click(slot, x.Act, x.Ready);

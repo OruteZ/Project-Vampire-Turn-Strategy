@@ -26,11 +26,13 @@
 .moon-state.hot { -unity-font-style: bold; }
 
 /* ---------- corners ---------- */
-/* battle-hud.md 3-4, 3-6: the wide action bar along the bottom, the round primary button half over its top edge. */
+/* battle-hud.md 3-4, 3-6: the wide action bar along the bottom, the round primary button inside its right end. */
 .action-bar, .action-row { position: absolute; left: 10%; right: 10%; bottom: 12px; height: 204px; }
 .action-bar { -unity-slice-scale: 0.111px; }
-.action-row { padding: 60px 24px 16px 24px; flex-direction: row; justify-content: center; }
-.end-turn { position: absolute; left: 50%; bottom: 150px; width: 136px; height: 136px; margin-left: -68px; justify-content: center; align-items: center; }
+.action-row { padding: 38px 184px 38px 24px; flex-direction: row; justify-content: center; }
+.end-turn { position: absolute; right: 10%; bottom: 46px; width: 136px; height: 136px; margin-right: 24px; justify-content: center; align-items: center; }
+.end-turn.deploy { right: auto; left: 50%; bottom: 40px; width: 176px; height: 176px; margin-right: 0; margin-left: -88px; }
+.end-turn.deploy > .end-turn-text { width: 144px; font-size: 24px; }
 .end-turn-text { width: 112px; font-size: 17px; -unity-font-style: bold; white-space: normal; -unity-text-align: middle-center; padding: 0; margin: 0; }
 .end-turn > .key { right: auto; left: 50%; bottom: 18px; translate: -50% 0; }
 .end-turn > .ring-badge { position: absolute; left: 2px; top: 2px; }
@@ -39,7 +41,7 @@
 .corner { position: absolute; left: 12px; bottom: 18px; height: 40px; flex-direction: row; align-items: flex-end; }
 .corner > * { margin-right: 4px; }
 .corner > .btn { width: 220px; height: 40px; }
-.hint { position: absolute; left: 50%; bottom: 298px; width: 1000px; height: 24px; margin-left: -500px; font-size: 15px; color: var(--muted); -unity-text-align: middle-center; }
+.hint { position: absolute; left: 50%; bottom: 228px; width: 1000px; height: 24px; margin-left: -500px; font-size: 15px; color: var(--muted); -unity-text-align: middle-center; }
 
 /* ---------- rules window (battle-hud.md 6) ---------- */
 .veil { position: absolute; left: 0; top: 0; right: 0; bottom: 0; background-color: rgba(18, 19, 26, 0.85); }
@@ -124,13 +126,11 @@
 .corner-badge { position: absolute; left: -6px; top: -6px; width: 24px; height: 24px; }
 .recall { position: absolute; right: 16px; bottom: 12px; width: 90px; height: 32px; }
 
-.slot { width: 172px; flex-shrink: 1; margin: 0 6px; justify-content: center; align-items: center; -unity-slice-scale: 0.0714px; }
-.slot > .icon { width: 80px; height: 80px; }
-.slot-name { margin-top: 8px; font-size: 20px; -unity-font-style: bold; -unity-text-align: middle-center; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 100%; }
+.slot { width: 128px; flex-shrink: 1; margin: 0 6px; justify-content: center; align-items: center; -unity-slice-scale: 0.0714px; }
+.slot > .icon { width: 88px; height: 88px; }
 .slot > .key { right: auto; bottom: auto; left: 8px; top: 8px; height: 22px; font-size: 15px; }
 .slot.disabled { opacity: 0.35; }
-.slot.passive > .icon { width: 52px; height: 52px; }
-.slot.passive .slot-name { font-size: 16px; -unity-font-style: normal; }
+.slot.passive > .icon { width: 60px; height: 60px; }
 
 /* ---------- heads (ui-style.md 8-1, 8-3, 8-4): the bar's bottom-centre sits on the unit's head point ---------- */
 .head { position: absolute; width: 72px; height: 12px; margin-left: -36px; margin-top: -12px; }
