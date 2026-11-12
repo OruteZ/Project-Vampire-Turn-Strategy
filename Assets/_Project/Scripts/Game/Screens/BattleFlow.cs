@@ -38,11 +38,14 @@ namespace VampireSpawn.Game.Screens
         BattleView View => input.battle;
         Campaign Campaign => App.Campaign;
 
+        // battle-hud.md 1: the battle HUD draws at this fraction of the shared 1920x1080 panel.
+        public const float HudZoom = 0.55f;
+
         void Start()
         {
             App.Ensure(data);
             Sound.Use(View.board.art.sound);
-            doc = ToolkitKit.Document(transform, "Battle (UI Toolkit)", View.board.art.panel, View.board.art.battleDocument);
+            doc = ToolkitKit.Document(transform, "Battle (UI Toolkit)", ToolkitKit.Zoomed(View.board.art.panel, HudZoom), View.board.art.battleDocument);
             var root = doc.rootVisualElement;
             banner = root.Q<Label>("banner");
             hudRoot = root.Q("hud");
@@ -115,7 +118,7 @@ namespace VampireSpawn.Game.Screens
             fittedSize = new Vector2Int(Screen.width, Screen.height);
             // stage-dressing.md 1-4: the world fills the screen behind the HUD; only the board is framed into the board area
             // (.board-area in Battle.uss: 360/150/360/190 px, ui-style.md 1-3), in viewport units with y up.
-            var size = ToolkitKit.PanelSize();
+            var size = ToolkitKit.PanelSize(HudZoom);
             viewCamera.rect = new Rect(0f, 0f, 1f, 1f);
             View.board.FrameInto(new Rect(360f / size.x, 190f / size.y, (size.x - 720f) / size.x, (size.y - 340f) / size.y));
         }

@@ -732,7 +732,7 @@ namespace VampireSpawn.Game.Screens
             Tip(title, titleTip, 300);
 
             var acts = E(box, "over-acts row");
-            var w = o.Camp ? 178f : 270f;
+            var w = o.Camp ? 280f : 400f;
             if (o.Camp) Btn(acts, Loc.T("over.toCamp"), a.ToCamp, BtnKind.Primary).style.width = w;
             Btn(acts, Loc.T("over.retry"), a.Retry, o.Camp ? BtnKind.Normal : BtnKind.Primary).style.width = w;
             Btn(acts, Loc.T("over.redeploy"), a.Redeploy, BtnKind.Normal).style.width = w;
