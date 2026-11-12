@@ -95,10 +95,11 @@ namespace VampireSpawn.Game
             var marks = session.Overlay();
             MarkCount = marks.Count;
             var shown = 0;
+            var iconed = new HashSet<Hex>();
             foreach (var m in marks)
             {
                 Hexagon(Center(m.Hex), Styles[m.Mark]);
-                if (Icons.TryGetValue(m.Mark, out var ic)) Icon(shown++, m.Hex, ic.Icon, ic.Tint);
+                if (Icons.TryGetValue(m.Mark, out var ic) && iconed.Add(m.Hex)) Icon(shown++, m.Hex, ic.Icon, ic.Tint);
             }
             for (var i = shown; i < icons.Count; i++) icons[i].enabled = false;
             var moon = session.Moon();
