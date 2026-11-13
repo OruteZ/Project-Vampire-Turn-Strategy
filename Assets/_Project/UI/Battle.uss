@@ -27,9 +27,10 @@
 /* ---------- corners ---------- */
 /* battle-hud.md 3-4, 3-6: the wide action bar along the bottom, the round primary button inside its right end. */
 .action-bar, .action-row { position: absolute; left: 28%; right: 28%; bottom: 12px; height: 204px; }
-.action-bar { -unity-slice-scale: 0.111px; }
-.action-row { padding: 38px 184px 38px 24px; flex-direction: row; justify-content: center; }
-.end-turn { position: absolute; right: 28%; bottom: 46px; width: 136px; height: 136px; margin-right: 24px; justify-content: center; align-items: center; }
+.action-bar, .bar-frame { -unity-slice-scale: 0.4px; }
+.bar-frame, .slot-frame { position: absolute; left: 0; top: 0; right: 0; bottom: 0; }
+.action-row { padding: 0 300px 0 200px; flex-direction: row; justify-content: center; align-items: center; }
+.end-turn { position: absolute; right: 28%; bottom: 46px; width: 136px; height: 136px; margin-right: 150px; justify-content: center; align-items: center; }
 .end-turn.deploy { right: auto; left: 50%; bottom: 40px; width: 176px; height: 176px; margin-right: 0; margin-left: -88px; }
 .end-turn.deploy > .end-turn-text { width: 144px; font-size: 26px; }
 .end-turn-text { width: 112px; font-size: 26px; -unity-font-style: bold; white-space: normal; -unity-text-align: middle-center; padding: 0; margin: 0; }
@@ -127,7 +128,8 @@
 .corner-badge { position: absolute; left: -6px; top: -6px; width: 24px; height: 24px; }
 .recall { position: absolute; right: 16px; bottom: 12px; width: 90px; height: 32px; }
 
-.slot { width: 128px; flex-shrink: 1; margin: 0 6px; justify-content: center; align-items: center; -unity-slice-scale: 0.0714px; }
+.slot, .slot-frame { -unity-slice-scale: 0.25px; }
+.slot { width: 112px; height: 112px; flex-shrink: 1; margin: 0 6px; justify-content: center; align-items: center; }
 .slot > .icon { width: 88px; height: 88px; }
 .slot > .key { right: auto; bottom: auto; left: 8px; top: 8px; height: 22px; font-size: 26px; }
 .slot.disabled { opacity: 0.35; }

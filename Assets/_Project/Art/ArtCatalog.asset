@@ -43,15 +43,15 @@ MonoBehaviour:
   stageDressings:
   - {fileID: 5263859813698259627, guid: c2bf055dd9852504d9fc338050feebf6, type: 3}
   - {fileID: 3030782837703166377, guid: b346508cfcf9f814989c37d45f9c15c6, type: 3}
-  - {fileID: 244820220458436171, guid: ca6cf397aa9b3934a9c951e0a41b6756, type: 3}
-  - {fileID: 5528679843050729538, guid: aef51b2cc3a40bb49b18e5680795e76e, type: 3}
-  - {fileID: 6408383977532646730, guid: df031f008ff01d44695f2e91ffd1bd94, type: 3}
-  - {fileID: 1487508386418375857, guid: 6bec02f0a396bb7448880cdb658c17cf, type: 3}
-  - {fileID: 1965239542189428424, guid: 924beddbdc6f915419c1dc9f7bdef9cd, type: 3}
-  - {fileID: 5071413747941981543, guid: a87062c78d217534d93cabbb22573d0a, type: 3}
-  - {fileID: 8642579361629917190, guid: 9915853746d8c35478fcde5fced70954, type: 3}
-  - {fileID: 1780652691994987089, guid: 3dc674aa4121ade4393a00a269891e75, type: 3}
-  - {fileID: 6117433564479643974, guid: b5a6c6ae51cec644a86cd94cab450e51, type: 3}
+  - {fileID: 6486490128227499760, guid: ca6cf397aa9b3934a9c951e0a41b6756, type: 3}
+  - {fileID: 1347828483173006019, guid: aef51b2cc3a40bb49b18e5680795e76e, type: 3}
+  - {fileID: 7227472767137753753, guid: df031f008ff01d44695f2e91ffd1bd94, type: 3}
+  - {fileID: 4301418341703728365, guid: 6bec02f0a396bb7448880cdb658c17cf, type: 3}
+  - {fileID: 589442673142321982, guid: 924beddbdc6f915419c1dc9f7bdef9cd, type: 3}
+  - {fileID: 2446276245070686982, guid: a87062c78d217534d93cabbb22573d0a, type: 3}
+  - {fileID: 6712341823736795375, guid: 9915853746d8c35478fcde5fced70954, type: 3}
+  - {fileID: 8459920474443982600, guid: 3dc674aa4121ade4393a00a269891e75, type: 3}
+  - {fileID: 7093307818820472811, guid: b5a6c6ae51cec644a86cd94cab450e51, type: 3}
   allyLooks:
   - {fileID: 11400000, guid: 7f5413a4c00440d48a8145a5224ad24a, type: 2}
   - {fileID: 11400000, guid: 9f9bd31ff4586394ea905716c8df4be9, type: 2}
@@ -124,6 +124,10 @@ MonoBehaviour:
   - {fileID: 21300000, guid: b3fa69947e6b2f54697740ed52182a3d, type: 3}
   - {fileID: 21300000, guid: 78101950704d07b4aa1db6c6162dfcc6, type: 3}
   - {fileID: 21300000, guid: eaed669fa71fa1d48a84ede3b7b4d910, type: 3}
+  - {fileID: 21300000, guid: 9d3580451f55dc04186af64f59897507, type: 3}
+  - {fileID: 21300000, guid: e3b3869912be6244db74f835e3adacaa, type: 3}
+  - {fileID: 21300000, guid: 50ab2bebf5ad9a544896c6ffedd778bf, type: 3}
+  - {fileID: 21300000, guid: 2e5de1a123ed8e34c97d9540efe05693, type: 3}
   uiPrefabs:
   - {fileID: 4654971216602336425, guid: 8a6d5f97315c9a04f9ceb0e8317bb261, type: 3}
   - {fileID: 7476782851927854031, guid: 91a89f5b582042147a074fc07aa52830, type: 3}

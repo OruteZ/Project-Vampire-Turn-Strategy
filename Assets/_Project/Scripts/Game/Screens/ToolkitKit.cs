@@ -106,20 +106,22 @@ namespace VampireSpawn.Game.Screens
             return e;
         }
 
-        // ui-style.md 5 frame.panel: the box background in panel tint and the frame in the edge colour; the frame is a .panel-frame child.
+        // ui-style.md 5 frame.panel: the box background in panel tint; the frame keeps the pack's own metal colours with only a 20% hint of the edge colour (#118).
         public static void Frame(VisualElement panel, ArtCatalog art, Color edge)
         {
             Picture(panel, art.Ui(FrameBack), Ui.Alpha(Ui.Panel, 0.92f));
             var frame = panel.Q(className: "panel-frame");
             if (frame == null) { frame = E(null, "panel-frame"); panel.Insert(0, frame); }
-            Picture(frame, art.Ui(FrameBox), edge);
+            Picture(frame, art.Ui(FrameBox), Edge(edge));
         }
+
+        public static Color Edge(Color c) => Color.Lerp(Color.white, c, 0.2f);
 
         public static VisualElement Chip(VisualElement parent, ArtCatalog art, Color edge, Sprite icon, Color iconColor, float iconSize = 36f)
         {
             var chip = E(parent, "chip", true);
             Picture(chip, art.Ui(FrameBack), Ui.Alpha(Ui.Panel, 0.92f));
-            Picture(E(chip, "chip-frame"), art.Ui(FrameBox), edge);
+            Picture(E(chip, "chip-frame"), art.Ui(FrameBox), Edge(edge));
             var i = E(chip, "chip-icon");
             i.style.width = iconSize;
             i.style.height = iconSize;
@@ -184,8 +186,8 @@ namespace VampireSpawn.Game.Screens
                 if (frame != null) frame.style.backgroundImage = StyleKeyword.None;
                 return;
             }
-            Picture(b, art.Ui(FrameBack), kind == BtnKind.Primary ? Ui.Steel : Ui.Alpha(Ui.Panel, 0.92f));
-            if (frame != null) Picture(frame, art.Ui(FrameBox), kind == BtnKind.Primary ? Ui.Bone : kind == BtnKind.Danger ? Ui.BloodDim : kind == BtnKind.DangerOn ? Ui.Blood : Ui.SteelDim);
+            Picture(b, art.Ui(FrameBack), kind == BtnKind.Primary ? Ui.SteelDim : Ui.Alpha(Ui.Panel, 0.92f));
+            if (frame != null) Picture(frame, art.Ui(FrameBox), kind == BtnKind.DangerOn ? Ui.Blood : Edge(kind == BtnKind.Danger ? Ui.Blood : Ui.Steel));
         }
 
         // ui-style.md 14-3-1: [icon][number], the label lives in the tooltip.
@@ -293,21 +295,29 @@ namespace VampireSpawn.Game.Screens
 
         static readonly Dictionary<string, FontAsset> fonts = new Dictionary<string, FontAsset>();
 
-        // UI Toolkit cannot draw an OS dynamic Font, so the first installed name in the language's chain (Text table font.body / font.display) is loaded from its file.
+        // The language's chain (Text table font.body / font.display): bundled fonts in Resources/Fonts first, then installed OS fonts; the first that resolves draws, the rest are its fallbacks for missing glyphs.
         static FontAsset OsFont(string key)
         {
             var chain = Loc.T(key);
             if (fonts.TryGetValue(chain, out var cached)) return cached;
-            var installed = new HashSet<string>(Font.GetOSInstalledFontNames());
-            var family = chain.Split(',').Select(n => n.Trim()).FirstOrDefault(installed.Contains);
-            if (family == null) return fonts[chain] = null;
+            var found = chain.Split(',').Select(n => Resolve(n.Trim())).Where(f => f != null).ToList();
+            if (found.Count == 0) return fonts[chain] = null;
+            found[0].fallbackFontAssetTable = found.Skip(1).ToList();
+            return fonts[chain] = found[0];
+        }
+
+        static FontAsset Resolve(string name)
+        {
+            var bundled = Resources.Load<Font>("Fonts/" + name);
+            if (bundled != null) return FontAsset.CreateFontAsset(bundled);
+            if (!Font.GetOSInstalledFontNames().Contains(name)) return null;
             // By name works for static faces (Malgun Gothic); variable fonts (NotoSerifKR-VF) only load from their file.
-            var byName = FontAsset.CreateFontAsset(family, "Regular");
-            if (byName != null) return fonts[chain] = byName;
+            var byName = FontAsset.CreateFontAsset(name, "Regular");
+            if (byName != null) return byName;
             var file = Font.GetPathsToOSFonts()
-                .Where(p => System.IO.Path.GetFileNameWithoutExtension(p).Replace(" ", "").StartsWith(family.Replace(" ", ""), StringComparison.OrdinalIgnoreCase))
+                .Where(p => System.IO.Path.GetFileNameWithoutExtension(p).Replace(" ", "").StartsWith(name.Replace(" ", ""), StringComparison.OrdinalIgnoreCase))
                 .OrderBy(p => System.IO.Path.GetFileNameWithoutExtension(p).Length).FirstOrDefault();
-            return fonts[chain] = file == null ? null : FontAsset.CreateFontAsset(new Font(file));
+            return file == null ? null : FontAsset.CreateFontAsset(new Font(file));
         }
     }
 }

@@ -89,13 +89,13 @@
 
 ### 언어별 글꼴
 
-18. 글꼴 파일을 들이지 않는다(글꼴 파일은 #16 의 일). 지금처럼 OS 에 깔린 글꼴을 이름 목록으로 고른다. 목록 앞에서부터 깔려 있는 글꼴을 쓰고, 그 글꼴에 없는 글자는 목록의 다음 글꼴로 그린다.
+18. 목록의 이름은 먼저 게임에 들인 글꼴(`Resources/Fonts/{이름}`)에서, 없으면 OS 에 깔린 글꼴에서 찾는다. 찾은 첫 글꼴로 그리고, 그 글꼴에 없는 글자는 찾은 나머지 글꼴로 차례로 그린다(#118, 2026-11-13 사용자가 Hahmlet·Source Han Serif K 를 들임).
 19. 언어마다 목록 둘을 둔다: 본문(`font.body`), 제목·배지(`font.display`). 목록은 표의 그 칸에 글꼴 이름을 쉼표로 이어 둔다(계획 3절).
 
 | 언어 | 본문 `font.body` | 제목·배지 `font.display` |
 |---|---|---|
-| 한국어 | IBM Plex Sans KR, Apple SD Gothic Neo, Malgun Gothic, Noto Sans CJK KR, Arial (지금 그대로) | Nanum Myeongjo, Noto Serif KR, Batang, AppleMyungjo, Malgun Gothic (지금 그대로) |
-| 영어 | IBM Plex Sans, Segoe UI, Helvetica Neue, Arial, Malgun Gothic, Apple SD Gothic Neo | Georgia, Times New Roman, Nanum Myeongjo, Batang, AppleMyungjo |
+| 한국어 | Hahmlet-Medium, SourceHanSerifK-VF, Malgun Gothic, Apple SD Gothic Neo | Hahmlet-Bold, SourceHanSerifK-VF, Malgun Gothic, AppleMyungjo |
+| 영어 | Hahmlet-Medium, SourceHanSerifK-VF, Segoe UI, Arial | Hahmlet-Bold, SourceHanSerifK-VF, Georgia, Times New Roman |
 
 20. 모든 언어 목록의 끝에는 다른 지원 언어의 글자를 그릴 수 있는 글꼴을 둔다. 영어 목록 끝의 한국어 글꼴은 영어 화면에서도 보이는 언어 줄의 "한국어" 버튼과, 아직 번역되지 않아 한국어로 보이는 칸(4번)을 그린다.
 21. 언어를 바꾸면 화면 글꼴도 그 언어 목록으로 바뀐다. 보드 위 3D 글(떠오르는 글, 보름달 표시)은 지금 쓰는 엔진 기본 글꼴을 두 언어 모두 그대로 쓴다.

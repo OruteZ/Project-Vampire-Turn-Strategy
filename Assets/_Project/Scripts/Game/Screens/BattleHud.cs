@@ -85,7 +85,12 @@ namespace VampireSpawn.Game.Screens
             Moon(root, b, hot, st.FullMoon, st.MoonFading);
             if (b.Phase == Phase.Deploy) Deploy(root, s, st, a);
             else Fight(root, s, st, a);
-            if (b.Phase != Phase.Deploy) Frame(E(root, "action-bar"), art, Ui.Steel);
+            if (b.Phase != Phase.Deploy)
+            {
+                var bar = E(root, "action-bar");
+                Picture(bar, S(BarBack), Ui.Alpha(Ui.Panel, 0.92f));
+                Picture(E(bar, "bar-frame"), S(BarFrame), Color.white);
+            }
             hoverLayer = E(root, "layer");
             Hover(s, st, a);
             EndTurn(root, b, st, a);
@@ -192,7 +197,7 @@ namespace VampireSpawn.Game.Screens
                 Fx.FadeOut(drain, 0.4f);
             }
             var v = b.Vampire;
-            Picture(E(box, "moon-ring"), S(Ring), hot || full ? Ui.MoonBlood : Ui.Steel);
+            Picture(E(box, "moon-ring"), S(Ring), hot || full ? Ui.MoonBlood : Color.white);
             if (full)
                 for (var k = 0; k < 4; k++)
                 {
@@ -237,10 +242,10 @@ namespace VampireSpawn.Game.Screens
         {
             var label = BattleScreen.PrimaryLabel(b, st.EnemyPlaying, out var enabled, st.Speed);
             var btn = E(root, b.Phase == Phase.Deploy ? "end-turn deploy" : "end-turn", true);
-            Picture(E(btn, "ring-fill"), S(RingBack), enabled ? Ui.Steel : Ui.Panel2);
+            Picture(E(btn, "ring-fill"), S(RingBack), enabled ? Ui.Panel : Ui.Panel2);
             var hot = b.Phase == Phase.Player && !st.EnemyPlaying && b.Stage.HasBoss && b.MoonNext();
-            Picture(E(btn, "ring"), S(Ring), hot ? Ui.MoonBlood : enabled ? Ui.Bone : Ui.Line);
-            L(btn, label, "end-turn-text", enabled ? Ui.Ink : Ui.Muted);
+            Picture(E(btn, "ring"), S(Ring), hot ? Ui.MoonBlood : enabled ? Color.white : Ui.Line);
+            L(btn, label, "end-turn-text", enabled ? Ui.Bone : Ui.Muted);
             L(btn, "Space", "key");
             Click(btn, a.Primary, enabled);
             if (b.Phase == Phase.Deploy && !enabled) Tip(btn, Loc.T("hud.needAlly"), 0);
@@ -571,15 +576,17 @@ namespace VampireSpawn.Game.Screens
         void CornerBadge(VisualElement p, string icon, Color c) => Icon(E(p, "overhang decor"), icon, c, "icon corner-badge");
 
         // battle-hud.md 3-4: the selected unit's actions as icons in one row inside the wide bar, left of the round button.
+        const string BarFrame = "SPR_DarkFantasy_Frame_Hotbar_03", BarBack = "SPR_DarkFantasy_Frame_Hotbar_03_Background",
+            SlotFrame = "SPR_DarkFantasy_Frame_Box_Medium_08", SlotBack = "SPR_DarkFantasy_Frame_Box_Medium_08_Background";
+
         void Actions(VisualElement root, BattleSession s, BattleActions a)
         {
             var row = E(root, "action-row");
             foreach (var x in BattleScreen.Slots(s, a))
             {
                 var slot = E(row, x.Key == 0 ? "slot passive" : "slot", true);
-                var danger = x.Color == Ui.Blood;
-                Frame(slot, art, x.On ? x.Color : danger ? Ui.BloodDim : Ui.SteelDim);
-                slot.Q(className: "panel-frame").AddToClassList("thin");
+                Picture(slot, S(SlotBack), Ui.Deep);
+                Picture(E(slot, "slot-frame"), S(SlotFrame), x.On ? x.Color : Color.white);
                 Icon(slot, x.Icon, x.Color);
                 Tip(slot, x.Label, 200);
                 if (x.Key == 0) continue;

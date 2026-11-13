@@ -52,7 +52,7 @@
 
 ## 맡길 때
 - 모델: 테마·스타일·화면 기획서와 방향 검토는 opus, 목업·화면 구현은 sonnet
-- 함정: Synty 키트 글꼴(LT Museum, Markazi, Pirata One)은 라틴 문자만 있다. 한글 글자는 #16 글꼴로
+- 함정: Synty 키트 글꼴(LT Museum, Markazi, Pirata One)은 라틴 문자만 있다. 한글은 `Resources/Fonts` 의 Hahmlet(+ Source Han Serif K 대체)로 그린다(ui-style.md 4)
 - 함정: 키트 장식은 대부분 악마 상징(해골, 오망성, 촉수)이다. 플레이어는 토벌대라서 어디에 쓸지는 테마가 정한다. 문장(Crest) 28개 중 해골이 없는 것은 Large_03(마름모)·Banner_02(천) 정도다
 - 함정: Synty 틀 스프라이트의 9-slice 테두리가 180~380px 라 그대로 쓰면 두껍다. USS `-unity-slice-scale` 로 줄인다(0.111px = 옛 ppu 9, 0.0714px = ppu 14) (ui-style.md 5절)
 - 함정: UIDocument 의 뿌리와 템플릿 칸은 화면 전체를 덮고 기본으로 클릭을 받는다. 그대로 두면 EventSystem 이 늘 "UI 위" 라고 해 지도·보드 클릭이 안 된다. `ToolkitKit.Document` 가 Ignore 로 둔다
