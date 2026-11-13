@@ -40,14 +40,14 @@ MonoBehaviour:
   bossMov: 4
   bossHeal: 5
   map:
-  - '#..........#'
-  - '#.########.#'
-  - '#.#......#.#'
-  - '#.#......#.#'
-  - '#.#......#..'
-  - '#.###..###,,'
-  - '#...,..,...,'
-  - ',,.........,'
+  - _.........._
+  - _.########._
+  - _.#......#._
+  - _.#......#._
+  - _.#......#..
+  - _.###..###,,
+  - _...,..,...,
+  - ',,...__....,'
   - ',.T.......T.'
   - dddddddddddd
   - dddddddddddd
@@ -57,46 +57,82 @@ MonoBehaviour:
     col: 5
     row: 2
     arrive: 0
+    wave: 
+    stance: 0
+    alert: 0
   - kind: skeletonArcher
     col: 3
     row: 2
     arrive: 0
+    wave: 
+    stance: 0
+    alert: 0
   - kind: skeletonArcher
     col: 8
     row: 2
     arrive: 0
+    wave: 
+    stance: 0
+    alert: 0
   - kind: skeleton
     col: 4
     row: 3
     arrive: 0
+    wave: 
+    stance: 0
+    alert: 0
   - kind: skeleton
     col: 7
     row: 3
     arrive: 0
+    wave: 
+    stance: 0
+    alert: 0
   - kind: skeletonHeavy
     col: 5
     row: 5
     arrive: 0
+    wave: 
+    stance: 0
+    alert: 0
   - kind: skeletonHeavy
     col: 6
     row: 5
     arrive: 0
+    wave: 
+    stance: 0
+    alert: 0
   - kind: skeleton
     col: 1
     row: 0
     arrive: 0
+    wave: 
+    stance: 0
+    alert: 0
   - kind: skeleton
     col: 10
     row: 0
     arrive: 0
+    wave: 
+    stance: 0
+    alert: 0
   - kind: skeleton
     col: 0
     row: 7
     arrive: 4
+    wave: 
+    stance: 0
+    alert: 0
   - kind: skeleton
     col: 11
     row: 6
     arrive: 4
+    wave: 
+    stance: 0
+    alert: 0
+  triggers: []
+  doors: []
+  reinforcements: []
   sample:
   - kind: pspear
     col: 4

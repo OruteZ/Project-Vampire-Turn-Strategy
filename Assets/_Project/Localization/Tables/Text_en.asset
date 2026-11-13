@@ -131,12 +131,12 @@ MonoBehaviour:
       m_Items:
       - rid: 7201578077006332005
   - m_Id: 3991484035091
-    m_Localized: You cannot mercy kill that unit.
+    m_Localized: You cannot attack that ally.
     m_Metadata:
       m_Items:
       - rid: 7201578077006332005
   - m_Id: 3991484035092
-    m_Localized: Mercy Kill
+    m_Localized: Ally Attack
     m_Metadata:
       m_Items:
       - rid: 7201578077006332005
@@ -323,7 +323,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 3991484035129
-    m_Localized: Click an ally in a white dashed ring to mercy kill it. Click elsewhere
+    m_Localized: Click an ally in a white dashed ring to attack it. Click elsewhere
       to cancel.
     m_Metadata:
       m_Items:
@@ -636,8 +636,9 @@ MonoBehaviour:
       m_Items:
       - rid: 7201578077006332005
   - m_Id: 5832187899953
-    m_Localized: Beyond the ashen fields, the first vampire sleeps in the mill. The
-      hedgerows slow the dead.
+    m_Localized: The first vampire sleeps in a coffin in the ashen mill, and the
+      coffin opens at the full moon. Hold the two gaps in the yard wall and make
+      your stand by the yard torch. In the light, none can be drained.
     m_Metadata:
       m_Items:
       - rid: 7201578077006332005
@@ -1160,12 +1161,12 @@ MonoBehaviour:
       m_Items:
       - rid: 7201578077006332005
   - m_Id: 9846568841275
-    m_Localized: Cancel Mercy Kill
+    m_Localized: Cancel Ally Attack
     m_Metadata:
       m_Items:
       - rid: 7201578077006332005
   - m_Id: 9846568841276
-    m_Localized: Mercy Kill
+    m_Localized: Attack Ally
     m_Metadata:
       m_Items:
       - rid: 7201578077006332005

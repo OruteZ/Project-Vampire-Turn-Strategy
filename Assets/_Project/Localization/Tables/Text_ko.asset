@@ -133,12 +133,12 @@ MonoBehaviour:
       m_Items:
       - rid: 7201578077006332004
   - m_Id: 3991484035091
-    m_Localized: "\uCC98\uCE58\uD560 \uC218 \uC5C6\uB2E4"
+    m_Localized: "\uACF5\uACA9\uD560 \uC218 \uC5C6\uB294 \uC544\uAD70\uC774\uB2E4"
     m_Metadata:
       m_Items:
       - rid: 7201578077006332004
   - m_Id: 3991484035092
-    m_Localized: "\uCC98\uCE58"
+    m_Localized: "\uC544\uAD70 \uACF5\uACA9"
     m_Metadata:
       m_Items:
       - rid: 7201578077006332004
@@ -340,7 +340,7 @@ MonoBehaviour:
       m_Items: []
   - m_Id: 3991484035129
     m_Localized: "\uD770 \uC810\uC120 \uACE0\uB9AC\uC758 \uC544\uAD70\uC744 \uB204\uB974\uBA74
-      \uCC98\uCE58\uD569\uB2C8\uB2E4. \uB2E4\uB978 \uACF3\uC744 \uB204\uB974\uBA74
+      \uACF5\uACA9\uD569\uB2C8\uB2E4. \uB2E4\uB978 \uACF3\uC744 \uB204\uB974\uBA74
       \uCDE8\uC18C\uD569\uB2C8\uB2E4."
     m_Metadata:
       m_Items:
@@ -669,9 +669,11 @@ MonoBehaviour:
       m_Items:
       - rid: 7201578077006332004
   - m_Id: 5832187899953
-    m_Localized: "\uC7BF\uB354\uBBF8\uAC00 \uB41C \uBC2D \uB108\uBA38 \uBC29\uC557\uAC04\uC5D0
-      \uCCAB \uBC40\uD30C\uC774\uC5B4\uAC00 \uC7A0\uB4E4\uC5B4 \uC788\uB2E4. \uC0B0\uC6B8\uD0C0\uB9AC\uAC00
-      \uB188\uB4E4\uC758 \uAC78\uC74C\uC744 \uB2A6\uCD98\uB2E4."
+    m_Localized: "\uC7BF\uBE5B \uBC29\uC557\uAC04\uC758 \uAD00\uC5D0 \uCCAB \uBC40\uD30C\uC774\uC5B4\uAC00
+      \uC7A0\uB4E4\uC5B4 \uC788\uB2E4. \uBCF4\uB984\uB2EC\uC774 \uCC28\uBA74 \uAD00\uC774
+      \uC5F4\uB9B0\uB2E4. \uB9C8\uB2F9 \uB2F4\uC758 \uB450 \uD2C8\uC744 \uB9C9\uACE0
+      \uB9C8\uB2F9 \uD683\uBD88 \uACC1\uC5D0\uC11C \uB9DE\uC11C\uB77C. \uBE5B \uC18D\uC5D0\uC11C\uB294
+      \uD53C\uB97C \uBE68\uB9AC\uC9C0 \uC54A\uB294\uB2E4."
     m_Metadata:
       m_Items:
       - rid: 7201578077006332004
@@ -1219,12 +1221,12 @@ MonoBehaviour:
       m_Items:
       - rid: 7201578077006332004
   - m_Id: 9846568841275
-    m_Localized: "\uCC98\uCE58 \uCDE8\uC18C"
+    m_Localized: "\uC544\uAD70 \uACF5\uACA9 \uCDE8\uC18C"
     m_Metadata:
       m_Items:
       - rid: 7201578077006332004
   - m_Id: 9846568841276
-    m_Localized: "\uC544\uAD70 \uCC98\uCE58"
+    m_Localized: "\uC544\uAD70 \uACF5\uACA9"
     m_Metadata:
       m_Items:
       - rid: 7201578077006332004

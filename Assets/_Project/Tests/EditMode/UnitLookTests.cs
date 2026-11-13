@@ -23,7 +23,7 @@ namespace VampireSpawn.Tests
         public void HeldWeaponsPointTheWayTheirHoldSaysAtRest(string name)
         {
             var look = Look(name);
-            var view = UnitView.Create(Art, look, null, 0, new Vector3(0f, -500f, 0f), 0f, Color.gray, true);
+            var view = UnitView.Create(Art, look, null, 0, new Vector3(0f, -500f, 0f), 0f, true);
             try
             {
                 var animator = view.GetComponentInChildren<Animator>();
@@ -59,7 +59,7 @@ namespace VampireSpawn.Tests
         public void PolygonWeaponsSitInThePalmNotTheWrist(string name)
         {
             var look = Look(name);
-            var view = UnitView.Create(Art, look, null, 0, new Vector3(0f, -500f, 0f), 0f, Color.gray, true);
+            var view = UnitView.Create(Art, look, null, 0, new Vector3(0f, -500f, 0f), 0f, true);
             try
             {
                 var bones = view.GetComponentsInChildren<Transform>(true);
@@ -81,7 +81,7 @@ namespace VampireSpawn.Tests
         public void ShootersHoldTheirWeaponUprightOnTheBowArm(string name)
         {
             var look = Look(name);
-            var view = UnitView.Create(Art, look, null, 0, new Vector3(0f, -500f, 0f), 0f, Color.gray, true);
+            var view = UnitView.Create(Art, look, null, 0, new Vector3(0f, -500f, 0f), 0f, true);
             try
             {
                 var animator = view.GetComponentInChildren<Animator>();
@@ -136,7 +136,7 @@ namespace VampireSpawn.Tests
         [Test]
         public void SleepingVampireIsOnlyACoffinUntilItWakes()
         {
-            var view = UnitView.Create(Art, Art.vampireLook, null, 0, new Vector3(0f, -500f, 0f), 180f, Color.gray, true, inCoffin: true);
+            var view = UnitView.Create(Art, Art.vampireLook, null, 0, new Vector3(0f, -500f, 0f), 180f, true, inCoffin: true);
             try
             {
                 Assert.IsTrue(view.Lying);

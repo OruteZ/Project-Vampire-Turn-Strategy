@@ -198,7 +198,7 @@ namespace VampireSpawn.Game
             var camp = CampSpot();
             if (type < 0 || camp == null) return;
             var t = GameData.Types[type];
-            campUnit = UnitView.Create(art, art.Look(t.Key), camp, -1, PointOr(camp, "Unit", camp.position), 180f - camp.eulerAngles.y, art.TierRing(t.Tier), true);
+            campUnit = UnitView.Create(art, art.Look(t.Key), camp, -1, PointOr(camp, "Unit", camp.position), 180f - camp.eulerAngles.y, true);
         }
 
         // One Cinemachine shot: follows its subject at the given distance and pitch; the composer aims it (campaign-map.md 9).

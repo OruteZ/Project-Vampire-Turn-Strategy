@@ -37,74 +37,119 @@ MonoBehaviour:
   bossMov: 4
   bossHeal: 4
   map:
-  - '####.....####'
-  - '#.#.,...,.#.#'
-  - '#...#...#...#'
-  - '##,#..,..#,##'
-  - .....dddd....
+  - ____.....____
+  - _._.,...,._._
+  - _...#...#..._
+  - __,#.._..#,__
+  - ._...dddd_...
   - ..,..ddTd..,.
-  - .....dddd....
-  - '##,#.,,,.#,##'
-  - '#.#.......#.#'
-  - '#...#.,.#...#'
-  - '####.....####'
+  - ._...dddd_...
+  - __,#.,,,.#,__
+  - _._..._...#._
+  - _...#.,.#..._
+  - ____.....____
   enemies:
   - kind: vampire
     col: 6
     row: 0
     arrive: 0
+    wave: 
+    stance: 0
+    alert: 0
   - kind: skeleton
     col: 4
     row: 1
     arrive: 0
+    wave: 
+    stance: 0
+    alert: 0
   - kind: skeleton
     col: 8
     row: 1
     arrive: 0
+    wave: 
+    stance: 0
+    alert: 0
   - kind: skeleton
     col: 6
     row: 2
     arrive: 0
+    wave: 
+    stance: 0
+    alert: 0
   - kind: skeleton
     col: 5
     row: 0
     arrive: 0
+    wave: 
+    stance: 0
+    alert: 0
   - kind: skeleton
     col: 7
     row: 0
     arrive: 0
+    wave: 
+    stance: 0
+    alert: 0
   - kind: skeleton
     col: 0
     row: 4
     arrive: 3
+    wave: 
+    stance: 0
+    alert: 0
   - kind: skeleton
     col: 0
     row: 6
     arrive: 3
+    wave: 
+    stance: 0
+    alert: 0
   - kind: skeleton
     col: 1
     row: 5
     arrive: 3
+    wave: 
+    stance: 0
+    alert: 0
   - kind: skeleton
     col: 12
     row: 4
     arrive: 5
+    wave: 
+    stance: 0
+    alert: 0
   - kind: skeleton
     col: 12
     row: 6
     arrive: 5
+    wave: 
+    stance: 0
+    alert: 0
   - kind: skeleton
     col: 11
     row: 5
     arrive: 5
+    wave: 
+    stance: 0
+    alert: 0
   - kind: skeleton
     col: 5
     row: 10
     arrive: 7
+    wave: 
+    stance: 0
+    alert: 0
   - kind: skeleton
     col: 7
     row: 10
     arrive: 7
+    wave: 
+    stance: 0
+    alert: 0
+  triggers: []
+  doors: []
+  reinforcements: []
   sample:
   - kind: sword
     col: 5
