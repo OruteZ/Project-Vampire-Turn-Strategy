@@ -3,13 +3,13 @@
     flex-grow: 1;
 }
 
-/* main-menu.md 9: one left-centre anchor; the block is about 600 px tall and 680 wide (Korean display font sets the title about 620 wide). The castle keeps the rest of the screen. */
+/* main-menu.md 9: one left-centre anchor; the block is about 600 px tall and 760 wide (Hahmlet Bold sets "VAMPIRE SPAWN" about 690 wide). The castle keeps the rest of the screen. */
 .block {
     position: absolute;
     left: 144px;
     top: 50%;
     margin-top: -300px;
-    width: 680px;
+    width: 760px;
     align-items: flex-start;
 }
 

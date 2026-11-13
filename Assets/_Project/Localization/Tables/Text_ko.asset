@@ -1624,13 +1624,13 @@ MonoBehaviour:
       m_Items:
       - rid: 7201578077006332004
   - m_Id: 10777284898816
-    m_Localized: IBM Plex Sans KR, Apple SD Gothic Neo, Malgun Gothic, Noto Sans
-      CJK KR, Arial
+    m_Localized: Hahmlet-Medium, SourceHanSerifK-VF, Malgun Gothic, Apple SD Gothic
+      Neo
     m_Metadata:
       m_Items:
       - rid: 7201578077006332004
   - m_Id: 10777347813376
-    m_Localized: Nanum Myeongjo, Noto Serif KR, Batang, AppleMyungjo, Malgun Gothic
+    m_Localized: Hahmlet-Bold, SourceHanSerifK-VF, Malgun Gothic, AppleMyungjo
     m_Metadata:
       m_Items:
       - rid: 7201578077006332004

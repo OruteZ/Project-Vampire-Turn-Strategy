@@ -293,21 +293,29 @@ namespace VampireSpawn.Game.Screens
 
         static readonly Dictionary<string, FontAsset> fonts = new Dictionary<string, FontAsset>();
 
-        // UI Toolkit cannot draw an OS dynamic Font, so the first installed name in the language's chain (Text table font.body / font.display) is loaded from its file.
+        // The language's chain (Text table font.body / font.display): bundled fonts in Resources/Fonts first, then installed OS fonts; the first that resolves draws, the rest are its fallbacks for missing glyphs.
         static FontAsset OsFont(string key)
         {
             var chain = Loc.T(key);
             if (fonts.TryGetValue(chain, out var cached)) return cached;
-            var installed = new HashSet<string>(Font.GetOSInstalledFontNames());
-            var family = chain.Split(',').Select(n => n.Trim()).FirstOrDefault(installed.Contains);
-            if (family == null) return fonts[chain] = null;
+            var found = chain.Split(',').Select(n => Resolve(n.Trim())).Where(f => f != null).ToList();
+            if (found.Count == 0) return fonts[chain] = null;
+            found[0].fallbackFontAssetTable = found.Skip(1).ToList();
+            return fonts[chain] = found[0];
+        }
+
+        static FontAsset Resolve(string name)
+        {
+            var bundled = Resources.Load<Font>("Fonts/" + name);
+            if (bundled != null) return FontAsset.CreateFontAsset(bundled);
+            if (!Font.GetOSInstalledFontNames().Contains(name)) return null;
             // By name works for static faces (Malgun Gothic); variable fonts (NotoSerifKR-VF) only load from their file.
-            var byName = FontAsset.CreateFontAsset(family, "Regular");
-            if (byName != null) return fonts[chain] = byName;
+            var byName = FontAsset.CreateFontAsset(name, "Regular");
+            if (byName != null) return byName;
             var file = Font.GetPathsToOSFonts()
-                .Where(p => System.IO.Path.GetFileNameWithoutExtension(p).Replace(" ", "").StartsWith(family.Replace(" ", ""), StringComparison.OrdinalIgnoreCase))
+                .Where(p => System.IO.Path.GetFileNameWithoutExtension(p).Replace(" ", "").StartsWith(name.Replace(" ", ""), StringComparison.OrdinalIgnoreCase))
                 .OrderBy(p => System.IO.Path.GetFileNameWithoutExtension(p).Length).FirstOrDefault();
-            return fonts[chain] = file == null ? null : FontAsset.CreateFontAsset(new Font(file));
+            return file == null ? null : FontAsset.CreateFontAsset(new Font(file));
         }
     }
 }

@@ -59,19 +59,19 @@
 
 | 토큰 | 글꼴 | 크기 | 굵기 | 쓰는 곳 |
 |---|---|---|---|---|
-| `display` | Nanum Myeongjo | 56 | ExtraBold | 메뉴 제목, 승리·패배 |
-| `h.1` | Nanum Myeongjo | 32 | Bold | 화면 제목, 팝업 제목 |
-| `h.2` | Nanum Myeongjo | 22 | Bold | 패널 제목(유닛 이름) |
-| `num.1` | IBM Plex Sans KR | 34 | Bold | 1단계 숫자(체력·이동력·보름달 남은 턴) |
-| `num.2` | IBM Plex Sans KR | 20 | SemiBold | 2단계 숫자 |
-| `body` | IBM Plex Sans KR | 17 | Regular | 본문, 버튼 글자 |
-| `small` | IBM Plex Sans KR | 14 | Regular | 3단계, 단축키, 아이콘 밑 이름 |
+| `display` | Hahmlet Bold | 56 | ExtraBold | 메뉴 제목, 승리·패배 |
+| `h.1` | Hahmlet Bold | 32 | Bold | 화면 제목, 팝업 제목 |
+| `h.2` | Hahmlet Bold | 22 | Bold | 패널 제목(유닛 이름) |
+| `num.1` | Hahmlet Medium | 34 | Bold | 1단계 숫자(체력·이동력·보름달 남은 턴) |
+| `num.2` | Hahmlet Medium | 20 | SemiBold | 2단계 숫자 |
+| `body` | Hahmlet Medium | 17 | Regular | 본문, 버튼 글자 |
+| `small` | Hahmlet Medium | 14 | Regular | 3단계, 단축키, 아이콘 밑 이름 |
 
 1. 가장 작은 글자는 **14px**. 더 작게 쓰지 않는다.
 2. 줄 간격 1.35, 패널 제목 아래 여백 8px.
 3. 숫자 옆 단위·이름은 숫자의 절반 크기, `text.2`.
 4. 키트 글꼴 LT Museum 은 영문 장식(메뉴 제목의 로마 숫자 장 번호 등)에만. 한글이 섞이는 자리에는 쓰지 않는다.
-5. 글꼴 파일은 #16. 그 전에는 지금처럼 OS 글꼴을 쓴다.
+5. 글꼴 파일은 사용자가 들인 Hahmlet(9굵기)과 Source Han Serif K(가변)를 `Assets/_Project/Resources/Fonts` 에 둔다(#118, 2026-11-13). 본문은 Hahmlet-Medium, 제목은 Hahmlet-Bold. Hahmlet 에 없는 글자(▾·★·한자 등)는 Source Han Serif K 가 그리고, 그 뒤에 OS 글꼴이 남는다. 두 글꼴 모두 SIL OFL.
 
 ## 5. 틀
 
