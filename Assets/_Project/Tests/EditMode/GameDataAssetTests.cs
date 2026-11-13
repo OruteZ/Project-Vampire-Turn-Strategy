@@ -73,7 +73,7 @@ namespace VampireSpawn.Tests
             root.units[0].upgrades[0].id = root.units[0].upgrades[1].id;
             var problems = string.Join("\n", root.Problems());
             StringAssert.Contains("지도 2행 길이", problems);
-            StringAssert.Contains("뱀파이어는 하나여야 한다", problems);
+            StringAssert.Contains("뱀파이어는 보스 처치 장에 하나", problems);
             StringAssert.Contains("없는 적 ghost", problems);
             StringAssert.Contains("없는 병종 dragoon", problems);
             StringAssert.Contains("배치 구역 밖", problems);

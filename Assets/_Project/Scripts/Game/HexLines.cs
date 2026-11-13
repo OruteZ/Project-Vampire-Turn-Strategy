@@ -76,7 +76,8 @@ namespace VampireSpawn.Game
             if (d.sqrMagnitude < 1e-8f) return;
             var side = Vector3.Cross(Vector3.up, d.normalized) * (width * 0.5f);
             var along = d.normalized * (width * 0.5f);
-            var n = Mathf.Max(1, Mathf.CeilToInt(d.magnitude / Piece));
+            // The epsilon keeps a unit edge that measures 1.0000001 at 4 pieces, not 5.
+            var n = Mathf.Max(1, Mathf.CeilToInt(d.magnitude / Piece - 0.001f));
             for (var i = 0; i < n; i++)
             {
                 var p = Vector3.Lerp(a, b, (float)i / n) - (i == 0 ? along : Vector3.zero);

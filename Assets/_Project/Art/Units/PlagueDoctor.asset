@@ -15,12 +15,25 @@ MonoBehaviour:
   key: doctor
   icon: ICON_SM_Wep_Staff_01_DarkFantasy
   recipe: 
-  model: {fileID: 6711451649947656021, guid: 6f84430900ee9f246aa877a58c0085a0, type: 3}
+  model: {fileID: 4348002319776719767, guid: 986e018360fad2141a3487eee6ecd1c1, type: 3}
   rig: 1
   weapons:
-  - prefab: {fileID: 2757144403252637568, guid: 35eccc3f6c3e3644daf869cc547870a9, type: 3}
+  - prefab: {fileID: 7380780585286429253, guid: eaf92cc55d1978f4283df924c9242717, type: 3}
     hand: 0
     hold: 2
     position: {x: 0, y: 0, z: 0}
     rotation: {x: 0, y: 0, z: 0}
   animator: {fileID: 22100000, guid: df70526b63d281b4b8a562ec70988bd3, type: 2}
+  sounds:
+    attack:
+      clips: []
+      volume: 1
+    hurt:
+      clips: []
+      volume: 1
+    death:
+      clips: []
+      volume: 1
+    step:
+      clips: []
+      volume: 1

@@ -13,17 +13,17 @@ MonoBehaviour:
   m_Name: Hunter
   m_EditorClassIdentifier: VampireSpawn.Game::VampireSpawn.Game.UnitLook
   key: hunter
-  icon: ICON_SM_Wep_Crossbow_01_DarkFantasy
+  icon: ICON_SM_Item_Potion_01_Dungeon
   recipe: 
-  model: {fileID: 3186528172670679936, guid: 48e71803e3dc7e248a1a532cdef1be17, type: 3}
+  model: {fileID: 6711451649947656021, guid: 6f84430900ee9f246aa877a58c0085a0, type: 3}
   rig: 1
   weapons:
-  - prefab: {fileID: 1108490044900275105, guid: 612f74c8fd471b64185d45d4daf4610b, type: 3}
-    hand: 1
+  - prefab: {fileID: 294619393721293448, guid: c89e883dd5067694e85eee551e513140, type: 3}
+    hand: 0
     hold: 0
     position: {x: 0, y: 0, z: 0}
-    rotation: {x: 0, y: 270, z: 327}
-  animator: {fileID: 22100000, guid: 68fafa10a9b80a2479ec41c29d78525a, type: 2}
+    rotation: {x: 0, y: 0, z: 0}
+  animator: {fileID: 22100000, guid: df70526b63d281b4b8a562ec70988bd3, type: 2}
   sounds:
     attack:
       clips: []

@@ -37,7 +37,6 @@ namespace VampireSpawn.Game.Screens
         readonly Dictionary<int, HeadMark> heads = new Dictionary<int, HeadMark>();
         readonly HashSet<VisualElement> blink = new HashSet<VisualElement>();
         VisualElement headLayer, hoverLayer, moonDisk;
-        Color[] moonColors;
         bool moonPulse;
         // Values and panels of the previous build, so only real changes flash and only new panels slide in (ui-style.md 12).
         Dictionary<string, string> lastValues = new Dictionary<string, string>(), values = new Dictionary<string, string>();
@@ -68,12 +67,6 @@ namespace VampireSpawn.Game.Screens
             return b;
         }
 
-        static void Hotkey(VisualElement b, string key)
-        {
-            L(b, key, "key");
-            KeepClearOfKey(b, key);
-        }
-
         public void Build(VisualElement root, BattleSession s, HudState st, BattleActions a)
         {
             root.Clear();
@@ -92,6 +85,12 @@ namespace VampireSpawn.Game.Screens
             Moon(root, b, hot, st.FullMoon, st.MoonFading);
             if (b.Phase == Phase.Deploy) Deploy(root, s, st, a);
             else Fight(root, s, st, a);
+            if (b.Phase != Phase.Deploy)
+            {
+                var bar = E(root, "action-bar");
+                Picture(bar, S(BarBack), Ui.Alpha(Ui.Panel, 0.92f));
+                Picture(E(bar, "bar-frame"), S(BarFrame), Color.white);
+            }
             hoverLayer = E(root, "layer");
             Hover(s, st, a);
             EndTurn(root, b, st, a);
@@ -179,30 +178,26 @@ namespace VampireSpawn.Game.Screens
         // full: the full-moon enemy turn is playing (7-2); fading: it just ended, so the blood drains away over 0.4 s.
         void Moon(VisualElement root, Battle b, bool hot, bool full, bool fading)
         {
+            moonDisk = null;
+            if (!b.Stage.HasBoss) return;
             var box = E(root, "moon");
             Tip(box, Loc.T("battle.moon") + " · " + Loc.T("battle.rule.moon", Rules.MoonMax), 400);
             Picture(E(box, "fill"), S(RingBack), Ui.Deep);
             var max = Rules.MoonMax;
             var moon = full ? max : b.Moon;
-            moonColors = Enumerable.Range(0, max).Select(i => i < moon ? (hot || full ? Ui.MoonBlood : Ui.Sun) : Ui.Panel2).ToArray();
+            var lit = hot || full ? Ui.MoonBlood : Ui.Sun;
+            var f = (float)moon / max;
             moonPulse = hot;
             moonDisk = E(box, "moon-disk");
-            var lit = moon;
-            moonDisk.generateVisualContent += ctx => Phases(ctx, max, i => moonPulse && i < lit ? Fx.Bright(Ui.MoonBlood, Fx.PulseK()) : moonColors[i]);
+            moonDisk.generateVisualContent += ctx => MoonPhase(ctx, f, moonPulse ? Fx.Bright(Ui.MoonBlood, Fx.PulseK()) : lit);
             if (fading)
             {
                 var drain = E(box, "moon-disk");
-                drain.generateVisualContent += ctx => Phases(ctx, max, _ => Ui.MoonBlood);
+                drain.generateVisualContent += ctx => MoonPhase(ctx, 1f, Ui.MoonBlood);
                 Fx.FadeOut(drain, 0.4f);
             }
             var v = b.Vampire;
-            if (v != null && v.Asleep)
-            {
-                var pin = E(box, "moon-pin");
-                pin.style.rotate = new Rotate(360f * Rules.MoonWake / max);
-                E(pin, "coffin");
-            }
-            Picture(E(box, "moon-ring"), S(Ring), hot || full ? Ui.MoonBlood : Ui.Steel);
+            Picture(E(box, "moon-ring"), S(Ring), hot || full ? Ui.MoonBlood : Color.white);
             if (full)
                 for (var k = 0; k < 4; k++)
                 {
@@ -216,33 +211,46 @@ namespace VampireSpawn.Game.Screens
             if (state.Length > 0) L(label, state, hot ? "moon-state hot" : "moon-state", hot ? Ui.MoonBlood : Ui.Muted);
         }
 
-        // One wedge per phase from the top, clockwise, with a 1.5% gap (the old radial fill).
-        static void Phases(MeshGenerationContext ctx, int max, Func<int, Color> color)
+        // ui-style.md 7: a waxing moon, lit from the right; the terminator is a half ellipse whose width runs r -> 0 -> -r as f goes 0 -> 0.5 -> 1.
+        static void MoonPhase(MeshGenerationContext ctx, float f, Color lit)
         {
             var r = ctx.visualElement.contentRect;
             var c = r.center;
             var radius = Mathf.Min(r.width, r.height) * 0.5f;
             var p = ctx.painter2D;
-            for (var i = 0; i < max; i++)
+            p.fillColor = Ui.Panel2;
+            p.BeginPath();
+            p.Arc(c, radius, 0f, 360f);
+            p.Fill();
+            if (f <= 0f) return;
+            p.fillColor = lit;
+            p.BeginPath();
+            p.MoveTo(c + new Vector2(0f, -radius));
+            p.Arc(c, radius, -90f, 90f);
+            var rx = radius * (1f - 2f * Mathf.Min(f, 1f));
+            for (var i = 1; i <= 32; i++)
             {
-                var start = -90f + 360f * i / max;
-                p.fillColor = color(i);
-                p.BeginPath();
-                p.MoveTo(c);
-                p.Arc(c, radius, start, start + 360f * (1f / max - 0.015f));
-                p.ClosePath();
-                p.Fill();
+                var a = Mathf.PI * (0.5f - i / 32f);
+                p.LineTo(c + new Vector2(rx * Mathf.Cos(a), radius * Mathf.Sin(a)));
             }
+            p.ClosePath();
+            p.Fill();
         }
 
+        // battle-hud.md 3-6: one round button for start, done deploying, end turn and results.
         void EndTurn(VisualElement root, Battle b, HudState st, BattleActions a)
         {
             var label = BattleScreen.PrimaryLabel(b, st.EnemyPlaying, out var enabled, st.Speed);
-            var btn = Btn(root, label, a.Primary, BtnKind.Primary, enabled, b.Phase == Phase.Deploy && !enabled ? Loc.T("hud.needAlly") : null, "end-turn");
-            Hotkey(btn, "Space");
+            var btn = E(root, b.Phase == Phase.Deploy ? "end-turn deploy" : "end-turn", true);
+            Picture(E(btn, "ring-fill"), S(RingBack), enabled ? Ui.Panel : Ui.Panel2);
+            var hot = b.Phase == Phase.Player && !st.EnemyPlaying && b.Stage.HasBoss && b.MoonNext();
+            Picture(E(btn, "ring"), S(Ring), hot ? Ui.MoonBlood : enabled ? Color.white : Ui.Line);
+            L(btn, label, "end-turn-text", enabled ? Ui.Bone : Ui.Muted);
+            L(btn, "Space", "key");
+            Click(btn, a.Primary, enabled);
+            if (b.Phase == Phase.Deploy && !enabled) Tip(btn, Loc.T("hud.needAlly"), 0);
             var left = b.Phase == Phase.Player && !st.EnemyPlaying ? b.Allies.Count(u => !u.Acted) : 0;
-            // ui-style.md 14-3-3: inside the button, left of the label.
-            if (left > 0) Tip(RingBadge(btn, art, left.ToString(), 28, Ui.Steel, Ui.Ink, Ui.Bone), Loc.T("battle.allyPhase"), 300);
+            if (left > 0) Tip(RingBadge(btn, art, left.ToString(), 32, Ui.Steel, Ui.Ink, Ui.Bone), Loc.T("battle.allyPhase"), 300);
         }
 
         void Corner(VisualElement root, HudState st, BattleActions a)
@@ -396,9 +404,11 @@ namespace VampireSpawn.Game.Screens
             else if (st.Hover != null && st.Hover.Side == Side.Enemy) Panel(root, b, st.Hover, "other-side", true);
 
             var atk = new HashSet<Hex>(s.Overlay().Where(m => m.Mark == Mark.Atk).Select(m => m.Hex));
+            var aimed = sel != null && st.Hover != null && atk.Contains(st.Hover.Pos);
+            var splash = aimed ? b.Splashed(sel, st.Hover).ToList() : null;
             foreach (var u in b.Units)
             {
-                var dmg = sel != null && st.Hover == u && atk.Contains(u.Pos) ? b.Damage(sel, u) : 0;
+                var dmg = aimed && st.Hover == u ? b.Damage(sel, u) : splash != null && splash.Contains(u) ? 1 : 0;
                 Head(headLayer, b, u, u == st.Hover || u == sel, st.Alt && u.Side == Side.Enemy, dmg);
             }
             if (st.Hover != null && heads.TryGetValue(st.Hover.Id, out var top)) top.Root.BringToFront();
@@ -565,28 +575,23 @@ namespace VampireSpawn.Game.Screens
 
         void CornerBadge(VisualElement p, string icon, Color c) => Icon(E(p, "overhang decor"), icon, c, "icon corner-badge");
 
+        // battle-hud.md 3-4: the selected unit's actions as icons in one row inside the wide bar, left of the round button.
+        const string BarFrame = "SPR_DarkFantasy_Frame_Hotbar_03", BarBack = "SPR_DarkFantasy_Frame_Hotbar_03_Background",
+            SlotFrame = "SPR_DarkFantasy_Frame_Box_Medium_08", SlotBack = "SPR_DarkFantasy_Frame_Box_Medium_08_Background";
+
         void Actions(VisualElement root, BattleSession s, BattleActions a)
         {
-            var exec = s.Mode == SelectMode.Execute;
-            var mend = s.Mode == SelectMode.Mend;
-            var sel = s.SelectedUnit;
-            var row = E(root, "actions");
-            foreach (var (key, icon, label, act, on, danger) in new[]
+            var row = E(root, "action-row");
+            foreach (var x in BattleScreen.Slots(s, a))
             {
-                (1, Kit.Icon.Dead, Loc.T(exec ? "unit.card.cancelExec" : "unit.card.exec"), a.Exec, exec, true),
-                (2, Kit.Icon.Wait, Loc.T("unit.card.wait"), a.Wait, false, false),
-                (3, Kit.Icon.Heal, Loc.T(mend ? "hud.cancelMend" : "hud.mend"), a.Mend, mend, false),
-            })
-            {
-                if (act == a.Mend && !sel.Has(Ability.Mend)) continue;
-                if (act == a.Exec && sel.Role == Role.Escort) continue;
-                var slot = E(row, "slot", true);
-                Frame(slot, art, on ? (danger ? Ui.Blood : Ui.Steel) : danger ? Ui.BloodDim : Ui.SteelDim);
-                slot.Q(className: "panel-frame").AddToClassList("thin");
-                Icon(slot, icon, danger ? Ui.Blood : Ui.Steel);
-                L(slot, key.ToString(), "key");
-                Click(slot, act);
-                Tip(slot, label, 200);
+                var slot = E(row, x.Key == 0 ? "slot passive" : "slot", true);
+                Picture(slot, S(SlotBack), Ui.Deep);
+                Picture(E(slot, "slot-frame"), S(SlotFrame), x.On ? x.Color : Color.white);
+                Icon(slot, x.Icon, x.Color);
+                Tip(slot, x.Label, 200);
+                if (x.Key == 0) continue;
+                L(slot, x.Key.ToString(), "key");
+                Click(slot, x.Act, x.Ready);
             }
         }
 
@@ -734,7 +739,7 @@ namespace VampireSpawn.Game.Screens
             Tip(title, titleTip, 300);
 
             var acts = E(box, "over-acts row");
-            var w = o.Camp ? 178f : 270f;
+            var w = o.Camp ? 280f : 400f;
             if (o.Camp) Btn(acts, Loc.T("over.toCamp"), a.ToCamp, BtnKind.Primary).style.width = w;
             Btn(acts, Loc.T("over.retry"), a.Retry, o.Camp ? BtnKind.Normal : BtnKind.Primary).style.width = w;
             Btn(acts, Loc.T("over.redeploy"), a.Redeploy, BtnKind.Normal).style.width = w;

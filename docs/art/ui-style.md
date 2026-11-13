@@ -7,6 +7,7 @@
 ## 1. 기준
 
 1. 기준 해상도 **1920×1080**. CanvasScaler 는 Scale With Screen Size, Screen Match Mode **Expand** (15-1). Match 값은 쓰지 않는다.
+   - 전투 화면만 예외 (#118): HUD 전체를 0.55 배로 그린다 (`BattleFlow.HudZoom`, 전투 전용 PanelSettings 사본의 기준 해상도 3491×1964). 전투 HUD 의 px 은 그 판 기준이고 화면에선 ×0.55, 글자 하한은 화면 14px (판 기준 26px). 자세한 값은 docs/ui/battle-hud.md 1.
 2. 화면 가장자리 안전 여백 **24px**. 이 안에만 UI 를 둔다.
 3. 보드 영역: 위 **150px**, 아래 **190px**, 왼쪽·오른쪽 **360px** 를 뺀 가운데. 전투 화면 UI 는 보드 영역을 가리지 않는다. 툴팁·미리 보기·머리 위 표시만 예외다.
 4. 모든 수치는 1920×1080 기준 px 이다.
@@ -58,23 +59,23 @@
 
 | 토큰 | 글꼴 | 크기 | 굵기 | 쓰는 곳 |
 |---|---|---|---|---|
-| `display` | Nanum Myeongjo | 56 | ExtraBold | 메뉴 제목, 승리·패배 |
-| `h.1` | Nanum Myeongjo | 32 | Bold | 화면 제목, 팝업 제목 |
-| `h.2` | Nanum Myeongjo | 22 | Bold | 패널 제목(유닛 이름) |
-| `num.1` | IBM Plex Sans KR | 34 | Bold | 1단계 숫자(체력·이동력·보름달 남은 턴) |
-| `num.2` | IBM Plex Sans KR | 20 | SemiBold | 2단계 숫자 |
-| `body` | IBM Plex Sans KR | 17 | Regular | 본문, 버튼 글자 |
-| `small` | IBM Plex Sans KR | 14 | Regular | 3단계, 단축키, 아이콘 밑 이름 |
+| `display` | Hahmlet Bold | 56 | ExtraBold | 메뉴 제목, 승리·패배 |
+| `h.1` | Hahmlet Bold | 32 | Bold | 화면 제목, 팝업 제목 |
+| `h.2` | Hahmlet Bold | 22 | Bold | 패널 제목(유닛 이름) |
+| `num.1` | Hahmlet Medium | 34 | Bold | 1단계 숫자(체력·이동력·보름달 남은 턴) |
+| `num.2` | Hahmlet Medium | 20 | SemiBold | 2단계 숫자 |
+| `body` | Hahmlet Medium | 17 | Regular | 본문, 버튼 글자 |
+| `small` | Hahmlet Medium | 14 | Regular | 3단계, 단축키, 아이콘 밑 이름 |
 
 1. 가장 작은 글자는 **14px**. 더 작게 쓰지 않는다.
 2. 줄 간격 1.35, 패널 제목 아래 여백 8px.
 3. 숫자 옆 단위·이름은 숫자의 절반 크기, `text.2`.
 4. 키트 글꼴 LT Museum 은 영문 장식(메뉴 제목의 로마 숫자 장 번호 등)에만. 한글이 섞이는 자리에는 쓰지 않는다.
-5. 글꼴 파일은 #16. 그 전에는 지금처럼 OS 글꼴을 쓴다.
+5. 글꼴 파일은 사용자가 들인 Hahmlet(9굵기)과 Source Han Serif K(가변)를 `Assets/_Project/Resources/Fonts` 에 둔다(#118, 2026-11-13). 본문은 Hahmlet-Medium, 제목은 Hahmlet-Bold. Hahmlet 에 없는 글자(▾·★·한자 등)는 Source Han Serif K 가 그리고, 그 뒤에 OS 글꼴이 남는다. 두 글꼴 모두 SIL OFL.
 
 ## 5. 틀
 
-모두 `Assets/Synty/InterfaceDarkFantasyMenus/Sprites/DarkFantasyMenus/` 의 9-slice 스프라이트를 `Image.Type = Sliced` 로 쓰고, Image 색으로 물들인다.
+모두 `Assets/Synty/InterfaceDarkFantasyMenus/Sprites/DarkFantasyMenus/` 의 9-slice 스프라이트를 `Image.Type = Sliced` 로 쓴다. 틀(쇠·돌 그림)은 팩의 원래 색을 살리고, 진영 색은 20% 만 섞는다(#118, 덧칠하면 질감과 명암이 죽어 플라스틱처럼 보였다). 아래 표의 색은 그 20% 에 섞는 색이다. 흰 실루엣으로 된 `_Background` 와 아이콘만 색으로 물들인다.
 
 | 틀 토큰 | 스프라이트 | 색 (기본 / 강조) | 장식 | 안쪽 여백 |
 |---|---|---|---|---|
@@ -99,7 +100,7 @@
 | `btn.normal` | `Frame_Box_Medium_02` + `_Background`, `bg.panel` 채움 + `ally.dim` 틀 | `body`, `text.1` | 보통 행동 | `Normal`, `Choice` |
 | `btn.ghost` | 틀 없음 | `body`, `text.2` | 나가기, 접기·펼치기, 취소 | `Ghost` |
 | `btn.danger` | `Frame_Box_Medium_02` + `_Background`, `bg.panel` 채움 + `enemy.dim` 틀 | `body`, `enemy` | 아군 직접 처치 | `Danger` |
-| `btn.slot` | `Frame_Box_Medium_02` + `_Background` 64×64, 아이콘 40px | 아래에 `small` 행동 이름 | 행동 줄 | — |
+| `btn.slot` | HUD 팩 `SPR_DarkFantasy_Frame_Box_Medium_08`(팔각) + `_Background`(`bg.panelDeep`) 112×112, 아이콘 88px. 틀은 원래 색, 켜진 모드(처치·치료)만 그 행동 색 | 왼쪽 위 단축키, 이름은 호버 툴팁 | 행동 줄 | — |
 | `btn.roster` | `frame.ally` 축소판, 초상 + 이름 | `small` | 배치 화면 유닛 목록 | `Roster` |
 
 ### 상태
@@ -120,21 +121,21 @@
 ### 7-1. 모양
 
 1. 화면 위 가운데. `Frame_Ring_01` 지름 **112px**, 위 여백 24px.
-2. 원 안을 `Rules.MoonMax` 칸(지금 6)으로 나눈 부채꼴. 찬 칸은 `moon`, 빈 칸은 `bg.panelDeep`. 칸 수는 데이터에서 읽는다.
+2. 원 안은 달의 위상. 어두운 원(`bg.panelDeep`) 위에 오른쪽부터 밝은 면(`moon`)이 Moon/MoonMax 만큼 찬다: 0 은 그믐(빈 원), 반은 반달, MoonMax 는 보름달(꽉 찬 원). 그 사이는 초승달·상현 너머 볼록달처럼 명암 경계가 둥글게 휜다. 칸으로 나누지 않는다(#118, 사용자 "피자처럼 차는게 별로, 달 느낌").
 3. 원 아래에 `num.2` 로 "달 {Moon}/{MoonMax}", 그 아래 `small` `text.2` 로 상태 한 줄:
    - 뱀파이어가 잠들어 있으면 "{MoonWake}에 관이 열림"
    - 다음 적 턴이 보름달이면 "다음 턴 보름달" (`moon.blood`)
    - 그 밖에는 비움
-4. 뱀파이어가 잠든 동안 `MoonWake` 칸 경계에 작은 관 표시(`line` 색 짧은 막대)를 둔다.
+4. 관이 열리는 시점은 3 의 상태 줄 글자로만 알린다(칸 경계가 없어 관 표시 막대는 뺐다).
 
 ### 7-2. 단계별 변화
 
 | 상태 | 게이지 | 화면 가장자리 |
 |---|---|---|
-| 달 < MoonMax − 1 | 찬 칸 `moon` | 없음 |
-| 다음 적 턴이 보름달 | 찬 칸이 `moon.blood` 로, 1.2초 주기로 밝기 ±10% 맥박 | 화면 네 가장자리에 `moon.blood` 비네트, 불투명도 8%, 폭 80px |
+| 달 < MoonMax − 1 | 밝은 면 `moon` | 없음 |
+| 다음 적 턴이 보름달 | 밝은 면이 `moon.blood` 로, 1.2초 주기로 밝기 ±10% 맥박 | 화면 네 가장자리에 `moon.blood` 비네트, 불투명도 8%, 폭 80px |
 | 보름달 턴 (적 턴 중) | 전부 `moon.blood`, 둘레에 `Greeble_DemonSkull` 4개 | 비네트 15% |
-| 보름달이 지나 0 으로 | 0.4초에 걸쳐 칸이 비워짐 | 비네트 0.4초에 사라짐 |
+| 보름달이 지나 0 으로 | 0.4초에 걸쳐 핏빛 보름달이 사라짐 | 비네트 0.4초에 사라짐 |
 
 - 비네트 불투명도는 화면에 보이는 값이다. 선형 색 공간에서 섞이면 진해 보이니, 구현은 스크린샷으로 맞춘다.
 - 보름달 표적 아군: 머리 위에 `Status_Targeted_01` 32px `enemy` 색, 칸 테두리 `enemy`. 이것이 이 게임의 유일한 행동 예고다 (combat.md, vampire.md).
@@ -160,7 +161,23 @@
 | 보름달 표적 칸 | 7-2 |
 | 직접 처치 가능한 아군 칸 | 테두리 `enemy` 점선 |
 | 흡혈 범위 칸 (다음 적 턴이 보름달일 때만) | 테두리 `moon.blood` 1px 실선, 안쪽 채움 `moon.blood` 5% |
-| 광원 칸 | UI 로 덧칠하지 않는다. 보드 아트(docs/areas/art-assets.md)가 이미 보인다 |
+| 광원 칸 | 칸 표시 없음. 광원 오브제와 그 빛 VFX 로만 알린다 (battle-terrain.md 3-1, #101) |
+
+색만으로는 역할이 갈리지 않아(#101 리뷰) 역할 칸 가운데에 아이콘을 하나 더 그린다. 기존 색·테두리는 그대로.
+
+| 역할 | 아이콘 (Synty, `ArtCatalog.ui` 에 이미 있는 것) | 색 |
+|---|---|---|
+| 아군 배치 칸 | `Inventory_Helmets_01_Clean` (병력, HUD 인구와 같은 그림) | `ally` |
+| 아군 증원 칸 | `Status_Up_01_Clean` | `ally` |
+| 적 증원 칸 | `Map_Skull_01_Clean` (HUD 적 목록과 같은 그림) | `enemy` |
+| 방어 칸 (지킬 곳) | `Map_Home_01_Clean` | `candle` |
+| 목표 칸 (닿을 곳) | `Map_Flag_01_Clean` | `ally` |
+| 트리거 칸 (밟으면 일어남) | `Map_Star_01_Clean` | `candle` |
+
+1. 크기: 아이콘은 칸 반지름의 0.9 배 폭 정사각. 알파 85%.
+2. 바닥에 눕힌다 (빌보드 아님). 칸 테두리 바로 위 높이, 칸에 붙어 있다.
+3. 유닛이 서 있어도 따로 숨기지 않는다. 발밑에 깔려 가려지고, 칸 색·테두리가 역할을 계속 알린다.
+4. 이동·공격 같은 행동 표시 칸에는 아이콘을 두지 않는다 (색 그대로).
 
 ### 8-3. 피해 미리 보기 (ui.md "계산 도움")
 
@@ -222,9 +239,10 @@
 │                                                              │
 │                                                              │
 │ ┌──────────────┐                           ┌──────────────┐  │
-│ │ 아군 패널     │    [행동 줄: 슬롯 ×N]     │ 적 패널       │  │
-│ │ frame.ally   │                           │ frame.enemy  │  │
-│ └──────────────┘ [규칙 ?]     [나가기]      └──────────────┘ [턴 종료] │
+│ │ 아군 패널     │                           │ 적 패널       │  │
+│ └──────────────┘ ┌───────────────────────┐ └──────────────┘  │
+│ [?][나가기]      │ [1][2][3][4][5][기술] (턴종료)│               │
+│                  └─────── 행동 바 판 ───────┘                  │
 └──────────────────────────────────────────────────────────────┘
 ```
 
@@ -235,8 +253,7 @@
 | 오른쪽 위 | 전투 기록: 접힌 상태 최근 3줄, 펼치면 320×400 `frame.tip`. 글자는 `body` `text.2`, 줄마다 한 줄로 넘치면 말줄임. 진영 색은 줄 앞 아이콘 16px 에만 | 폭 320 | 2·3 |
 | 왼쪽 아래 | 아군 패널: 선택한(없으면 호버한) 아군. 이름 `h.2`, 체력·이동력 `num.1`, 공격·방어·사거리 `num.2`, 경고 줄 | 340×190 | 1 |
 | 오른쪽 아래 | 적 패널: 호버한 적(뱀파이어 포함). 같은 구성, `frame.enemy`. 스폰은 `frame.spawn` | 340×190 | 1 |
-| 아래 가운데 | 행동 줄 `btn.slot` | 슬롯당 64, 간격 8 | 1 |
-| 오른쪽 아래 끝 | 턴 종료 `btn.primary` 200×56. 행동하지 않은 아군이 있으면 왼쪽 위에 숫자 배지 | 200×56 | 1 |
+| 아래 | 행동 바 판(HUD 팩 `SPR_DarkFantasy_Frame_Hotbar_03` + `_Background`, 높이 204) 안에 `btn.slot` 아이콘만 한 줄(이름은 툴팁), 원형 주 버튼(턴 종료) 지름 136 이 판 안 오른쪽 끝. 배치 중에는 판 없이 아래 가운데 지름 176 "전투 개시" (battle-hud.md 3-4·3-6, #118) | 칸 112×112, 간격 12 | 1 |
 | 왼쪽 아래 끝 | 규칙 요약 `btn.ghost` "?" (펼치면 `frame.popup`), 나가기 `btn.ghost` | | 3 |
 | 아래 가운데 위 | 안내 문구 한 줄 `small` `text.3` (지금 화면 맨 아래 문구) | | 3 |
 
@@ -245,8 +262,8 @@
 
 ## 11. 메뉴 화면 공통
 
-1. 바탕: 메인 메뉴는 `bg.night` 위에 첫 장 보드 아트를 흐리게(블러 + 어둡게 60%) 깐다. 장 선택·병영은 흐리지 않은 3D 원정 지도다 (docs/art/campaign-map.md). 지도가 그 화면의 게임 요소다 (16-1).
-2. 틀은 `frame.menu`. 장식은 위 가운데 `Crest` 하나만. 장 선택의 장 정보 칸은 마지막 장일 때만 문장을 단다. 그 칸은 화면 위에 붙어 있어 문장을 칸 안 왼쪽 아래에 둔다 (docs/ui/stage-select.md 3-1).
+1. 바탕: 메인 메뉴는 Synty 데모 씬 `Demo_Cathedral_01`(백작성·큰 달)을 실시간으로 그리고, 메뉴가 있는 왼쪽에만 `ink` 그늘을 깐다 (docs/ui/main-menu.md 8, #116). 장 선택·병영은 흐리지 않은 3D 원정 지도다 (docs/art/campaign-map.md). 지도가 그 화면의 게임 요소다 (16-1).
+2. 틀은 `frame.menu`. 장식은 `Crest` 하나만(메인 메뉴는 왼쪽 덩어리 맨 위, 나머지는 위 가운데). 장 선택의 장 정보 칸은 마지막 장일 때만 문장을 단다. 그 칸은 화면 위에 붙어 있어 문장을 칸 안 왼쪽 아래에 둔다 (docs/ui/stage-select.md 3-1).
 3. 마지막 장(백작의 성)과 관련된 카드·문장만 `enemy` 색. 나머지 메뉴는 `ally`.
 4. 강화·구매 확인은 `frame.popup` (`Panel_DarkFantasyMenus_Popup` 바탕).
 5. 장 사이 구분선은 `Component_DarkFantasyMenus_Section_Break`.
@@ -408,7 +425,7 @@
 | 위 가운데 | 화면 상징 하나 | 보름달 게이지 |
 | 오른쪽 (위에 붙임) | 고른 것의 상세 칸 (오른쪽 칸) | 장 정보, 병영, 전투 기록 |
 | 왼쪽 아래 | 다른 레이어로 가는 버튼, 내 쪽 정보 | 병영 버튼, 아군 패널 |
-| 오른쪽 아래 | 이 레이어의 주 행동. 오른쪽 칸이 있으면 그 칸 안 오른쪽 아래 | 출정(장 정보 칸 안), 턴 종료 |
+| 오른쪽 아래 | 이 레이어의 주 행동. 오른쪽 칸이 있으면 그 칸 안 오른쪽 아래. 전투 화면만 예외로 아래 가운데 원형 버튼 (#118) | 출정(장 정보 칸 안) |
 
 1. 모서리 하나에는 덩어리 하나만 둔다.
 2. 같은 일을 하는 버튼은 레이어가 바뀌어도 같은 자리다.

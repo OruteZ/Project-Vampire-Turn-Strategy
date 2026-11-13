@@ -2,25 +2,24 @@
     <Style src="Theme.uss" />
     <Style src="Menu.uss" />
     <ui:VisualElement name="menu" class="screen" picking-mode="Ignore">
-        <ui:VisualElement name="backdrop" class="backdrop" picking-mode="Ignore" />
+        <ui:VisualElement name="shade" class="shade" picking-mode="Ignore" />
         <ui:VisualElement name="block" class="block" picking-mode="Ignore">
-        <ui:VisualElement name="crest" class="crest" picking-mode="Ignore" />
-        <ui:Label name="title" class="title display" text="PROJECT VAMPIRE SPAWN" picking-mode="Ignore" />
-        <ui:VisualElement name="break" class="break" picking-mode="Ignore" />
-        <ui:VisualElement name="cards" class="cards" picking-mode="Ignore">
-            <ui:VisualElement name="demo" class="card">
-                <ui:VisualElement class="card-frame" picking-mode="Ignore" />
-                <ui:VisualElement class="card-icon" picking-mode="Ignore" />
-                <ui:Label class="card-name display" picking-mode="Ignore" />
-                <ui:VisualElement class="card-meta" picking-mode="Ignore" />
+            <ui:VisualElement name="crest" class="crest" picking-mode="Ignore" />
+            <ui:Label name="kicker" class="kicker display" text="PROJECT" picking-mode="Ignore" />
+            <ui:Label name="title" class="title display" text="VAMPIRE SPAWN" picking-mode="Ignore" />
+            <ui:VisualElement name="break" class="break" picking-mode="Ignore" />
+            <ui:VisualElement name="cards" class="cards" picking-mode="Ignore">
+                <ui:VisualElement name="camp" class="card">
+                    <ui:VisualElement class="card-icon" picking-mode="Ignore" />
+                    <ui:Label class="card-name display" picking-mode="Ignore" />
+                    <ui:VisualElement class="card-meta" picking-mode="Ignore" />
+                </ui:VisualElement>
+                <ui:VisualElement name="demo" class="card">
+                    <ui:VisualElement class="card-icon" picking-mode="Ignore" />
+                    <ui:Label class="card-name display" picking-mode="Ignore" />
+                    <ui:VisualElement class="card-meta" picking-mode="Ignore" />
+                </ui:VisualElement>
             </ui:VisualElement>
-            <ui:VisualElement name="camp" class="card">
-                <ui:VisualElement class="card-frame" picking-mode="Ignore" />
-                <ui:VisualElement class="card-icon" picking-mode="Ignore" />
-                <ui:Label class="card-name display" picking-mode="Ignore" />
-                <ui:VisualElement class="card-meta" picking-mode="Ignore" />
-            </ui:VisualElement>
-        </ui:VisualElement>
         </ui:VisualElement>
         <ui:VisualElement name="languages" class="languages" />
         <ui:Label name="version" class="version" picking-mode="Ignore" />

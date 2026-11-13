@@ -38,11 +38,14 @@ namespace VampireSpawn.Game.Screens
         BattleView View => input.battle;
         Campaign Campaign => App.Campaign;
 
+        // battle-hud.md 1: the battle HUD draws at this fraction of the shared 1920x1080 panel.
+        public const float HudZoom = 0.55f;
+
         void Start()
         {
             App.Ensure(data);
             Sound.Use(View.board.art.sound);
-            doc = ToolkitKit.Document(transform, "Battle (UI Toolkit)", View.board.art.panel, View.board.art.battleDocument);
+            doc = ToolkitKit.Document(transform, "Battle (UI Toolkit)", ToolkitKit.Zoomed(View.board.art.panel, HudZoom), View.board.art.battleDocument);
             var root = doc.rootVisualElement;
             banner = root.Q<Label>("banner");
             hudRoot = root.Q("hud");
@@ -68,6 +71,7 @@ namespace VampireSpawn.Game.Screens
                 Exec = () => input.Act(s => s.ToggleExecute()),
                 Mend = () => input.Act(s => s.ToggleMend()),
                 Wait = () => input.Run(s => s.Wait()),
+                Aim = () => input.Act(s => s.ClearMode()),
                 ToggleRules = () => { rulesOpen = !rulesOpen; RenderBattle(); },
                 ToggleLog = () => { logOpen = !logOpen; RenderBattle(); },
                 Retry = () => StartBattle(stage, Session.Battle.StartFormation, true),
@@ -114,7 +118,7 @@ namespace VampireSpawn.Game.Screens
             fittedSize = new Vector2Int(Screen.width, Screen.height);
             // stage-dressing.md 1-4: the world fills the screen behind the HUD; only the board is framed into the board area
             // (.board-area in Battle.uss: 360/150/360/190 px, ui-style.md 1-3), in viewport units with y up.
-            var size = ToolkitKit.PanelSize();
+            var size = ToolkitKit.PanelSize(HudZoom);
             viewCamera.rect = new Rect(0f, 0f, 1f, 1f);
             View.board.FrameInto(new Rect(360f / size.x, 190f / size.y, (size.x - 720f) / size.x, (size.y - 340f) / size.y));
         }
@@ -195,9 +199,9 @@ namespace VampireSpawn.Game.Screens
         {
             var kb = UnityEngine.InputSystem.Keyboard.current;
             if (kb == null) return;
-            var one = keys.Pressed("1", kb.digit1Key.isPressed);
-            var two = keys.Pressed("2", kb.digit2Key.isPressed);
-            var three = keys.Pressed("3", kb.digit3Key.isPressed);
+            var digits = new[] { kb.digit1Key, kb.digit2Key, kb.digit3Key, kb.digit4Key, kb.digit5Key };
+            var digit = 0;
+            for (var i = 0; i < digits.Length; i++) if (keys.Pressed((i + 1).ToString(), digits[i].isPressed)) digit = i + 1;
             var space = keys.Pressed("space", kb.spaceKey.isPressed);
             // docs/ui/battle-hud.md 4-5: F cycles enemy playback 1x, 2x, 4x and is remembered.
             if (keys.Pressed("f", kb.fKey.isPressed))
@@ -208,11 +212,7 @@ namespace VampireSpawn.Game.Screens
             }
             if (View.IsBusy || enemyPlaying || OverShown) return;
             var b = Session.Battle;
-            var sel = Session.SelectedUnit;
-            var canAct = b.Phase == Phase.Player && sel != null && !sel.Acted;
-            if (one && canAct) actions.Exec();
-            if (two && canAct) actions.Wait();
-            if (three && canAct && sel.Has(Ability.Mend)) actions.Mend();
+            if (digit > 0) BattleScreen.Slots(Session, actions).FirstOrDefault(x => x.Key == digit && x.Ready)?.Act?.Invoke();
             if (space && (b.Phase == Phase.Deploy ? b.Reinforcing || b.Allies.Any() : b.Phase == Phase.Player)) Primary();
         }
 

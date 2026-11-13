@@ -20,7 +20,7 @@ MonoBehaviour:
   - archer
   - gravedigger
   - doctor
-  pop: 11
+  pop: 13
   silver: 0
   reward: 30
   goal: 1
@@ -33,17 +33,17 @@ MonoBehaviour:
   escortDef: 0
   escortMov: 0
   escortAt: {x: 0, y: 0}
-  bonusType: 1
-  bonusValue: 0
+  bonusType: 3
+  bonusValue: 4
   bonusGold: 15
   bossHp: 26
-  bossAtk: 6
+  bossAtk: 5
   bossDef: 1
   bossMov: 4
   bossHeal: 4
   map:
-  - ..,,......,..,,...
-  - .#....,#..#,....#.
+  - ..,,....###..,,...
+  - .#....,####,....#.
   - ..,..,........,...
   - '#...##.####.##...#'
   - .#..#dddddddd#..,.
@@ -57,13 +57,6 @@ MonoBehaviour:
   - '##################'
   - ..................
   enemies:
-  - kind: vampire
-    col: 9
-    row: 0
-    arrive: 0
-    wave: 
-    stance: 0
-    alert: 0
   - kind: skeleton
     col: 4
     row: 0
@@ -99,41 +92,34 @@ MonoBehaviour:
     wave: 
     stance: 0
     alert: 0
-  - kind: skeleton
-    col: 0
-    row: 4
+  - kind: skeletonHeavy
+    col: 8
+    row: 2
     arrive: 0
     wave: 
-    stance: 1
-    alert: 3
-  - kind: skeleton
-    col: 0
-    row: 7
-    arrive: 0
-    wave: 
-    stance: 1
-    alert: 3
-  - kind: skeleton
-    col: 1
-    row: 3
-    arrive: 0
-    wave: 
-    stance: 1
-    alert: 3
+    stance: 0
+    alert: 0
   - kind: skeleton
     col: 15
     row: 4
     arrive: 0
     wave: 
     stance: 1
-    alert: 2
+    alert: 3
   - kind: skeleton
     col: 17
     row: 8
     arrive: 0
     wave: 
     stance: 1
-    alert: 2
+    alert: 3
+  - kind: skeleton
+    col: 17
+    row: 4
+    arrive: 0
+    wave: 
+    stance: 1
+    alert: 3
   - kind: skeletonArcher
     col: 14
     row: 9
@@ -144,36 +130,78 @@ MonoBehaviour:
   - kind: skeleton
     col: 16
     row: 3
-    arrive: 4
+    arrive: 3
     wave: 
     stance: 0
     alert: 0
   - kind: skeletonArcher
     col: 16
     row: 11
-    arrive: 4
+    arrive: 3
+    wave: 
+    stance: 0
+    alert: 0
+  - kind: skeletonHeavy
+    col: 17
+    row: 11
+    arrive: 3
     wave: 
     stance: 0
     alert: 0
   - kind: skeleton
     col: 0
     row: 0
-    arrive: 0
-    wave: north2
+    arrive: 4
+    wave: 
     stance: 0
     alert: 0
   - kind: skeleton
     col: 17
     row: 0
-    arrive: 0
-    wave: north2
+    arrive: 4
+    wave: 
+    stance: 0
+    alert: 0
+  - kind: skeletonArcher
+    col: 6
+    row: 1
+    arrive: 4
+    wave: 
+    stance: 0
+    alert: 0
+  - kind: skeletonHeavy
+    col: 9
+    row: 2
+    arrive: 4
+    wave: 
     stance: 0
     alert: 0
   - kind: skeleton
-    col: 8
-    row: 1
-    arrive: 0
-    wave: north2
+    col: 0
+    row: 4
+    arrive: 5
+    wave: 
+    stance: 0
+    alert: 0
+  - kind: skeleton
+    col: 0
+    row: 7
+    arrive: 5
+    wave: 
+    stance: 0
+    alert: 0
+  - kind: skeletonArcher
+    col: 1
+    row: 3
+    arrive: 5
+    wave: 
+    stance: 0
+    alert: 0
+  - kind: skeletonHeavy
+    col: 0
+    row: 5
+    arrive: 5
+    wave: 
     stance: 0
     alert: 0
   - kind: skeleton
@@ -204,57 +232,134 @@ MonoBehaviour:
     wave: gate
     stance: 0
     alert: 0
+  - kind: skeletonHeavy
+    col: 7
+    row: 13
+    arrive: 0
+    wave: gate
+    stance: 0
+    alert: 0
+  - kind: skeletonHeavy
+    col: 10
+    row: 13
+    arrive: 0
+    wave: gate
+    stance: 0
+    alert: 0
+  - kind: skeleton
+    col: 17
+    row: 2
+    arrive: 8
+    wave: 
+    stance: 0
+    alert: 0
+  - kind: skeletonHeavy
+    col: 17
+    row: 9
+    arrive: 8
+    wave: 
+    stance: 0
+    alert: 0
+  - kind: skeleton
+    col: 0
+    row: 9
+    arrive: 8
+    wave: 
+    stance: 0
+    alert: 0
+  - kind: skeletonArcher
+    col: 0
+    row: 2
+    arrive: 8
+    wave: 
+    stance: 0
+    alert: 0
+  - kind: skeletonHeavy
+    col: 4
+    row: 0
+    arrive: 9
+    wave: 
+    stance: 0
+    alert: 0
+  - kind: skeletonHeavy
+    col: 13
+    row: 0
+    arrive: 9
+    wave: 
+    stance: 0
+    alert: 0
+  - kind: skeleton
+    col: 6
+    row: 0
+    arrive: 9
+    wave: 
+    stance: 0
+    alert: 0
+  - kind: skeleton
+    col: 11
+    row: 0
+    arrive: 9
+    wave: 
+    stance: 0
+    alert: 0
+  - kind: skeletonArcher
+    col: 15
+    row: 0
+    arrive: 9
+    wave: 
+    stance: 0
+    alert: 0
   triggers:
-  - id: north2
-    kind: 2
-    value: 6
-    hexes: []
   - id: gate
     kind: 0
-    value: 8
+    value: 7
     hexes: []
-  - id: stable
+  - id: chapel
     kind: 1
     value: 0
     hexes:
-    - {x: 1, y: 6}
-    - {x: 2, y: 6}
-    - {x: 2, y: 7}
+    - {x: 16, y: 6}
+    - {x: 17, y: 6}
   doors:
   - hexes:
     - {x: 8, y: 12}
     - {x: 9, y: 12}
     trigger: gate
   reinforcements:
-  - trigger: stable
+  - trigger: chapel
     pop: 4
     silver: 0
     hexes:
-    - {x: 2, y: 4}
-    - {x: 3, y: 4}
-    - {x: 2, y: 5}
-    - {x: 3, y: 5}
-    - {x: 3, y: 6}
-    - {x: 3, y: 7}
+    - {x: 11, y: 5}
+    - {x: 12, y: 5}
+    - {x: 11, y: 6}
+    - {x: 12, y: 6}
+    - {x: 11, y: 7}
+    - {x: 12, y: 7}
+    - {x: 11, y: 8}
+    - {x: 12, y: 8}
   sample:
   - kind: sword
-    col: 8
-    row: 6
+    col: 6
+    row: 4
   - kind: sword
+    col: 11
+    row: 4
+  - kind: doctor
     col: 9
+    row: 6
+  - kind: archer
+    col: 8
     row: 6
   - kind: pspear
     col: 9
     row: 7
   - kind: archer
-    col: 8
-    row: 7
-  - kind: doctor
     col: 10
     row: 7
   - kind: pspear
-    col: 6
-    row: 4
-  - kind: parcher
-    col: 11
-    row: 4
+    col: 5
+    row: 6
+  - kind: pspear
+    col: 12
+    row: 7

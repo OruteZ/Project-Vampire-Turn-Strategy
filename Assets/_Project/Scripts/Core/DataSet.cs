@@ -33,7 +33,7 @@ namespace VampireSpawn.Core
         // Branch order is list order (docs/systems/progression.md 7).
         public Upgrade[] Branches(string unit) => Upgrades.Where(u => u.Unit == unit).ToArray();
 
-        const string Tiles = ".#T~Sd,";
+        const string Tiles = ".#T~Sd,_";
 
         public List<string> Validate()
         {
@@ -106,13 +106,14 @@ namespace VampireSpawn.Core
             }
             char Tile(int c, int r) => r >= 0 && r < s.Map.Length && c >= 0 && c < s.Map[r].Length ? s.Map[r][c] : '\0';
             foreach (var k in s.Units) if (Types.All(t => t.Key != k)) p.Add($"{at}: 없는 병종 {k}");
-            if (s.Enemies.Count(e => e.Kind == EnemyType.Vampire) != 1) p.Add(at + ": 뱀파이어는 하나여야 한다");
+            var vampires = s.Enemies.Count(e => e.Kind == EnemyType.Vampire);
+            if (vampires > 1 || (s.Goal == Goal.Boss && vampires != 1)) p.Add(at + ": 뱀파이어는 보스 처치 장에 하나, 다른 목표의 장엔 없거나 하나");
             var taken = new HashSet<(int, int)>();
             foreach (var e in s.Enemies)
             {
                 if (e.Kind != EnemyType.Vampire && Minions.All(m => m.Key != e.Kind)) p.Add($"{at}: 없는 적 {e.Kind}");
                 var t = Tile(e.Col, e.Row);
-                if (t == '\0' || t == '#' || t == '~') p.Add($"{at}: 적 {e.Kind} 이(가) 설 수 없는 칸 {e.Col},{e.Row}");
+                if (t == '\0' || t == '#' || t == '~' || t == '_') p.Add($"{at}: 적 {e.Kind} 이(가) 설 수 없는 칸 {e.Col},{e.Row}");
                 if (!e.Reinforcement && !taken.Add((e.Col, e.Row))) p.Add($"{at}: {e.Col},{e.Row} 에 유닛이 겹친다");
                 if (e.Arrive < 0 || (e.Reinforcement && e.Kind == EnemyType.Vampire)) p.Add($"{at}: 증원 턴 {e.Arrive} 은(는) 하수인만, 1 이상");
                 if (e.Arrive > 0 && e.Wave != null) p.Add($"{at}: {e.Kind} {e.Col},{e.Row} 은(는) 증원 턴과 트리거 중 하나만");

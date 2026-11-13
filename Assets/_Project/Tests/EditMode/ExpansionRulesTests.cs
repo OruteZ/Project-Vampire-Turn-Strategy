@@ -182,7 +182,7 @@ namespace VampireSpawn.Tests
             Assert.AreEqual(Ending.Held, held.Ending);
             Assert.AreEqual(true, held.Won);
 
-            var lost = new Battle(GoalStage(Goal.Defense, new[] { P(EnemyType.Vampire, 6, 6), P("skeleton", 3, 1) }, new[] { At(3, 3) }, hold: 6),
+            var lost = new Battle(GoalStage(Goal.Defense, new[] { P(EnemyType.Vampire, 6, 6), P("skeleton", 3, 2) }, new[] { At(3, 3) }, hold: 6),
                 null, new[] { P("knight", 0, 6) });
             lost.Start();
             lost.EndTurn();
@@ -224,6 +224,56 @@ namespace VampireSpawn.Tests
             Assert.IsNotNull(alone.Escort);
         }
 
+        // docs/content/units.md "판타지 직업 개편" B.
+        [Test]
+        public void AlchemistFlaskSplashesTheOtherEnemiesNextToTheTarget()
+        {
+            var (near, beyond) = Line(At(3, 1));
+            var b = new Battle(Field(new[] { P(EnemyType.Vampire, 6, 6), P("skeleton", 3, 1), P("skeleton", near.Col, near.Row), P("skeleton", beyond.Col, beyond.Row) }),
+                null, new[] { P("hunter", 3, 3) });
+            b.Start();
+            Unit Foe(Hex h) => b.UnitAt(h);
+            var hp = Foe(near).Hp;
+            var far = Foe(beyond).Hp;
+            CollectionAssert.AreEquivalent(new[] { Foe(near) }, b.Splashed(Ally(b, 3, 3), Foe(At(3, 1))).ToList());
+            Assert.IsTrue(b.Attack(Ally(b, 3, 3).Id, Foe(At(3, 1)).Id).Ok);
+            Assert.AreEqual(hp - 1, Foe(near).Hp, "next to the target: 1, armour ignored");
+            Assert.AreEqual(far, Foe(beyond).Hp, "two away: untouched");
+            Assert.IsTrue(b.Log.Any(l => Loc.Text(l.Text).Contains(Loc.T("tag.splash"))));
+        }
+
+        // docs/content/units.md "판타지 직업 개편" C.
+        [Test]
+        public void WerewolfTurnsWithTheMoonAndLeavesAHumanCorpse()
+        {
+            var type = GameData.Type("werewolf");
+            var b = new Battle(Field(new[] { P(EnemyType.Vampire, 6, 6), P("skeleton", 3, 2) }), new[] { "werewolf_feast" }, new[] { P("werewolf", 3, 3) });
+            b.Start();
+            var wolf = Ally(b, 3, 3);
+            b.EndTurn(); b.EndTurn();
+            Assert.AreEqual(2, b.Moon);
+            Assert.IsFalse(wolf.Wolf, "moon 2: still human");
+            var events = b.EndTurn().Events;
+            Assert.IsTrue(wolf.Wolf, "moon 3");
+            Assert.AreEqual(type.Atk + 2, wolf.Atk);
+            Assert.AreEqual(type.Mov + 1, wolf.Mov);
+            Assert.IsTrue(events.Any(e => e.Kind == BattleEventKind.Shifted && e.UnitId == wolf.Id && e.Value == 1));
+            var hurt = wolf.Hp;
+            Assert.Less(hurt, wolf.MaxHp, "the skeleton next to it has hit it");
+            Assert.IsTrue(b.Attack(wolf.Id, b.UnitAt(At(3, 2)).Id).Ok);
+            Assert.AreEqual(hurt + 2, wolf.Hp, "feast: 2 back on the kill");
+
+            var fall = new Battle(Field(new[] { P(EnemyType.Vampire, 3, 2) }, 99), null, new[] { P("werewolf", 3, 3), P("knight", 0, 6) });
+            fall.Start();
+            for (var i = 0; i < 8 && fall.Corpses.Count == 0; i++) fall.EndTurn();
+            Assert.AreEqual(type.Atk, fall.Corpses.Single(c => c.Type == "werewolf").Atk, "the corpse keeps the human attack");
+
+            var crescent = new Battle(Field(new[] { P(EnemyType.Vampire, 6, 6) }), new[] { "werewolf_early" }, new[] { P("werewolf", 3, 3) });
+            crescent.Start();
+            crescent.EndTurn(); crescent.EndTurn();
+            Assert.IsTrue(Ally(crescent, 3, 3).Wolf, "crescent call: from moon 2");
+        }
+
         [Test]
         public void EveryGoalHasAnObjectiveAndIsJudged()
         {
@@ -232,7 +282,6 @@ namespace VampireSpawn.Tests
                 var s = Field(new[] { P(EnemyType.Vampire, 6, 6), P("skeleton", 3, 2) });
                 s = new Stage(s.Id, s.Units, s.Pop, s.Silver, s.Reward, g, s.Bonus, s.Boss, s.Map, s.Enemies, s.Sample);
                 Assert.IsNotEmpty(Loc.Text(s.Objective), g.ToString());
-                if (g != Goal.Boss) Assert.IsNotEmpty(Loc.Text(s.AlsoWins), g.ToString());
                 var b = new Battle(s, null, new[] { P("knight", 3, 3) });
                 b.Start();
                 Assert.DoesNotThrow(() => b.Move(b.Allies.First().Id, At(3, 4)), g + " judged after a move");

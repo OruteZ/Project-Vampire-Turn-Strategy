@@ -131,12 +131,12 @@ MonoBehaviour:
       m_Items:
       - rid: 7201578077006332005
   - m_Id: 3991484035091
-    m_Localized: You cannot mercy kill that unit.
+    m_Localized: You cannot attack that ally.
     m_Metadata:
       m_Items:
       - rid: 7201578077006332005
   - m_Id: 3991484035092
-    m_Localized: Mercy Kill
+    m_Localized: Ally Attack
     m_Metadata:
       m_Items:
       - rid: 7201578077006332005
@@ -323,7 +323,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 3991484035129
-    m_Localized: Click an ally in a white dashed ring to mercy kill it. Click elsewhere
+    m_Localized: Click an ally in a white dashed ring to attack it. Click elsewhere
       to cancel.
     m_Metadata:
       m_Items:
@@ -559,23 +559,23 @@ MonoBehaviour:
       m_Items:
       - rid: 7201578077006332005
   - m_Id: 5832187899938
-    m_Localized: Hunter
+    m_Localized: Alchemist
     m_Metadata:
       m_Items:
       - rid: 7201578077006332005
   - m_Id: 5832187899939
-    m_Localized: HU
+    m_Localized: AL
     m_Metadata:
       m_Items:
       - rid: 7201578077006332005
   - m_Id: 5832187899940
-    m_Localized: Vampire hunter (working name). Extra damage to vampires and spawn.
-      Costs 1 silver.
+    m_Localized: 'A beak-masked alchemist. Hurls flasks of molten silver that sear
+      vampires and spawn. The flask bursts: enemies next to the target take 1.'
     m_Metadata:
       m_Items:
       - rid: 7201578077006332005
   - m_Id: 5832187899941
-    m_Localized: Refined Silver Shot
+    m_Localized: Refined Silver Solution
     m_Metadata:
       m_Items:
       - rid: 7201578077006332005
@@ -636,8 +636,9 @@ MonoBehaviour:
       m_Items:
       - rid: 7201578077006332005
   - m_Id: 5832187899953
-    m_Localized: Beyond the ashen fields, the first vampire sleeps in the mill. The
-      hedgerows slow the dead.
+    m_Localized: The first vampire sleeps in a coffin in the ashen mill, and the
+      coffin opens at the full moon. Hold the two gaps in the yard wall and make
+      your stand by the yard torch. In the light, none can be drained.
     m_Metadata:
       m_Items:
       - rid: 7201578077006332005
@@ -740,10 +741,9 @@ MonoBehaviour:
       m_Items:
       - rid: 7201578077006332005
   - m_Id: 5832192094221
-    m_Localized: A plague doctor hiding in the manor has joined. From the garden,
-      the stables, the chapel and the south gate, the night closes in. Hold the great
-      hall for twelve turns. Reach the torch in the stables and the villagers hiding
-      there will help.
+    m_Localized: 'A plague doctor hiding in the manor has joined. North, east, west,
+      south: the dead come from every side in turn. Hold the great hall for twelve
+      turns. Reach the chapel torch and the villagers hiding there will help.'
     m_Metadata:
       m_Items:
       - rid: 7201578077006332005
@@ -805,10 +805,10 @@ MonoBehaviour:
       m_Items:
       - rid: 7201578077006332005
   - m_Id: 5832192094233
-    m_Localized: The Count's servant hides deep in the abandoned silver mine. Three
-      shafts lead down; the gate at the end of the middle one opens only when someone
-      draws near. The deeper you go, the emptier the entrance behind you. Fell eight
-      minions and the miners join you at the entrance.
+    m_Localized: The Count's servant lurks deep in the abandoned silver mine and
+      will not come out. Three shafts lead down; the gate at the end of the middle
+      one opens only when someone draws near. The deeper you go, the emptier the
+      entrance behind you. Fell five minions and the miners join you at the entrance.
     m_Metadata:
       m_Items:
       - rid: 7201578077006332005
@@ -1161,12 +1161,12 @@ MonoBehaviour:
       m_Items:
       - rid: 7201578077006332005
   - m_Id: 9846568841275
-    m_Localized: Cancel Mercy Kill
+    m_Localized: Cancel Ally Attack
     m_Metadata:
       m_Items:
       - rid: 7201578077006332005
   - m_Id: 9846568841276
-    m_Localized: Mercy Kill
+    m_Localized: Attack Ally
     m_Metadata:
       m_Items:
       - rid: 7201578077006332005
@@ -1531,13 +1531,12 @@ MonoBehaviour:
       m_Items:
       - rid: 7201578077006332005
   - m_Id: 10777284898816
-    m_Localized: IBM Plex Sans, Segoe UI, Helvetica Neue, Arial, Malgun Gothic, Apple
-      SD Gothic Neo
+    m_Localized: Hahmlet-Medium, SourceHanSerifK-VF, Segoe UI, Arial
     m_Metadata:
       m_Items:
       - rid: 7201578077006332005
   - m_Id: 10777347813376
-    m_Localized: Georgia, Times New Roman, Nanum Myeongjo, Batang, AppleMyungjo
+    m_Localized: Hahmlet-Bold, SourceHanSerifK-VF, Georgia, Times New Roman
     m_Metadata:
       m_Items:
       - rid: 7201578077006332005
@@ -1704,15 +1703,16 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 1147185487736834
-    m_Localized: Plague Doctor
+    m_Localized: Saintess
     m_Metadata:
       m_Items: []
   - m_Id: 1147185487736835
-    m_Localized: PD
+    m_Localized: ST
     m_Metadata:
       m_Items: []
   - m_Id: 1147185487736836
-    m_Localized: A beak-masked physician. Treats a wounded ally within 2 hexes. Frail.
+    m_Localized: A cross-bearing saintess. Heals a wounded ally within 2 hexes by
+      prayer. Frail.
     m_Metadata:
       m_Items: []
   - m_Id: 1147185487736837
@@ -1788,7 +1788,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 1147185487736855
-    m_Localized: Swift Rounds
+    m_Localized: Pilgrim's Stride
     m_Metadata:
       m_Items: []
   - m_Id: 1147185487736856
@@ -1796,7 +1796,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 1147185487736857
-    m_Localized: Herb Pouch
+    m_Localized: Blessed Oil
     m_Metadata:
       m_Items: []
   - m_Id: 1147185487736858
@@ -1804,7 +1804,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 1147185487736859
-    m_Localized: Waxed Coat
+    m_Localized: Consecrated Vestments
     m_Metadata:
       m_Items: []
   - m_Id: 1147185487736860
@@ -2126,6 +2126,91 @@ MonoBehaviour:
       m_Items: []
   - m_Id: 1805115534929931
     m_Localized: Close
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1848099521490944
+    m_Localized: Minions {0}
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1851480008880128
+    m_Localized: Lose no more than {0} allies
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1911882109480960
+    m_Localized: Werewolf
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1911882184978432
+    m_Localized: WW
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1911882184978433
+    m_Localized: 'A drifter with moon-blood. At Moon 3 or more turns wolf: +2 attack,
+      +1 move. Unarmoured and quick to fall.'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1911882184978434
+    m_Localized: Tough Hide
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1911882184978435
+    m_Localized: HP +3
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1911882184978436
+    m_Localized: Feast
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1911882184978437
+    m_Localized: Restores 2 HP on felling an enemy
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1911882184978438
+    m_Localized: Crescent Call
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1911882184978439
+    m_Localized: Turns wolf from Moon 2
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1911882184978440
+    m_Localized: Splash
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1911882184978441
+    m_Localized: Moon-Blood
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1911882184978442
+    m_Localized: Feast
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1911882184978443
+    m_Localized: Crescent Call
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1911882184978444
+    m_Localized: Splash
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1911882189172736
+    m_Localized: The Moon swells. {0} turns wolf!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1911882189172737
+    m_Localized: '{0} turns back to human form.'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1911882189172738
+    m_Localized: '{0} feasts: HP +{1}'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1980499945648128
+    m_Localized: Move
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1980500012756992
+    m_Localized: Attack
     m_Metadata:
       m_Items: []
   references:

@@ -37,10 +37,18 @@ namespace VampireSpawn.Game.Screens
 
         // ui-style.md 15-1 on Panel.asset (Scale With Screen Size, Expand, 1920x1080): the panel never shrinks below 1920x1080, the spare axis grows.
         // Computed, not read from layout, so the first frame (before UI Toolkit lays out) already knows it.
-        public static Vector2 PanelSize()
+        public static Vector2 PanelSize(float zoom = 1f)
         {
-            var scale = Mathf.Min(Screen.width / 1920f, Screen.height / 1080f);
-            return scale > 0f ? new Vector2(Screen.width / scale, Screen.height / scale) : new Vector2(1920f, 1080f);
+            var scale = Mathf.Min(Screen.width / 1920f, Screen.height / 1080f) * zoom;
+            return scale > 0f ? new Vector2(Screen.width / scale, Screen.height / scale) : new Vector2(1920f, 1080f) / zoom;
+        }
+
+        // A runtime copy lets one screen draw smaller without touching the shared Panel.asset; a bigger reference resolution shrinks every px.
+        public static PanelSettings Zoomed(PanelSettings panel, float zoom)
+        {
+            var p = UnityEngine.Object.Instantiate(panel);
+            p.referenceResolution = new Vector2Int(Mathf.RoundToInt(panel.referenceResolution.x / zoom), Mathf.RoundToInt(panel.referenceResolution.y / zoom));
+            return p;
         }
 
         // True when the mouse is over an element that takes clicks; the screen-wide root and layers are Ignore.
@@ -98,13 +106,13 @@ namespace VampireSpawn.Game.Screens
             return e;
         }
 
-        // ui-style.md 5 frame.panel: the box background in panel tint and the frame in the edge colour; the frame is a .panel-frame child.
+        // ui-style.md 5 frame.panel: the box background in panel tint; the frame keeps the pack's own metal colours with only a 20% hint of the edge colour (#118).
         public static void Frame(VisualElement panel, ArtCatalog art, Color edge)
         {
             Picture(panel, art.Ui(FrameBack), Ui.Alpha(Ui.Panel, 0.92f));
             var frame = panel.Q(className: "panel-frame");
             if (frame == null) { frame = E(null, "panel-frame"); panel.Insert(0, frame); }
-            Picture(frame, art.Ui(FrameBox), edge);
+            Picture(frame, art.Ui(FrameBox), Color.Lerp(Color.white, edge, 0.2f));
         }
 
         public static VisualElement Chip(VisualElement parent, ArtCatalog art, Color edge, Sprite icon, Color iconColor, float iconSize = 36f)
@@ -285,21 +293,29 @@ namespace VampireSpawn.Game.Screens
 
         static readonly Dictionary<string, FontAsset> fonts = new Dictionary<string, FontAsset>();
 
-        // UI Toolkit cannot draw an OS dynamic Font, so the first installed name in the language's chain (Text table font.body / font.display) is loaded from its file.
+        // The language's chain (Text table font.body / font.display): bundled fonts in Resources/Fonts first, then installed OS fonts; the first that resolves draws, the rest are its fallbacks for missing glyphs.
         static FontAsset OsFont(string key)
         {
             var chain = Loc.T(key);
             if (fonts.TryGetValue(chain, out var cached)) return cached;
-            var installed = new HashSet<string>(Font.GetOSInstalledFontNames());
-            var family = chain.Split(',').Select(n => n.Trim()).FirstOrDefault(installed.Contains);
-            if (family == null) return fonts[chain] = null;
+            var found = chain.Split(',').Select(n => Resolve(n.Trim())).Where(f => f != null).ToList();
+            if (found.Count == 0) return fonts[chain] = null;
+            found[0].fallbackFontAssetTable = found.Skip(1).ToList();
+            return fonts[chain] = found[0];
+        }
+
+        static FontAsset Resolve(string name)
+        {
+            var bundled = Resources.Load<Font>("Fonts/" + name);
+            if (bundled != null) return FontAsset.CreateFontAsset(bundled);
+            if (!Font.GetOSInstalledFontNames().Contains(name)) return null;
             // By name works for static faces (Malgun Gothic); variable fonts (NotoSerifKR-VF) only load from their file.
-            var byName = FontAsset.CreateFontAsset(family, "Regular");
-            if (byName != null) return fonts[chain] = byName;
+            var byName = FontAsset.CreateFontAsset(name, "Regular");
+            if (byName != null) return byName;
             var file = Font.GetPathsToOSFonts()
-                .Where(p => System.IO.Path.GetFileNameWithoutExtension(p).Replace(" ", "").StartsWith(family.Replace(" ", ""), StringComparison.OrdinalIgnoreCase))
+                .Where(p => System.IO.Path.GetFileNameWithoutExtension(p).Replace(" ", "").StartsWith(name.Replace(" ", ""), StringComparison.OrdinalIgnoreCase))
                 .OrderBy(p => System.IO.Path.GetFileNameWithoutExtension(p).Length).FirstOrDefault();
-            return fonts[chain] = file == null ? null : FontAsset.CreateFontAsset(new Font(file));
+            return file == null ? null : FontAsset.CreateFontAsset(new Font(file));
         }
     }
 }

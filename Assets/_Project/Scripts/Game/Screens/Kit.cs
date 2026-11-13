@@ -23,14 +23,14 @@ namespace VampireSpawn.Game.Screens
 
         // docs/systems/goals.md 5-1: the goal, and under it that the vampire still wins.
         public static string Objective(Stage s) =>
-            Loc.Text(s.Objective) + (s.AlsoWins.IsEmpty ? "" : "\n<size=80%>" + Loc.Text(s.AlsoWins) + "</size>");
+            Loc.Text(s.Objective);
 
         // docs/content/enemies.md 7: "Minions n, boss" then the count of each minion kind present.
         public static string EnemyList(Stage s)
         {
             var minions = s.Minions;
             var kinds = GameData.Minions.Select(m => (m, n: minions.Count(e => e.Kind == m.Key))).Where(x => x.n > 0).Select(x => Loc.Text(x.m.Name) + " " + x.n);
-            return Loc.T("battle.enemyList", minions.Length, s.BossName) + " · " + string.Join(" · ", kinds);
+            return (s.HasBoss ? Loc.T("battle.enemyList", minions.Length, s.BossName) : Loc.T("battle.enemyListNoBoss", minions.Length)) + " · " + string.Join(" · ", kinds);
         }
     }
 }

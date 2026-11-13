@@ -22,6 +22,7 @@ MonoBehaviour:
   - hunter
   - gravedigger
   - doctor
+  - werewolf
   pop: 13
   silver: 2
   reward: 35
@@ -63,8 +64,8 @@ MonoBehaviour:
     row: 1
     arrive: 0
     wave: 
-    stance: 0
-    alert: 0
+    stance: 1
+    alert: 4
   - kind: skeletonHeavy
     col: 9
     row: 3
@@ -188,21 +189,21 @@ MonoBehaviour:
     col: 18
     row: 5
     arrive: 0
-    wave: kills8
+    wave: late
     stance: 0
     alert: 0
   - kind: skeleton
     col: 19
     row: 7
     arrive: 0
-    wave: kills8
+    wave: late
     stance: 0
     alert: 0
   - kind: skeleton
     col: 19
     row: 5
     arrive: 0
-    wave: kills8
+    wave: late
     stance: 0
     alert: 0
   - kind: skeleton
@@ -233,9 +234,13 @@ MonoBehaviour:
     hexes:
     - {x: 9, y: 5}
     - {x: 10, y: 5}
-  - id: kills8
+  - id: kills5
     kind: 2
-    value: 8
+    value: 5
+    hexes: []
+  - id: late
+    kind: 0
+    value: 7
     hexes: []
   doors:
   - hexes:
@@ -243,7 +248,7 @@ MonoBehaviour:
     - {x: 10, y: 4}
     trigger: deep
   reinforcements:
-  - trigger: kills8
+  - trigger: kills5
     pop: 4
     silver: 0
     hexes:

@@ -1743,6 +1743,90 @@ MonoBehaviour:
     m_Key: settings.close
     m_Metadata:
       m_Items: []
+  - m_Id: 1848099521490944
+    m_Key: battle.enemyListNoBoss
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1851480008880128
+    m_Key: bonus.losses
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1911882109480960
+    m_Key: unit.werewolf.name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1911882184978432
+    m_Key: unit.werewolf.glyph
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1911882184978433
+    m_Key: unit.werewolf.desc
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1911882184978434
+    m_Key: upgrade.werewolf_hp.name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1911882184978435
+    m_Key: upgrade.werewolf_hp.desc
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1911882184978436
+    m_Key: upgrade.werewolf_feast.name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1911882184978437
+    m_Key: upgrade.werewolf_feast.desc
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1911882184978438
+    m_Key: upgrade.werewolf_early.name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1911882184978439
+    m_Key: upgrade.werewolf_early.desc
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1911882184978440
+    m_Key: skill.splash
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1911882184978441
+    m_Key: skill.moonblood
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1911882184978442
+    m_Key: skill.feast
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1911882184978443
+    m_Key: skill.crescent
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1911882184978444
+    m_Key: tag.splash
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1911882189172736
+    m_Key: log.wolf
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1911882189172737
+    m_Key: log.unwolf
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1911882189172738
+    m_Key: log.feast
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1980499945648128
+    m_Key: hud.act.move
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1980500012756992
+    m_Key: hud.act.attack
+    m_Metadata:
+      m_Items: []
   m_Metadata:
     m_Items: []
   m_KeyGenerator:

@@ -11,12 +11,14 @@
 | 기사 캐릭터 | Assets/Synty/SidekickCharacters/Characters/FantasyKnights | SIDEKICK_Fantasy_Knights | `FantasyKnights_01`~`06` 완성 프리팹 |
 | 마을 사람 캐릭터 | Assets/Synty/SidekickCharacters/Characters/FantasyVillagers | SIDEKICK_Fantasy_Villagers | `FantasyVillagers_01`~`05` 완성 프리팹 |
 | 사람 몸 바탕 | Assets/Synty/SidekickCharacters/Characters/HumanSpecies | SIDEKICK 둘 다 | `HumanSpecies_01`~`04` |
+| 웨어울프 캐릭터 | Assets/Synty/PolygonWerewolf | POLYGON_Werewolf | `SM_Chr_Werewolf_01`·`SM_Chr_Werewolf_Undead_01`, 꼬리 부착물. 사람 모습 캐릭터는 없다. 웨어울프(#111)의 늑대 모습 `Units/WerewolfWolf` (`ArtCatalog.wolfLook`). 사람 모습은 `Units/Werewolf` = `SM_Chr_Hunter_Male_01` |
 | 활·석궁 무기 | Assets/Synty/PolygonBowCrossbow | POLYGON_Bow_Crossbow | 리깅된 활 `SM_Wep_Rigged_Bow_01`·`_NativeAmerican_01`(시위 뼈 `bowString`), 화살 `SM_Prop_Arrow_01`, 리깅된 석궁 `SM_Wep_Rigged_CrossBow_01`, 석궁 화살 |
 | 기본 이동 애니메이션 | Assets/Synty/AnimationBaseLocomotion | ANIMATION_Base_Locomotion | |
 | 활 전투 애니메이션 | Assets/Synty/AnimationBowCombat | ANIMATION_Bow_Combat | |
 | 검 전투 애니메이션 | Assets/Synty/AnimationSwordCombat | ANIMATION_Sword_Combat | |
 | HUD | Assets/Synty/InterfaceDarkFantasyHUD | INTERFACE_Dark_Fantasy_HUD | uGUI 프리팹 327 |
 | 메뉴 UI | Assets/Synty/InterfaceDarkFantasyMenus | INTERFACE_Dark_Fantasy_Menus | uGUI 프리팹 228 |
+| 메인 메뉴 바탕 | Assets/Synty/PolygonDarkFantasy/Scenes/Demo_Cathedral_01.unity | POLYGON_Dark_Fantasy | 백작성·큰 달 데모 씬. Build Settings 에 있고 `MenuFlow` 가 겹쳐 불러 그 씬 카메라로 그린다 (#116) |
 | UI 공용 스프라이트·셰이더 | Assets/Synty/InterfaceCore | INTERFACE 둘 다 | |
 
 ## 결정
@@ -26,6 +28,7 @@
 | 전투 보드 꾸미기는 장별 프리팹(`Assets/_Project/Art/Stages/<장 id>.prefab`)으로 굽고, 구운 뒤엔 프리팹이 기준(사람·에이전트가 직접 고침). 장별 조명도 프리팹 안에 두고, 베이크 조명이 필요한 장만 나중에 씬으로 | 시험 중 | 2026-11-09 | #101 "그래 뭐 그럼 그렇게 하자" |
 | 무기는 쥐는 법(`Hold`: 칼날·창·자루·그대로)으로 붙이고, 루트 모션은 모델만 움직인다(칸 자리·걷기는 코드) | 시험 중 | 2026-11-07 | #42 요청 2 "모든 유닛이 도구를 정상적으로", "Loot Motion을 키는쪽으로" |
 | 배치 때 아군은 북쪽, 적은 남쪽을 본다. 잠든 뱀파이어는 관만 보인다 | 시험 중 | 2026-11-07 | #42 요청 2 "적방향 (북쪽)", "관만 보여줄 것" |
+| 검사·기사·궁수·농민은 그대로, 특수 직업만 판타지로: 역병 의사 → 성녀, 사냥꾼 → 연금술사(약병 투척), 웨어울프는 새 병종. key 는 그대로 | 시험 중 | 2026-11-11 | #111 "검사기사궁수 빼고 특수직업군을 판타지로 해줘" |
 | 관은 석관 `SM_Prop_Tomb_01`, 색칠 없이 | 시험 중 | 2026-11-08 | #82 "A, 색칠없이" |
 
 ## 맡길 때
@@ -37,6 +40,7 @@
 - 함정: `TerrainData` 는 `heightmapResolution` 을 먼저 정하고 `size` 를 정한다. 거꾸로 하면 크기가 되돌아간다
 - 함정: 꾸미기 프리팹 굽기는 프리팹이 없는 장만 짓는다(손맞춤 보존). 한 장을 규칙대로 다시 보려면 그 프리팹을 지우고 누른다. 맵 칸을 바꾸면 `StageDressingTests` 가 그 장을 잡는다 (docs/art/stage-dressing.md 4)
 - 함정: 애니메이션 팩마다 Sidekick 전용판 클립(`A_MOD_*`)이 따로 있다. Sidekick 캐릭터에는 그쪽을 쓴다. 무기 자리 뼈는 Sidekick `prop_r`/`prop_l`, Polygon 캐릭터 `Hand_R`/`Hand_L`
+- 함정: `SM_Chr_PlagueDoctor_01` 은 죽마(`Stilt`) 부착물이 발밑으로 뻗어 키 맞추기(`FitHeight`)에서 몸이 작아지고 죽마가 바닥 아래로 내려간다 (#111 확인 목록)
 - 함정: Sidekick 프리셋은 메시 하나라 모자 같은 부품만 끌 수 없다. 부품을 고르려면 Sidekick 도구로 새로 만든다 (위 "모델 바꾸기")
 - 함정: 구운 캐릭터는 굽기마다 GUID·fileID 가 새로 정해진다. 에셋 참조로 가리키지 말고 `UnitLook.recipe` 이름으로 찾는다
 - 함정: 애니메이션 패키지 임포트 때 `Rig Error: Copied Avatar Rig Configuration mis-match` 경고가 수백 개 나온다. Synty 쪽 설정이라 오류가 아니다. 이 클립을 PolygonDarkFantasy 캐릭터에 쓸 때 자세가 맞는지는 P7 에서 본다.
@@ -71,9 +75,10 @@
 | 검사 | `FantasyKnights_05` | 검 (칼날) + 방패 | `Units/SwordShield` |
 | 궁수 | `FantasyKnights_02` | 활 왼손 | `Units/Bow` |
 | 기사 | `FantasyKnights_06` | 검 `Sword_02` (칼날) + 방패 | `Units/SwordShield` |
-| 사냥꾼 | `SM_Chr_Hunter_Male_01` | 왼손 석궁 `SM_Wep_Rigged_CrossBow_01` (한 손 석궁) | `Units/PolygonBow.overrideController` (Polygon 활 쏘기, #99) |
+| 연금술사 (key `hunter`, `Units/Hunter`, #111) | `SM_Chr_PlagueDoctor_01` | 오른손 약병 `SM_Prop_Bottle_01` (그대로) | `Units/Polygon` (던지는 동작이 없다) |
 | 장의사 (#99) | `SM_Chr_Gravedigger_Male_01` | 삽 `SM_Wep_Shovel_01` (자루) | `Units/Polygon` |
-| 역병 의사 (#99) | `SM_Chr_PlagueDoctor_01` | 지팡이 `SM_Wep_Staff_01` (자루) | `Units/Polygon` |
+| 성녀 (key `doctor`, `Units/PlagueDoctor`, #111) | `SM_Chr_Priest_Female_01` | 십자가 `SM_Wep_Cross_01` (자루) | `Units/Polygon` |
+| 웨어울프 (key `werewolf`, `Units/Werewolf` · 늑대 `Units/WerewolfWolf`, #111) | 사람 `SM_Chr_Hunter_Male_01`, 달 3 이상 `SM_Chr_Werewolf_01` (`UnitView.Shift` 가 모델을 바꾼다) | 맨손 | `Units/Polygon` |
 | 스켈레톤 | `SM_Chr_Skeleton_01` | 검 `Sword_03` (칼날) | `Units/Polygon` |
 | 스켈레톤 궁수 (#99) | `SM_Chr_Skeleton_Ranger_01` | 왼손 활 `SM_Wep_Rigged_Bow_01` (그대로) | `Units/PolygonBow` |
 | 스켈레톤 중갑병 (#99) | `SM_Chr_Skeleton_HeavyArmor_01` | 철퇴 `SM_Wep_Mace_01` (칼날), 왼손 방패 `SM_Wep_Shield_01` | `Units/Polygon` |

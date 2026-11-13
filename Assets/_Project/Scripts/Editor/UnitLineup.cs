@@ -16,7 +16,7 @@ namespace VampireSpawn.Editor
         public static string Capture(string path)
         {
             var art = AssetDatabase.LoadAssetAtPath<ArtCatalog>("Assets/_Project/Art/ArtCatalog.asset");
-            var looks = art.allyLooks.Concat(art.minionLooks).Append(art.vampireLook).ToArray();
+            var looks = art.allyLooks.Append(art.wolfLook).Concat(art.minionLooks).Append(art.vampireLook).ToArray();
             // Far below the scene so the open board does not show up in the shot.
             var origin = new Vector3(0f, -500f, 0f);
             var root = new GameObject("UnitLineup") { hideFlags = HideFlags.DontSave };
@@ -27,7 +27,7 @@ namespace VampireSpawn.Editor
                 for (var i = 0; i < looks.Length; i++)
                 {
                     var at = origin + new Vector3(i * Gap, (Rows.Length - 1 - row) * RowGap, 0f);
-                    var view = UnitView.Create(art, looks[i], root.transform, i, at, Rows[row].yaw, Color.gray, true);
+                    var view = UnitView.Create(art, looks[i], root.transform, i, at, Rows[row].yaw, true);
                     var animator = view.GetComponentInChildren<Animator>();
                     if (animator == null || animator.runtimeAnimatorController == null) continue;
                     animator.cullingMode = AnimatorCullingMode.AlwaysAnimate;

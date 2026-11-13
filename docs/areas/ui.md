@@ -45,12 +45,14 @@
 | 장 선택 바탕은 Synty 프리팹을 코드가 데이터 표대로 놓아 짓는 3D 원정 지도. 장마다 지역 하나, 지역 표식은 고정 크기 UI(3D 점을 따라감), 이름은 가리킨·고른 지역만. 진행은 빛(클리어한 지역의 화로)으로 보인다 (campaign-map.md) | 시험 중 | 2026-11-07 | #43 "Synty 에셋을 사용해 3D맵을 제작 … 그 지역을 클릭하면 스테이지 정보화면으로" |
 | 병영 강화 구매 확인은 두 번 누르기 대신 화면 가운데 작은 확인 창(이름·"구매하시겠습니까?"·가격·취소/구매). 산 뒤 번쩍임은 없다 (upgrade.md 6) | 시험 중 | 2026-11-08 | #87 "번쩍임 … 필요 없음. 정말 살까요 표기보다 --를 구매하시겠습니까? 하고 가운데 작은 레터박스" |
 | 장 선택 칸 나타남·사라짐은 감속(ease-out) | 시험 중 | 2026-11-08 | #87 "UI 등장에 이징이 없음" |
+| 전투 주 버튼(전투 개시·배치 완료·턴 종료)은 큰 원형 버튼, 고른 아군의 행동은 아래 화면 폭 80% 의 넓은 행동 바 판 안 큰 칸(1 이동·2 공격·3 대기·4 처치·5 치료/수습, 저절로 듣는 기술 칸). 칸은 아이콘만(이름은 툴팁), 원형 턴 종료는 판 안 오른쪽 끝, 배치 중에는 판 없이 아래 가운데 큰 "전투 개시" 원(2026-11-12 사용자 피드백). 레퍼런스 Baldur's Gate 3·Desperados III (battle-hud.md 3-4·3-6) | 시험 중 | 2026-11-11 | #118 "턴 종료 + 배치완료 버튼이 중앙 하단 큰 원형 버튼으로 있고 유닛 행동 선택할때도 행동 바가 있으면 좋겠어" |
+| 메인 메뉴 바탕은 Synty 데모 씬 `Demo_Cathedral_01`(백작성) 실시간 장면, 메뉴는 왼쪽 세로 글자 목록 + 왼쪽 그늘. 레퍼런스 Desperados III·The Witcher 3 메인 메뉴 (main-menu.md 8~11) | 시험 중 | 2026-11-11 | #116 "싱티 데모씬 백작성 이쁘던데 그거쓰자", "UI도 바꿔" |
 | 원정 지도는 실행 중 씬만 읽는다. 배치 표(`CampaignMapLayout`)는 굽기 입력일 뿐이고, 길·물·야영지·표식·화로 자리도 씬의 점으로 구워 손으로 옮긴다 (campaign-map.md 10-2) | 시험 중 | 2026-11-09 | #104 "씬을 진실로" |
 | 원정 지도 카메라 이동은 손 코드 보간이 아니라 Cinemachine(구운 시점 + 브레인 블렌드)으로 한다. 시점은 Camp 씬에서 손으로 고친다 (campaign-map.md 구현 메모) | 시험 중 | 2026-11-08 | #57 "그 코드 밀어버리고 Cinemachine 패키지 설치해서 처리해줘" |
 
 ## 맡길 때
 - 모델: 테마·스타일·화면 기획서와 방향 검토는 opus, 목업·화면 구현은 sonnet
-- 함정: Synty 키트 글꼴(LT Museum, Markazi, Pirata One)은 라틴 문자만 있다. 한글 글자는 #16 글꼴로
+- 함정: Synty 키트 글꼴(LT Museum, Markazi, Pirata One)은 라틴 문자만 있다. 한글은 `Resources/Fonts` 의 Hahmlet(+ Source Han Serif K 대체)로 그린다(ui-style.md 4)
 - 함정: 키트 장식은 대부분 악마 상징(해골, 오망성, 촉수)이다. 플레이어는 토벌대라서 어디에 쓸지는 테마가 정한다. 문장(Crest) 28개 중 해골이 없는 것은 Large_03(마름모)·Banner_02(천) 정도다
 - 함정: Synty 틀 스프라이트의 9-slice 테두리가 180~380px 라 그대로 쓰면 두껍다. USS `-unity-slice-scale` 로 줄인다(0.111px = 옛 ppu 9, 0.0714px = ppu 14) (ui-style.md 5절)
 - 함정: UIDocument 의 뿌리와 템플릿 칸은 화면 전체를 덮고 기본으로 클릭을 받는다. 그대로 두면 EventSystem 이 늘 "UI 위" 라고 해 지도·보드 클릭이 안 된다. `ToolkitKit.Document` 가 Ignore 로 둔다
@@ -63,6 +65,7 @@
 - 함정: 지도·보드 클릭을 막는 판단(`PointerBlocked`, `CampFlow.PointerOverUi`)은 `ToolkitKit.PointerOverUi` 하나로 본다. 화면 전체를 덮는 뿌리·층(`.layer`)은 picking-mode Ignore 여야 한다
 - 함정: Input System 만 켠 이 프로젝트에서 UI Toolkit 런타임 패널은 EventSystem(+`InputSystemUIInputModule`)이 있어야 포인터를 받는다. 없으면 클릭·호버가 전혀 안 온다(2026-11-09 재어 봄). `ToolkitKit.Document` 가 없으면 만든다
 - 함정: USS 는 선택자 구체성으로 이긴다. `.battle Label { margin: 0 }` 같은 넓은 규칙이 `.hint { margin-left }` 를 덮어 가운데 정렬이 깨졌다. 공용 초기화 규칙은 클래스 하나짜리보다 구체적이면 안 된다
-- 함정: UI Toolkit 은 둥근 채움(Image.fillMethod Radial)이 없다. 보름달 칸은 `generateVisualContent` + Painter2D 로 쐐기를 그린다(`BattleHud.Phases`)
+- 함정: UI Toolkit 은 둥근 채움(Image.fillMethod Radial)이 없다. 보름달 위상은 `generateVisualContent` + Painter2D 로 그린다(`BattleHud.MoonPhase`: 오른쪽 반원 + 반타원 명암 경계)
+- 함정: 다른 씬을 겹쳐(additive) 불러도 하늘·안개·주변광은 활성 씬 것만 쓴다. 메인 메뉴는 데모 씬을 `SetActiveScene` 한다. UI Toolkit 화면 뿌리에 `background-color` 가 있으면 뒤의 3D 가 전부 가려진다(USS 를 바꾼 뒤 에디터가 다시 읽지 않으면 `AssetDatabase.Refresh`)
 - 함정: `BoardView.LateUpdate` 는 `Board` 가 남아 있으면 카메라를 보드에 다시 맞춘다(`Clear()` 뒤에도 남는다). 원정 지도가 카메라를 쓰는 동안 막아야 한다 (campaign-map.md 구현 메모)
 - 함정: `FX_*`, `SM_Bld_Base_*` 프리팹은 PolygonDarkFantasy 와 PolygonGeneric 에 같은 이름이 있다. 이름으로 찾을 때 PolygonDarkFantasy 쪽을 쓴다

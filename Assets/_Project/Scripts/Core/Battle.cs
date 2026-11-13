@@ -37,6 +37,7 @@ namespace VampireSpawn.Core
         public bool JustRisen { get; internal set; }
         public bool JustWoke { get; internal set; }
         public bool JustArrived { get; internal set; }
+        public bool Wolf { get; internal set; }
         public Stance Stance { get; internal set; }
         public int Alert { get; internal set; }
         internal readonly List<Ability> abil = new List<Ability>();
@@ -85,7 +86,8 @@ namespace VampireSpawn.Core
         public readonly BattleStats Stats = new BattleStats();
         public Phase Phase { get; private set; } = Phase.Deploy;
         public int Turn { get; private set; } = 1;
-        public int Moon { get; private set; }
+        int moon;
+        public int Moon { get => moon; private set { moon = value; Shift(); } }
         public int? EatTarget { get; private set; }
         public bool? Won { get; private set; }
         public Ending? Ending { get; private set; }
@@ -154,7 +156,8 @@ namespace VampireSpawn.Core
         Unit Placed(Placement p, Hex at)
         {
             var u = MakeEnemy(p.Kind, at);
-            if (u.Role == Role.Minion) { u.Stance = p.Stance; u.Alert = p.Alert; }
+            u.Stance = p.Stance;
+            u.Alert = p.Alert;
             return u;
         }
 
@@ -204,7 +207,7 @@ namespace VampireSpawn.Core
         public Corpse CorpseAt(Hex h) => corpses.FirstOrDefault(c => c.Pos == h);
         public Unit Find(int id) => units.FirstOrDefault(u => u.Id == id);
         public int Used(Func<UnitType, int> cost) => Allies.Sum(u => cost(GameData.Type(u.Type)));
-        public bool BonusMet => Stage.Bonus.IsMet(Turn, Stats.Drained, units.Any(u => u.Role == Role.Minion) || pending.Count > 0);
+        public bool BonusMet => Stage.Bonus.IsMet(Turn, Stats.Drained, units.Any(u => u.Role == Role.Minion) || pending.Count > 0, Stats.Lost);
 
         public Occupant OccupantAt(Hex h)
         {
@@ -234,7 +237,31 @@ namespace VampireSpawn.Core
                 u.Mov += up.Mod.Mov; u.Rng += up.Mod.Rng; u.Bane += up.Mod.Bane; u.Heal += up.Mod.Heal;
                 if (up.Ability != Ability.None) u.abil.Add(up.Ability);
             }
+            if (WolfNow(u)) SetWolf(u, true);
             return u;
+        }
+
+        // docs/content/units.md "판타지 직업 개편" C.
+        const int WolfMoon = 3, WolfAtk = 2, WolfMov = 1, FeastHeal = 2;
+
+        bool WolfNow(Unit u) => u.Has(Ability.Moonblood) && moon >= (u.Has(Ability.Crescent) ? WolfMoon - 1 : WolfMoon);
+
+        static void SetWolf(Unit u, bool wolf)
+        {
+            u.Wolf = wolf;
+            u.Atk += wolf ? WolfAtk : -WolfAtk;
+            u.Mov += wolf ? WolfMov : -WolfMov;
+        }
+
+        void Shift()
+        {
+            foreach (var u in units)
+            {
+                if (u.Wolf == WolfNow(u)) continue;
+                SetWolf(u, !u.Wolf);
+                Emit(BattleEvent.Shifted(u.Id, u.Wolf));
+                Say(new Message(u.Wolf ? "log.wolf" : "log.unwolf", u.Name), "h");
+            }
         }
 
         Unit MakeEnemy(string kind, Hex at)
@@ -417,8 +444,7 @@ namespace VampireSpawn.Core
             var t = Find(targetId);
             if (u == null || t == null || t.Role != Role.Ally || t == u || Hex.Distance(u.Pos, t.Pos) > u.Rng)
                 return CommandResult.Rejected(new Message("reason.cannotExecute"));
-            Emit(BattleEvent.Popup(t.Id, PopupKind.Execute, new Message("popup.execute")));
-            Kill(t, u, DeathCause.Execute);
+            Strike(u, t, DeathCause.Execute);
             u.Acted = u.Moved = true;
             CheckEnd();
             return Done();
@@ -516,6 +542,32 @@ namespace VampireSpawn.Core
 
         void ApplyHit(Unit att, Unit def)
         {
+            if (Strike(att, def, DeathCause.Blow))
+            {
+                var fed = Math.Min(FeastHeal, att.MaxHp - att.Hp);
+                if (att.Has(Ability.Feast) && fed > 0)
+                {
+                    att.Hp += fed;
+                    Emit(BattleEvent.HpChanged(att.Id, att.Hp));
+                    Emit(BattleEvent.Popup(att.Id, PopupKind.Heal, new Message("popup.heal", fed)));
+                    Say(new Message("log.feast", att.Name, fed), "h");
+                }
+            }
+            foreach (var o in Splashed(att, def).ToList())
+            {
+                o.Hp -= 1;
+                if (o.Stance == Stance.Guard) o.Stance = Stance.Charge;
+                Emit(BattleEvent.Hit(o.Id, 0, 1));
+                Emit(BattleEvent.HpChanged(o.Id, o.Hp));
+                Emit(BattleEvent.Popup(o.Id, PopupKind.Damage, new Message("popup.damage", 1)));
+                Say(new Message("log.hitTags", att.Name, o.Name, 1, new Message("tags.1", new Message("tag.splash"))));
+                if (o.Hp <= 0) Kill(o, att, DeathCause.Blow);
+            }
+        }
+
+        // The damage half of an attack, shared with attacking an ally (docs/systems/spawn.md 2). True when def died.
+        bool Strike(Unit att, Unit def, DeathCause cause)
+        {
             var (d, tags) = DamageParts(att, def);
             def.Hp -= d;
             if (def.Stance == Stance.Guard) def.Stance = Stance.Charge;
@@ -526,15 +578,23 @@ namespace VampireSpawn.Core
                 ? new Message("log.hit", att.Name, def.Name, d)
                 : new Message("log.hitTags", att.Name, def.Name, d, new Message("tags." + tags.Count, tags.Cast<object>().ToArray()));
             Say(line, att.Side == Side.Enemy ? "k" : "");
-            if (def.Hp <= 0) Kill(def, att, DeathCause.Blow);
+            if (def.Hp > 0) return false;
+            if (cause == DeathCause.Execute) Emit(BattleEvent.Popup(def.Id, PopupKind.Execute, new Message("popup.execute")));
+            Kill(def, att, cause);
+            return true;
         }
+
+        // docs/content/units.md "판타지 직업 개편" B: the other enemies next to the target take 1.
+        public IEnumerable<Unit> Splashed(Unit att, Unit def) => !att.Has(Ability.Splash) ? Enumerable.Empty<Unit>()
+            : units.Where(o => o != def && o.Side != att.Side && !o.Asleep && Hex.Distance(o.Pos, def.Pos) == 1);
 
         enum DeathCause { Blow, Execute, Drain }
 
         void Kill(Unit u, Unit killer, DeathCause cause)
         {
-            Moon = Math.Min(Rules.MoonMax, Moon + 1);
             units.Remove(u);
+            if (u.Wolf) SetWolf(u, false);
+            Moon = Math.Min(Rules.MoonMax, Moon + 1);
             Emit(BattleEvent.Died(u.Id, u.Pos));
             if (u.Side == Side.Enemy)
             {
@@ -574,7 +634,8 @@ namespace VampireSpawn.Core
         // dawn: the enemy phase has just ended. A win is checked before a loss (docs/systems/goals.md 1-4).
         Ending? Outcome(bool dawn = false)
         {
-            if (Vampire == null) return Core.Ending.Slain;
+            // docs/systems/goals.md 1-2: only a boss stage is won by killing the vampire; other goals end on their own terms.
+            if (Stage.Goal == Goal.Boss && Vampire == null) return Core.Ending.Slain;
             var escort = Escort;
             var goal = Stage.Goal switch
             {
