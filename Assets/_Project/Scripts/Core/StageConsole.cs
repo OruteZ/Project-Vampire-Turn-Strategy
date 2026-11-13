@@ -84,7 +84,7 @@ namespace VampireSpawn.Core
                     var u = B.UnitAt(h);
                     sb.Append(u != null ? Glyph(u) : B.CorpseAt(h) != null ? '%' : B.Board.At(h) switch
                     {
-                        Terrain.Rock => '#', Terrain.Water => '~', Terrain.Rough => ',', Terrain.Torch => 'T', Terrain.Sun => '*', Terrain.Deploy => B.InDeploy(h) ? 'd' : '.',
+                        Terrain.Rock => '#', Terrain.Water => '~', Terrain.Void => '_', Terrain.Rough => ',', Terrain.Torch => 'T', Terrain.Sun => '*', Terrain.Deploy => B.InDeploy(h) ? 'd' : '.',
                         _ => B.InDeploy(h) ? 'd' : B.Board.Lit(h) ? ':' : '.',
                     });
                 }

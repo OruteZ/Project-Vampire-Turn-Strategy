@@ -19,7 +19,7 @@ MonoBehaviour:
   hp: 9
   atk: 3
   def: 1
-  mov: 3
+  mov: 1
   rng: 1
   bane: 0
   heal: 0

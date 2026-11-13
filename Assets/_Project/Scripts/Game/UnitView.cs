@@ -10,14 +10,10 @@ namespace VampireSpawn.Game
         public UnitSounds Sounds { get; set; }
 
         static readonly int WalkParam = Animator.StringToHash("Walk");
-        static readonly int BaseColor = Shader.PropertyToID("_BaseColor");
 
         Animator animator;
         UnitMotion motion;
         Transform model;
-        MeshRenderer ring;
-        Color ringColor;
-        public bool Done { get; private set; }
         GameObject coffin;
         ArtCatalog art;
         UnitLook look, own;
@@ -26,7 +22,7 @@ namespace VampireSpawn.Game
 
         // armed: false for spawns and corpses, which lost their weapons (docs/art/unit-visuals.md 1).
         // inCoffin: a sleeping vampire is only its coffin until it wakes (docs/art/unit-visuals.md 5).
-        public static UnitView Create(ArtCatalog art, UnitLook look, Transform parent, int id, Vector3 at, float yaw, Color ring, bool armed, bool inCoffin = false)
+        public static UnitView Create(ArtCatalog art, UnitLook look, Transform parent, int id, Vector3 at, float yaw, bool armed, bool inCoffin = false)
         {
             var root = new GameObject("Unit " + id);
             root.transform.SetParent(parent, false);
@@ -44,11 +40,6 @@ namespace VampireSpawn.Game
                 view.coffin = Coffin(art, root.transform);
             }
             else view.BuildModel();
-
-            var r = Quad(art, root.transform, "Ring", ring * 0.55f, new Vector3(art.hexSize * 1.05f, 0.015f, art.hexSize * 1.05f), PrimitiveType.Cylinder);
-            r.localPosition = Vector3.up * 0.01f;
-            view.ring = r.GetComponent<MeshRenderer>();
-            view.ringColor = ring * 0.55f;
             return view;
         }
 
@@ -128,23 +119,6 @@ namespace VampireSpawn.Game
             return min > max ? Vector3.zero : Vector3.up * Mathf.Lerp(min, max, UnitLook.PoleGrip);
         }
 
-        static Transform Quad(ArtCatalog art, Transform parent, string name, Color color, Vector3 scale, PrimitiveType shape)
-        {
-            var go = GameObject.CreatePrimitive(shape);
-            go.name = name;
-            var col = go.GetComponent<Collider>();
-            if (Application.isPlaying) Destroy(col); else DestroyImmediate(col);
-            go.transform.SetParent(parent, false);
-            go.transform.localScale = scale;
-            var mr = go.GetComponent<MeshRenderer>();
-            mr.sharedMaterial = art.flat;
-            mr.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
-            var block = new MaterialPropertyBlock();
-            block.SetColor(BaseColor, color);
-            mr.SetPropertyBlock(block);
-            return go.transform;
-        }
-
         static GameObject Coffin(ArtCatalog art, Transform parent)
         {
             var c = Instantiate(art.coffin, parent, false);
@@ -167,16 +141,6 @@ namespace VampireSpawn.Game
             var b = rs[0].bounds;
             foreach (var r in rs) b.Encapsulate(r.bounds);
             if (b.size.y > 0.01f) t.localScale *= height / b.size.y;
-        }
-
-        // Prototype .tk.done dims an ally that has acted this turn.
-        public void SetDone(bool done)
-        {
-            if (Done == done || ring == null) return;
-            Done = done;
-            var block = new MaterialPropertyBlock();
-            block.SetColor(BaseColor, done ? ringColor * 0.3f : ringColor);
-            ring.SetPropertyBlock(block);
         }
 
         public void SetHp(int hp, int max)

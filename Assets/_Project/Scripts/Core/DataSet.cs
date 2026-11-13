@@ -33,7 +33,7 @@ namespace VampireSpawn.Core
         // Branch order is list order (docs/systems/progression.md 7).
         public Upgrade[] Branches(string unit) => Upgrades.Where(u => u.Unit == unit).ToArray();
 
-        const string Tiles = ".#T~Sd,";
+        const string Tiles = ".#T~Sd,_";
 
         public List<string> Validate()
         {
@@ -113,7 +113,7 @@ namespace VampireSpawn.Core
             {
                 if (e.Kind != EnemyType.Vampire && Minions.All(m => m.Key != e.Kind)) p.Add($"{at}: 없는 적 {e.Kind}");
                 var t = Tile(e.Col, e.Row);
-                if (t == '\0' || t == '#' || t == '~') p.Add($"{at}: 적 {e.Kind} 이(가) 설 수 없는 칸 {e.Col},{e.Row}");
+                if (t == '\0' || t == '#' || t == '~' || t == '_') p.Add($"{at}: 적 {e.Kind} 이(가) 설 수 없는 칸 {e.Col},{e.Row}");
                 if (!e.Reinforcement && !taken.Add((e.Col, e.Row))) p.Add($"{at}: {e.Col},{e.Row} 에 유닛이 겹친다");
                 if (e.Arrive < 0 || (e.Reinforcement && e.Kind == EnemyType.Vampire)) p.Add($"{at}: 증원 턴 {e.Arrive} 은(는) 하수인만, 1 이상");
                 if (e.Arrive > 0 && e.Wave != null) p.Add($"{at}: {e.Kind} {e.Col},{e.Row} 은(는) 증원 턴과 트리거 중 하나만");

@@ -444,8 +444,7 @@ namespace VampireSpawn.Core
             var t = Find(targetId);
             if (u == null || t == null || t.Role != Role.Ally || t == u || Hex.Distance(u.Pos, t.Pos) > u.Rng)
                 return CommandResult.Rejected(new Message("reason.cannotExecute"));
-            Emit(BattleEvent.Popup(t.Id, PopupKind.Execute, new Message("popup.execute")));
-            Kill(t, u, DeathCause.Execute);
+            Strike(u, t, DeathCause.Execute);
             u.Acted = u.Moved = true;
             CheckEnd();
             return Done();
@@ -543,19 +542,8 @@ namespace VampireSpawn.Core
 
         void ApplyHit(Unit att, Unit def)
         {
-            var (d, tags) = DamageParts(att, def);
-            def.Hp -= d;
-            if (def.Stance == Stance.Guard) def.Stance = Stance.Charge;
-            Emit(BattleEvent.Hit(def.Id, att.Id, d));
-            Emit(BattleEvent.HpChanged(def.Id, def.Hp));
-            Emit(BattleEvent.Popup(def.Id, PopupKind.Damage, new Message("popup.damage", d)));
-            var line = tags.Count == 0
-                ? new Message("log.hit", att.Name, def.Name, d)
-                : new Message("log.hitTags", att.Name, def.Name, d, new Message("tags." + tags.Count, tags.Cast<object>().ToArray()));
-            Say(line, att.Side == Side.Enemy ? "k" : "");
-            if (def.Hp <= 0)
+            if (Strike(att, def, DeathCause.Blow))
             {
-                Kill(def, att, DeathCause.Blow);
                 var fed = Math.Min(FeastHeal, att.MaxHp - att.Hp);
                 if (att.Has(Ability.Feast) && fed > 0)
                 {
@@ -575,6 +563,25 @@ namespace VampireSpawn.Core
                 Say(new Message("log.hitTags", att.Name, o.Name, 1, new Message("tags.1", new Message("tag.splash"))));
                 if (o.Hp <= 0) Kill(o, att, DeathCause.Blow);
             }
+        }
+
+        // The damage half of an attack, shared with attacking an ally (docs/systems/spawn.md 2). True when def died.
+        bool Strike(Unit att, Unit def, DeathCause cause)
+        {
+            var (d, tags) = DamageParts(att, def);
+            def.Hp -= d;
+            if (def.Stance == Stance.Guard) def.Stance = Stance.Charge;
+            Emit(BattleEvent.Hit(def.Id, att.Id, d));
+            Emit(BattleEvent.HpChanged(def.Id, def.Hp));
+            Emit(BattleEvent.Popup(def.Id, PopupKind.Damage, new Message("popup.damage", d)));
+            var line = tags.Count == 0
+                ? new Message("log.hit", att.Name, def.Name, d)
+                : new Message("log.hitTags", att.Name, def.Name, d, new Message("tags." + tags.Count, tags.Cast<object>().ToArray()));
+            Say(line, att.Side == Side.Enemy ? "k" : "");
+            if (def.Hp > 0) return false;
+            if (cause == DeathCause.Execute) Emit(BattleEvent.Popup(def.Id, PopupKind.Execute, new Message("popup.execute")));
+            Kill(def, att, cause);
+            return true;
         }
 
         // docs/content/units.md "판타지 직업 개편" B: the other enemies next to the target take 1.
