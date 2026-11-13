@@ -48,15 +48,23 @@ function project() {
   let d;
   try {
     d = gql(`query($o:String!){user(login:$o){projectsV2(first:50){nodes{id title
-      fields(first:30){nodes{... on ProjectV2SingleSelectField{id name options{id name}}}}
-      items(first:100){nodes{id fieldValues(first:20){nodes{... on ProjectV2ItemFieldSingleSelectValue{name field{... on ProjectV2SingleSelectField{name}}}}}
-        content{... on Issue{number}}}}}}}}`, { o: OWNER });
+      fields(first:30){nodes{... on ProjectV2SingleSelectField{id name options{id name}}}}}}}}`, { o: OWNER });
   } catch { return null; }
   const p = d.user.projectsV2.nodes.find((n) => n.title === PROJECT);
   if (!p) return null;
   const fields = Object.fromEntries(p.fields.nodes.filter((f) => f.name).map((f) => [f.name, f]));
+  // Paged: items past the first page looked "not on the board" and sync reset them to 미작업.
+  const nodes = [];
+  for (let after = null; ;) {
+    const page = gql(`query($p:ID!${after ? ',$a:String!' : ''}){node(id:$p){... on ProjectV2{items(first:100${after ? ',after:$a' : ''}){pageInfo{hasNextPage endCursor}
+      nodes{id fieldValues(first:20){nodes{... on ProjectV2ItemFieldSingleSelectValue{name field{... on ProjectV2SingleSelectField{name}}}}}
+        content{... on Issue{number}}}}}}}`, after ? { p: p.id, a: after } : { p: p.id }).node.items;
+    nodes.push(...page.nodes);
+    if (!page.pageInfo.hasNextPage) break;
+    after = page.pageInfo.endCursor;
+  }
   const items = new Map();
-  for (const it of p.items.nodes) {
+  for (const it of nodes) {
     if (!it.content || it.content.number == null) continue;
     const status = it.fieldValues.nodes.find((v) => v.field && v.field.name === 'Status');
     items.set(it.content.number, { id: it.id, status: status ? status.name : undefined });
