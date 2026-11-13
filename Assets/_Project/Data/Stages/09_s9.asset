@@ -23,7 +23,7 @@ MonoBehaviour:
   - gravedigger
   - doctor
   - werewolf
-  pop: 13
+  pop: 12
   silver: 2
   reward: 35
   goal: 0
@@ -36,94 +36,69 @@ MonoBehaviour:
   bonusType: 0
   bonusValue: 14
   bonusGold: 15
-  bossHp: 38
-  bossAtk: 7
+  bossHp: 20
+  bossAtk: 5
   bossDef: 1
-  bossMov: 4
+  bossMov: 2
   bossHeal: 5
   map:
-  - '###....,....,....###'
-  - '##..T..........T..##'
-  - '#....#........#....#'
-  - '#..,..............,#'
-  - .##################.
-  - ..,..##......##.,...
-  - .,...##......##..#..
-  - ..#,.#........#..,..
-  - .,...##..##..##.#.,.
-  - ..,..##......##.....
-  - ...,.##......##.,...
-  - .,.....,....,.....,.
-  - '##.####.####.####.##'
-  - ..dddddddddddddddd..
-  - ..ddddddd,,ddddddd..
-  - ...dddddddddddddd...
+  - '###.......###'
+  - '###..T.T..###'
+  - '#####...#####'
+  - '#############'
+  - '#..,.....,..#'
+  - '#.#..#.#..#.#'
+  - '#.#.......#.#'
+  - '#...##.##...#'
+  - .............
+  - '##ddddddddd##'
+  - ..ddddddddd..
+  - ..ddddddddd..
   enemies:
   - kind: vampire
-    col: 10
-    row: 1
+    col: 6
+    row: 0
     arrive: 0
     wave: 
-    stance: 1
-    alert: 4
+    stance: 0
+    alert: 0
   - kind: skeletonHeavy
-    col: 9
-    row: 3
+    col: 5
+    row: 2
     arrive: 0
     wave: 
     stance: 2
     alert: 0
   - kind: skeletonHeavy
-    col: 10
-    row: 3
+    col: 7
+    row: 2
     arrive: 0
     wave: 
     stance: 2
     alert: 0
   - kind: skeleton
     col: 3
-    row: 3
-    arrive: 0
-    wave: 
-    stance: 1
-    alert: 3
-  - kind: skeleton
-    col: 16
-    row: 3
-    arrive: 0
-    wave: 
-    stance: 1
-    alert: 3
-  - kind: skeleton
-    col: 1
-    row: 6
-    arrive: 0
-    wave: 
-    stance: 1
-    alert: 3
-  - kind: skeleton
-    col: 3
-    row: 9
-    arrive: 0
-    wave: 
-    stance: 1
-    alert: 3
-  - kind: skeleton
-    col: 2
-    row: 8
-    arrive: 0
-    wave: 
-    stance: 1
-    alert: 3
-  - kind: skeletonHeavy
-    col: 9
-    row: 9
+    row: 4
     arrive: 0
     wave: 
     stance: 1
     alert: 2
   - kind: skeleton
-    col: 8
+    col: 9
+    row: 4
+    arrive: 0
+    wave: 
+    stance: 1
+    alert: 2
+  - kind: skeletonArcher
+    col: 6
+    row: 5
+    arrive: 0
+    wave: 
+    stance: 2
+    alert: 0
+  - kind: skeleton
+    col: 1
     row: 6
     arrive: 0
     wave: 
@@ -136,93 +111,58 @@ MonoBehaviour:
     wave: 
     stance: 0
     alert: 0
-  - kind: skeletonArcher
-    col: 10
+  - kind: skeleton
+    col: 6
     row: 7
     arrive: 0
     wave: 
-    stance: 2
+    stance: 0
     alert: 0
-  - kind: skeletonArcher
-    col: 16
-    row: 6
-    arrive: 0
+  - kind: skeleton
+    col: 0
+    row: 8
+    arrive: 4
     wave: 
-    stance: 2
+    stance: 0
+    alert: 0
+  - kind: skeleton
+    col: 12
+    row: 8
+    arrive: 4
+    wave: 
+    stance: 0
     alert: 0
   - kind: skeletonArcher
-    col: 18
+    col: 11
+    row: 4
+    arrive: 0
+    wave: late
+    stance: 0
+    alert: 0
+  - kind: skeleton
+    col: 12
     row: 8
     arrive: 0
-    wave: 
-    stance: 2
-    alert: 0
-  - kind: skeleton
-    col: 16
-    row: 9
-    arrive: 0
-    wave: 
+    wave: late
     stance: 0
     alert: 0
   - kind: skeleton
-    col: 18
+    col: 0
+    row: 11
+    arrive: 0
+    wave: deep
+    stance: 0
+    alert: 0
+  - kind: skeleton
+    col: 12
+    row: 11
+    arrive: 0
+    wave: deep
+    stance: 0
+    alert: 0
+  - kind: skeleton
+    col: 0
     row: 10
-    arrive: 0
-    wave: 
-    stance: 0
-    alert: 0
-  - kind: skeleton
-    col: 0
-    row: 11
-    arrive: 5
-    wave: 
-    stance: 0
-    alert: 0
-  - kind: skeleton
-    col: 19
-    row: 11
-    arrive: 5
-    wave: 
-    stance: 0
-    alert: 0
-  - kind: skeletonArcher
-    col: 18
-    row: 5
-    arrive: 0
-    wave: late
-    stance: 0
-    alert: 0
-  - kind: skeleton
-    col: 19
-    row: 7
-    arrive: 0
-    wave: late
-    stance: 0
-    alert: 0
-  - kind: skeleton
-    col: 19
-    row: 5
-    arrive: 0
-    wave: late
-    stance: 0
-    alert: 0
-  - kind: skeleton
-    col: 0
-    row: 15
-    arrive: 0
-    wave: deep
-    stance: 0
-    alert: 0
-  - kind: skeleton
-    col: 19
-    row: 15
-    arrive: 0
-    wave: deep
-    stance: 0
-    alert: 0
-  - kind: skeleton
-    col: 1
-    row: 14
     arrive: 0
     wave: deep
     stance: 0
@@ -232,8 +172,9 @@ MonoBehaviour:
     kind: 1
     value: 0
     hexes:
-    - {x: 9, y: 5}
-    - {x: 10, y: 5}
+    - {x: 5, y: 4}
+    - {x: 6, y: 4}
+    - {x: 7, y: 4}
   - id: kills5
     kind: 2
     value: 5
@@ -244,74 +185,53 @@ MonoBehaviour:
     hexes: []
   doors:
   - hexes:
-    - {x: 9, y: 4}
-    - {x: 10, y: 4}
+    - {x: 6, y: 3}
     trigger: deep
   reinforcements:
   - trigger: kills5
-    pop: 4
+    pop: 3
     silver: 0
     hexes:
-    - {x: 2, y: 13}
-    - {x: 3, y: 13}
-    - {x: 4, y: 13}
-    - {x: 5, y: 13}
-    - {x: 6, y: 13}
-    - {x: 7, y: 13}
-    - {x: 8, y: 13}
-    - {x: 9, y: 13}
-    - {x: 10, y: 13}
-    - {x: 11, y: 13}
-    - {x: 12, y: 13}
-    - {x: 13, y: 13}
-    - {x: 14, y: 13}
-    - {x: 15, y: 13}
-    - {x: 16, y: 13}
-    - {x: 17, y: 13}
-    - {x: 2, y: 14}
-    - {x: 3, y: 14}
-    - {x: 4, y: 14}
-    - {x: 5, y: 14}
-    - {x: 6, y: 14}
-    - {x: 7, y: 14}
-    - {x: 8, y: 14}
-    - {x: 11, y: 14}
-    - {x: 12, y: 14}
-    - {x: 13, y: 14}
-    - {x: 14, y: 14}
-    - {x: 15, y: 14}
-    - {x: 16, y: 14}
-    - {x: 17, y: 14}
-    - {x: 3, y: 15}
-    - {x: 4, y: 15}
-    - {x: 5, y: 15}
-    - {x: 6, y: 15}
-    - {x: 7, y: 15}
-    - {x: 8, y: 15}
-    - {x: 9, y: 15}
-    - {x: 10, y: 15}
-    - {x: 11, y: 15}
-    - {x: 12, y: 15}
-    - {x: 13, y: 15}
-    - {x: 14, y: 15}
-    - {x: 15, y: 15}
-    - {x: 16, y: 15}
+    - {x: 2, y: 9}
+    - {x: 3, y: 9}
+    - {x: 4, y: 9}
+    - {x: 5, y: 9}
+    - {x: 6, y: 9}
+    - {x: 7, y: 9}
+    - {x: 8, y: 9}
+    - {x: 9, y: 9}
+    - {x: 10, y: 9}
+    - {x: 2, y: 10}
+    - {x: 3, y: 10}
+    - {x: 4, y: 10}
+    - {x: 5, y: 10}
+    - {x: 6, y: 10}
+    - {x: 7, y: 10}
+    - {x: 8, y: 10}
+    - {x: 9, y: 10}
+    - {x: 10, y: 10}
+    - {x: 2, y: 11}
+    - {x: 3, y: 11}
+    - {x: 4, y: 11}
+    - {x: 5, y: 11}
+    - {x: 6, y: 11}
+    - {x: 7, y: 11}
+    - {x: 8, y: 11}
+    - {x: 9, y: 11}
+    - {x: 10, y: 11}
   sample:
   - kind: knight
-    col: 9
-    row: 13
+    col: 6
+    row: 9
   - kind: hunter
-    col: 10
-    row: 13
+    col: 5
+    row: 10
   - kind: sword
-    col: 8
-    row: 13
-  - kind: archer
-    col: 8
-    row: 14
-  - kind: doctor
-    col: 11
-    row: 14
-  - kind: pspear
     col: 7
-    row: 13
+    row: 10
+  - kind: archer
+    col: 6
+    row: 11
+  - kind: doctor
+    col: 4
+    row: 11

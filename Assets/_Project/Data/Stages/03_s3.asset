@@ -30,72 +30,105 @@ MonoBehaviour:
   bonusType: 2
   bonusValue: 0
   bonusGold: 10
-  bossHp: 18
+  bossHp: 12
   bossAtk: 4
-  bossDef: 1
-  bossMov: 4
+  bossDef: 0
+  bossMov: 2
   bossHeal: 4
   map:
-  - '##........##'
-  - '#...T..T...#'
-  - '#..#....#..#'
-  - '#..........#'
-  - '###.#..#.###'
-  - '#....,,....#'
-  - .dddddddddd#
-  - '#dddd..dddd#'
-  - '#..#....#..#'
-  - '####....####'
+  - '##..T..##'
+  - '#.......#'
+  - '#.#...#.#'
+  - '#.......#'
+  - '###.#.###'
+  - .........
+  - '#ddddddd#'
+  - '#ddddddd#'
+  - '###...###'
+  - '####.####'
   enemies:
   - kind: vampire
-    col: 5
-    row: 0
+    col: 4
+    row: 1
     arrive: 0
+    wave: 
+    stance: 0
+    alert: 0
   - kind: skeleton
     col: 2
-    row: 2
+    row: 1
     arrive: 0
+    wave: 
+    stance: 0
+    alert: 0
   - kind: skeleton
-    col: 9
-    row: 2
+    col: 6
+    row: 1
     arrive: 0
+    wave: 
+    stance: 0
+    alert: 0
   - kind: skeleton
-    col: 4
+    col: 3
     row: 3
     arrive: 0
+    wave: 
+    stance: 0
+    alert: 0
   - kind: skeleton
-    col: 7
+    col: 5
     row: 3
     arrive: 0
+    wave: 
+    stance: 0
+    alert: 0
   - kind: skeleton
     col: 0
-    row: 6
+    row: 5
     arrive: 3
+    wave: 
+    stance: 0
+    alert: 0
   - kind: skeleton
-    col: 1
-    row: 8
+    col: 8
+    row: 5
     arrive: 3
+    wave: 
+    stance: 0
+    alert: 0
   - kind: skeleton
-    col: 5
+    col: 4
     row: 9
     arrive: 4
+    wave: 
+    stance: 0
+    alert: 0
   - kind: skeleton
-    col: 6
-    row: 9
-    arrive: 4
-  sample:
-  - kind: pspear
-    col: 1
-    row: 6
-  - kind: sword
-    col: 5
-    row: 6
-  - kind: sword
-    col: 6
-    row: 6
-  - kind: parcher
     col: 3
+    row: 8
+    arrive: 4
+    wave: 
+    stance: 0
+    alert: 0
+  triggers: []
+  doors: []
+  reinforcements: []
+  sample:
+  - kind: sword
+    col: 3
+    row: 6
+  - kind: pspear
+    col: 5
+    row: 6
+  - kind: pspear
+    col: 4
+    row: 6
+  - kind: pspear
+    col: 4
     row: 7
   - kind: parcher
-    col: 8
+    col: 2
+    row: 7
+  - kind: parcher
+    col: 6
     row: 7

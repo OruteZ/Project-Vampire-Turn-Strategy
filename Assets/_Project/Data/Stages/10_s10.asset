@@ -23,7 +23,7 @@ MonoBehaviour:
   - gravedigger
   - doctor
   - werewolf
-  pop: 12
+  pop: 14
   silver: 2
   reward: 45
   goal: 0
@@ -36,28 +36,27 @@ MonoBehaviour:
   bonusType: 1
   bonusValue: 0
   bonusGold: 15
-  bossHp: 42
-  bossAtk: 7
+  bossHp: 20
+  bossAtk: 5
   bossDef: 1
-  bossMov: 4
-  bossHeal: 6
+  bossMov: 2
+  bossHeal: 5
   map:
-  - '###.......###'
-  - '##.........##'
-  - '#.T#.....#T.#'
-  - '#..###.###..#'
-  - '#...........#'
-  - '###.##.##.###'
-  - ...#.....#...
-  - ...#.ddd.#...
-  - .,.##ddd##.,.
-  - ...ddddddd...
-  - '###ddddddd###'
-  - '###ddd.ddd###'
-  - '######.######'
+  - '##.......##'
+  - '#.T.....T.#'
+  - '#.........#'
+  - '####.#.####'
+  - ...#...#...
+  - ...#...#...
+  - ...........
+  - '###.#.#.###'
+  - '#ddddddddd#'
+  - '#ddddddddd#'
+  - '####...####'
+  - '#####.#####'
   enemies:
   - kind: vampire
-    col: 6
+    col: 5
     row: 0
     arrive: 0
     wave: 
@@ -65,92 +64,78 @@ MonoBehaviour:
     alert: 0
   - kind: skeletonArcher
     col: 2
-    row: 1
+    row: 2
     arrive: 0
     wave: 
-    stance: 0
+    stance: 2
     alert: 0
   - kind: skeletonArcher
-    col: 10
-    row: 1
+    col: 8
+    row: 2
     arrive: 0
     wave: 
-    stance: 0
+    stance: 2
+    alert: 0
+  - kind: skeletonHeavy
+    col: 4
+    row: 3
+    arrive: 0
+    wave: 
+    stance: 2
     alert: 0
   - kind: skeletonHeavy
     col: 6
     row: 3
     arrive: 0
     wave: 
+    stance: 2
+    alert: 0
+  - kind: skeleton
+    col: 4
+    row: 5
+    arrive: 0
+    wave: 
+    stance: 0
+    alert: 0
+  - kind: skeleton
+    col: 6
+    row: 5
+    arrive: 0
+    wave: 
+    stance: 0
+    alert: 0
+  - kind: skeleton
+    col: 0
+    row: 4
+    arrive: 3
+    wave: 
+    stance: 0
+    alert: 0
+  - kind: skeleton
+    col: 10
+    row: 4
+    arrive: 3
+    wave: 
     stance: 0
     alert: 0
   - kind: skeletonHeavy
-    col: 6
-    row: 4
-    arrive: 0
+    col: 5
+    row: 11
+    arrive: 7
     wave: 
     stance: 0
     alert: 0
   - kind: skeleton
     col: 4
-    row: 4
-    arrive: 0
+    row: 10
+    arrive: 9
     wave: 
     stance: 0
     alert: 0
   - kind: skeleton
-    col: 8
-    row: 4
-    arrive: 0
-    wave: 
-    stance: 0
-    alert: 0
-  - kind: skeleton
-    col: 0
-    row: 6
-    arrive: 3
-    wave: 
-    stance: 0
-    alert: 0
-  - kind: skeleton
-    col: 12
-    row: 6
-    arrive: 3
-    wave: 
-    stance: 0
-    alert: 0
-  - kind: skeletonArcher
-    col: 1
-    row: 7
-    arrive: 4
-    wave: 
-    stance: 0
-    alert: 0
-  - kind: skeletonArcher
-    col: 11
-    row: 7
-    arrive: 4
-    wave: 
-    stance: 0
-    alert: 0
-  - kind: skeletonHeavy
     col: 6
-    row: 12
-    arrive: 6
-    wave: 
-    stance: 0
-    alert: 0
-  - kind: skeleton
-    col: 0
-    row: 8
-    arrive: 7
-    wave: 
-    stance: 0
-    alert: 0
-  - kind: skeleton
-    col: 12
-    row: 8
-    arrive: 7
+    row: 10
+    arrive: 9
     wave: 
     stance: 0
     alert: 0
@@ -158,18 +143,21 @@ MonoBehaviour:
   doors: []
   reinforcements: []
   sample:
-  - kind: hunter
-    col: 5
-    row: 7
   - kind: knight
-    col: 6
-    row: 7
+    col: 5
+    row: 8
+  - kind: hunter
+    col: 4
+    row: 8
   - kind: sword
-    col: 7
-    row: 7
-  - kind: archer
     col: 6
     row: 8
-  - kind: doctor
-    col: 6
+  - kind: archer
+    col: 5
     row: 9
+  - kind: doctor
+    col: 3
+    row: 9
+  - kind: pspear
+    col: 7
+    row: 8

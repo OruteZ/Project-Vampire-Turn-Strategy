@@ -658,8 +658,8 @@ MonoBehaviour:
       m_Items:
       - rid: 7201578077006332005
   - m_Id: 5832187899957
-    m_Localized: Two bridges and a ford cross the stream. The mill must hold until
-      dawn.
+    m_Localized: Two bridges and a ford cross the stream, and only the left bridge
+      is torchlit. Hold the mill for eight nights.
     m_Metadata:
       m_Items:
       - rid: 7201578077006332005
@@ -679,8 +679,8 @@ MonoBehaviour:
       m_Items:
       - rid: 7201578077006332005
   - m_Id: 5832192094209
-    m_Localized: The ruined chapel has three doors. Watch only the altar and your
-      back lies open.
+    m_Localized: The ruined chapel's screen has two gaps. While you hold them, the
+      side doors and the back door open.
     m_Metadata:
       m_Items:
       - rid: 7201578077006332005
@@ -700,8 +700,8 @@ MonoBehaviour:
       m_Items:
       - rid: 7201578077006332005
   - m_Id: 5832192094213
-    m_Localized: Four roads meet at the graveyard, and the dead come down every one.
-      The village gravedigger has come along, shovel in hand.
+    m_Localized: In the graveyard at the crossroads, hold the north gap and the west
+      and east lanes together. The south comes late.
     m_Metadata:
       m_Items:
       - rid: 7201578077006332005
@@ -721,7 +721,8 @@ MonoBehaviour:
       m_Items:
       - rid: 7201578077006332005
   - m_Id: 5832192094217
-    m_Localized: Torches light the pass, but skeleton archers watch it from the slopes.
+    m_Localized: Torches light the middle of the pass, but archers watch from the
+      slopes. Climb the dark side paths to reach them.
     m_Metadata:
       m_Items:
       - rid: 7201578077006332005
@@ -741,9 +742,8 @@ MonoBehaviour:
       m_Items:
       - rid: 7201578077006332005
   - m_Id: 5832192094221
-    m_Localized: 'A plague doctor hiding in the manor has joined. North, east, west,
-      south: the dead come from every side in turn. Hold the great hall for twelve
-      turns. Reach the chapel torch and the villagers hiding there will help.'
+    m_Localized: The manor hall has four doors. Hold for ten nights. Reach the chapel
+      torch to the east and the villagers hiding there will come to the hall.
     m_Metadata:
       m_Items:
       - rid: 7201578077006332005
@@ -763,8 +763,8 @@ MonoBehaviour:
       m_Items:
       - rid: 7201578077006332005
   - m_Id: 5832192094225
-    m_Localized: There is one gate into the watchtower, and armored skeletons guard
-      it.
+    m_Localized: The watchtower has a single door, blocked by heavy skeletons. As
+      long as you hold the door, the master cannot come out.
     m_Metadata:
       m_Items:
       - rid: 7201578077006332005
@@ -784,8 +784,8 @@ MonoBehaviour:
       m_Items:
       - rid: 7201578077006332005
   - m_Id: 5832192094229
-    m_Localized: A village guide knows the drains beneath the walls. Choose your
-      alley and get him there.
+    m_Localized: Bring the guide to the drain. The alleys are narrow, and the woken
+      vampire may come down the same one.
     m_Metadata:
       m_Items:
       - rid: 7201578077006332005
@@ -805,10 +805,9 @@ MonoBehaviour:
       m_Items:
       - rid: 7201578077006332005
   - m_Id: 5832192094233
-    m_Localized: The Count's servant lurks deep in the abandoned silver mine and
-      will not come out. Three shafts lead down; the gate at the end of the middle
-      one opens only when someone draws near. The deeper you go, the emptier the
-      entrance behind you. Fell five minions and the miners join you at the entrance.
+    m_Localized: The deep chamber's door opens only when someone reaches the top
+      of the middle shaft. When to open it is your choice, but enemies will appear
+      behind the entrance.
     m_Metadata:
       m_Items:
       - rid: 7201578077006332005
@@ -828,8 +827,8 @@ MonoBehaviour:
       m_Items:
       - rid: 7201578077006332005
   - m_Id: 5832192094237
-    m_Localized: The Count's castle. Every hall to the throne has side chambers,
-      and their doors open one by one.
+    m_Localized: The Count waits on his throne. The further you push, the more enemies
+      come through the main gate behind you.
     m_Metadata:
       m_Items:
       - rid: 7201578077006332005
