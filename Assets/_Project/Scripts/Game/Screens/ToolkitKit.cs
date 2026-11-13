@@ -106,13 +106,13 @@ namespace VampireSpawn.Game.Screens
             return e;
         }
 
-        // ui-style.md 5 frame.panel: the box background in panel tint and the frame in the edge colour; the frame is a .panel-frame child.
+        // ui-style.md 5 frame.panel: the box background in panel tint; the frame keeps the pack's own metal colours with only a 20% hint of the edge colour (#118).
         public static void Frame(VisualElement panel, ArtCatalog art, Color edge)
         {
             Picture(panel, art.Ui(FrameBack), Ui.Alpha(Ui.Panel, 0.92f));
             var frame = panel.Q(className: "panel-frame");
             if (frame == null) { frame = E(null, "panel-frame"); panel.Insert(0, frame); }
-            Picture(frame, art.Ui(FrameBox), edge);
+            Picture(frame, art.Ui(FrameBox), Color.Lerp(Color.white, edge, 0.2f));
         }
 
         public static VisualElement Chip(VisualElement parent, ArtCatalog art, Color edge, Sprite icon, Color iconColor, float iconSize = 36f)
