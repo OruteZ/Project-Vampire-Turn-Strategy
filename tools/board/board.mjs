@@ -38,9 +38,11 @@ export function progress(body) {
 
 const issueId = (number) => gql(`query($o:String!,$r:String!,$n:Int!){repository(owner:$o,name:$r){issue(number:$n){id}}}`, { o: OWNER, r: REPO, n: number }).repository.issue.id;
 
+// Closed issues only need their number to be marked 작업 완료, so their bodies are not fetched.
 function issues() {
-  const raw = gh(['issue', 'list', '-R', `${OWNER}/${REPO}`, '--state', 'all', '--limit', '500', '--json', 'number,title,state,body,labels,id']);
-  return JSON.parse(raw).filter((i) => i.labels.some((l) => LABELS.includes(l.name)));
+  const list = (state, fields) => JSON.parse(gh(['issue', 'list', '-R', `${OWNER}/${REPO}`, '--state', state, '--limit', '500', '--json', fields]));
+  return [...list('open', 'number,title,state,body,labels,id'), ...list('closed', 'number,state,labels,id')]
+    .filter((i) => i.labels.some((l) => LABELS.includes(l.name)));
 }
 
 // null when the token lacks the project scope or the project does not exist; callers fall back to issues alone.
