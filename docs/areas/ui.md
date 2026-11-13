@@ -65,7 +65,7 @@
 - 함정: 지도·보드 클릭을 막는 판단(`PointerBlocked`, `CampFlow.PointerOverUi`)은 `ToolkitKit.PointerOverUi` 하나로 본다. 화면 전체를 덮는 뿌리·층(`.layer`)은 picking-mode Ignore 여야 한다
 - 함정: Input System 만 켠 이 프로젝트에서 UI Toolkit 런타임 패널은 EventSystem(+`InputSystemUIInputModule`)이 있어야 포인터를 받는다. 없으면 클릭·호버가 전혀 안 온다(2026-11-09 재어 봄). `ToolkitKit.Document` 가 없으면 만든다
 - 함정: USS 는 선택자 구체성으로 이긴다. `.battle Label { margin: 0 }` 같은 넓은 규칙이 `.hint { margin-left }` 를 덮어 가운데 정렬이 깨졌다. 공용 초기화 규칙은 클래스 하나짜리보다 구체적이면 안 된다
-- 함정: UI Toolkit 은 둥근 채움(Image.fillMethod Radial)이 없다. 보름달 칸은 `generateVisualContent` + Painter2D 로 쐐기를 그린다(`BattleHud.Phases`)
+- 함정: UI Toolkit 은 둥근 채움(Image.fillMethod Radial)이 없다. 보름달 위상은 `generateVisualContent` + Painter2D 로 그린다(`BattleHud.MoonPhase`: 오른쪽 반원 + 반타원 명암 경계)
 - 함정: 다른 씬을 겹쳐(additive) 불러도 하늘·안개·주변광은 활성 씬 것만 쓴다. 메인 메뉴는 데모 씬을 `SetActiveScene` 한다. UI Toolkit 화면 뿌리에 `background-color` 가 있으면 뒤의 3D 가 전부 가려진다(USS 를 바꾼 뒤 에디터가 다시 읽지 않으면 `AssetDatabase.Refresh`)
 - 함정: `BoardView.LateUpdate` 는 `Board` 가 남아 있으면 카메라를 보드에 다시 맞춘다(`Clear()` 뒤에도 남는다). 원정 지도가 카메라를 쓰는 동안 막아야 한다 (campaign-map.md 구현 메모)
 - 함정: `FX_*`, `SM_Bld_Base_*` 프리팹은 PolygonDarkFantasy 와 PolygonGeneric 에 같은 이름이 있다. 이름으로 찾을 때 PolygonDarkFantasy 쪽을 쓴다
