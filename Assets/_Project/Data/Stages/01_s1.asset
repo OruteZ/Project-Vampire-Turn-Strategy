@@ -27,7 +27,7 @@ MonoBehaviour:
   escortMov: 0
   escortAt: {x: 0, y: 0}
   bonusType: 0
-  bonusValue: 13
+  bonusValue: 12
   bonusGold: 10
   bossHp: 10
   bossAtk: 3
@@ -36,13 +36,13 @@ MonoBehaviour:
   bossHeal: 3
   map:
   - '##.....##'
-  - '#...T...#'
+  - '#.......#'
   - '#.......#'
   - '####.####'
   - .........
   - '##.###.##'
   - .ddd.ddd.
-  - ddddddddd
+  - ddddTdddd
   - _ddddddd_
   enemies:
   - kind: vampire
@@ -50,22 +50,22 @@ MonoBehaviour:
     row: 0
     arrive: 0
     wave: 
-    stance: 1
-    alert: 2
+    stance: 0
+    alert: 0
   - kind: skeleton
     col: 1
     row: 1
     arrive: 0
     wave: 
-    stance: 1
-    alert: 3
+    stance: 0
+    alert: 0
   - kind: skeleton
     col: 7
     row: 1
     arrive: 0
     wave: 
-    stance: 1
-    alert: 3
+    stance: 0
+    alert: 0
   - kind: skeleton
     col: 2
     row: 4

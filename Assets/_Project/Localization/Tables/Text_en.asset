@@ -636,9 +636,9 @@ MonoBehaviour:
       m_Items:
       - rid: 7201578077006332005
   - m_Id: 5832187899953
-    m_Localized: The first vampire sleeps in the back room of the ashen mill. Hold
-      the two gaps in the yard wall, cross the threshing floor, and go in through
-      the only door. Beside the mill's torch, none can be drained.
+    m_Localized: The first vampire sleeps in a coffin in the ashen mill, and the
+      coffin opens at the full moon. Hold the two gaps in the yard wall and make
+      your stand by the yard torch. In the light, none can be drained.
     m_Metadata:
       m_Items:
       - rid: 7201578077006332005
