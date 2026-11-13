@@ -79,10 +79,8 @@
 .bk-ups { position: absolute; left: 32px; top: 328px; width: 496px; height: 480px; }
 
 .up {
-    width: 496px; height: 152px; margin-bottom: 12px; flex-shrink: 0;
-    background-color: rgba(15, 16, 22, 0.92); border-width: 1px; border-color: var(--line);
+    width: 496px; height: 152px; margin-bottom: 12px; flex-shrink: 0; -unity-slice-scale: 0.0714px;
 }
-.up.owned { border-color: #e3a84b; }
 .up.shut .up-name > Label, .up.shut .up-desc { color: var(--dim); }
 .up-name { position: absolute; left: 16px; top: 16px; width: 400px; height: 24px; flex-direction: row; align-items: center; }
 .up-name > Label { font-size: 15px; -unity-font-style: bold; color: var(--bone); padding: 0; margin: 0; }
@@ -122,7 +120,10 @@
 .marker-star.locked { width: 18px; height: 18px; margin-left: -9px; margin-top: -9px; }
 .marker-name {
     position: absolute; left: -92px; top: 96px; width: 280px; height: 32px;
-    background-color: rgba(15, 16, 22, 0.92); border-width: 1px; border-color: var(--line);
+    -unity-slice-scale: 0.0714px;
     font-size: 15px; color: var(--bone); -unity-text-align: middle-center; padding: 0; margin: 0; display: none;
 }
 .marker-name.shown { display: flex; }
+
+/* #118: the pack frame on upgrade cards and map labels, thin like the battle slots. */
+.up > .panel-frame, .marker-name > .panel-frame { -unity-slice-scale: 0.0714px; }

@@ -240,6 +240,8 @@ namespace VampireSpawn.Game.Screens
                 var row = new VisualElement();
                 row.AddToClassList("up");
                 row.EnableInClassList("owned", own);
+                ToolkitKit.Frame(row, art, Ui.Steel);
+                if (own) ToolkitKit.Picture(row.Q(className: "panel-frame"), art.Ui(ToolkitKit.FrameBox), Color.Lerp(Color.white, Ui.Candle, 0.6f));
                 row.EnableInClassList("shut", shut);
                 SetTip(row, Loc.T(up.Inherit ? "camp.inherit" : "camp.noInherit") + (shut ? " · " + branchLocked : ""));
                 var head = new VisualElement { pickingMode = PickingMode.Ignore };
