@@ -16,5 +16,5 @@ MonoBehaviour:
   hp: 4
   atk: 2
   def: 0
-  mov: 3
+  mov: 1
   rng: 1

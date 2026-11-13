@@ -74,6 +74,8 @@ namespace VampireSpawn.Editor
             var seed = stage.Id.Aggregate(17, (k, ch) => unchecked(k * 31 + ch)) & 0xffff;
             float ox = seed % 251 * 1.37f, oz = seed / 251 * 0.91f;
             var river = River(board, s, ox, oz);
+            var voids = Enumerable.Range(0, board.Rows).SelectMany(r => Enumerable.Range(0, board.Cols).Select(c => new Hex(c, r)))
+                .Where(h => board.At(h) == Terrain.Void).Select(h => { var w = BoardView.Local(h, s); return new Vector2(w.x, w.z); }).ToList();
             // Distance past the river bank; negative inside the channel (battle-terrain.md 2-2).
             float Bank(float x, float z)
             {
@@ -90,7 +92,7 @@ namespace VampireSpawn.Editor
             }
 
             // A finer grid where there is a shoreline, or the bank shows 0.6-wide stair steps.
-            var Resolution = river.Count > 0 ? 1025 : 257;
+            var Resolution = river.Count > 0 || voids.Count > 0 ? 1025 : 257;
             var heights = new float[Resolution, Resolution];
             for (var i = 0; i < Resolution; i++)
                 for (var j = 0; j < Resolution; j++)
@@ -109,6 +111,12 @@ namespace VampireSpawn.Editor
                     {
                         var bank = Bank(x, z);
                         if (bank < Wall * s) y = Mathf.Min(y, BankProfile(bank, s, y));
+                    }
+                    if (voids.Count > 0)
+                    {
+                        // A void cell is a pit down to the terrain floor; the slope ends inside the hex so its walkable neighbours stay flat.
+                        var d = voids.Min(v => Vector2.Distance(v, new Vector2(x, z)));
+                        if (d < 0.95f * s) y = Mathf.Lerp(-Below, y, Mathf.SmoothStep(0f, 1f, (d - 0.6f * s) / (0.35f * s)));
                     }
                     heights[i, j] = (y + Below) / HeightRange;
                 }

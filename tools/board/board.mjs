@@ -38,9 +38,11 @@ export function progress(body) {
 
 const issueId = (number) => gql(`query($o:String!,$r:String!,$n:Int!){repository(owner:$o,name:$r){issue(number:$n){id}}}`, { o: OWNER, r: REPO, n: number }).repository.issue.id;
 
+// Closed issues only need their number to be marked 작업 완료, so their bodies are not fetched.
 function issues() {
-  const raw = gh(['issue', 'list', '-R', `${OWNER}/${REPO}`, '--state', 'all', '--limit', '500', '--json', 'number,title,state,body,labels,id']);
-  return JSON.parse(raw).filter((i) => i.labels.some((l) => LABELS.includes(l.name)));
+  const list = (state, fields) => JSON.parse(gh(['issue', 'list', '-R', `${OWNER}/${REPO}`, '--state', state, '--limit', '500', '--json', fields]));
+  return [...list('open', 'number,title,state,body,labels,id'), ...list('closed', 'number,state,labels,id')]
+    .filter((i) => i.labels.some((l) => LABELS.includes(l.name)));
 }
 
 // null when the token lacks the project scope or the project does not exist; callers fall back to issues alone.
@@ -48,15 +50,23 @@ function project() {
   let d;
   try {
     d = gql(`query($o:String!){user(login:$o){projectsV2(first:50){nodes{id title
-      fields(first:30){nodes{... on ProjectV2SingleSelectField{id name options{id name}}}}
-      items(first:100){nodes{id fieldValues(first:20){nodes{... on ProjectV2ItemFieldSingleSelectValue{name field{... on ProjectV2SingleSelectField{name}}}}}
-        content{... on Issue{number}}}}}}}}`, { o: OWNER });
+      fields(first:30){nodes{... on ProjectV2SingleSelectField{id name options{id name}}}}}}}}`, { o: OWNER });
   } catch { return null; }
   const p = d.user.projectsV2.nodes.find((n) => n.title === PROJECT);
   if (!p) return null;
   const fields = Object.fromEntries(p.fields.nodes.filter((f) => f.name).map((f) => [f.name, f]));
+  // Paged: items past the first page looked "not on the board" and sync reset them to 미작업.
+  const nodes = [];
+  for (let after = null; ;) {
+    const page = gql(`query($p:ID!${after ? ',$a:String!' : ''}){node(id:$p){... on ProjectV2{items(first:100${after ? ',after:$a' : ''}){pageInfo{hasNextPage endCursor}
+      nodes{id fieldValues(first:20){nodes{... on ProjectV2ItemFieldSingleSelectValue{name field{... on ProjectV2SingleSelectField{name}}}}}
+        content{... on Issue{number}}}}}}}`, after ? { p: p.id, a: after } : { p: p.id }).node.items;
+    nodes.push(...page.nodes);
+    if (!page.pageInfo.hasNextPage) break;
+    after = page.pageInfo.endCursor;
+  }
   const items = new Map();
-  for (const it of p.items.nodes) {
+  for (const it of nodes) {
     if (!it.content || it.content.number == null) continue;
     const status = it.fieldValues.nodes.find((v) => v.field && v.field.name === 'Status');
     items.set(it.content.number, { id: it.id, status: status ? status.name : undefined });

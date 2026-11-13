@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace VampireSpawn.Core
 {
-    public enum Terrain { Plain, Rock, Torch, Water, Sun, Deploy, Rough }
+    public enum Terrain { Plain, Rock, Torch, Water, Sun, Deploy, Rough, Void }
     public enum Side { Ally, Enemy }
     public enum Occupant { Empty, Ally, Enemy, Corpse }
 
@@ -32,6 +32,7 @@ namespace VampireSpawn.Core
             'S' => Terrain.Sun,
             'd' => Terrain.Deploy,
             ',' => Terrain.Rough,
+            '_' => Terrain.Void,
             _ => throw new ArgumentException("unknown map tile '" + ch + "'"),
         };
 
@@ -40,7 +41,7 @@ namespace VampireSpawn.Core
 
         public bool InBounds(Hex h) => h.Col >= 0 && h.Col < Cols && h.Row >= 0 && h.Row < Rows;
         public Terrain At(Hex h) => terrain[h.Col, h.Row];
-        public bool Walkable(Hex h) => At(h) != Terrain.Rock && At(h) != Terrain.Water;
+        public bool Walkable(Hex h) => At(h) != Terrain.Rock && At(h) != Terrain.Water && At(h) != Terrain.Void;
 
         public List<Hex> Neighbors(Hex h)
         {
@@ -116,6 +117,8 @@ namespace VampireSpawn.Core
                     {
                         if (Blocked(n, side, occupant)) continue;
                         var nd = d + Cost(toStarts ? h : n);
+                        // Most units move 1, so the first step is always allowed or rough ground would wall them in (hex-grid.md 1).
+                        if (d == 0 && nd > limit && limit > 0) nd = limit;
                         if (nd > limit || (dist.TryGetValue(n, out var old) && old <= nd)) continue;
                         dist[n] = nd;
                         if (prev != null) prev[n] = h;
