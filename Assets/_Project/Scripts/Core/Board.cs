@@ -117,6 +117,8 @@ namespace VampireSpawn.Core
                     {
                         if (Blocked(n, side, occupant)) continue;
                         var nd = d + Cost(toStarts ? h : n);
+                        // Most units move 1, so the first step is always allowed or rough ground would wall them in (hex-grid.md 1).
+                        if (d == 0 && nd > limit && limit > 0) nd = limit;
                         if (nd > limit || (dist.TryGetValue(n, out var old) && old <= nd)) continue;
                         dist[n] = nd;
                         if (prev != null) prev[n] = h;

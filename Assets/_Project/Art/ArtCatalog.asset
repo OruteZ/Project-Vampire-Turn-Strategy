@@ -42,7 +42,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 683de39d41503894692809cc4b1d46d7, type: 2}
   stageDressings:
   - {fileID: 5263859813698259627, guid: c2bf055dd9852504d9fc338050feebf6, type: 3}
-  - {fileID: 6899149423493481395, guid: b346508cfcf9f814989c37d45f9c15c6, type: 3}
+  - {fileID: 4045396636269850557, guid: b346508cfcf9f814989c37d45f9c15c6, type: 3}
   - {fileID: 6486490128227499760, guid: ca6cf397aa9b3934a9c951e0a41b6756, type: 3}
   - {fileID: 1347828483173006019, guid: aef51b2cc3a40bb49b18e5680795e76e, type: 3}
   - {fileID: 7227472767137753753, guid: df031f008ff01d44695f2e91ffd1bd94, type: 3}

@@ -182,7 +182,7 @@ namespace VampireSpawn.Tests
             Assert.AreEqual(Ending.Held, held.Ending);
             Assert.AreEqual(true, held.Won);
 
-            var lost = new Battle(GoalStage(Goal.Defense, new[] { P(EnemyType.Vampire, 6, 6), P("skeleton", 3, 1) }, new[] { At(3, 3) }, hold: 6),
+            var lost = new Battle(GoalStage(Goal.Defense, new[] { P(EnemyType.Vampire, 6, 6), P("skeleton", 3, 2) }, new[] { At(3, 3) }, hold: 6),
                 null, new[] { P("knight", 0, 6) });
             lost.Start();
             lost.EndTurn();
