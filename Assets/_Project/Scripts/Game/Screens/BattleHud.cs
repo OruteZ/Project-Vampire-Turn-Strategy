@@ -37,7 +37,6 @@ namespace VampireSpawn.Game.Screens
         readonly Dictionary<int, HeadMark> heads = new Dictionary<int, HeadMark>();
         readonly HashSet<VisualElement> blink = new HashSet<VisualElement>();
         VisualElement headLayer, hoverLayer, moonDisk;
-        Color[] moonColors;
         bool moonPulse;
         // Values and panels of the previous build, so only real changes flash and only new panels slide in (ui-style.md 12).
         Dictionary<string, string> lastValues = new Dictionary<string, string>(), values = new Dictionary<string, string>();
@@ -181,24 +180,18 @@ namespace VampireSpawn.Game.Screens
             Picture(E(box, "fill"), S(RingBack), Ui.Deep);
             var max = Rules.MoonMax;
             var moon = full ? max : b.Moon;
-            moonColors = Enumerable.Range(0, max).Select(i => i < moon ? (hot || full ? Ui.MoonBlood : Ui.Sun) : Ui.Panel2).ToArray();
+            var lit = hot || full ? Ui.MoonBlood : Ui.Sun;
+            var f = (float)moon / max;
             moonPulse = hot;
             moonDisk = E(box, "moon-disk");
-            var lit = moon;
-            moonDisk.generateVisualContent += ctx => Phases(ctx, max, i => moonPulse && i < lit ? Fx.Bright(Ui.MoonBlood, Fx.PulseK()) : moonColors[i]);
+            moonDisk.generateVisualContent += ctx => MoonPhase(ctx, f, moonPulse ? Fx.Bright(Ui.MoonBlood, Fx.PulseK()) : lit);
             if (fading)
             {
                 var drain = E(box, "moon-disk");
-                drain.generateVisualContent += ctx => Phases(ctx, max, _ => Ui.MoonBlood);
+                drain.generateVisualContent += ctx => MoonPhase(ctx, 1f, Ui.MoonBlood);
                 Fx.FadeOut(drain, 0.4f);
             }
             var v = b.Vampire;
-            if (v != null && v.Asleep)
-            {
-                var pin = E(box, "moon-pin");
-                pin.style.rotate = new Rotate(360f * Rules.MoonWake / max);
-                E(pin, "coffin");
-            }
             Picture(E(box, "moon-ring"), S(Ring), hot || full ? Ui.MoonBlood : Ui.Steel);
             if (full)
                 for (var k = 0; k < 4; k++)
@@ -213,23 +206,30 @@ namespace VampireSpawn.Game.Screens
             if (state.Length > 0) L(label, state, hot ? "moon-state hot" : "moon-state", hot ? Ui.MoonBlood : Ui.Muted);
         }
 
-        // One wedge per phase from the top, clockwise, with a 1.5% gap (the old radial fill).
-        static void Phases(MeshGenerationContext ctx, int max, Func<int, Color> color)
+        // ui-style.md 7: a waxing moon, lit from the right; the terminator is a half ellipse whose width runs r -> 0 -> -r as f goes 0 -> 0.5 -> 1.
+        static void MoonPhase(MeshGenerationContext ctx, float f, Color lit)
         {
             var r = ctx.visualElement.contentRect;
             var c = r.center;
             var radius = Mathf.Min(r.width, r.height) * 0.5f;
             var p = ctx.painter2D;
-            for (var i = 0; i < max; i++)
+            p.fillColor = Ui.Panel2;
+            p.BeginPath();
+            p.Arc(c, radius, 0f, 360f);
+            p.Fill();
+            if (f <= 0f) return;
+            p.fillColor = lit;
+            p.BeginPath();
+            p.MoveTo(c + new Vector2(0f, -radius));
+            p.Arc(c, radius, -90f, 90f);
+            var rx = radius * (1f - 2f * Mathf.Min(f, 1f));
+            for (var i = 1; i <= 32; i++)
             {
-                var start = -90f + 360f * i / max;
-                p.fillColor = color(i);
-                p.BeginPath();
-                p.MoveTo(c);
-                p.Arc(c, radius, start, start + 360f * (1f / max - 0.015f));
-                p.ClosePath();
-                p.Fill();
+                var a = Mathf.PI * (0.5f - i / 32f);
+                p.LineTo(c + new Vector2(rx * Mathf.Cos(a), radius * Mathf.Sin(a)));
             }
+            p.ClosePath();
+            p.Fill();
         }
 
         // battle-hud.md 3-6: one round button for start, done deploying, end turn and results.

@@ -18,7 +18,6 @@
 .moon-disk { position: absolute; left: 12px; top: 12px; right: 12px; bottom: 12px; }
 .moon-ring { position: absolute; left: -6px; top: -6px; right: -6px; bottom: -6px; }
 .moon-pin { position: absolute; left: 56px; top: 56px; width: 0; height: 0; }
-.coffin { position: absolute; left: -2.5px; top: -55px; width: 5px; height: 26px; background-color: var(--line); }
 .moon-skull { position: absolute; left: -14px; top: -76px; width: 28px; height: 28px; }
 .moon-label { position: absolute; left: 50%; top: 142px; width: 300px; margin-left: -150px; align-items: center; }
 .moon-count { font-size: 26px; -unity-font-style: bold; color: var(--bone); }
