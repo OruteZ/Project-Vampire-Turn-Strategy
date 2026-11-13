@@ -54,12 +54,12 @@ namespace VampireSpawn.Tests
             var map = new[] { ".......", ".......", ".......", ".......", ".......", "ddddddd", "ddddddd" };
             var stage = new Stage("demo", GameData.Types.Select(t => t.Key).ToArray(), 2, 0, 0, Goal.Boss, new Bonus(BonusType.NoEat, 0, 0), new Boss(30, 1, 0, 0, 0), map,
                 new[] { new Placement(EnemyType.Vampire, 6, 0) }, new Placement[0],
-                triggers: new[] { new Trigger("bell", TriggerKind.Reach, 0, new[] { new Hex(3, 3) }) },
+                triggers: new[] { new Trigger("bell", TriggerKind.Reach, 0, new[] { new Hex(3, 4) }) },
                 reinforcements: new[] { new Reinforcement("bell", 3, 0, new[] { new Hex(0, 0), new Hex(1, 0), new Hex(2, 0) }) });
             var b = new Battle(stage, null, new[] { new Placement("pspear", 3, 5), new Placement("pspear", 4, 5) });
             b.Start();
             var first = b.Allies.First();
-            Assert.IsTrue(b.Move(first.Id, new Hex(3, 3)).Ok);
+            Assert.IsTrue(b.Move(first.Id, new Hex(3, 4)).Ok);
             b.EndTurn();
             Assert.AreEqual(Phase.Deploy, b.Phase);
             Assert.IsTrue(b.Reinforcing);
@@ -79,17 +79,22 @@ namespace VampireSpawn.Tests
         [Test]
         public void LostUnitsFreeTheirPopulation()
         {
-            var stage = new Stage("demo", GameData.Types.Select(t => t.Key).ToArray(), 2, 0, 0, Goal.Boss, new Bonus(BonusType.NoEat, 0, 0), new Boss(30, 1, 0, 0, 0), Open,
+            var stage = new Stage("demo", GameData.Types.Select(t => t.Key).ToArray(), 3, 0, 0, Goal.Boss, new Bonus(BonusType.NoEat, 0, 0), new Boss(30, 1, 0, 0, 0), Open,
                 new[] { new Placement(EnemyType.Vampire, 6, 6) }, new Placement[0],
                 triggers: new[] { new Trigger("t", TriggerKind.Turn, 1) },
                 reinforcements: new[] { new Reinforcement("t", 1, 0, new[] { new Hex(0, 0) }) });
-            var b = new Battle(stage, null, new[] { new Placement("pspear", 3, 3), new Placement("pspear", 3, 4) });
+            var b = new Battle(stage, null, new[] { new Placement("pspear", 3, 2), new Placement("pspear", 3, 4), new Placement("parcher", 3, 3) });
             b.Start();
-            Assert.IsTrue(b.Execute(b.Allies.First().Id, b.Allies.Last().Id).Ok);
+            var archer = b.Allies.Single(a => a.Type == "parcher");
+            foreach (var spear in b.Allies.Where(a => a.Type == "pspear").ToList())
+                Assert.IsTrue(b.Execute(spear.Id, archer.Id).Ok);
+            Assert.IsFalse(b.Allies.Contains(archer), "2 + 2 against 4 hp");
+            Assert.AreEqual(1, b.Stats.Executed);
+            Assert.AreEqual(0, b.Corpses.Count, "an ally killed by an ally leaves no corpse");
             b.EndTurn();
             Assert.IsTrue(b.Reinforcing);
-            Assert.AreEqual(1, b.Used(t => t.Pop));
-            Assert.IsTrue(b.Place("sword", new Hex(0, 0)).Ok, "cap 3, one spearman alive: room for a sword");
+            Assert.AreEqual(2, b.Used(t => t.Pop));
+            Assert.IsTrue(b.Place("sword", new Hex(0, 0)).Ok, "cap 4, two spearmen alive: room for a sword");
         }
 
         // docs/systems/triggers.md 1
@@ -97,7 +102,7 @@ namespace VampireSpawn.Tests
         public void ReachingAMarkedHexBringsTheWaveNextEnemyPhase()
         {
             var b = new Battle(Staged(Open, new[] { new Placement(EnemyType.Vampire, 6, 6), new Placement("skeleton", 0, 0, wave: "gate") },
-                new[] { new Trigger("gate", TriggerKind.Reach, 0, new[] { new Hex(3, 3) }) }), null, new[] { new Placement("pspear", 3, 5) });
+                new[] { new Trigger("gate", TriggerKind.Reach, 0, new[] { new Hex(3, 3) }) }), null, new[] { new Placement("pspear", 3, 4) });
             b.Start();
             b.EndTurn();
             Assert.AreEqual(1, b.Pending.Count, "not reached yet, no wave");
@@ -125,6 +130,25 @@ namespace VampireSpawn.Tests
             Assert.AreEqual(Terrain.Plain, b.Board.At(new Hex(3, 1)));
         }
 
+        // docs/content/stages.md 1-3: '_' is a missing cell, not a wall. Nothing stands on it, but shots fly over it.
+        [Test]
+        public void AVoidCellHoldsNothingButShotsCrossIt()
+        {
+            var map = new[] { ".......", ".......", ".......", "..._...", ".......", "ddddddd", "ddd_ddd" };
+            var b = new Battle(Staged(map, new[] { new Placement(EnemyType.Vampire, 6, 0), new Placement("skeleton", 3, 2, stance: Stance.Hold) }, new Trigger[0]), null, new[] { new Placement("parcher", 3, 5) });
+            Assert.AreEqual(Terrain.Void, b.Board.At(new Hex(3, 3)));
+            Assert.IsFalse(b.Board.Walkable(new Hex(3, 3)));
+            Assert.IsFalse(b.InDeploy(new Hex(3, 6)), "no deploying onto a void");
+            Assert.IsFalse(b.Place("pspear", new Hex(3, 6)).Ok);
+            b.Start();
+            var archer = b.Allies.Single();
+            Assert.IsFalse(b.Move(archer.Id, new Hex(3, 3)).Ok, "no walking onto a void");
+            Assert.IsTrue(b.Board.Reachable(archer.Pos, 9, Side.Ally, b.OccupantAt).All(r => b.Board.At(r.hex) != Terrain.Void));
+            Assert.IsTrue(b.Move(archer.Id, new Hex(3, 4)).Ok);
+            var skeleton = b.Enemies.Single(e => e.Kind == "skeleton");
+            Assert.IsTrue(b.Attack(archer.Id, skeleton.Id).Ok, "range 2 over the void");
+        }
+
         [Test]
         public void EveryShippedStageEndsUnderTheBot()
         {
@@ -140,11 +164,11 @@ namespace VampireSpawn.Tests
         public void GuardWaitsUntilAnAllyComesNearAndHoldNeverMoves()
         {
             var b = new Battle(Field(new[] { new Placement(EnemyType.Vampire, 6, 6), new Placement("skeleton", 3, 0, stance: Stance.Guard, alert: 3),
-                new Placement("skeleton", 0, 0, stance: Stance.Hold) }), null, new[] { new Placement("pspear", 3, 6) });
+                new Placement("skeleton", 0, 0, stance: Stance.Hold) }), null, new[] { new Placement("pspear", 3, 4) });
             b.Start();
             b.EndTurn();
             var guard = b.Enemies.First(e => e.Stance == Stance.Guard);
-            Assert.AreEqual(new Hex(3, 0), guard.Pos, "ally 6 away, guard 3: stays");
+            Assert.AreEqual(new Hex(3, 0), guard.Pos, "ally 4 away, guard 3: stays");
             var spear = b.Allies.Single();
             b.Move(spear.Id, new Hex(3, 3));
             b.EndTurn();
@@ -163,6 +187,8 @@ namespace VampireSpawn.Tests
             Assert.IsFalse(three.ContainsKey(new Hex(3, 0)), "past the rough needs 4");
             Assert.IsTrue(board.Reachable(new Hex(0, 0), 4, Side.Ally, Empty).Any(r => r.hex == new Hex(3, 0)));
             Assert.AreEqual(4, board.DistField(new[] { new Hex(0, 0) }, Side.Ally, Empty)[new Hex(3, 0)], "from (3,0) back to (0,0): rough 2, then 1, 1");
+            Assert.IsTrue(board.Reachable(new Hex(1, 0), 1, Side.Ally, Empty).Any(r => r.hex == new Hex(2, 0)), "a first step is always allowed, even onto rough");
+            Assert.IsFalse(board.Reachable(new Hex(0, 0), 2, Side.Ally, Empty).Any(r => r.hex == new Hex(2, 0)), "after a plain step, rough still costs 2");
         }
 
         [Test]

@@ -182,7 +182,7 @@ namespace VampireSpawn.Tests
             Assert.AreEqual(Ending.Held, held.Ending);
             Assert.AreEqual(true, held.Won);
 
-            var lost = new Battle(GoalStage(Goal.Defense, new[] { P(EnemyType.Vampire, 6, 6), P("skeleton", 3, 1) }, new[] { At(3, 3) }, hold: 6),
+            var lost = new Battle(GoalStage(Goal.Defense, new[] { P(EnemyType.Vampire, 6, 6), P("skeleton", 3, 2) }, new[] { At(3, 3) }, hold: 6),
                 null, new[] { P("knight", 0, 6) });
             lost.Start();
             lost.EndTurn();
@@ -265,7 +265,7 @@ namespace VampireSpawn.Tests
 
             var fall = new Battle(Field(new[] { P(EnemyType.Vampire, 3, 2) }, 99), null, new[] { P("werewolf", 3, 3), P("knight", 0, 6) });
             fall.Start();
-            for (var i = 0; i < 4 && fall.Corpses.Count == 0; i++) fall.EndTurn();
+            for (var i = 0; i < 8 && fall.Corpses.Count == 0; i++) fall.EndTurn();
             Assert.AreEqual(type.Atk, fall.Corpses.Single(c => c.Type == "werewolf").Atk, "the corpse keeps the human attack");
 
             var crescent = new Battle(Field(new[] { P(EnemyType.Vampire, 6, 6) }), new[] { "werewolf_early" }, new[] { P("werewolf", 3, 3) });

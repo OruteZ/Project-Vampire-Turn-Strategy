@@ -15,5 +15,5 @@ MonoBehaviour:
   drainHeal: 8
   moonMax: 6
   eatRange: 2
-  moonWake: 3
+  moonWake: 6
   mendRange: 2

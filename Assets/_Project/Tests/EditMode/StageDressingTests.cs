@@ -41,13 +41,29 @@ namespace VampireSpawn.Tests
                     var t = board.At(h);
                     var door = stage.Doors.Any(d => d.Hexes.Contains(h));
                     if (t == Terrain.Rock && !door) Assert.Less(near, 0.5f * s, stage.Id + " prop on rock " + h);
-                    if (door) Assert.Greater(near, 0.9f * s, stage.Id + " door " + h + " is a live prop, not baked (triggers.md 1-4)");
+                    if (t == Terrain.Void)
+                    {
+                        Assert.Greater(near, 0.9f * s, stage.Id + " prop on void " + h);
+                        Assert.Less(Height(at), -1f, stage.Id + " void " + h + " is a pit");
+                    }
+                    else if (door) Assert.Greater(near, 0.9f * s, stage.Id + " door " + h + " is a live prop, not baked (triggers.md 1-4)");
                     else if (board.Walkable(h))
                     {
                         Assert.Greater(near, 0.9f * s, stage.Id + " prop stands on walkable " + h);
                         Assert.That(Height(at), Is.InRange(-0.3f, 0.3f), stage.Id + " walkable " + h + " height (battle-terrain.md 1-4)");
                     }
                 }
+        }
+
+        // docs/art/battle-camera.md 13.
+        [Test]
+        public void APropCountsAsBlockingOnlyBetweenTheCameraAndTheUnit()
+        {
+            var eye = new Vector3(0f, 10f, -10f);
+            var unit = Vector3.zero;
+            Assert.IsTrue(BattleCamera.Blocks(new Bounds(new Vector3(0f, 5f, -5f), Vector3.one * 2f), eye, unit));
+            Assert.IsFalse(BattleCamera.Blocks(new Bounds(new Vector3(0f, 0f, 3f), Vector3.one * 2f), eye, unit));
+            Assert.IsFalse(BattleCamera.Blocks(new Bounds(new Vector3(5f, 5f, -5f), Vector3.one * 2f), eye, unit));
         }
     }
 }

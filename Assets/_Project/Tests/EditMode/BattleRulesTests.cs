@@ -47,17 +47,22 @@ namespace VampireSpawn.Tests
         }
 
         [Test]
-        public void AnAllyCannotExecuteItselfOrMoveOntoAnotherUnit()
+        public void AttackingAnAllyDealsAttackDamageAndUsesTheAttack()
         {
             var b = Demo();
             b.Start();
             var knight = b.Allies.First(u => u.Kind == "knight");
             var sword = b.Allies.First(u => u.Kind == "sword");
-            Assert.IsFalse(b.Execute(knight.Id, knight.Id).Ok, "self execute");
+            Assert.IsFalse(b.Execute(knight.Id, knight.Id).Ok, "self attack");
             Assert.IsFalse(b.Move(knight.Id, sword.Pos).Ok, "move onto an ally");
-            Assert.IsTrue(b.Execute(knight.Id, sword.Id).Ok, "adjacent ally can be executed");
-            Assert.AreEqual(1, b.Stats.Executed);
-            Assert.AreEqual(0, b.Corpses.Count, "an executed ally leaves no corpse");
+            var hp = sword.Hp;
+            var damage = b.Damage(knight, sword);
+            Assert.IsTrue(b.Execute(knight.Id, sword.Id).Ok, "adjacent ally can be attacked");
+            Assert.AreEqual(hp - damage, sword.Hp, "same damage as an attack, not an instant kill");
+            Assert.IsTrue(b.Allies.Contains(sword));
+            Assert.AreEqual(0, b.Stats.Executed);
+            Assert.IsTrue(knight.Acted && knight.Moved, "it spends the attack");
+            Assert.IsFalse(b.Execute(knight.Id, sword.Id).Ok, "once per turn");
         }
 
         static string Josa(string word, string withFinal, string withoutFinal) => word + JosaFormatter.Pick(word, withFinal, withoutFinal);
