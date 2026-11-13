@@ -38,10 +38,10 @@ MonoBehaviour:
   - ...........
   - ..,,...,,..
   - .#.......#.
-  - ',,,.###.,,,'
-  - ....#T#....
-  - ',,.......,,'
-  - ddddddddddd
+  - _,,.###.,,_
+  - __..#T#..__
+  - ___.....___
+  - _ddddddddd_
   - dd,ddddd,dd
   - ddddddddddd
   enemies:
@@ -49,26 +49,47 @@ MonoBehaviour:
     col: 5
     row: 0
     arrive: 0
+    wave: 
+    stance: 0
+    alert: 0
   - kind: skeleton
     col: 2
     row: 1
     arrive: 0
+    wave: 
+    stance: 0
+    alert: 0
   - kind: skeleton
     col: 8
     row: 1
     arrive: 0
+    wave: 
+    stance: 0
+    alert: 0
   - kind: skeleton
     col: 4
     row: 2
     arrive: 0
+    wave: 
+    stance: 0
+    alert: 0
   - kind: skeleton
     col: 6
     row: 2
     arrive: 0
+    wave: 
+    stance: 0
+    alert: 0
   - kind: skeleton
     col: 0
     row: 0
     arrive: 0
+    wave: 
+    stance: 0
+    alert: 0
+  triggers: []
+  doors: []
+  reinforcements: []
   sample:
   - kind: pspear
     col: 4

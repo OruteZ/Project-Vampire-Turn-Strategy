@@ -24,6 +24,9 @@ MonoBehaviour:
   - {fileID: 4733503901829419923, guid: 3941e6e2f78e6eb43a03216c2c433d13, type: 3}
   brazier: {fileID: 8371062267507710030, guid: 887ca6f05d8eb0940be8f3d4916be6b1, type: 3}
   fire: {fileID: 5879195395630746260, guid: 66935891f0cc76c46869337a4d1b7fd5, type: 3}
+  embers: {fileID: 1028970867693538119, guid: ad0ae052968bc3b45a7809f7f3b2fcda, type: 3}
+  dust: {fileID: 1963974882115008307, guid: 9cb0af795e4b4574caa233d8b5c23272, type: 3}
+  lightBeam: {fileID: 4800000, guid: 863dacce3da22984aad4dd38cb8e4cec, type: 3}
   torchLight: {r: 0.89, g: 0.66, b: 0.29, a: 1}
   sunLight: {r: 0.92, g: 0.86, b: 0.68, a: 1}
   themes:
@@ -39,13 +42,13 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 683de39d41503894692809cc4b1d46d7, type: 2}
   stageDressings:
   - {fileID: 5263859813698259627, guid: c2bf055dd9852504d9fc338050feebf6, type: 3}
-  - {fileID: 6620939941351202441, guid: b346508cfcf9f814989c37d45f9c15c6, type: 3}
+  - {fileID: 6899149423493481395, guid: b346508cfcf9f814989c37d45f9c15c6, type: 3}
   - {fileID: 6486490128227499760, guid: ca6cf397aa9b3934a9c951e0a41b6756, type: 3}
   - {fileID: 1347828483173006019, guid: aef51b2cc3a40bb49b18e5680795e76e, type: 3}
-  - {fileID: 1083985562754225960, guid: df031f008ff01d44695f2e91ffd1bd94, type: 3}
+  - {fileID: 7227472767137753753, guid: df031f008ff01d44695f2e91ffd1bd94, type: 3}
   - {fileID: 4301418341703728365, guid: 6bec02f0a396bb7448880cdb658c17cf, type: 3}
   - {fileID: 589442673142321982, guid: 924beddbdc6f915419c1dc9f7bdef9cd, type: 3}
-  - {fileID: 41089743295868413, guid: a87062c78d217534d93cabbb22573d0a, type: 3}
+  - {fileID: 2446276245070686982, guid: a87062c78d217534d93cabbb22573d0a, type: 3}
   - {fileID: 6712341823736795375, guid: 9915853746d8c35478fcde5fced70954, type: 3}
   - {fileID: 8459920474443982600, guid: 3dc674aa4121ade4393a00a269891e75, type: 3}
   - {fileID: 7093307818820472811, guid: b5a6c6ae51cec644a86cd94cab450e51, type: 3}
@@ -68,15 +71,7 @@ MonoBehaviour:
   wolfLook: {fileID: 11400000, guid: 08ece1f2a992b884081d58ac45ad02e2, type: 2}
   unitAnimator: {fileID: 9100000, guid: 2b7b31fac4d09d24bab28abb943acab0, type: 2}
   spawnAnimator: {fileID: 22100000, guid: 1fdfeebf2685688439c5272f58b765dd, type: 2}
-  flat: {fileID: 2100000, guid: 2024b0488a33d814a987b2e5a4be5fbd, type: 2}
   unitHeight: 1.5
-  peasantRing: {r: 0.72, g: 0.61, b: 0.45, a: 1}
-  regularRing: {r: 0.56, g: 0.69, b: 0.8, a: 1}
-  knightRing: {r: 0.85, g: 0.87, b: 0.89, a: 1}
-  hunterRing: {r: 0.53, g: 0.72, b: 0.65, a: 1}
-  skeletonRing: {r: 0.71, g: 0.66, b: 0.56, a: 1}
-  vampireRing: {r: 0.78, g: 0.19, b: 0.29, a: 1}
-  spawnRing: {r: 0.65, g: 0.31, b: 0.77, a: 1}
   coffin: {fileID: 7416434307688326560, guid: bdf4e270f5d02034ab8ecb736e89b28e, type: 3}
   ui:
   - {fileID: 21300000, guid: 5190468f75372b34c9ce4e588be76293, type: 3}

@@ -24,6 +24,7 @@ namespace VampireSpawn.Game
 
         readonly Dictionary<int, UnitView> units = new Dictionary<int, UnitView>();
         readonly Dictionary<int, UnitView> corpses = new Dictionary<int, UnitView>();
+        readonly Dictionary<Hex, UnitView> falling = new Dictionary<Hex, UnitView>();
         readonly Queue<IReadOnlyList<BattleEvent>> pending = new Queue<IReadOnlyList<BattleEvent>>();
         Transform layer;
         bool playing;
@@ -77,15 +78,6 @@ namespace VampireSpawn.Game
         }
 
         public UnitView ViewOf(int id) => units.TryGetValue(id, out var v) ? v : null;
-
-        public void ShowDone()
-        {
-            foreach (var kv in units)
-            {
-                var u = Battle.Find(kv.Key);
-                kv.Value.SetDone(u != null && u.Side == Side.Ally && Battle.Phase == Phase.Player && u.Acted);
-            }
-        }
 
         readonly HashSet<int> reinforceViews = new HashSet<int>();
 
@@ -167,11 +159,13 @@ namespace VampireSpawn.Game
                     if (units.TryGetValue(e.UnitId, out var shown)) Popup.Spawn(shown.transform.position + Vector3.up * (Art.unitHeight * Art.hexSize + 0.6f), Loc.Text(e.Text), e.Style, speed / Pace);
                     break;
                 case BattleEventKind.Died:
-                    if (units.TryGetValue(e.UnitId, out var dead)) { dead.Trigger("Death"); Sound.Play(dead.Sounds, s => s.death); Remove(units, e.UnitId, Wait(1.2f)); }
+                    if (units.TryGetValue(e.UnitId, out var dead)) { dead.Trigger("Death"); Sound.Play(dead.Sounds, s => s.death); falling[e.At] = dead; Remove(units, e.UnitId, Wait(1.2f)); }
                     break;
                 case BattleEventKind.CorpseLeft:
                     var corpse = CorpseType(e.UnitId);
                     if (corpse != null) AddCorpse(e.UnitId, corpse, e.At);
+                    if (corpse != null && falling.TryGetValue(e.At, out var fell) && fell != null) StartCoroutine(ShowAfter(corpses[e.UnitId], fell));
+                    falling.Remove(e.At);
                     break;
                 case BattleEventKind.Buried:
                     Remove(corpses, e.UnitId, 0f);
@@ -205,6 +199,14 @@ namespace VampireSpawn.Game
             if (director != null) yield return Delay(director.HoldFor(e));
         }
 
+        // The falling model and the lying corpse are two views; the corpse shows only once the fall is destroyed (#119).
+        static IEnumerator ShowAfter(UnitView corpse, UnitView fell)
+        {
+            corpse.gameObject.SetActive(false);
+            while (fell != null) yield return null;
+            if (corpse != null) corpse.gameObject.SetActive(true);
+        }
+
         static int MaxHpOf(UnitView v, int hp) => v.HpFraction > 0f ? Mathf.RoundToInt(hp / v.HpFraction) : hp;
 
         // A corpse that rises in the same command is gone from Battle.Corpses by the time playback reaches it; its origin is on the spawn.
@@ -233,7 +235,7 @@ namespace VampireSpawn.Game
             };
             // docs/art/unit-visuals.md 4: allies face the enemy side (north, +Z), enemies face south.
             var yaw = u.Side == Side.Ally ? 0f : 180f;
-            var view = UnitView.Create(Art, look, layer, u.Id, Ground(at ?? u.Pos), yaw, RingColor(u), u.Role != Role.Spawn, u.Asleep);
+            var view = UnitView.Create(Art, look, layer, u.Id, Ground(at ?? u.Pos), yaw, u.Role != Role.Spawn, u.Asleep);
             if (u.Wolf) view.Shift(Art.wolfLook);
             view.SetHp(u.Hp, u.MaxHp);
             view.Sounds = u.Role == Role.Spawn ? Art.sound?.spawn : look.sounds;
@@ -242,22 +244,10 @@ namespace VampireSpawn.Game
 
         void AddCorpse(int id, string type, Hex at)
         {
-            var view = UnitView.Create(Art, Art.Look(type), layer, -id, Ground(at), 20f, Art.spawnRing * 0.6f, false);
+            var view = UnitView.Create(Art, Art.Look(type), layer, -id, Ground(at), 20f, false);
             view.name = "Corpse " + id;
             view.LieDown();
             corpses[id] = view;
-        }
-
-        Color RingColor(Unit u)
-        {
-            switch (u.Role)
-            {
-                case Role.Minion: return Art.skeletonRing;
-                case Role.Vampire: return Art.vampireRing;
-                case Role.Spawn: return Art.spawnRing;
-                case Role.Escort: return Art.peasantRing;
-            }
-            return Art.TierRing(GameData.Type(u.Type).Tier);
         }
 
         static void Remove(Dictionary<int, UnitView> from, int id, float after)

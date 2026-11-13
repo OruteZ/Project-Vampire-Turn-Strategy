@@ -133,12 +133,12 @@ MonoBehaviour:
       m_Items:
       - rid: 7201578077006332004
   - m_Id: 3991484035091
-    m_Localized: "\uCC98\uCE58\uD560 \uC218 \uC5C6\uB2E4"
+    m_Localized: "\uACF5\uACA9\uD560 \uC218 \uC5C6\uB294 \uC544\uAD70\uC774\uB2E4"
     m_Metadata:
       m_Items:
       - rid: 7201578077006332004
   - m_Id: 3991484035092
-    m_Localized: "\uCC98\uCE58"
+    m_Localized: "\uC544\uAD70 \uACF5\uACA9"
     m_Metadata:
       m_Items:
       - rid: 7201578077006332004
@@ -340,7 +340,7 @@ MonoBehaviour:
       m_Items: []
   - m_Id: 3991484035129
     m_Localized: "\uD770 \uC810\uC120 \uACE0\uB9AC\uC758 \uC544\uAD70\uC744 \uB204\uB974\uBA74
-      \uCC98\uCE58\uD569\uB2C8\uB2E4. \uB2E4\uB978 \uACF3\uC744 \uB204\uB974\uBA74
+      \uACF5\uACA9\uD569\uB2C8\uB2E4. \uB2E4\uB978 \uACF3\uC744 \uB204\uB974\uBA74
       \uCDE8\uC18C\uD569\uB2C8\uB2E4."
     m_Metadata:
       m_Items:
@@ -1219,12 +1219,12 @@ MonoBehaviour:
       m_Items:
       - rid: 7201578077006332004
   - m_Id: 9846568841275
-    m_Localized: "\uCC98\uCE58 \uCDE8\uC18C"
+    m_Localized: "\uC544\uAD70 \uACF5\uACA9 \uCDE8\uC18C"
     m_Metadata:
       m_Items:
       - rid: 7201578077006332004
   - m_Id: 9846568841276
-    m_Localized: "\uC544\uAD70 \uCC98\uCE58"
+    m_Localized: "\uC544\uAD70 \uACF5\uACA9"
     m_Metadata:
       m_Items:
       - rid: 7201578077006332004
