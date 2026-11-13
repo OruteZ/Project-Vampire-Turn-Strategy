@@ -100,11 +100,13 @@
 .log-lines .log-text { white-space: normal; width: 270px; }
 
 /* ---------- unit panels (ui-style.md 8-2) ---------- */
-.unit { position: absolute; width: 340px; height: 190px; -unity-slice-scale: 0.111px; }
+.unit { position: absolute; width: 340px; min-height: 190px; -unity-slice-scale: 0.111px; }
 .unit.ally-side { left: 24px; bottom: 228px; }
 .unit.other-side { right: 24px; bottom: 228px; }
 .unit.deploy-side { right: 24px; bottom: 228px; }
-.unit-body { position: absolute; left: 0; top: 0; right: 0; bottom: 0; padding: 16px 20px 14px 20px; }
+.unit-body { flex-grow: 1; padding: 16px 20px 14px 20px; }
+.unit-body > * { flex-shrink: 0; }
+.unit.deploy-side > .unit-body { padding-bottom: 56px; }
 .unit-body > * { margin-bottom: 6px; }
 .unit-head { align-items: flex-end; }
 .unit-weapon { width: 26px; height: 26px; margin-right: 10px; flex-shrink: 0; }
