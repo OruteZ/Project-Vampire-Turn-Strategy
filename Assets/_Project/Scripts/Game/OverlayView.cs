@@ -84,15 +84,27 @@ namespace VampireSpawn.Game
         {
             if (h == hover) return;
             hover = h;
-            if (last != null) Show(last, lastDrop);
+            if (last != null) Draw();
         }
+
+        List<MarkedHex> marks;
+        MoonMark moon;
 
         public void Show(BattleSession session, Hex? drop = null)
         {
             last = session;
             lastDrop = drop;
+            marks = session.Overlay();
+            moon = session.Moon();
+            Draw();
+        }
+
+        // Hover redraws the marks of the last Show: during playback the model is already at the turn's end (#125, #126).
+        void Draw()
+        {
+            var session = last;
+            var drop = lastDrop;
             lines.Clear();
-            var marks = session.Overlay();
             MarkCount = marks.Count;
             var shown = 0;
             var iconed = new HashSet<Hex>();
@@ -102,7 +114,6 @@ namespace VampireSpawn.Game
                 if (Icons.TryGetValue(m.Mark, out var ic) && iconed.Add(m.Hex)) Icon(shown++, m.Hex, ic.Icon, ic.Tint);
             }
             for (var i = shown; i < icons.Count; i++) icons[i].enabled = false;
-            var moon = session.Moon();
             if (moon != null && moon.Target is Hex t) lines.Dashed(Center(moon.Vampire), Center(t), 2f * Scale, MoonBlood, 4f * Scale, 4f * Scale);
             if (hover is Hex hv && session.Battle.Board.InBounds(hv)) Hexagon(Center(hv), HoverCell);
             if (drop is Hex d && session.Battle.Board.InBounds(d)) Hexagon(Center(d), session.Battle.InDeploy(d) ? DropIn : DropOut);
