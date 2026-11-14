@@ -168,7 +168,7 @@
 | 역할 | 아이콘 (Synty, `ArtCatalog.ui` 에 이미 있는 것) | 색 |
 |---|---|---|
 | 아군 배치 칸 | `Inventory_Helmets_01_Clean` (병력, HUD 인구와 같은 그림) | `ally` |
-| 아군 증원 칸 | `Status_Up_01_Clean` | `ally` |
+| 아군 증원 칸 (배치 단계엔 숨김) | `Status_Up_01_Clean` | `ally` |
 | 적 증원 칸 | `Map_Skull_01_Clean` (HUD 적 목록과 같은 그림) | `enemy` |
 | 방어 칸 (지킬 곳) | `Map_Home_01_Clean` | `candle` |
 | 목표 칸 (닿을 곳) | `Map_Flag_01_Clean` | `ally` |

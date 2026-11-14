@@ -199,7 +199,7 @@ namespace VampireSpawn.Core
             var b = Battle;
             o.AddRange(b.Stage.Spots.Select(h => new MarkedHex(b.Stage.Goal == Goal.Defense ? Mark.Hold : Mark.Goal, h)));
             o.AddRange(b.Pending.Select(p => new MarkedHex(Mark.Arrive, new Hex(p.Col, p.Row))));
-            if (!b.Reinforcing) o.AddRange(b.Upcoming.SelectMany(r => r.Hexes).Select(h => new MarkedHex(Mark.Reinforce, h)));
+            if (!b.Reinforcing && b.Phase != Phase.Deploy) o.AddRange(b.Upcoming.SelectMany(r => r.Hexes).Select(h => new MarkedHex(Mark.Reinforce, h)));
             o.AddRange(b.Stage.Triggers.Where(t => t.Kind == TriggerKind.Reach && !b.Fired(t.Id)).SelectMany(t => t.Hexes).Select(h => new MarkedHex(Mark.Trigger, h)));
             o.AddRange(b.Stage.Doors.SelectMany(d => d.Hexes).Where(h => b.Board.At(h) == Terrain.Rock).Select(h => new MarkedHex(Mark.Arrive, h)));
             if (b.Phase == Phase.Deploy) o.AddRange(Cells().Where(b.InDeploy).Select(h => new MarkedHex(Mark.Deploy, h)));
