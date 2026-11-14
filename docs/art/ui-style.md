@@ -96,10 +96,10 @@
 
 | 버튼 토큰 | 바탕 | 글자 | 쓰는 곳 | 지금 코드 `Look` |
 |---|---|---|---|---|
-| `btn.primary` | `Frame_Box_Medium_02_Background` 를 `ally` 로 채움 + `Frame_Box_Medium_02` 틀 `text.1` | `body` Bold, `bg.night` | 턴 종료, 출전, 사기 | `Primary` |
-| `btn.normal` | `Frame_Box_Medium_02` + `_Background`, `bg.panel` 채움 + `ally.dim` 틀 | `body`, `text.1` | 보통 행동 | `Normal`, `Choice` |
+| `btn.primary` | `Frame_Box_Medium_02_Background` 를 `ally.dim` 으로 채움 + `Frame_Box_Medium_02` 틀(원래 색, 5 처럼 `ally` 20%) | `body` Bold, `text.1` | 턴 종료, 출전, 사기 | `Primary` |
+| `btn.normal` | `Frame_Box_Medium_02` + `_Background`, `bg.panel` 채움 + 틀(원래 색 + `ally` 20%) | `body`, `text.1` | 보통 행동 | `Normal`, `Choice` |
 | `btn.ghost` | 틀 없음 | `body`, `text.2` | 나가기, 접기·펼치기, 취소 | `Ghost` |
-| `btn.danger` | `Frame_Box_Medium_02` + `_Background`, `bg.panel` 채움 + `enemy.dim` 틀 | `body`, `enemy` | 아군 직접 처치 | `Danger` |
+| `btn.danger` | `Frame_Box_Medium_02` + `_Background`, `bg.panel` 채움 + 틀(원래 색 + `enemy` 20%, 켜짐은 `enemy` 그대로) | `body`, `enemy` | 아군 직접 처치 | `Danger` |
 | `btn.slot` | HUD 팩 `SPR_DarkFantasy_Frame_Box_Medium_08`(팔각) + `_Background`(`bg.panelDeep`) 112×112, 아이콘 88px. 틀은 원래 색, 켜진 모드(처치·치료)만 그 행동 색 | 왼쪽 위 단축키, 이름은 호버 툴팁 | 행동 줄 | — |
 | `btn.roster` | `frame.ally` 축소판, 초상 + 이름 | `small` | 배치 화면 유닛 목록 | `Roster` |
 
@@ -168,7 +168,7 @@
 | 역할 | 아이콘 (Synty, `ArtCatalog.ui` 에 이미 있는 것) | 색 |
 |---|---|---|
 | 아군 배치 칸 | `Inventory_Helmets_01_Clean` (병력, HUD 인구와 같은 그림) | `ally` |
-| 아군 증원 칸 | `Status_Up_01_Clean` | `ally` |
+| 아군 증원 칸 (배치 단계엔 숨김) | `Status_Up_01_Clean` | `ally` |
 | 적 증원 칸 | `Map_Skull_01_Clean` (HUD 적 목록과 같은 그림) | `enemy` |
 | 방어 칸 (지킬 곳) | `Map_Home_01_Clean` | `candle` |
 | 목표 칸 (닿을 곳) | `Map_Flag_01_Clean` | `ally` |

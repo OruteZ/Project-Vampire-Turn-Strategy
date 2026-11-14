@@ -48,6 +48,7 @@ namespace VampireSpawn.Game.Screens
                 m.Number = m.Badge.Q<Label>();
                 m.Star = ToolkitKit.E(m.Root, "marker-star");
                 m.Name = ToolkitKit.L(m.Root, Loc.Text(Campaign.Stages[i].Title), "marker-name");
+                ToolkitKit.Frame(m.Name, art, Ui.Steel);
                 var index = i;
                 ToolkitKit.Click(m.Root, () => pick(index));
                 m.Root.RegisterCallback<PointerEnterEvent>(_ => { m.Hover = true; view.Restyle(); });

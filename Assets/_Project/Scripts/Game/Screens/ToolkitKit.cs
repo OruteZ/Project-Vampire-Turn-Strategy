@@ -112,14 +112,16 @@ namespace VampireSpawn.Game.Screens
             Picture(panel, art.Ui(FrameBack), Ui.Alpha(Ui.Panel, 0.92f));
             var frame = panel.Q(className: "panel-frame");
             if (frame == null) { frame = E(null, "panel-frame"); panel.Insert(0, frame); }
-            Picture(frame, art.Ui(FrameBox), Color.Lerp(Color.white, edge, 0.2f));
+            Picture(frame, art.Ui(FrameBox), Edge(edge));
         }
+
+        public static Color Edge(Color c) => Color.Lerp(Color.white, c, 0.2f);
 
         public static VisualElement Chip(VisualElement parent, ArtCatalog art, Color edge, Sprite icon, Color iconColor, float iconSize = 36f)
         {
             var chip = E(parent, "chip", true);
             Picture(chip, art.Ui(FrameBack), Ui.Alpha(Ui.Panel, 0.92f));
-            Picture(E(chip, "chip-frame"), art.Ui(FrameBox), edge);
+            Picture(E(chip, "chip-frame"), art.Ui(FrameBox), Edge(edge));
             var i = E(chip, "chip-icon");
             i.style.width = iconSize;
             i.style.height = iconSize;
@@ -184,8 +186,8 @@ namespace VampireSpawn.Game.Screens
                 if (frame != null) frame.style.backgroundImage = StyleKeyword.None;
                 return;
             }
-            Picture(b, art.Ui(FrameBack), kind == BtnKind.Primary ? Ui.Steel : Ui.Alpha(Ui.Panel, 0.92f));
-            if (frame != null) Picture(frame, art.Ui(FrameBox), kind == BtnKind.Primary ? Ui.Bone : kind == BtnKind.Danger ? Ui.BloodDim : kind == BtnKind.DangerOn ? Ui.Blood : Ui.SteelDim);
+            Picture(b, art.Ui(FrameBack), kind == BtnKind.Primary ? Ui.SteelDim : Ui.Alpha(Ui.Panel, 0.92f));
+            if (frame != null) Picture(frame, art.Ui(FrameBox), kind == BtnKind.DangerOn ? Ui.Blood : Edge(kind == BtnKind.Danger ? Ui.Blood : Ui.Steel));
         }
 
         // ui-style.md 14-3-1: [icon][number], the label lives in the tooltip.

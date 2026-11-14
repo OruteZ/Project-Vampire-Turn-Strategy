@@ -55,9 +55,9 @@
 .btn.has-key .btn-text { position: absolute; left: 0; top: 0; bottom: 0; }
 .btn.ghost .btn-text { color: var(--muted); }
 .btn.danger .btn-text { color: #c8304a; }
-.btn.primary .btn-text { color: var(--ink); -unity-font-style: bold; }
+.btn.primary .btn-text { color: var(--bone); -unity-font-style: bold; }
 .btn:hover { -unity-background-image-tint-color: rgba(38, 41, 54, 0.96); }
-.btn.primary:hover { -unity-background-image-tint-color: #9dc1e0; }
+.btn.primary:hover { -unity-background-image-tint-color: #5d7488; }
 .btn.disabled { opacity: 0.4; }
 .btn.disabled .btn-text { color: var(--dim); }
 .key {

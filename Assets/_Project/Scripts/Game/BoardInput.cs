@@ -63,7 +63,8 @@ namespace VampireSpawn.Game
         public void Redraw()
         {
             if (Session == null) return;
-            overlay.Show(Session, drag != null && drag.Moved ? drag.Target : null);
+            // The model has already played the whole turn; Update redraws once playback ends (#125, #126).
+            if (!battle.IsBusy) overlay.Show(Session, drag != null && drag.Moved ? drag.Target : null);
             flashUntil = !Session.Flash.IsEmpty ? Time.unscaledTime + FlashSeconds : 0f;
             Changed?.Invoke();
         }

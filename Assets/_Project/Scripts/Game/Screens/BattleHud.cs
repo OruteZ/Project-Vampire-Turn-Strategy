@@ -17,6 +17,9 @@ namespace VampireSpawn.Game.Screens
         public float Speed = 1f;
         public bool Alt, EnemyPlaying, LeaveArmed, RulesOpen, LogOpen, Demo, FullMoon, MoonFading;
         public IEnumerable<string> Upgrades = Enumerable.Empty<string>();
+        // While the enemy turn plays back the model has already reached its end (a reinforcement deploy, the next target): #125, #126.
+        public int? EatTarget;
+        public bool Deploying(Battle b) => b.Phase == Phase.Deploy && !EnemyPlaying;
     }
 
     // docs/ui/battle-hud.md in the docs/art/ui-style.md tokens on UI Toolkit. Places and sizes are Assets/_Project/UI/Battle.uss;
@@ -83,9 +86,9 @@ namespace VampireSpawn.Game.Screens
             else if (hot) Vignette(root, 0.08f);
             headLayer = E(root, "layer");
             Moon(root, b, hot, st.FullMoon, st.MoonFading);
-            if (b.Phase == Phase.Deploy) Deploy(root, s, st, a);
+            if (st.Deploying(b)) Deploy(root, s, st, a);
             else Fight(root, s, st, a);
-            if (b.Phase != Phase.Deploy)
+            if (!st.Deploying(b))
             {
                 var bar = E(root, "action-bar");
                 Picture(bar, S(BarBack), Ui.Alpha(Ui.Panel, 0.92f));
@@ -119,7 +122,7 @@ namespace VampireSpawn.Game.Screens
             heads.Clear();
             (lastPanels, panels) = (panels, lastPanels);
             panels.Clear();
-            if (s.Battle.Phase == Phase.Deploy) DeployHover(hoverLayer, s, st, a);
+            if (st.Deploying(s.Battle)) DeployHover(hoverLayer, s, st, a);
             else FightHover(hoverLayer, s, st, a);
         }
 
@@ -241,14 +244,14 @@ namespace VampireSpawn.Game.Screens
         void EndTurn(VisualElement root, Battle b, HudState st, BattleActions a)
         {
             var label = BattleScreen.PrimaryLabel(b, st.EnemyPlaying, out var enabled, st.Speed);
-            var btn = E(root, b.Phase == Phase.Deploy ? "end-turn deploy" : "end-turn", true);
+            var btn = E(root, st.Deploying(b) ? "end-turn deploy" : "end-turn", true);
             Picture(E(btn, "ring-fill"), S(RingBack), enabled ? Ui.Panel : Ui.Panel2);
             var hot = b.Phase == Phase.Player && !st.EnemyPlaying && b.Stage.HasBoss && b.MoonNext();
             Picture(E(btn, "ring"), S(Ring), hot ? Ui.MoonBlood : enabled ? Color.white : Ui.Line);
             L(btn, label, "end-turn-text", enabled ? Ui.Bone : Ui.Muted);
             L(btn, "Space", "key");
             Click(btn, a.Primary, enabled);
-            if (b.Phase == Phase.Deploy && !enabled) Tip(btn, Loc.T("hud.needAlly"), 0);
+            if (st.Deploying(b) && !enabled) Tip(btn, Loc.T("hud.needAlly"), 0);
             var left = b.Phase == Phase.Player && !st.EnemyPlaying ? b.Allies.Count(u => !u.Acted) : 0;
             if (left > 0) Tip(RingBadge(btn, art, left.ToString(), 32, Ui.Steel, Ui.Ink, Ui.Bone), Loc.T("battle.allyPhase"), 300);
         }
@@ -409,7 +412,7 @@ namespace VampireSpawn.Game.Screens
             foreach (var u in b.Units)
             {
                 var dmg = aimed && st.Hover == u ? b.Damage(sel, u) : splash != null && splash.Contains(u) ? 1 : 0;
-                Head(headLayer, b, u, u == st.Hover || u == sel, st.Alt && u.Side == Side.Enemy, dmg);
+                Head(headLayer, b, u, u == st.Hover || u == sel, st.Alt && u.Side == Side.Enemy, dmg, st.EatTarget == u.Id);
             }
             if (st.Hover != null && heads.TryGetValue(st.Hover.Id, out var top)) top.Root.BringToFront();
         }
@@ -599,7 +602,7 @@ namespace VampireSpawn.Game.Screens
 
         const float HeadBarW = 72f;
 
-        void Head(VisualElement layer, Battle b, Unit u, bool named, bool showMov, int damage)
+        void Head(VisualElement layer, Battle b, Unit u, bool named, bool showMov, int damage, bool target)
         {
             var cells = Mathf.Max(1, u.MaxHp);
             var full = u.Hp;
@@ -658,7 +661,7 @@ namespace VampireSpawn.Game.Screens
                 }
                 y += 24f;
             }
-            if (b.EatTarget == u.Id) Icon(rt, Kit.Icon.Target, Ui.Blood, "icon head-target").style.bottom = y;
+            if (target) Icon(rt, Kit.Icon.Target, Ui.Blood, "icon head-target").style.bottom = y;
             heads[u.Id] = new HeadMark { Root = rt, Cells = imgs, Fill = fill, MaxHp = Mathf.Max(1, u.MaxHp), Lost = boss ? lost : 0, Color = color };
         }
 

@@ -21,6 +21,7 @@ namespace VampireSpawn.Game.Screens
 
         bool demo, leaveArm, rulesOpen, logOpen, finished, enemyPlaying, fullMoon, moonFading, altDown;
         float leaveUntil, bannerUntil;
+        int? eatBefore;
         Vector2Int fittedSize;
         Stage stage;
         PlayLog playLog;
@@ -142,6 +143,7 @@ namespace VampireSpawn.Game.Screens
                 Speed = View.speed,
                 Alt = altDown, EnemyPlaying = enemyPlaying, LeaveArmed = leaveArm, RulesOpen = rulesOpen, LogOpen = logOpen, Demo = demo,
                 FullMoon = fullMoon, MoonFading = moonFading,
+                EatTarget = enemyPlaying ? eatBefore : b.EatTarget,
                 Upgrades = (demo ? App.DemoUpgrades : Campaign.Upgrades) ?? Enumerable.Empty<string>(),
             };
         }
@@ -247,7 +249,7 @@ namespace VampireSpawn.Game.Screens
             if (View.IsBusy) return;
             var b = Session.Battle;
             if (b.Phase == Phase.Deploy) { if (!b.Reinforcing) playLog.Started(); input.Run(s => s.Start()); }
-            else if (b.Phase == Phase.Player) { enemyPlaying = true; playLog.EnemyBegins(); input.Run(s => s.EndTurn()); }
+            else if (b.Phase == Phase.Player) { eatBefore = b.EatTarget; enemyPlaying = true; playLog.EnemyBegins(); input.Run(s => s.EndTurn()); }
             else if (b.Phase == Phase.Over && over != null) overRoot.AddToClassList("shown");
         }
 
