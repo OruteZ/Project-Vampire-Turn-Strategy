@@ -14,6 +14,8 @@ namespace VampireSpawn.Game
         public ArtCatalog art;
         public Camera viewCamera;
         [Tooltip("씬에 구운 지형 (Campaign Map, 그 아래 Cameras 의 Cinemachine 시점들). 비면 실행 중에 짓는다")] public Transform terrain;
+        [Tooltip("지도 레이어 WASD 이동 속도 (초당 단위)")] public float panSpeed = 40f;
+        [Tooltip("지도 레이어 WASD 이동 범위: 전경 시점에서 동서(x)·남북(y)으로 갈 수 있는 거리")] public Vector2 panRange = new Vector2(30f, 45f);
 
         // campaign-map.md 9: pitch 50, the scene's FOV 40, camp distance 28, 0.3 s between shots.
         public const float Pitch = 50f, Fov = 40f, CampDistance = 28f, BlendSeconds = 0.3f, WideDistance = 80f;
@@ -38,6 +40,7 @@ namespace VampireSpawn.Game
             }
             terrain.gameObject.SetActive(true);
             fogDistance = 0f;
+            pan = Vector2.zero;
             if (progress != null) Kill(progress.gameObject);
             progress = new GameObject("Progress").transform;
             progress.SetParent(terrain, false);
@@ -84,6 +87,7 @@ namespace VampireSpawn.Game
             var chosen = layer == CampLayer.Barracks ? Shot("Shot Camp") : layer == CampLayer.Info && r != null ? Shot("Shot " + Campaign.Stages[stage].Id) : Shot("Shot Wide");
             foreach (var cam in Shots()) cam.enabled = cam == chosen;
             this.empty = empty;
+            panning = layer == CampLayer.Map ? chosen : null;
             if (chosen != null)
             {
                 Shift(chosen);
@@ -142,6 +146,22 @@ namespace VampireSpawn.Game
         }
 
         float fogDistance;
+
+        CinemachineCamera panning;
+        Vector2 pan;
+
+        // Arrows stay with marker focus (CampFlow). The offset is camera-local after Aim, so it slides the wide shot without re-aiming.
+        void Update()
+        {
+            var kb = UnityEngine.InputSystem.Keyboard.current;
+            if (!Showing || panning == null || kb == null) return;
+            var move = new Vector2((kb.dKey.isPressed ? 1f : 0f) - (kb.aKey.isPressed ? 1f : 0f), (kb.wKey.isPressed ? 1f : 0f) - (kb.sKey.isPressed ? 1f : 0f));
+            pan += move.normalized * panSpeed * Time.unscaledDeltaTime;
+            pan = new Vector2(Mathf.Clamp(pan.x, -panRange.x, panRange.x), Mathf.Clamp(pan.y, -panRange.y, panRange.y));
+            if (!panning.TryGetComponent<CinemachineCameraOffset>(out var offset)) offset = panning.gameObject.AddComponent<CinemachineCameraOffset>();
+            var rad = Pitch * Mathf.Deg2Rad;
+            offset.Offset = new Vector3(pan.x, pan.y * Mathf.Sin(rad), pan.y * Mathf.Cos(rad));
+        }
 
         // The running map reads only the scene: regions, their Marker/Brazier/Camp points, Paths and the Camp Template are baked
         // objects people may move by hand. CampaignMapLayout only feeds the bake (campaign-map.md 10).
