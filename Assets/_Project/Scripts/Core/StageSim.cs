@@ -34,9 +34,9 @@ namespace VampireSpawn.Core
             return sb.ToString();
         }
 
-        public static Run Play(Stage stage)
+        public static Run Play(Stage stage, IEnumerable<string> owned = null, IEnumerable<Placement> formation = null)
         {
-            var b = new Battle(stage);
+            var b = new Battle(stage, owned, formation);
             b.Start();
             var peak = b.Enemies.Count();
             while ((b.Phase == Phase.Player || b.Reinforcing) && b.Turn <= TurnCap)
