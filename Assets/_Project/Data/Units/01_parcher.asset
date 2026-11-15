@@ -17,7 +17,7 @@ MonoBehaviour:
   pop: 1
   silver: 0
   hp: 4
-  atk: 2
+  atk: 1
   def: 0
   mov: 1
   rng: 2

@@ -16,9 +16,9 @@ MonoBehaviour:
   tier: 1
   pop: 2
   silver: 0
-  hp: 9
-  atk: 3
-  def: 1
+  hp: 8
+  atk: 4
+  def: 0
   mov: 1
   rng: 1
   bane: 0

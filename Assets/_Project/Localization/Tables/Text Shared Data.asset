@@ -1863,6 +1863,198 @@ MonoBehaviour:
     m_Key: unit.card.gargoyleNote
     m_Metadata:
       m_Items: []
+  - m_Id: 3548993824813056
+    m_Key: stage.s11.label
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3548993875144704
+    m_Key: stage.s11.title
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3548993875144705
+    m_Key: stage.s11.brief
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3548993875144706
+    m_Key: stage.s11.boss
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3548993875144707
+    m_Key: stage.s11.place
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3548993875144708
+    m_Key: stage.s12.label
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3548993875144709
+    m_Key: stage.s12.title
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3548993875144710
+    m_Key: stage.s12.brief
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3548993875144711
+    m_Key: stage.s12.boss
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3548993875144712
+    m_Key: stage.s12.place
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3548993875144713
+    m_Key: stage.s12.escort
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3548993875144714
+    m_Key: stage.s13.label
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3548993875144715
+    m_Key: stage.s13.title
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3548993875144716
+    m_Key: stage.s13.brief
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3548993875144717
+    m_Key: stage.s13.boss
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3548993875144718
+    m_Key: stage.s14.label
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3548993875144719
+    m_Key: stage.s14.title
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3548993875144720
+    m_Key: stage.s14.brief
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3548993875144721
+    m_Key: stage.s14.boss
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3548993875144722
+    m_Key: stage.s15.label
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3548993875144723
+    m_Key: stage.s15.title
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3548993875144724
+    m_Key: stage.s15.brief
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3548993875144725
+    m_Key: stage.s15.boss
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3548993875144726
+    m_Key: stage.s15.place
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3548993875144727
+    m_Key: stage.s16.label
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3548993875144728
+    m_Key: stage.s16.title
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3548993875144729
+    m_Key: stage.s16.brief
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3548993875144730
+    m_Key: stage.s16.boss
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3548993875144731
+    m_Key: stage.s17.label
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3548993875144732
+    m_Key: stage.s17.title
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3548993875144733
+    m_Key: stage.s17.brief
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3548993875144734
+    m_Key: stage.s17.boss
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3548993875144735
+    m_Key: stage.s18.label
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3548993875144736
+    m_Key: stage.s18.title
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3548993875144737
+    m_Key: stage.s18.brief
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3548993875144738
+    m_Key: stage.s18.boss
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3548993875144739
+    m_Key: stage.s19.label
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3548993875144740
+    m_Key: stage.s19.title
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3548993875144741
+    m_Key: stage.s19.brief
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3548993875144742
+    m_Key: stage.s19.boss
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3548993875144743
+    m_Key: stage.s19.place
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3548993875144744
+    m_Key: stage.s20.label
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3548993875144745
+    m_Key: stage.s20.title
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3548993875144746
+    m_Key: stage.s20.brief
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3548993875144747
+    m_Key: stage.s20.boss
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3548993875144748
+    m_Key: deathKnight.name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3548993875144749
+    m_Key: deathKnight.glyph
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3548993875144750
+    m_Key: unit.card.deathKnightNote
+    m_Metadata:
+      m_Items: []
   m_Metadata:
     m_Items: []
   m_KeyGenerator:

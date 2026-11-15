@@ -124,6 +124,20 @@ MonoBehaviour:
     wave: 
     stance: 0
     alert: 0
+  - kind: skeleton
+    col: 3
+    row: 0
+    arrive: 6
+    wave: 
+    stance: 0
+    alert: 0
+  - kind: skeleton
+    col: 5
+    row: 0
+    arrive: 6
+    wave: 
+    stance: 0
+    alert: 0
   triggers: []
   doors: []
   reinforcements: []

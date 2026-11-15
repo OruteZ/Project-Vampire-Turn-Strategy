@@ -30,11 +30,11 @@ MonoBehaviour:
   bonusType: 2
   bonusValue: 0
   bonusGold: 10
-  bossHp: 16
+  bossHp: 14
   bossAtk: 4
   bossDef: 0
   bossMov: 2
-  bossHeal: 8
+  bossHeal: 7
   map:
   - '##..T..##'
   - '#.......#'
@@ -96,9 +96,16 @@ MonoBehaviour:
     wave: 
     stance: 0
     alert: 0
-  - kind: skeletonCaptain
+  - kind: skeleton
     col: 4
     row: 9
+    arrive: 5
+    wave: 
+    stance: 0
+    alert: 0
+  - kind: skeleton
+    col: 3
+    row: 8
     arrive: 5
     wave: 
     stance: 0

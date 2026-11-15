@@ -822,18 +822,18 @@ MonoBehaviour:
       m_Items:
       - rid: 7201578077006332005
   - m_Id: 5832192094236
-    m_Localized: The Count's Castle
+    m_Localized: Before the Gate
     m_Metadata:
       m_Items:
       - rid: 7201578077006332005
   - m_Id: 5832192094237
-    m_Localized: The Count waits on his throne. The further you push, the more enemies
-      come through the main gate behind you.
+    m_Localized: The outer gate of the castle. Its keeper waits in the inner room.
+      The further you push, the more enemies come through the gate behind you.
     m_Metadata:
       m_Items:
       - rid: 7201578077006332005
   - m_Id: 5832192094238
-    m_Localized: Vampire Count
+    m_Localized: Keeper of the Gate
     m_Metadata:
       m_Items:
       - rid: 7201578077006332005
@@ -2248,6 +2248,209 @@ MonoBehaviour:
   - m_Id: 3528098670505991
     m_Localized: Mid-boss. A statue guarding the way. Weak blows barely scratch it.
       Allies it kills do not rise.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3548993824813056
+    m_Localized: Chapter 11
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3548993875144704
+    m_Localized: The Moat Bridge
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3548993875144705
+    m_Localized: Two bridges cross the moat. Hold the gate threshold for ten nights.
+      The ghouls reach this bank first.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3548993875144706
+    m_Localized: Knight of the Moat
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3548993875144707
+    m_Localized: the gate threshold
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3548993875144708
+    m_Localized: Chapter 12
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3548993875144709
+    m_Localized: On the Walls
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3548993875144710
+    m_Localized: Bring the keykeeper to the tower at the end of the wall. The wall
+      walk is narrow, and ghouls give chase from behind.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3548993875144711
+    m_Localized: Watcher on the Wall
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3548993875144712
+    m_Localized: the far tower
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3548993875144713
+    m_Localized: the keykeeper
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3548993875144714
+    m_Localized: Chapter 13
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3548993875144715
+    m_Localized: The Courtyard
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3548993875144716
+    m_Localized: Beyond the fountain are three gates, and a gargoyle guards the middle
+      one. Ghouls come in through the gate behind you.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3548993875144717
+    m_Localized: Steward of the Courtyard
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3548993875144718
+    m_Localized: Chapter 14
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3548993875144719
+    m_Localized: The Dungeon
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3548993875144720
+    m_Localized: Something is locked in every cell. Fell four, and the remaining
+      cell doors open.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3548993875144721
+    m_Localized: The Gaoler
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3548993875144722
+    m_Localized: Chapter 15
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3548993875144723
+    m_Localized: The Chapel
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3548993875144724
+    m_Localized: Hold the ground between the two altar candles for ten nights. The
+      enemy comes from north and south in turn.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3548993875144725
+    m_Localized: The Fallen Priest
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3548993875144726
+    m_Localized: the altar
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3548993875144727
+    m_Localized: Chapter 16
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3548993875144728
+    m_Localized: The Great Gallery
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3548993875144729
+    m_Localized: A black knight guards the middle of the pillared gallery. The pillars
+      stop arrows.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3548993875144730
+    m_Localized: Master of the Gallery
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3548993875144731
+    m_Localized: Chapter 17
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3548993875144732
+    m_Localized: The Bell Tower
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3548993875144733
+    m_Localized: The room beneath the bell tower is small. Enemies come through both
+      side doors every second night.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3548993875144734
+    m_Localized: The Bell Ringer
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3548993875144735
+    m_Localized: Chapter 18
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3548993875144736
+    m_Localized: The Ballroom
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3548993875144737
+    m_Localized: There is no wall to hide behind in the wide ballroom. Only the light
+      of the chandelier in the middle keeps the feeding at bay.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3548993875144738
+    m_Localized: Mistress of the Ball
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3548993875144739
+    m_Localized: Chapter 19
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3548993875144740
+    m_Localized: The Stair to the Throne
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3548993875144741
+    m_Localized: Hold the landing for twelve nights. The black knight comes down
+      twice.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3548993875144742
+    m_Localized: Captain of the Guard
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3548993875144743
+    m_Localized: the landing
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3548993875144744
+    m_Localized: Chapter 20
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3548993875144745
+    m_Localized: The Count's Throne
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3548993875144746
+    m_Localized: The Count waits on his throne. Gargoyles hold the two doors to it,
+      and a black knight stands within.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3548993875144747
+    m_Localized: Vampire Count
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3548993875144748
+    m_Localized: Black Knight
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3548993875144749
+    m_Localized: BK
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3548993875144750
+    m_Localized: Mid-boss. Fast, sturdy and hard-hitting. Allies it kills do not
+      rise.
     m_Metadata:
       m_Items: []
   references:

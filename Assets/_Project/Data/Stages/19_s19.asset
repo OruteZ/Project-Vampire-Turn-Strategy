@@ -1,0 +1,204 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 15fef31503538d54ab5290184fb375be, type: 3}
+  m_Name: 19_s19
+  m_EditorClassIdentifier: VampireSpawn.Game::VampireSpawn.Game.Data.StageData
+  id: s19
+  units:
+  - pspear
+  - parcher
+  - sword
+  - archer
+  - knight
+  - hunter
+  - gravedigger
+  - doctor
+  - werewolf
+  pop: 18
+  silver: 2
+  reward: 60
+  goal: 1
+  spots:
+  - {x: 5, y: 7}
+  - {x: 5, y: 8}
+  hold: 12
+  escortHp: 0
+  escortDef: 0
+  escortMov: 0
+  escortAt: {x: 0, y: 0}
+  bonusType: 3
+  bonusValue: 4
+  bonusGold: 20
+  bossHp: 1
+  bossAtk: 1
+  bossDef: 0
+  bossMov: 1
+  bossHeal: 0
+  map:
+  - ..#.....#..
+  - ...........
+  - .#.,.#.,.#.
+  - ...........
+  - '#.#.#.#.#.#'
+  - ...........
+  - ..ddddddd..
+  - '#.ddTdTdd.#'
+  - '##ddddddd##'
+  - '###.....###'
+  enemies:
+  - kind: skeleton
+    col: 1
+    row: 1
+    arrive: 0
+    wave: 
+    stance: 0
+    alert: 0
+  - kind: skeleton
+    col: 5
+    row: 1
+    arrive: 0
+    wave: 
+    stance: 0
+    alert: 0
+  - kind: skeleton
+    col: 9
+    row: 1
+    arrive: 0
+    wave: 
+    stance: 0
+    alert: 0
+  - kind: skeletonArcher
+    col: 3
+    row: 0
+    arrive: 0
+    wave: 
+    stance: 0
+    alert: 0
+  - kind: skeletonArcher
+    col: 7
+    row: 0
+    arrive: 0
+    wave: 
+    stance: 0
+    alert: 0
+  - kind: ghoul
+    col: 0
+    row: 3
+    arrive: 2
+    wave: 
+    stance: 0
+    alert: 0
+  - kind: ghoul
+    col: 10
+    row: 3
+    arrive: 2
+    wave: 
+    stance: 0
+    alert: 0
+  - kind: skeletonCaptain
+    col: 4
+    row: 0
+    arrive: 3
+    wave: 
+    stance: 0
+    alert: 0
+  - kind: skeletonCaptain
+    col: 6
+    row: 0
+    arrive: 3
+    wave: 
+    stance: 0
+    alert: 0
+  - kind: deathKnight
+    col: 5
+    row: 0
+    arrive: 5
+    wave: 
+    stance: 0
+    alert: 0
+  - kind: skeletonHeavy
+    col: 1
+    row: 0
+    arrive: 6
+    wave: 
+    stance: 0
+    alert: 0
+  - kind: skeletonHeavy
+    col: 9
+    row: 0
+    arrive: 6
+    wave: 
+    stance: 0
+    alert: 0
+  - kind: gargoyle
+    col: 0
+    row: 5
+    arrive: 7
+    wave: 
+    stance: 0
+    alert: 0
+  - kind: gargoyle
+    col: 10
+    row: 5
+    arrive: 7
+    wave: 
+    stance: 0
+    alert: 0
+  - kind: deathKnight
+    col: 5
+    row: 0
+    arrive: 9
+    wave: 
+    stance: 0
+    alert: 0
+  - kind: ghoul
+    col: 3
+    row: 0
+    arrive: 10
+    wave: 
+    stance: 0
+    alert: 0
+  - kind: ghoul
+    col: 7
+    row: 0
+    arrive: 10
+    wave: 
+    stance: 0
+    alert: 0
+  triggers: []
+  doors: []
+  reinforcements: []
+  sample:
+  - kind: knight
+    col: 5
+    row: 6
+  - kind: werewolf
+    col: 4
+    row: 6
+  - kind: sword
+    col: 6
+    row: 6
+  - kind: gravedigger
+    col: 2
+    row: 6
+  - kind: pspear
+    col: 8
+    row: 6
+  - kind: hunter
+    col: 5
+    row: 7
+  - kind: doctor
+    col: 3
+    row: 6
+  - kind: archer
+    col: 7
+    row: 6

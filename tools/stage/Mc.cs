@@ -136,6 +136,9 @@ namespace StagePlay
                 var foes = b.Enemies.Where(e => !e.Asleep).ToList();
                 if (foes.Count > 0) s -= 0.15 * b.Allies.Sum(a => foes.Min(e => Hex.Distance(a.Pos, e.Pos)));
             }
+            // A door that opens when someone reaches a hex: lean toward it, or the bot never finds the boss behind it.
+            foreach (var t in b.Stage.Triggers.Where(t => t.Kind == TriggerKind.Reach && !b.Fired(t.Id) && t.Hexes.Length > 0))
+                if (b.Allies.Any()) s -= 1.5 * b.Allies.Min(a => t.Hexes.Min(h => Hex.Distance(a.Pos, h)));
             return s - b.Turn * 0.5;
         }
     }

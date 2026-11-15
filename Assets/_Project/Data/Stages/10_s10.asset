@@ -36,11 +36,11 @@ MonoBehaviour:
   bonusType: 1
   bonusValue: 0
   bonusGold: 15
-  bossHp: 32
+  bossHp: 34
   bossAtk: 6
-  bossDef: 1
+  bossDef: 0
   bossMov: 2
-  bossHeal: 14
+  bossHeal: 16
   map:
   - '##.......##'
   - '#.T.....T.#'

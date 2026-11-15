@@ -16,12 +16,12 @@ MonoBehaviour:
   tier: 3
   pop: 3
   silver: 1
-  hp: 9
+  hp: 7
   atk: 3
-  def: 1
+  def: 0
   mov: 2
   rng: 2
-  bane: 3
+  bane: 2
   heal: 0
   skills: 0b000000
   unlockAt: 9

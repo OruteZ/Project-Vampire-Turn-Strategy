@@ -52,6 +52,16 @@ MonoBehaviour:
   - {fileID: 8642579361629917190, guid: 9915853746d8c35478fcde5fced70954, type: 3}
   - {fileID: 1780652691994987089, guid: 3dc674aa4121ade4393a00a269891e75, type: 3}
   - {fileID: 6117433564479643974, guid: b5a6c6ae51cec644a86cd94cab450e51, type: 3}
+  - {fileID: 6844575226425343367, guid: ff568bce70c7a1243a9d698bd815043a, type: 3}
+  - {fileID: 2368909919830446992, guid: 17b0e751c9466c747b4b1a832a4defe1, type: 3}
+  - {fileID: 5263793357742816725, guid: a2803cbbee11a2045bf5eda356c7d029, type: 3}
+  - {fileID: 4929990291635870022, guid: 6db46a9b4b60a094eb9b93d5c85adc2a, type: 3}
+  - {fileID: 7881255966117498096, guid: af8c1b4d95fd43a4c964d66c7b106b37, type: 3}
+  - {fileID: 2715520345056812671, guid: 0947260062640af4aa1d50006586c4c8, type: 3}
+  - {fileID: 755666254312371176, guid: 7cfa23c85404f7b488bbf23b71b22bc5, type: 3}
+  - {fileID: 1560173473846337514, guid: 607111f609704a24d8b1c37ffd468c78, type: 3}
+  - {fileID: 2602014492620539636, guid: dd2f6566da45d324bb0decffa05755cb, type: 3}
+  - {fileID: 6427972392022404707, guid: 665613cebfef0634cb61b7cae25281bc, type: 3}
   allyLooks:
   - {fileID: 11400000, guid: 7f5413a4c00440d48a8145a5224ad24a, type: 2}
   - {fileID: 11400000, guid: 9f9bd31ff4586394ea905716c8df4be9, type: 2}
@@ -70,6 +80,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: a9e1f1e36a348dc458951bb613859f23, type: 2}
   - {fileID: 11400000, guid: 0aa4be8e5747b9a4ea077de1d7230d18, type: 2}
   - {fileID: 11400000, guid: d3927b6050517724eab8633dbd8b228e, type: 2}
+  - {fileID: 11400000, guid: 1f1e17672d7f8f047955b23000c66f66, type: 2}
   vampireLook: {fileID: 11400000, guid: 2aa0e12222516714582208c22eb067d2, type: 2}
   wolfLook: {fileID: 11400000, guid: 08ece1f2a992b884081d58ac45ad02e2, type: 2}
   unitAnimator: {fileID: 9100000, guid: 2b7b31fac4d09d24bab28abb943acab0, type: 2}
