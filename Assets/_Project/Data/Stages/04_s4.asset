@@ -28,8 +28,8 @@ MonoBehaviour:
   escortDef: 0
   escortMov: 0
   escortAt: {x: 0, y: 0}
-  bonusType: 1
-  bonusValue: 0
+  bonusType: 0
+  bonusValue: 12
   bonusGold: 10
   bossHp: 16
   bossAtk: 4
@@ -42,7 +42,7 @@ MonoBehaviour:
   - '#####.#####'
   - '###ddddd###'
   - '###ddddd###'
-  - ...ddTdd...
+  - ...ddddd...
   - '###ddddd###'
   - '###ddddd###'
   - '#####.#####'
@@ -84,14 +84,14 @@ MonoBehaviour:
     wave: 
     stance: 0
     alert: 0
-  - kind: skeleton
+  - kind: spawn
     col: 0
     row: 5
     arrive: 3
     wave: 
     stance: 0
     alert: 0
-  - kind: skeleton
+  - kind: spawn
     col: 1
     row: 5
     arrive: 3

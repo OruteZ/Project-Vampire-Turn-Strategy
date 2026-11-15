@@ -216,8 +216,8 @@ namespace VampireSpawn.Core
         public Unit Escort => units.FirstOrDefault(u => u.Role == Role.Escort);
         public IEnumerable<Unit> Enemies => units.Where(u => u.Side == Side.Enemy);
         public Unit Vampire => units.FirstOrDefault(u => u.Role == Role.Vampire);
-        // Ranged attacks (range 2 or more) need a clear line; rock blocks it (hex-grid.md 5).
-        public bool InRange(Unit u, Hex from, Hex to) => Hex.Distance(from, to) <= u.Rng && (u.Rng <= 1 || Board.Sees(from, to));
+        // Ranged attacks (range 2 or more) need a clear line (rock blocks it) and cannot hit the hex next to the shooter (hex-grid.md 4-1, 4-2).
+        public bool InRange(Unit u, Hex from, Hex to) => Hex.Distance(from, to) <= u.Rng && (u.Rng <= 1 || Hex.Distance(from, to) >= 2 && Board.Sees(from, to));
         public Unit UnitAt(Hex h) => units.FirstOrDefault(u => u.Pos == h);
         public Corpse CorpseAt(Hex h) => corpses.FirstOrDefault(c => c.Pos == h);
         public Unit Find(int id) => units.FirstOrDefault(u => u.Id == id);
@@ -257,7 +257,7 @@ namespace VampireSpawn.Core
         }
 
         // docs/content/units.md "판타지 직업 개편" C.
-        const int WolfMoon = 3, WolfAtk = 2, WolfMov = 1, FeastHeal = 2;
+        const int WolfMoon = 4, WolfAtk = 2, WolfMov = 1, FeastHeal = 2;
 
         bool WolfNow(Unit u) => u.Has(Ability.Moonblood) && moon >= (u.Has(Ability.Crescent) ? WolfMoon - 1 : WolfMoon);
 
@@ -288,6 +288,17 @@ namespace VampireSpawn.Core
                 {
                     Id = nextId++, Role = Role.Vampire, Name = Stage.BossName, Glyph = new Message("vampire.glyph"), Pos = at,
                     Hp = b.Hp, MaxHp = b.Hp, Atk = b.Atk, Def = b.Def, Mov = b.Mov, Rng = 1, Heal = b.Heal, Asleep = true,
+                };
+            }
+            // A villager that rose before the battle began (docs/content/enemies.md 5): a real spawn, so allies it kills rise too.
+            if (kind == EnemyType.Spawn)
+            {
+                var m = GameData.Minion(kind);
+                var t = GameData.Type(EnemyType.SpawnOf);
+                return new Unit
+                {
+                    Id = nextId++, Role = Role.Spawn, Type = t.Key, Name = new Message("name.spawn", t.Name), Glyph = t.Glyph, Origin = t.Name, Pos = at,
+                    Hp = m.Hp, MaxHp = m.Hp, Atk = m.Atk, Def = m.Def, Mov = m.Mov, Rng = 1,
                 };
             }
             var s = GameData.Minion(kind);
@@ -465,7 +476,9 @@ namespace VampireSpawn.Core
             return Done();
         }
 
-        public bool CanBury(Unit u, Corpse c) => u != null && c != null && u.Side == Side.Ally && !u.Acted && u.Has(Ability.Bury) && Hex.Distance(u.Pos, c.Pos) == 1;
+        public const int BuryRange = 2;
+
+        public bool CanBury(Unit u, Corpse c) => u != null && c != null && u.Side == Side.Ally && !u.Acted && u.Has(Ability.Bury) && Hex.Distance(u.Pos, c.Pos) <= BuryRange;
 
         // docs/content/units.md 4-3.
         public CommandResult Bury(int id, int corpseId)

@@ -64,6 +64,8 @@ namespace VampireSpawn.Core
     public sealed class EnemyType
     {
         public const string Vampire = "vampire";
+        // Data key of a spawn placed by the stage, and the unit type it looks like.
+        public const string Spawn = "spawn", SpawnOf = "pspear";
 
         public readonly string Key;
         public readonly int Hp, Atk, Def, Mov, Rng;

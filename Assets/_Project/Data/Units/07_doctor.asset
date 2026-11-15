@@ -22,7 +22,7 @@ MonoBehaviour:
   mov: 1
   rng: 1
   bane: 0
-  heal: 3
+  heal: 4
   skills: 0a000000
   unlockAt: 6
   upgrades:

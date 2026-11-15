@@ -2127,6 +2127,14 @@ MonoBehaviour:
     m_Key: log.trapSprung
     m_Metadata:
       m_Items: []
+  - m_Id: 3582748518051840
+    m_Key: spawn.name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3582748580966400
+    m_Key: spawn.glyph
+    m_Metadata:
+      m_Items: []
   m_Metadata:
     m_Items: []
   m_KeyGenerator:

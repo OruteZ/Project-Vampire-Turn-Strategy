@@ -250,11 +250,11 @@ namespace VampireSpawn.Tests
             var b = new Battle(Field(new[] { P(EnemyType.Vampire, 6, 6), P("skeleton", 3, 2) }), new[] { "werewolf_feast" }, new[] { P("werewolf", 3, 3) });
             b.Start();
             var wolf = Ally(b, 3, 3);
-            b.EndTurn(); b.EndTurn();
-            Assert.AreEqual(2, b.Moon);
-            Assert.IsFalse(wolf.Wolf, "moon 2: still human");
+            b.EndTurn(); b.EndTurn(); b.EndTurn();
+            Assert.AreEqual(3, b.Moon);
+            Assert.IsFalse(wolf.Wolf, "moon 3: still human");
             var events = b.EndTurn().Events;
-            Assert.IsTrue(wolf.Wolf, "moon 3");
+            Assert.IsTrue(wolf.Wolf, "moon 4");
             Assert.AreEqual(type.Atk + 2, wolf.Atk);
             Assert.AreEqual(type.Mov + 1, wolf.Mov);
             Assert.IsTrue(events.Any(e => e.Kind == BattleEventKind.Shifted && e.UnitId == wolf.Id && e.Value == 1));
@@ -270,8 +270,8 @@ namespace VampireSpawn.Tests
 
             var crescent = new Battle(Field(new[] { P(EnemyType.Vampire, 6, 6) }), new[] { "werewolf_early" }, new[] { P("werewolf", 3, 3) });
             crescent.Start();
-            crescent.EndTurn(); crescent.EndTurn();
-            Assert.IsTrue(Ally(crescent, 3, 3).Wolf, "crescent call: from moon 2");
+            crescent.EndTurn(); crescent.EndTurn(); crescent.EndTurn();
+            Assert.IsTrue(Ally(crescent, 3, 3).Wolf, "crescent call: from moon 3");
         }
 
         [Test]

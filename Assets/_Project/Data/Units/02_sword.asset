@@ -38,7 +38,7 @@ MonoBehaviour:
     ability: 0
   - id: sword_def
     cost: 70
-    hp: 0
+    hp: 2
     atk: 0
     def: 1
     mov: 0

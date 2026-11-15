@@ -23,7 +23,6 @@ MonoBehaviour:
   - gravedigger
   - doctor
   - werewolf
-  - scout
   pop: 14
   silver: 2
   reward: 45
@@ -37,7 +36,7 @@ MonoBehaviour:
   bonusType: 1
   bonusValue: 0
   bonusGold: 15
-  bossHp: 34
+  bossHp: 28
   bossAtk: 6
   bossDef: 0
   bossMov: 2

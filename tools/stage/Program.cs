@@ -68,6 +68,31 @@ namespace StagePlay
                 case "form":
                     Console.WriteLine(string.Join(" ", Comp(GameData.Stages.First(s => s.Id == a[1]), a[2]).Select(p => $"{p.Kind}@{p.Col},{p.Row}")));
                     return 0;
+                case "builds":
+                    {
+                        // builds <stage> <n> [seed]: n random builds (a few unit kinds, random counts, at most one upgrade branch per kind), one lookahead-bot game each.
+                        // stage, formation, upgrades, end, won, lost, turns, buries, mends, traps, ally attacks
+                        var s = GameData.Stages.First(x => x.Id == a[1]);
+                        var n = int.Parse(a[2]);
+                        var rng = new Random(a.Length > 3 ? int.Parse(a[3]) : 1);
+                        var samples = int.Parse(Environment.GetEnvironmentVariable("SP_SAMPLES") ?? "100");
+                        var num = int.Parse(s.Id.Substring(1));
+                        for (var i = 0; i < n; i++)
+                        {
+                            string force = Environment.GetEnvironmentVariable("SP_FORCE"), ban = Environment.GetEnvironmentVariable("SP_BAN");
+                            var kinds = s.Units.Where(k => k != ban && k != force).OrderBy(_ => rng.Next()).Take(Math.Min(s.Units.Length, 2 + rng.Next(3))).ToList();
+                            if (!string.IsNullOrEmpty(force)) kinds.Insert(0, force);
+                            var spec = string.Join(" ", kinds.Select((k, j) => j == 0 || rng.Next(3) == 0 ? k + ":" + (j == 0 && !string.IsNullOrEmpty(force) ? 2 : 1 + rng.Next(3)) : k + ":*"));
+                            if (!spec.Contains("*")) spec += " " + s.Units[rng.Next(Math.Min(2, s.Units.Length))] + ":*";
+                            var f = Comp(s, spec);
+                            var up = f.Select(p => p.Kind).Distinct().Where(k => GameData.Type(k).UnlockAt < num && rng.Next(2) == 0)
+                                .Select(k => { var br = GameData.Branches(k); return br.Length == 0 ? null : br[rng.Next(br.Length)].Id; }).Where(x => x != null).ToArray();
+                            var r = Mc.Play(s, up, f, i + 1, samples);
+                            int Count(string c) => r.Log.Count(l => l.StartsWith(c + " "));
+                            Console.WriteLine($"{s.Id}\t{string.Join("+", f.GroupBy(p => p.Kind).Select(g => g.Key + g.Count()))}\t{string.Join(",", up)}\t{(r.End?.ToString() ?? "cap")}\t{(r.Won ? 1 : 0)}\t{r.Lost}\t{r.Turns}\t{Count("b")}\t{Count("h")}\t{Count("t")}\t{Count("x")}");
+                        }
+                        return 0;
+                    }
                 case "mc":
                     {
                         // mc <stage|all> [formation] [upgrades] ; env SP_SEEDS (8), SP_SAMPLES (200), SP_SAVE (play-file prefix for the first win)

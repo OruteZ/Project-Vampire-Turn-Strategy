@@ -6,7 +6,7 @@ d = json.load(open(os.path.join(T, 'data.json'), encoding='utf8'))
 TITLE = {'s1': '잿빛 방앗간', 's2': '물레방아 다리', 's3': '무너진 예배당', 's4': '갈림길 묘지', 's5': '횃불 고개', 's6': '버려진 장원', 's7': '국경 망루',
          's8': '성 아래 마을', 's9': '버려진 은광', 's10': '성문 앞', 's11': '해자 다리', 's12': '성벽 위', 's13': '안뜰', 's14': '지하 감옥', 's15': '예배실',
          's16': '대회랑', 's17': '종탑', 's18': '무도회장', 's19': '왕좌로 가는 계단', 's20': '백작의 왕좌'}
-EN = {'skeleton': '스켈레톤', 'skeletonArcher': '궁수', 'skeletonHeavy': '중갑병', 'ghoul': '구울', 'skeletonCaptain': '대장', 'gargoyle': '가고일', 'deathKnight': '검은 기사'}
+EN = {'skeleton': '스켈레톤', 'skeletonArcher': '궁수', 'skeletonHeavy': '중갑병', 'ghoul': '구울', 'skeletonCaptain': '대장', 'gargoyle': '가고일', 'deathKnight': '검은 기사', 'spawn': '스폰'}
 GOAL = {0: '보스 처치', 1: '방어전 {h}턴', 2: '호위'}
 BON = {0: '{v}턴 안', 1: '흡혈 0회', 2: '모든 하수인 처치', 3: '아군 손실 {v} 이하'}
 res = collections.defaultdict(dict)

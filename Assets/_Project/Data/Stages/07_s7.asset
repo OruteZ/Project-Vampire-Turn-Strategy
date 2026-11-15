@@ -72,20 +72,20 @@ MonoBehaviour:
     wave: 
     stance: 2
     alert: 0
-  - kind: gargoyle
+  - kind: skeletonHeavy
     col: 5
     row: 4
     arrive: 0
     wave: 
     stance: 2
     alert: 0
-  - kind: skeletonHeavy
+  - kind: skeletonCaptain
     col: 5
     row: 3
     arrive: 0
     wave: 
-    stance: 2
-    alert: 0
+    stance: 1
+    alert: 2
   - kind: skeleton
     col: 2
     row: 5

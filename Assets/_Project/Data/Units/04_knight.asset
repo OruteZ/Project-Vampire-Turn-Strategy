@@ -28,7 +28,7 @@ MonoBehaviour:
   upgrades:
   - id: knight_hp
     cost: 90
-    hp: 4
+    hp: 6
     atk: 0
     def: 0
     mov: 0
@@ -38,7 +38,7 @@ MonoBehaviour:
     ability: 0
   - id: knight_def
     cost: 90
-    hp: 0
+    hp: 2
     atk: 0
     def: 1
     mov: 0

@@ -429,7 +429,8 @@ MonoBehaviour:
       - rid: 7201578077006332005
   - m_Id: 5832187899912
     m_Localized: A villager with a hunting bow. Cheap, but the arrows are weak and
-      RNG is only 2. Cannot shoot through walls. As a spawn it fights only in melee.
+      RNG is only 2. Cannot shoot through walls or at an enemy next to it. As a spawn
+      it fights only in melee.
     m_Metadata:
       m_Items:
       - rid: 7201578077006332005
@@ -475,7 +476,7 @@ MonoBehaviour:
       m_Items:
       - rid: 7201578077006332005
   - m_Id: 5832187899921
-    m_Localized: DEF +1
+    m_Localized: DEF +1, HP +2
     m_Metadata:
       m_Items:
       - rid: 7201578077006332005
@@ -501,7 +502,7 @@ MonoBehaviour:
       - rid: 7201578077006332005
   - m_Id: 5832187899926
     m_Localized: Regular archer. Shoots from afar with RNG 3. Cannot shoot through
-      walls, and is frail. As a spawn it loses its bow.
+      walls or at an enemy next to it, and is frail. As a spawn it loses its bow.
     m_Metadata:
       m_Items:
       - rid: 7201578077006332005
@@ -511,7 +512,7 @@ MonoBehaviour:
       m_Items:
       - rid: 7201578077006332005
   - m_Id: 5832187899928
-    m_Localized: RNG +1
+    m_Localized: RNG +1, HP +1
     m_Metadata:
       m_Items:
       - rid: 7201578077006332005
@@ -547,7 +548,7 @@ MonoBehaviour:
       m_Items:
       - rid: 7201578077006332005
   - m_Id: 5832187899935
-    m_Localized: DEF +1
+    m_Localized: DEF +1, HP +2
     m_Metadata:
       m_Items: []
   - m_Id: 5832187899936
@@ -573,7 +574,7 @@ MonoBehaviour:
   - m_Id: 5832187899940
     m_Localized: 'A beak-masked alchemist. Hurls flasks of molten silver that sear
       vampires and spawn. The flask bursts: enemies next to the target take 1. Cannot
-      throw through walls.'
+      throw through walls or at an enemy next to it.'
     m_Metadata:
       m_Items:
       - rid: 7201578077006332005
@@ -703,8 +704,8 @@ MonoBehaviour:
       m_Items:
       - rid: 7201578077006332005
   - m_Id: 5832192094213
-    m_Localized: In the graveyard at the crossroads, hold the north gap and the west
-      and east lanes together. The south comes late.
+    m_Localized: At the crossroads graveyard the already risen come down the west
+      road. Allies they fell rise too, unless the gravedigger buries the body first.
     m_Metadata:
       m_Items:
       - rid: 7201578077006332005
@@ -745,8 +746,9 @@ MonoBehaviour:
       m_Items:
       - rid: 7201578077006332005
   - m_Id: 5832192094221
-    m_Localized: The manor hall has four doors. Hold for ten nights. Reach the chapel
-      torch to the east and the villagers hiding there will come to the hall.
+    m_Localized: The manor hall has four doors. Hold for ten nights. With the saintess
+      tending the wounded, more will live. Reach the chapel torch to the east and
+      the villagers hiding there will come to the hall.
     m_Metadata:
       m_Items:
       - rid: 7201578077006332005
@@ -766,8 +768,8 @@ MonoBehaviour:
       m_Items:
       - rid: 7201578077006332005
   - m_Id: 5832192094225
-    m_Localized: The watchtower has a single door, and a gargoyle blocks it. Until
-      the statue is broken, the master cannot come out either.
+    m_Localized: The watchtower has a single door, held by a heavy skeleton with
+      a captain behind it. You need a knight to stand before the door.
     m_Metadata:
       m_Items:
       - rid: 7201578077006332005
@@ -1193,8 +1195,7 @@ MonoBehaviour:
       m_Items:
       - rid: 7201578077006332005
   - m_Id: 9846568841280
-    m_Localized: "Inherited HP \xB7 ATK \xB7 MOV from {0}. DEF 0, melee only. Allies
-      it kills rise as spawn."
+    m_Localized: A villager already risen. Allies it kills rise as spawn.
     m_Metadata:
       m_Items:
       - rid: 7201578077006332005
@@ -1256,8 +1257,8 @@ MonoBehaviour:
       - rid: 7201578077006332005
   - m_Id: 9846568841289
     m_Localized: "Damage = ATK \u2212 DEF (minimum 1). No randomness. No counterattacks
-      or attacks of opportunity. Ranged attacks are blocked by walls (rock); water
-      and pits are not."
+      or attacks of opportunity. Ranged attacks are blocked by walls (rock) and cannot
+      hit the hex next to the shooter; water and pits are not walls."
     m_Metadata:
       m_Items:
       - rid: 7201578077006332005
@@ -1702,8 +1703,8 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 1147185487736833
-    m_Localized: The village gravedigger. Buries an adjacent body so it cannot rise.
-      Weak in a fight.
+    m_Localized: The village gravedigger. Buries a body within 2 hexes so it cannot
+      rise. Weak in a fight, but sturdy.
     m_Metadata:
       m_Items: []
   - m_Id: 1147185487736834
@@ -1715,7 +1716,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 1147185487736836
-    m_Localized: A cross-bearing saintess. Heals a wounded ally within 2 hexes by
+    m_Localized: A cross-bearing saintess. Heals a wounded ally within 3 hexes by
       prayer. Frail.
     m_Metadata:
       m_Items: []
@@ -1748,7 +1749,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 1147185487736844
-    m_Localized: +2 extra damage to vampires and spawn
+    m_Localized: +3 extra damage to vampires and spawn
     m_Metadata:
       m_Items: []
   - m_Id: 1147185487736845
@@ -1756,7 +1757,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 1147185487736846
-    m_Localized: HP +4
+    m_Localized: HP +6
     m_Metadata:
       m_Items: []
   - m_Id: 1147185487736847
@@ -2149,7 +2150,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 1911882184978433
-    m_Localized: 'A drifter with moon-blood. At Moon 3 or more turns wolf: +2 attack,
+    m_Localized: 'A drifter with moon-blood. At Moon 4 or more turns wolf: +2 attack,
       +1 move. Unarmoured and quick to fall.'
     m_Metadata:
       m_Items: []
@@ -2158,7 +2159,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 1911882184978435
-    m_Localized: HP +3
+    m_Localized: HP +5
     m_Metadata:
       m_Items: []
   - m_Id: 1911882184978436
@@ -2174,7 +2175,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 1911882184978439
-    m_Localized: Turns wolf from Moon 2
+    m_Localized: Turns wolf from Moon 3
     m_Metadata:
       m_Items: []
   - m_Id: 1911882184978440
@@ -2265,7 +2266,7 @@ MonoBehaviour:
       m_Items: []
   - m_Id: 3548993875144705
     m_Localized: Two bridges cross the moat. Hold the gate threshold for ten nights.
-      The ghouls reach this bank first.
+      A scout's trap at the end of a bridge stops whatever crosses.
     m_Metadata:
       m_Items: []
   - m_Id: 3548993875144706
@@ -2531,6 +2532,14 @@ MonoBehaviour:
       m_Items: []
   - m_Id: 3562236937039886
     m_Localized: '{0} sprang a trap: {1} damage, and it can do no more this turn.'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3582748518051840
+    m_Localized: Spawn
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3582748580966400
+    m_Localized: SP
     m_Metadata:
       m_Items: []
   references:

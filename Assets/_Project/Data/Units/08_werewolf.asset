@@ -16,7 +16,7 @@ MonoBehaviour:
   tier: 2
   pop: 3
   silver: 0
-  hp: 12
+  hp: 10
   atk: 3
   def: 0
   mov: 2
@@ -28,7 +28,7 @@ MonoBehaviour:
   upgrades:
   - id: werewolf_hp
     cost: 90
-    hp: 3
+    hp: 5
     atk: 0
     def: 0
     mov: 0

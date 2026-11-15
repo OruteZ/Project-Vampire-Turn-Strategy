@@ -33,7 +33,7 @@ MonoBehaviour:
   escortMov: 0
   escortAt: {x: 0, y: 0}
   bonusType: 3
-  bonusValue: 3
+  bonusValue: 2
   bonusGold: 15
   bossHp: 26
   bossAtk: 5
@@ -176,6 +176,20 @@ MonoBehaviour:
     col: 0
     row: 9
     arrive: 8
+    wave: 
+    stance: 0
+    alert: 0
+  - kind: ghoul
+    col: 0
+    row: 5
+    arrive: 6
+    wave: 
+    stance: 0
+    alert: 0
+  - kind: ghoul
+    col: 12
+    row: 5
+    arrive: 6
     wave: 
     stance: 0
     alert: 0

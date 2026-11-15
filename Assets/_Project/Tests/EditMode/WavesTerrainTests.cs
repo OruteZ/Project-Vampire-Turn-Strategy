@@ -245,5 +245,15 @@ namespace VampireSpawn.Tests
             var s = b.Enemies.Single(e => e.Kind == "skeleton");
             Assert.AreEqual(1, Hex.Distance(new Hex(3, 3), s.Pos));
         }
+
+        // docs/systems/hex-grid.md 4-2, docs/content/enemies.md 5
+        [Test]
+        public void ArchersCannotShootTheNextHexAndAPlacedSpawnIsARealSpawn()
+        {
+            var b = new Battle(Field(new[] { new Placement(EnemyType.Vampire, 6, 6), new Placement("skeleton", 3, 4), new Placement(EnemyType.Spawn, 0, 0) }), null, new[] { new Placement("archer", 3, 5) });
+            b.Start();
+            Assert.IsFalse(b.Attack(b.Allies.Single().Id, b.Enemies.Single(e => e.Kind == "skeleton").Id).Ok, "the enemy is next to the archer");
+            Assert.AreEqual(Role.Spawn, b.UnitAt(new Hex(0, 0)).Role, "data key spawn makes a spawn, not a minion");
+        }
     }
 }
