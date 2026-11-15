@@ -65,6 +65,9 @@ namespace StagePlay
                         Console.WriteLine($"{Path.GetFileNameWithoutExtension(f)}\t{head[0]}\t{(b.Ending?.ToString() ?? "unfinished")}\tturn {b.Turn}\tlost {b.Stats.Lost}\trisen {b.Stats.Risen}\tdrained {b.Stats.Drained}\tbonus {(b.Won == true && b.BonusMet ? "yes" : "no")}\tup [{head.ElementAtOrDefault(2)}]\tleft {team}");
                     }
                     return 0;
+                case "form":
+                    Console.WriteLine(string.Join(" ", Comp(GameData.Stages.First(s => s.Id == a[1]), a[2]).Select(p => $"{p.Kind}@{p.Col},{p.Row}")));
+                    return 0;
                 case "mc":
                     {
                         // mc <stage|all> [formation] [upgrades] ; env SP_SEEDS (8), SP_SAMPLES (200), SP_SAVE (play-file prefix for the first win)

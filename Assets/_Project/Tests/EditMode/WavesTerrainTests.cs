@@ -177,6 +177,35 @@ namespace VampireSpawn.Tests
             Assert.AreEqual(new Hex(0, 0), b.Enemies.Single(e => e.Stance == Stance.Hold).Pos);
         }
 
+        // docs/systems/hex-grid.md 5
+        [Test]
+        public void RockBlocksAShotButWaterAndPitsDoNot()
+        {
+            var board = new Board(new[] { "..#..", "..~..", ".._.." });
+            Assert.IsFalse(board.Sees(new Hex(0, 0), new Hex(4, 0)), "rock in between");
+            Assert.IsTrue(board.Sees(new Hex(0, 1), new Hex(4, 1)), "water does not block");
+            Assert.IsTrue(board.Sees(new Hex(0, 2), new Hex(4, 2)), "a pit does not block");
+            Assert.IsTrue(board.Sees(new Hex(1, 0), new Hex(2, 0)), "next to each other");
+
+            var b = new Battle(Staged(new[] { "..#....", ".......", ".......", ".......", ".......", ".......", "......." },
+                new[] { new Placement(EnemyType.Vampire, 6, 6), new Placement("skeleton", 4, 0) }, new Trigger[0]), null, new[] { new Placement("archer", 1, 0) });
+            b.Start();
+            Assert.IsFalse(b.Attack(b.Allies.Single().Id, b.Enemies.Single(e => e.Kind == "skeleton").Id).Ok, "in range but behind rock");
+        }
+
+        // docs/systems/triggers.md 3
+        [Test]
+        public void AHoldingEnemyChargesOnceHitFromBeyondItsReach()
+        {
+            var b = new Battle(Field(new[] { new Placement(EnemyType.Vampire, 6, 6), new Placement("skeleton", 3, 2, stance: Stance.Hold) }), null, new[] { new Placement("archer", 3, 5) });
+            b.Start();
+            var s = b.Enemies.Single(e => e.Kind == "skeleton");
+            b.EndTurn();
+            Assert.AreEqual(new Hex(3, 2), s.Pos, "holds its ground");
+            Assert.IsTrue(b.Attack(b.Allies.Single().Id, s.Id).Ok);
+            Assert.AreEqual(Stance.Charge, s.Stance, "shot from three hexes away, it comes");
+        }
+
         [Test]
         public void RoughGroundCostsTwoToEnter()
         {
