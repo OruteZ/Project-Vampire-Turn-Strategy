@@ -90,7 +90,7 @@ namespace VampireSpawn.Core
         static bool TryHit(Battle b, Unit u)
         {
             if (u.Acted) return false;
-            var t = b.Enemies.Where(e => !e.Asleep && Hex.Distance(u.Pos, e.Pos) <= u.Rng).OrderBy(e => e.Hp).FirstOrDefault();
+            var t = b.Enemies.Where(e => !e.Asleep && b.InRange(u, u.Pos, e.Pos)).OrderBy(e => e.Hp).FirstOrDefault();
             return t != null && b.Attack(u.Id, t.Id).Ok;
         }
 

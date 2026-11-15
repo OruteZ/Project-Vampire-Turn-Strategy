@@ -157,7 +157,7 @@ namespace StagePlay
             foreach (var u in b.Units.Where(x => x.Side == Side.Ally && x.Role != Role.Escort).ToList())
             {
                 if (!b.Units.Contains(u) || u.Acted || u.Atk <= 0 || b.Phase != Phase.Player) continue;
-                var t = b.Enemies.Where(e => !e.Asleep && Hex.Distance(u.Pos, e.Pos) <= u.Rng).OrderBy(e => e.Hp).FirstOrDefault();
+                var t = b.Enemies.Where(e => !e.Asleep && b.InRange(u, u.Pos, e.Pos)).OrderBy(e => e.Hp).FirstOrDefault();
                 if (t != null) yield return $"a {u.Id} {t.Id}";
             }
         }

@@ -80,7 +80,7 @@ namespace StagePlay
                 {
                     var reach = b.Reach(u).Keys.ToList();
                     var foes = b.Enemies.Where(e => !e.Asleep).ToList();
-                    var hit = reach.Where(h => foes.Any(e => Hex.Distance(h, e.Pos) <= u.Rng)).ToList();
+                    var hit = reach.Where(h => foes.Any(e => b.InRange(u, h, e.Pos))).ToList();
                     var roll = rng.Next(10);
                     Hex to = u.Pos;
                     if (roll < 4 && hit.Count > 0) to = hit[rng.Next(hit.Count)];
@@ -89,16 +89,18 @@ namespace StagePlay
                 }
                 if (b.Phase != Phase.Player || !b.Units.Contains(u) || u.Acted) continue;
                 var acts = new List<string>();
-                foreach (var e in b.Enemies.Where(e => !e.Asleep && Hex.Distance(u.Pos, e.Pos) <= u.Rng).OrderBy(e => e.Hp).Take(3)) acts.Add($"a {u.Id} {e.Id}");
+                foreach (var e in b.Enemies.Where(e => !e.Asleep && b.InRange(u, u.Pos, e.Pos)).OrderBy(e => e.Hp).Take(3)) acts.Add($"a {u.Id} {e.Id}");
                 foreach (var c in b.Corpses.Where(c => b.CanBury(u, c))) { acts.Insert(0, $"b {u.Id} {c.Id}"); }
                 foreach (var t in b.Units.Where(t => b.CanMend(u, t) && t.Hp < t.MaxHp).OrderBy(t => t.Hp).Take(2)) acts.Add($"h {u.Id} {t.Id}");
-                if (b.EatTarget is int eat && b.Find(eat) is Unit prey && prey != u && Hex.Distance(u.Pos, prey.Pos) <= u.Rng && b.Damage(u, prey) >= prey.Hp && rng.Next(4) == 0)
+                if (b.EatTarget is int eat && b.Find(eat) is Unit prey && prey != u && b.InRange(u, u.Pos, prey.Pos) && b.Damage(u, prey) >= prey.Hp && rng.Next(4) == 0)
                     acts.Add($"x {u.Id} {prey.Id}");
                 if (acts.Count == 0) continue;
                 Do(plain || rng.Next(10) < 6 ? acts[0] : acts[rng.Next(acts.Count)]);
             }
             return plan;
         }
+
+        static int PopOf(Unit u) => GameData.Current.Types.FirstOrDefault(t => t.Key == u.Type)?.Pop ?? 3;
 
         static double Score(Battle b)
         {
@@ -109,7 +111,7 @@ namespace StagePlay
             {
                 if (u.Role == Role.Ally)
                 {
-                    var pop = GameData.Type(u.Type).Pop;
+                    var pop = PopOf(u);
                     s += pop * 14 + pop * 6.0 * u.Hp / u.MaxHp;
                     if (b.Board.Lit(u.Pos)) s += 0.5;
                 }
@@ -127,7 +129,7 @@ namespace StagePlay
             {
                 var d = Hex.Distance(v.Pos, prey.Pos);
                 var safe = d >= GameData.Current.Rules.EatRange && prey.Mov >= 1;
-                if (!safe) s -= GameData.Type(prey.Type).Pop * 10;
+                if (!safe) s -= PopOf(prey) * 10;
             }
             if (b.Stage.Goal == Goal.Boss)
             {

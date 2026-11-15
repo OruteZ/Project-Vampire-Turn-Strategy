@@ -131,7 +131,7 @@ namespace VampireSpawn.Core
                         for (var c = 0; c < B.Board.Cols; c++)
                         {
                             var h = new Hex(c, r);
-                            if (Hex.Distance(f, h) <= e.Rng && B.Board.Walkable(h) && seen.Add(h))
+                            if (B.InRange(e, f, h) && B.Board.Walkable(h) && seen.Add(h))
                                 hits[h] = hits.TryGetValue(h, out var x) ? (x.n + 1, x.atk + e.Atk) : (1, e.Atk);
                         }
             }

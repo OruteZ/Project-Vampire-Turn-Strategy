@@ -193,8 +193,8 @@ namespace VampireSpawn.Core
             return best;
         }
 
-        // docs/systems/ai.md 2: allies within range, no line of sight.
-        List<Unit> AlliesInReach(Unit e, Hex h) => Targets.Where(a => Hex.Distance(h, a.Pos) <= e.Rng).ToList();
+        // docs/systems/ai.md 2: allies within range and in line of sight.
+        List<Unit> AlliesInReach(Unit e, Hex h) => Targets.Where(a => InRange(e, h, a.Pos)).ToList();
 
         void MeleeAct(Unit e)
         {

@@ -203,6 +203,8 @@ namespace VampireSpawn.Core
         public Unit Escort => units.FirstOrDefault(u => u.Role == Role.Escort);
         public IEnumerable<Unit> Enemies => units.Where(u => u.Side == Side.Enemy);
         public Unit Vampire => units.FirstOrDefault(u => u.Role == Role.Vampire);
+        // Ranged attacks (range 2 or more) need a clear line; rock blocks it (hex-grid.md 5).
+        public bool InRange(Unit u, Hex from, Hex to) => Hex.Distance(from, to) <= u.Rng && (u.Rng <= 1 || Board.Sees(from, to));
         public Unit UnitAt(Hex h) => units.FirstOrDefault(u => u.Pos == h);
         public Corpse CorpseAt(Hex h) => corpses.FirstOrDefault(c => c.Pos == h);
         public Unit Find(int id) => units.FirstOrDefault(u => u.Id == id);
@@ -423,7 +425,7 @@ namespace VampireSpawn.Core
             if (!Begin(Phase.Player, out var no)) return no;
             var u = Ready(id);
             var t = Find(targetId);
-            if (u == null || t == null || t.Side != Side.Enemy || t.Asleep || Hex.Distance(u.Pos, t.Pos) > u.Rng)
+            if (u == null || t == null || t.Side != Side.Enemy || t.Asleep || !InRange(u, u.Pos, t.Pos))
                 return CommandResult.Rejected(new Message("reason.cannotAttack"));
             ApplyHit(u, t);
             u.Acted = u.Moved = true;
@@ -442,7 +444,7 @@ namespace VampireSpawn.Core
             if (!Begin(Phase.Player, out var no)) return no;
             var u = Ready(id);
             var t = Find(targetId);
-            if (u == null || t == null || t.Role != Role.Ally || t == u || Hex.Distance(u.Pos, t.Pos) > u.Rng)
+            if (u == null || t == null || t.Role != Role.Ally || t == u || !InRange(u, u.Pos, t.Pos))
                 return CommandResult.Rejected(new Message("reason.cannotExecute"));
             Strike(u, t, DeathCause.Execute);
             u.Acted = u.Moved = true;
@@ -556,7 +558,7 @@ namespace VampireSpawn.Core
             foreach (var o in Splashed(att, def).ToList())
             {
                 o.Hp -= 1;
-                if (o.Stance == Stance.Guard) o.Stance = Stance.Charge;
+                Provoke(att, o);
                 Emit(BattleEvent.Hit(o.Id, 0, 1));
                 Emit(BattleEvent.HpChanged(o.Id, o.Hp));
                 Emit(BattleEvent.Popup(o.Id, PopupKind.Damage, new Message("popup.damage", 1)));
@@ -565,12 +567,18 @@ namespace VampireSpawn.Core
             }
         }
 
+        // A guard charges once hit. A unit told to hold its ground does too when hit from where it cannot hit back (docs/systems/triggers.md 3).
+        void Provoke(Unit att, Unit def)
+        {
+            if (def.Stance == Stance.Guard || def.Stance == Stance.Hold && att.Side != def.Side && Hex.Distance(att.Pos, def.Pos) > def.Rng) def.Stance = Stance.Charge;
+        }
+
         // The damage half of an attack, shared with attacking an ally (docs/systems/spawn.md 2). True when def died.
         bool Strike(Unit att, Unit def, DeathCause cause)
         {
             var (d, tags) = DamageParts(att, def);
             def.Hp -= d;
-            if (def.Stance == Stance.Guard) def.Stance = Stance.Charge;
+            Provoke(att, def);
             Emit(BattleEvent.Hit(def.Id, att.Id, d));
             Emit(BattleEvent.HpChanged(def.Id, def.Hp));
             Emit(BattleEvent.Popup(def.Id, PopupKind.Damage, new Message("popup.damage", d)));

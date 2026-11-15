@@ -76,7 +76,7 @@ namespace VampireSpawn.Core
             {
                 if (Mode == SelectMode.Execute)
                 {
-                    if (u != null && u.Role == Role.Ally && u != sel && Hex.Distance(sel.Pos, u.Pos) <= sel.Rng) return After(Battle.Execute(sel.Id, u.Id));
+                    if (u != null && u.Role == Role.Ally && u != sel && Battle.InRange(sel, sel.Pos, u.Pos)) return After(Battle.Execute(sel.Id, u.Id));
                     Mode = SelectMode.Act;
                     return Nothing;
                 }
@@ -86,7 +86,7 @@ namespace VampireSpawn.Core
                     return Battle.CanMend(sel, u) ? After(Battle.Mend(sel.Id, u.Id)) : Nothing;
                 }
                 if (co != null && Battle.CanBury(sel, co)) return After(Battle.Bury(sel.Id, co.Id));
-                if (u != null && u.Side == Side.Enemy && !u.Asleep && Hex.Distance(sel.Pos, u.Pos) <= sel.Rng) return After(Battle.Attack(sel.Id, u.Id));
+                if (u != null && u.Side == Side.Enemy && !u.Asleep && Battle.InRange(sel, sel.Pos, u.Pos)) return After(Battle.Attack(sel.Id, u.Id));
                 if (!sel.Moved && u == null && co == null && Battle.Reach(sel).ContainsKey(h)) return After(Battle.Move(sel.Id, h));
             }
             if (u != null && u.Side == Side.Ally) { Selected = u.Acted ? (int?)null : u.Id; Inspect(u); Mode = SelectMode.Act; }
@@ -211,12 +211,12 @@ namespace VampireSpawn.Core
                 if (!sel.Acted)
                 {
                     if (Mode == SelectMode.Execute)
-                        o.AddRange(b.Allies.Where(a => a != sel && Hex.Distance(sel.Pos, a.Pos) <= sel.Rng).Select(a => new MarkedHex(Mark.Exec, a.Pos)));
+                        o.AddRange(b.Allies.Where(a => a != sel && b.InRange(sel, sel.Pos, a.Pos)).Select(a => new MarkedHex(Mark.Exec, a.Pos)));
                     else if (Mode == SelectMode.Mend)
                         o.AddRange(b.Units.Where(a => b.CanMend(sel, a)).Select(a => new MarkedHex(Mark.Mend, a.Pos)));
                     else
                     {
-                        o.AddRange(b.Enemies.Where(e => !e.Asleep && Hex.Distance(sel.Pos, e.Pos) <= sel.Rng).Select(e => new MarkedHex(Mark.Atk, e.Pos)));
+                        o.AddRange(b.Enemies.Where(e => !e.Asleep && b.InRange(sel, sel.Pos, e.Pos)).Select(e => new MarkedHex(Mark.Atk, e.Pos)));
                         o.AddRange(b.Corpses.Where(c => b.CanBury(sel, c)).Select(c => new MarkedHex(Mark.Bury, c.Pos)));
                     }
                 }
