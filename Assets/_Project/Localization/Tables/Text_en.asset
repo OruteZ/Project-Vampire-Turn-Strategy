@@ -2458,6 +2458,81 @@ MonoBehaviour:
       rise.
     m_Metadata:
       m_Items: []
+  - m_Id: 3562236890902528
+    m_Localized: Scout
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3562236932845568
+    m_Localized: SC
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3562236932845569
+    m_Localized: A fleet-footed scout. Lays a trap on a hex next to it (two a battle).
+      An enemy that steps on it takes 3 and neither moves on nor attacks that turn.
+      Frail.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3562236937039872
+    m_Localized: Light Feet
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3562236937039873
+    m_Localized: MOV +1
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3562236937039874
+    m_Localized: Barbed Jaws
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3562236937039875
+    m_Localized: Trap damage +2
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3562236937039876
+    m_Localized: Trap Satchel
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3562236937039877
+    m_Localized: Lays up to three traps a battle (two by default)
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3562236937039878
+    m_Localized: Trap
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3562236937039879
+    m_Localized: Barbed Jaws
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3562236937039880
+    m_Localized: Trap Satchel
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3562236937039881
+    m_Localized: Trap
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3562236937039882
+    m_Localized: Cancel Trap
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3562236937039883
+    m_Localized: Pick an empty hex next to the scout for the trap. Click elsewhere
+      to cancel.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3562236937039884
+    m_Localized: A trap cannot be laid there
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3562236937039885
+    m_Localized: '{0} laid a trap.'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3562236937039886
+    m_Localized: '{0} sprang a trap: {1} damage, and it can do no more this turn.'
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds:

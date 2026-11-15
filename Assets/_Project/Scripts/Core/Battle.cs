@@ -35,6 +35,7 @@ namespace VampireSpawn.Core
         public bool ActedAgain { get; internal set; }
         public bool Asleep { get; internal set; }
         public bool JustRisen { get; internal set; }
+        public int TrapsLaid { get; internal set; }
         public bool JustWoke { get; internal set; }
         public bool JustArrived { get; internal set; }
         public bool Wolf { get; internal set; }
@@ -47,6 +48,15 @@ namespace VampireSpawn.Core
         public string Kind => Role == Role.Ally ? Type : Role == Role.Minion ? Minion : Role.ToString().ToLowerInvariant();
         public bool IsUndead => Role == Role.Vampire || Role == Role.Spawn;
         public bool Has(Ability a) => abil.Contains(a);
+    }
+
+    // A scout's trap (docs/content/units.md "정찰병"). Enemies do not see it.
+    public sealed class Trap
+    {
+        public int Id { get; internal set; }
+        public Hex Pos { get; internal set; }
+        public int Owner { get; internal set; }
+        public int Damage { get; internal set; }
     }
 
     public sealed class Corpse
@@ -98,6 +108,9 @@ namespace VampireSpawn.Core
         readonly List<LogEntry> log = new List<LogEntry>();
         public IReadOnlyList<Unit> Units => units;
         public IReadOnlyList<Corpse> Corpses => corpses;
+        public IReadOnlyList<Trap> Traps => traps;
+        public Trap TrapAt(Hex h) => traps.FirstOrDefault(t => t.Pos == h);
+        readonly List<Trap> traps = new List<Trap>();
         public IReadOnlyList<LogEntry> Log => log;
 
         readonly HashSet<string> upgrades;
@@ -500,6 +513,38 @@ namespace VampireSpawn.Core
             Say(new Message("log.mend", u.Name, t.Name, heal), "h");
             u.Acted = u.Moved = true;
             return Done();
+        }
+
+        public const int TrapDamage = 3, BarbsDamage = 2, TrapsHeld = 2, SatchelHeld = 3;
+
+        // A scout carries this many traps into a battle and gets none back.
+        public int TrapsLeft(Unit u) => (u.Has(Ability.Satchel) ? SatchelHeld : TrapsHeld) - u.TrapsLaid;
+
+        public bool CanTrap(Unit u, Hex h) => u != null && u.Side == Side.Ally && !u.Acted && u.Has(Ability.Trap) && TrapsLeft(u) > 0 && Hex.Distance(u.Pos, h) == 1
+            && Board.InBounds(h) && Board.Walkable(h) && UnitAt(h) == null && CorpseAt(h) == null && TrapAt(h) == null;
+
+        public CommandResult SetTrap(int id, Hex at)
+        {
+            if (!Begin(Phase.Player, out var no)) return no;
+            var u = Ready(id);
+            if (!CanTrap(u, at)) return CommandResult.Rejected(new Message("reason.cannotTrap"));
+            u.TrapsLaid++;
+            traps.Add(new Trap { Id = nextId++, Pos = at, Owner = u.Id, Damage = TrapDamage + (u.Has(Ability.Barbs) ? BarbsDamage : 0) });
+            Say(new Message("log.trapSet", u.Name), "h");
+            u.Acted = u.Moved = true;
+            return Done();
+        }
+
+        // The enemy that stepped on it is hurt and does nothing more this phase.
+        void Spring(Trap t, Unit e)
+        {
+            traps.Remove(t);
+            e.Hp -= t.Damage;
+            Emit(BattleEvent.Hit(e.Id, 0, t.Damage));
+            Emit(BattleEvent.HpChanged(e.Id, e.Hp));
+            Emit(BattleEvent.Popup(e.Id, PopupKind.Damage, new Message("popup.damage", t.Damage)));
+            Say(new Message("log.trapSprung", e.Name, t.Damage), "h");
+            if (e.Hp <= 0) Kill(e, Find(t.Owner), DeathCause.Blow);
         }
 
         public CommandResult Wait(int id)

@@ -288,5 +288,26 @@ namespace VampireSpawn.Tests
                 Assert.DoesNotThrow(() => b.EndTurn(), g + " judged at the end of a turn");
             }
         }
+
+        // docs/content/units.md scout
+        [Test]
+        public void ATrapHurtsAndStopsTheEnemyThatStepsOnIt()
+        {
+            var stage = new Stage("demo", GameData.Types.Select(t => t.Key).ToArray(), 99, 99, 0, Goal.Boss, new Bonus(BonusType.NoEat, 0, 0), new Boss(30, 1, 0, 0, 0),
+                Enumerable.Repeat(".......", 7).ToArray(), new[] { new Placement(EnemyType.Vampire, 6, 6), new Placement("skeleton", 3, 1) }, new Placement[0]);
+            var b = new Battle(stage, null, new[] { new Placement("scout", 3, 4) });
+            b.Start();
+            var scout = b.Allies.Single();
+            var s = b.Enemies.Single(e => e.Kind == "skeleton");
+            Assert.IsTrue(b.SetTrap(scout.Id, new Hex(3, 3)).Ok);
+            Assert.IsFalse(b.CanTrap(scout, new Hex(3, 5)), "laying a trap is the turn's action");
+            b.EndTurn();
+            b.EndTurn();
+            Assert.AreEqual(new Hex(3, 3), s.Pos, "stopped on the trap");
+            Assert.AreEqual(1, s.Hp, "skeleton 4 - trap 3");
+            Assert.AreEqual(1, b.TrapsLeft(scout), "two traps a battle");
+            Assert.AreEqual(scout.MaxHp, scout.Hp, "a trapped enemy does not attack that phase");
+            Assert.AreEqual(0, b.Traps.Count, "a trap works once");
+        }
     }
 }

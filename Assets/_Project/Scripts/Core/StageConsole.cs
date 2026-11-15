@@ -42,6 +42,7 @@ namespace VampireSpawn.Core
                     case "b": r = B.Bury(int.Parse(c[1]), int.Parse(c[2])); break;
                     case "h": r = B.Mend(int.Parse(c[1]), int.Parse(c[2])); break;
                     case "w": r = B.Wait(int.Parse(c[1])); break;
+                    case "t": r = B.SetTrap(int.Parse(c[1]), ParseHex(c[2])); break;
                     case "p": r = B.Place(c[1], ParseHex(c[2])); break;
                     case "r": r = B.Recall(int.Parse(c[1])); break;
                     case "go": r = B.Start(); break;

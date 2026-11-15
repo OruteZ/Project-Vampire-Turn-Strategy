@@ -217,8 +217,7 @@ namespace VampireSpawn.Core
                 .OrderBy(r => r.steps).Select(r => (Hex?)r.hex).FirstOrDefault();
             if (spot.HasValue)
             {
-                MoveEnemy(e, spot.Value);
-                if (!units.Contains(e)) return;
+                if (MoveEnemy(e, spot.Value) || !units.Contains(e)) return;
                 adj = AlliesInReach(e, e.Pos);
             }
             else if (adj.Count == 0)
@@ -249,16 +248,19 @@ namespace VampireSpawn.Core
                         if (d < bestDist || (d == bestDist && steps < bestSteps)) { bestDist = d; bestSteps = steps; best = h; }
                     }
                 }
-                if (best.HasValue && best.Value != e.Pos) MoveEnemy(e, best.Value);
+                if (best.HasValue && best.Value != e.Pos && MoveEnemy(e, best.Value)) return;
                 if (!units.Contains(e)) return;
                 adj = AlliesInReach(e, e.Pos);
             }
             if (adj.Count > 0) ApplyHit(e, PickTarget(e, adj));
         }
 
-        void MoveEnemy(Unit e, Hex to)
+        // True when a trap on the way stopped it (it then does not attack this phase).
+        bool MoveEnemy(Unit e, Hex to)
         {
-            Walk(e, to);
+            var trap = Board.PathTo(e.Pos, to, e.Side, OccupantAt).Where(h => h != e.Pos && UnitAt(h) == null).Select(TrapAt).FirstOrDefault(t => t != null);
+            Walk(e, trap != null ? trap.Pos : to);
+            if (trap != null) Spring(trap, e);
             foreach (var a in Allies.ToList())
             {
                 if (!units.Contains(e)) break;
@@ -269,6 +271,7 @@ namespace VampireSpawn.Core
                 Say(new Message("log.pike", a.Name, e.Name), "h");
                 if (e.Hp <= 0) { Kill(e, a, DeathCause.Blow); break; }
             }
+            return trap != null;
         }
     }
 }

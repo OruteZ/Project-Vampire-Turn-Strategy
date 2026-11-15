@@ -71,6 +71,7 @@ namespace VampireSpawn.Game.Screens
                 Recall = id => input.Run(s => s.Recall(id)),
                 Exec = () => input.Act(s => s.ToggleExecute()),
                 Mend = () => input.Act(s => s.ToggleMend()),
+                Trap = () => input.Act(s => s.ToggleTrap()),
                 Wait = () => input.Run(s => s.Wait()),
                 Aim = () => input.Act(s => s.ClearMode()),
                 ToggleRules = () => { rulesOpen = !rulesOpen; RenderBattle(); },
@@ -159,6 +160,7 @@ namespace VampireSpawn.Game.Screens
             }
             if (Session.Mode == SelectMode.Execute) input.Act(x => x.ToggleExecute());
             else if (Session.Mode == SelectMode.Mend) input.Act(x => x.ToggleMend());
+            else if (Session.Mode == SelectMode.Trap) input.Act(x => x.ToggleTrap());
             else return false;
             return true;
         }

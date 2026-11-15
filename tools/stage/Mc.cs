@@ -94,6 +94,12 @@ namespace StagePlay
                 foreach (var t in b.Units.Where(t => b.CanMend(u, t) && t.Hp < t.MaxHp).OrderBy(t => t.Hp).Take(2)) acts.Add($"h {u.Id} {t.Id}");
                 if (b.EatTarget is int eat && b.Find(eat) is Unit prey && prey != u && b.InRange(u, u.Pos, prey.Pos) && b.Damage(u, prey) >= prey.Hp && rng.Next(4) == 0)
                     acts.Add($"x {u.Id} {prey.Id}");
+                if (u.Has(Ability.Trap))
+                {
+                    var foe = b.Enemies.Where(e => !e.Asleep).OrderBy(e => Hex.Distance(u.Pos, e.Pos)).FirstOrDefault();
+                    var spot = foe == null ? (Hex?)null : b.Board.Neighbors(u.Pos).Where(h => b.CanTrap(u, h)).OrderBy(h => Hex.Distance(h, foe.Pos)).Select(h => (Hex?)h).FirstOrDefault();
+                    if (spot.HasValue) acts.Add($"t {u.Id} {spot.Value.Col},{spot.Value.Row}");
+                }
                 if (acts.Count == 0) continue;
                 Do(plain || rng.Next(10) < 6 ? acts[0] : acts[rng.Next(acts.Count)]);
             }

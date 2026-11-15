@@ -2055,6 +2055,78 @@ MonoBehaviour:
     m_Key: unit.card.deathKnightNote
     m_Metadata:
       m_Items: []
+  - m_Id: 3562236890902528
+    m_Key: unit.scout.name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3562236932845568
+    m_Key: unit.scout.glyph
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3562236932845569
+    m_Key: unit.scout.desc
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3562236937039872
+    m_Key: upgrade.scout_mov.name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3562236937039873
+    m_Key: upgrade.scout_mov.desc
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3562236937039874
+    m_Key: upgrade.scout_barbs.name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3562236937039875
+    m_Key: upgrade.scout_barbs.desc
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3562236937039876
+    m_Key: upgrade.scout_satchel.name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3562236937039877
+    m_Key: upgrade.scout_satchel.desc
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3562236937039878
+    m_Key: skill.trap
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3562236937039879
+    m_Key: skill.barbs
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3562236937039880
+    m_Key: skill.satchel
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3562236937039881
+    m_Key: hud.trap
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3562236937039882
+    m_Key: hud.cancelTrap
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3562236937039883
+    m_Key: hint.trap
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3562236937039884
+    m_Key: reason.cannotTrap
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3562236937039885
+    m_Key: log.trapSet
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3562236937039886
+    m_Key: log.trapSprung
+    m_Metadata:
+      m_Items: []
   m_Metadata:
     m_Items: []
   m_KeyGenerator:

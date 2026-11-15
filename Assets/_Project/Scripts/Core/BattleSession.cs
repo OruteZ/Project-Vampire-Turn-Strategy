@@ -3,9 +3,9 @@ using System.Linq;
 
 namespace VampireSpawn.Core
 {
-    public enum SelectMode { Act, Execute, Mend }
+    public enum SelectMode { Act, Execute, Mend, Trap }
 
-    public enum Mark { Deploy, Move, Atk, Exec, Sel, MarkZone, Target, Bury, Mend, Hold, Goal, Arrive, Trigger, Reinforce }
+    public enum Mark { Deploy, Move, Atk, Exec, Sel, MarkZone, Target, Bury, Mend, Hold, Goal, Arrive, Trigger, Reinforce, Trap, TrapSpot }
 
     public readonly struct MarkedHex
     {
@@ -85,6 +85,11 @@ namespace VampireSpawn.Core
                     Mode = SelectMode.Act;
                     return Battle.CanMend(sel, u) ? After(Battle.Mend(sel.Id, u.Id)) : Nothing;
                 }
+                if (Mode == SelectMode.Trap)
+                {
+                    Mode = SelectMode.Act;
+                    return Battle.CanTrap(sel, h) ? After(Battle.SetTrap(sel.Id, h)) : Nothing;
+                }
                 if (co != null && Battle.CanBury(sel, co)) return After(Battle.Bury(sel.Id, co.Id));
                 if (u != null && u.Side == Side.Enemy && !u.Asleep && Battle.InRange(sel, sel.Pos, u.Pos)) return After(Battle.Attack(sel.Id, u.Id));
                 if (!sel.Moved && u == null && co == null && Battle.Reach(sel).ContainsKey(h)) return After(Battle.Move(sel.Id, h));
@@ -109,6 +114,7 @@ namespace VampireSpawn.Core
 
         public void ToggleExecute() { if (SelectedUnit?.Role == Role.Escort) return; Flash = default; Mode = Mode == SelectMode.Execute ? SelectMode.Act : SelectMode.Execute; }
 
+        public void ToggleTrap() { Flash = default; Mode = Mode == SelectMode.Trap ? SelectMode.Act : SelectMode.Trap; }
         public void ToggleMend() { Flash = default; Mode = Mode == SelectMode.Mend ? SelectMode.Act : SelectMode.Mend; }
 
         public void ClearMode() { Flash = default; Mode = SelectMode.Act; }
@@ -183,6 +189,7 @@ namespace VampireSpawn.Core
             if (sel == null) return new Message("hint.select");
             if (Mode == SelectMode.Execute) return new Message("hint.execute");
             if (Mode == SelectMode.Mend) return new Message("hint.mend");
+            if (Mode == SelectMode.Trap) return new Message("hint.trap");
             if (sel.Acted) return new Message("hint.acted");
             return new Message(sel.Moved ? "hint.attack" : "hint.moveAttack");
         }
@@ -199,6 +206,7 @@ namespace VampireSpawn.Core
             var b = Battle;
             o.AddRange(b.Stage.Spots.Select(h => new MarkedHex(b.Stage.Goal == Goal.Defense ? Mark.Hold : Mark.Goal, h)));
             o.AddRange(b.Pending.Select(p => new MarkedHex(Mark.Arrive, new Hex(p.Col, p.Row))));
+            o.AddRange(b.Traps.Select(t => new MarkedHex(Mark.Trap, t.Pos)));
             if (!b.Reinforcing && b.Phase != Phase.Deploy) o.AddRange(b.Upcoming.SelectMany(r => r.Hexes).Select(h => new MarkedHex(Mark.Reinforce, h)));
             o.AddRange(b.Stage.Triggers.Where(t => t.Kind == TriggerKind.Reach && !b.Fired(t.Id)).SelectMany(t => t.Hexes).Select(h => new MarkedHex(Mark.Trigger, h)));
             o.AddRange(b.Stage.Doors.SelectMany(d => d.Hexes).Where(h => b.Board.At(h) == Terrain.Rock).Select(h => new MarkedHex(Mark.Arrive, h)));
@@ -212,6 +220,8 @@ namespace VampireSpawn.Core
                 {
                     if (Mode == SelectMode.Execute)
                         o.AddRange(b.Allies.Where(a => a != sel && b.InRange(sel, sel.Pos, a.Pos)).Select(a => new MarkedHex(Mark.Exec, a.Pos)));
+                    else if (Mode == SelectMode.Trap)
+                        o.AddRange(b.Board.Neighbors(sel.Pos).Where(h => b.CanTrap(sel, h)).Select(h => new MarkedHex(Mark.TrapSpot, h)));
                     else if (Mode == SelectMode.Mend)
                         o.AddRange(b.Units.Where(a => b.CanMend(sel, a)).Select(a => new MarkedHex(Mark.Mend, a.Pos)));
                     else

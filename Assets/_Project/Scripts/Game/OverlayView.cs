@@ -33,6 +33,8 @@ namespace VampireSpawn.Game
             [Mark.Exec] = S(Enemy, 0f, Enemy, 1f, R - 3f, 2f, 4f, 4f),
             [Mark.Bury] = S(Spawn, 0f, Spawn, 1f, R - 3f, 2f, 4f, 4f),
             [Mark.Mend] = S(Ally, 0f, Ally, 1f, R - 3f, 2f, 4f, 4f),
+            [Mark.Trap] = S(Ally, 0.05f, Ally, 1f, R - 6f, 1.5f, 3f, 3f),
+            [Mark.TrapSpot] = S(Ally, 0f, Ally, 1f, R - 3f, 2f, 4f, 4f),
             [Mark.Sel] = S(Ally, 0f, Ally, 1f, R - 3f, 3f),
             [Mark.MarkZone] = S(MoonBlood, 0.05f, MoonBlood, 1f, R - 2f, 1f),
             [Mark.Target] = S(Enemy, 0f, Enemy, 1f, R - 1.5f, 3f),
@@ -46,6 +48,7 @@ namespace VampireSpawn.Game
         static readonly Dictionary<Mark, (string Icon, Color Tint)> Icons = new Dictionary<Mark, (string, Color)>
         {
             [Mark.Deploy] = (Screens.Kit.Icon.Pop, Ally),
+            [Mark.Trap] = (Screens.Kit.Icon.Target, Ally),
             [Mark.Reinforce] = (Screens.Kit.Icon.Up, Ally),
             [Mark.Arrive] = (Screens.Kit.Icon.Skulls, Enemy),
             [Mark.Hold] = (Screens.Kit.Icon.Home, Screens.Ui.Candle),

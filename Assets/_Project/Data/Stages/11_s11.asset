@@ -23,6 +23,7 @@ MonoBehaviour:
   - gravedigger
   - doctor
   - werewolf
+  - scout
   pop: 15
   silver: 2
   reward: 40
