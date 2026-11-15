@@ -138,7 +138,7 @@ namespace VampireSpawn.Game.Screens
             {
                 var v = view.ViewOf(kv.Key);
                 var h = kv.Value;
-                var world = v != null && !v.Lying ? v.transform.position + Vector3.up * (art.unitHeight * art.hexSize + 0.15f) : (Vector3?)null;
+                var world = v != null && !v.Lying ? v.transform.position + Vector3.up * (v.Height + 0.15f) : (Vector3?)null;
                 var shown = world.HasValue && cam.WorldToScreenPoint(world.Value).z > 0f;
                 h.Root.style.display = shown ? DisplayStyle.Flex : DisplayStyle.None;
                 if (!shown) continue;

@@ -1827,6 +1827,42 @@ MonoBehaviour:
     m_Key: hud.act.attack
     m_Metadata:
       m_Items: []
+  - m_Id: 3528098620174336
+    m_Key: ghoul.name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3528098670505984
+    m_Key: ghoul.glyph
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3528098670505985
+    m_Key: unit.card.ghoulNote
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3528098670505986
+    m_Key: skeletonCaptain.name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3528098670505987
+    m_Key: skeletonCaptain.glyph
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3528098670505988
+    m_Key: unit.card.skeletonCaptainNote
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3528098670505989
+    m_Key: gargoyle.name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3528098670505990
+    m_Key: gargoyle.glyph
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3528098670505991
+    m_Key: unit.card.gargoyleNote
+    m_Metadata:
+      m_Items: []
   m_Metadata:
     m_Items: []
   m_KeyGenerator:

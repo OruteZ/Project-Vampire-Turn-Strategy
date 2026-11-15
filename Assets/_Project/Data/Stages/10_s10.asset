@@ -36,11 +36,11 @@ MonoBehaviour:
   bonusType: 1
   bonusValue: 0
   bonusGold: 15
-  bossHp: 20
-  bossAtk: 5
+  bossHp: 32
+  bossAtk: 6
   bossDef: 1
   bossMov: 2
-  bossHeal: 5
+  bossHeal: 14
   map:
   - '##.......##'
   - '#.T.....T.#'
@@ -76,7 +76,7 @@ MonoBehaviour:
     wave: 
     stance: 2
     alert: 0
-  - kind: skeletonHeavy
+  - kind: gargoyle
     col: 4
     row: 3
     arrive: 0
@@ -118,7 +118,7 @@ MonoBehaviour:
     wave: 
     stance: 0
     alert: 0
-  - kind: skeletonHeavy
+  - kind: skeletonCaptain
     col: 5
     row: 11
     arrive: 7

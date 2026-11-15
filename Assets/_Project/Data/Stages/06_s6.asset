@@ -109,14 +109,14 @@ MonoBehaviour:
     wave: 
     stance: 0
     alert: 0
-  - kind: skeleton
+  - kind: ghoul
     col: 12
     row: 2
     arrive: 4
     wave: 
     stance: 0
     alert: 0
-  - kind: skeleton
+  - kind: ghoul
     col: 12
     row: 8
     arrive: 4
@@ -144,15 +144,8 @@ MonoBehaviour:
     wave: 
     stance: 0
     alert: 0
-  - kind: skeletonHeavy
+  - kind: gargoyle
     col: 5
-    row: 0
-    arrive: 7
-    wave: 
-    stance: 0
-    alert: 0
-  - kind: skeletonHeavy
-    col: 7
     row: 0
     arrive: 7
     wave: 

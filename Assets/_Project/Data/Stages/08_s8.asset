@@ -37,11 +37,11 @@ MonoBehaviour:
   bonusType: 0
   bonusValue: 13
   bonusGold: 15
-  bossHp: 16
+  bossHp: 22
   bossAtk: 4
-  bossDef: 1
+  bossDef: 0
   bossMov: 2
-  bossHeal: 4
+  bossHeal: 10
   map:
   - ..#.....#..
   - ..#.#.#.#..
@@ -96,14 +96,14 @@ MonoBehaviour:
     wave: 
     stance: 0
     alert: 0
-  - kind: skeleton
+  - kind: ghoul
     col: 0
     row: 6
     arrive: 3
     wave: 
     stance: 0
     alert: 0
-  - kind: skeleton
+  - kind: ghoul
     col: 10
     row: 6
     arrive: 3

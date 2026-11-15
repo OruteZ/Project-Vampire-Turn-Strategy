@@ -32,13 +32,13 @@ MonoBehaviour:
   escortMov: 0
   escortAt: {x: 0, y: 0}
   bonusType: 0
-  bonusValue: 12
+  bonusValue: 16
   bonusGold: 15
-  bossHp: 16
+  bossHp: 22
   bossAtk: 5
-  bossDef: 1
+  bossDef: 0
   bossMov: 2
-  bossHeal: 5
+  bossHeal: 10
   map:
   - _#########_
   - _#.......#_
@@ -72,7 +72,7 @@ MonoBehaviour:
     wave: 
     stance: 2
     alert: 0
-  - kind: skeletonHeavy
+  - kind: gargoyle
     col: 5
     row: 4
     arrive: 0

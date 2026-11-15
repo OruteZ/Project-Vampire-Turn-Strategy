@@ -79,7 +79,7 @@ namespace VampireSpawn.Core
             {
                 foreach (var e in units.Where(x => x.Role == kind).ToList())
                 {
-                    if (!units.Contains(e) || e.JustRisen || e.Asleep || e.JustWoke || e.JustArrived) continue;
+                    if (!units.Contains(e) || e.Asleep || e.JustWoke || e.JustArrived) continue;
                     if (kind == Role.Vampire && full) continue;
                     MeleeAct(e);
                     if (CheckEnd()) return;

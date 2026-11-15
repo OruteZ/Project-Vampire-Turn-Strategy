@@ -29,6 +29,7 @@ namespace VampireSpawn.Game
         [Tooltip("Sidekick 레시피 이름 (Assets/_Project/Art/Characters/<이름>.sk). 있으면 구운 캐릭터를 쓴다")] public string recipe;
         [Tooltip("레시피가 없을 때 쓰는 프리팹. 레시피가 있으면 굽기 전 클론의 대체 모델")] public GameObject model;
         [Tooltip("무기를 붙일 뼈 이름을 정한다")] public Rig rig;
+        [Tooltip("기본 키의 몇 배로 세울지 (보스·정예·중간보스는 크게)")] public float scale = 1f;
         public Grip[] weapons;
         [Tooltip("비우면 ArtCatalog.unitAnimator")] public RuntimeAnimatorController animator;
         [Tooltip("빈 칸은 SoundCatalog.unitDefault (docs/audio/sounds.md 6)")] public UnitSounds sounds;
