@@ -170,14 +170,14 @@ MonoBehaviour:
   - kind: deathKnight
     col: 5
     row: 0
-    arrive: 5
+    arrive: 3
     wave: 
     stance: 0
     alert: 0
   - kind: gargoyle
     col: 5
-    row: 2
-    arrive: 6
+    row: 4
+    arrive: 5
     wave: 
     stance: 0
     alert: 0

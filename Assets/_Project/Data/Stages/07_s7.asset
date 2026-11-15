@@ -119,20 +119,17 @@ MonoBehaviour:
   reinforcements: []
   sample:
   - kind: knight
+    col: 2
+    row: 8
+  - kind: knight
+    col: 8
+    row: 8
+  - kind: sword
     col: 5
     row: 8
   - kind: sword
-    col: 3
-    row: 8
-  - kind: archer
-    col: 7
-    row: 8
-  - kind: pspear
     col: 4
-    row: 9
+    row: 8
   - kind: pspear
-    col: 5
-    row: 9
-  - kind: gravedigger
     col: 6
-    row: 9
+    row: 8

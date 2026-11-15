@@ -32,7 +32,7 @@ MonoBehaviour:
   bonusType: 2
   bonusValue: 0
   bonusGold: 15
-  bossHp: 24
+  bossHp: 26
   bossAtk: 5
   bossDef: 0
   bossMov: 2

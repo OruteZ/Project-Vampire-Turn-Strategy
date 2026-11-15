@@ -36,7 +36,7 @@ MonoBehaviour:
   bonusType: 2
   bonusValue: 0
   bonusGold: 20
-  bossHp: 30
+  bossHp: 28
   bossAtk: 6
   bossDef: 0
   bossMov: 2
@@ -151,6 +151,20 @@ MonoBehaviour:
     wave: 
     stance: 0
     alert: 0
+  - kind: ghoul
+    col: 4
+    row: 9
+    arrive: 3
+    wave: 
+    stance: 0
+    alert: 0
+  - kind: ghoul
+    col: 8
+    row: 9
+    arrive: 3
+    wave: 
+    stance: 0
+    alert: 0
   triggers: []
   doors: []
   reinforcements: []
@@ -158,24 +172,21 @@ MonoBehaviour:
   - kind: knight
     col: 2
     row: 8
-  - kind: werewolf
+  - kind: knight
     col: 10
     row: 8
   - kind: sword
     col: 6
     row: 8
-  - kind: gravedigger
+  - kind: sword
     col: 4
     row: 8
-  - kind: pspear
+  - kind: hunter
     col: 8
     row: 8
   - kind: hunter
     col: 3
     row: 8
-  - kind: doctor
+  - kind: archer
     col: 9
     row: 8
-  - kind: archer
-    col: 2
-    row: 9

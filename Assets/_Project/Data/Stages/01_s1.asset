@@ -16,7 +16,7 @@ MonoBehaviour:
   units:
   - pspear
   - parcher
-  pop: 5
+  pop: 6
   silver: 0
   reward: 20
   goal: 0
@@ -113,3 +113,6 @@ MonoBehaviour:
   - kind: parcher
     col: 5
     row: 6
+  - kind: pspear
+    col: 4
+    row: 8

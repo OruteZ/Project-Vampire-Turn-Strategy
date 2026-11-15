@@ -37,7 +37,7 @@ MonoBehaviour:
   bonusType: 0
   bonusValue: 13
   bonusGold: 15
-  bossHp: 22
+  bossHp: 20
   bossAtk: 4
   bossDef: 0
   bossMov: 2
@@ -107,13 +107,6 @@ MonoBehaviour:
     col: 10
     row: 6
     arrive: 3
-    wave: 
-    stance: 0
-    alert: 0
-  - kind: skeletonArcher
-    col: 5
-    row: 0
-    arrive: 5
     wave: 
     stance: 0
     alert: 0

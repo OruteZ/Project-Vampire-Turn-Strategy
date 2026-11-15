@@ -139,6 +139,7 @@ namespace StagePlay
             // A door that opens when someone reaches a hex: lean toward it, or the bot never finds the boss behind it.
             foreach (var t in b.Stage.Triggers.Where(t => t.Kind == TriggerKind.Reach && !b.Fired(t.Id) && t.Hexes.Length > 0))
                 if (b.Allies.Any()) s -= 1.5 * b.Allies.Min(a => t.Hexes.Min(h => Hex.Distance(a.Pos, h)));
+            s += 25 * b.Stage.Triggers.Count(t => t.Kind == TriggerKind.Reach && b.Fired(t.Id));
             return s - b.Turn * 0.5;
         }
     }

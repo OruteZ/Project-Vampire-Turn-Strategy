@@ -428,8 +428,8 @@ MonoBehaviour:
       m_Items:
       - rid: 7201578077006332005
   - m_Id: 5832187899912
-    m_Localized: A villager with a hunting bow. Cheap, but RNG is only 2. As a spawn
-      it fights only in melee.
+    m_Localized: A villager with a hunting bow. Cheap, but the arrows are weak and
+      RNG is only 2. Cannot shoot through walls. As a spawn it fights only in melee.
     m_Metadata:
       m_Items:
       - rid: 7201578077006332005
@@ -464,7 +464,8 @@ MonoBehaviour:
       m_Items:
       - rid: 7201578077006332005
   - m_Id: 5832187899919
-    m_Localized: Regular infantry. Holds the line.
+    m_Localized: 'Regular infantry. A striker: hits hard, but unarmoured and cannot
+      hold for long.'
     m_Metadata:
       m_Items:
       - rid: 7201578077006332005
@@ -499,8 +500,8 @@ MonoBehaviour:
       m_Items:
       - rid: 7201578077006332005
   - m_Id: 5832187899926
-    m_Localized: Regular archer. Shoots from afar with RNG 3. As a spawn it loses
-      its bow.
+    m_Localized: Regular archer. Shoots from afar with RNG 3. Cannot shoot through
+      walls, and is frail. As a spawn it loses its bow.
     m_Metadata:
       m_Items:
       - rid: 7201578077006332005
@@ -535,7 +536,8 @@ MonoBehaviour:
       m_Items:
       - rid: 7201578077006332005
   - m_Id: 5832187899933
-    m_Localized: The toughest and strongest. As a spawn, the most dangerous.
+    m_Localized: 'A tank: holds the longest, but hits no harder than a soldier. As
+      a spawn, the most stubborn.'
     m_Metadata:
       m_Items:
       - rid: 7201578077006332005
@@ -545,7 +547,7 @@ MonoBehaviour:
       m_Items:
       - rid: 7201578077006332005
   - m_Id: 5832187899935
-    m_Localized: DEF +2
+    m_Localized: DEF +1
     m_Metadata:
       m_Items: []
   - m_Id: 5832187899936
@@ -570,7 +572,8 @@ MonoBehaviour:
       - rid: 7201578077006332005
   - m_Id: 5832187899940
     m_Localized: 'A beak-masked alchemist. Hurls flasks of molten silver that sear
-      vampires and spawn. The flask bursts: enemies next to the target take 1.'
+      vampires and spawn. The flask bursts: enemies next to the target take 1. Cannot
+      throw through walls.'
     m_Metadata:
       m_Items:
       - rid: 7201578077006332005
@@ -1233,8 +1236,9 @@ MonoBehaviour:
       m_Items:
       - rid: 7201578077006332005
   - m_Id: 9846568841286
-    m_Localized: '<b>Mercy kill</b>: An ally you mercy-kill within attack range rests
-      without rising. Mercy-killing the full-moon target also makes the drain fail.'
+    m_Localized: '<b>Attack an ally</b>: You may attack an ally within attack range.
+      An ally felled this way rests without rising. Felling the full-moon target
+      also makes the drain fail.'
     m_Metadata:
       m_Items:
       - rid: 7201578077006332005
@@ -1252,7 +1256,8 @@ MonoBehaviour:
       - rid: 7201578077006332005
   - m_Id: 9846568841289
     m_Localized: "Damage = ATK \u2212 DEF (minimum 1). No randomness. No counterattacks
-      or attacks of opportunity."
+      or attacks of opportunity. Ranged attacks are blocked by walls (rock); water
+      and pits are not."
     m_Metadata:
       m_Items:
       - rid: 7201578077006332005

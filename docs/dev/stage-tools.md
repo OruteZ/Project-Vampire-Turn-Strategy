@@ -27,3 +27,16 @@
 - `script eval --code 'return VampireSpawn.Core.StageConsole.New("s6", "sword@6,4 doctor@9,6");'` (편성을 안 주면 예시 편성), `Do("go; m 13 6,3; a 13 2; h 16 14; b 15 21; end")` (m 이동, a 공격, x 처형, b 수습, h 치료, w 대기, p 놓기, r 회수, go 전투 개시·증원 배치 완료, end 턴 종료), `State()`, `Map()`, `Reach(id)`, `Threat()`(다음 적 차례에 각 칸을 칠 수 있는 적 수).
 - 에이전트는 이것으로 "고민이 생기는가, 할 일 없는 턴이 있는가, 길이·난이도"를 본다. 연출·손맛·실제 걸리는 시간은 사람 몫(플레이 기록).
 - 2026-11-11 6장·9장 1판을 이렇게 둬서 고쳤다(docs/content/stages.md 6-3).
+
+## 에디터 없이 두기 (`tools/stage`, 2026-11-17)
+- 규칙 코드(`Scripts/Core`)는 Unity 를 참조하지 않아서 .NET 콘솔 프로그램으로 그대로 돈다. 에디터 왕복(한 수에 3~5초) 없이 0.2초에 한 수, 여러 프로세스로 동시에 돌릴 수 있다.
+- `tools/stage/export.cs`: Unity `script eval --file` 로 지금 데이터 에셋을 `tools/stage/data.json` 에 내보낸다. `tools/stage/import.py`: `data.json` 을 다시 에셋에 넣는 eval 스크립트(`scratch/import.cs`)를 만든다. 넣은 뒤 다시 내보내 같아야 한다.
+- `tools/stage/sp` (처음 쓸 때 빌드):
+  - `sp new <판> <장> ["sword@3,6 ..."] [강화 id,...]`, `sp play <판> "go; m 6 3,5; a 6 4; auto; end"`: 한 수씩 두기. 판은 `plays/<판>.play` 글 파일(첫 줄 장|편성|강화, 그 뒤 명령)이고 부를 때마다 처음부터 다시 재생한다. `auto` 는 아직 안 친 아군이 닿는 가장 약한 적을 친다.
+  - `sp replay <판>...`: 기록을 다시 돌려 결과 한 줄(끝, 턴, 손실, 변이, 추가 목표).
+  - `sp bot [장|all] [편성] [강화]`: 단순 봇(`StageSim`).
+  - `sp mc <장,장|all> [편성|comp:명세] [강화]`: **한 수 앞 봇.** 턴마다 무작위 수 순서 `SP_SAMPLES`(200)가지를 적 차례까지 돌려 보고 가장 나은 턴을 고른다. `SP_SEEDS`(8)판의 승수·평균 손실을 낸다. `SP_SAVE=<머리말>` 이면 가장 손실이 적은 이긴 판을 `plays/` 에 남긴다.
+  - `comp:knight:2 archer:1 pspear:* parcher:*`: 편성 만들기. 숫자는 그 수만큼, `*` 는 인구가 찰 때까지 번갈아. 근접은 적 쪽 배치 칸부터 선다.
+  - `sp validate`, `sp form <장> <명세>`, `sp info <판> threat|reach <id>`.
+- `tools/stage/matrix.sh <이름> <장,...>`: 편성 여섯 가지(예시, 검사 쌓기, 궁수 쌓기, 기사 쌓기, 연금술사 둘 + 섞기, 고르게 섞기)를 한꺼번에 돌려 `scratch/<이름>.tsv`. `tools/stage/doc.py <이름>` 이 stages.md 8절 표를 만든다.
+- 한 수 앞 봇은 두 턴 뒤를 계획하지 못한다(미끼로 흡혈을 헛되게 하기 같은 수). 사람 대신이 아니라 장·편성을 서로 견주는 잣대다. 그래도 에이전트가 손으로 둔 것보다 잘 둔다(7장: 손 14턴, 봇 9턴).
