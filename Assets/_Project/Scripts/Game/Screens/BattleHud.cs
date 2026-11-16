@@ -299,12 +299,14 @@ namespace VampireSpawn.Game.Screens
             L(roster, Loc.T("battle.formation"), "box-title display");
             var pop = b.Used(t => t.Pop);
             var sil = b.Used(t => t.Silver);
-            foreach (var k in stg.Units)
+            for (var i = 0; i < stg.Units.Length; i++)
             {
+                var k = stg.Units[i];
                 var t = GameData.Type(k);
                 var can = pop + t.Pop <= b.PopCap && sil + t.Silver <= b.SilverCap;
-                var kind = k;
-                RosterRow(roster, t, k, s.DeployType == k, can, st.Upgrades, () => a.Pick?.Invoke(kind));
+                var row = RosterRow(roster, t, k, s.DeployType == k, can, st.Upgrades, () => a.Pick?.Invoke(k));
+                if (i < 9) L(row, (i + 1).ToString(), "key roster-key");
+                row.RegisterCallback<PointerDownEvent>(e => { if (e.button == 1) a.RecallKind?.Invoke(k); });
             }
             var acts = E(roster, "acts row");
             Btn(acts, Loc.T("battle.recallAll"), a.Clear, BtnKind.Normal);
@@ -335,7 +337,7 @@ namespace VampireSpawn.Game.Screens
             Btn(p, Loc.T("unit.card.recall"), () => a.Recall?.Invoke(uid), BtnKind.Normal, true, null, "recall");
         }
 
-        void RosterRow(VisualElement parent, UnitType t, string k, bool on, bool can, IEnumerable<string> upgrades, Action pick)
+        VisualElement RosterRow(VisualElement parent, UnitType t, string k, bool on, bool can, IEnumerable<string> upgrades, Action pick)
         {
             var row = E(parent, "roster-row row", true);
             Frame(row, art, on ? Ui.Steel : Ui.Line);
@@ -348,6 +350,7 @@ namespace VampireSpawn.Game.Screens
             if (t.Silver > 0) Value(top, Kit.Icon.Silver, t.Silver.ToString(), can ? Ui.Candle : Ui.Blood, can ? Ui.Muted : Ui.Blood, Loc.T("battle.silver"));
             Stats(col, Battle.Preview(k, upgrades));
             Click(row, pick);
+            return row;
         }
 
         void Stats(VisualElement parent, Unit u)
