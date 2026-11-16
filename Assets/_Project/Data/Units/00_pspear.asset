@@ -27,7 +27,7 @@ MonoBehaviour:
   unlockAt: 1
   upgrades:
   - id: pspear_hp
-    cost: 30
+    cost: 20
     hp: 3
     atk: 0
     def: 0
@@ -37,7 +37,7 @@ MonoBehaviour:
     heal: 0
     ability: 0
   - id: pspear_pike
-    cost: 30
+    cost: 40
     hp: 0
     atk: 0
     def: 0

@@ -16,7 +16,7 @@ MonoBehaviour:
   units:
   - pspear
   - parcher
-  pop: 5
+  pop: 6
   silver: 0
   reward: 20
   goal: 0
@@ -29,11 +29,11 @@ MonoBehaviour:
   bonusType: 0
   bonusValue: 12
   bonusGold: 10
-  bossHp: 10
+  bossHp: 9
   bossAtk: 3
   bossDef: 0
   bossMov: 2
-  bossHeal: 3
+  bossHeal: 4
   map:
   - '##.....##'
   - '#.......#'
@@ -113,3 +113,6 @@ MonoBehaviour:
   - kind: parcher
     col: 5
     row: 6
+  - kind: pspear
+    col: 4
+    row: 8

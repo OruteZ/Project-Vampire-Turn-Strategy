@@ -5,7 +5,7 @@ namespace VampireSpawn.Core
 {
     public enum Tier { Peasant, Regular, Knight, Hunter }
     // Stored as numbers in the unit assets: add new skills at the end only.
-    public enum Ability { None, Pike, Ambush, Cleave, Charge, Formation, Ward, Rite, Twice, Bury, Mend, Splash, Moonblood, Feast, Crescent }
+    public enum Ability { None, Pike, Ambush, Cleave, Charge, Formation, Ward, Rite, Twice, Bury, Mend, Splash, Moonblood, Feast, Crescent, Trap, Barbs, Satchel, Taunt }
     public enum BonusType { Turns, NoEat, AllMinions, Losses }
     // What wins a battle (docs/dev/battle-goals.md). Stored as numbers in the stage assets: add new goals at the end only.
     public enum Goal { Boss, Defense, Escort }
@@ -64,6 +64,10 @@ namespace VampireSpawn.Core
     public sealed class EnemyType
     {
         public const string Vampire = "vampire";
+        // Data key of a spawn placed by the stage, and the unit type it looks like.
+        public const string Spawn = "spawn", SpawnOf = "pspear";
+        // Data key of a villager already dead when the battle begins: it rises as that spawn unless buried first.
+        public const string Corpse = "corpse";
 
         public readonly string Key;
         public readonly int Hp, Atk, Def, Mov, Rng;
@@ -226,7 +230,7 @@ namespace VampireSpawn.Core
             Reinforcements = reinforcements ?? Array.Empty<Reinforcement>();
         }
 
-        public Placement[] Minions => Enemies.Where(e => e.Kind != EnemyType.Vampire).ToArray();
+        public Placement[] Minions => Enemies.Where(e => e.Kind != EnemyType.Vampire && e.Kind != EnemyType.Corpse).ToArray();
 
         public Message Objective => Goal switch
         {

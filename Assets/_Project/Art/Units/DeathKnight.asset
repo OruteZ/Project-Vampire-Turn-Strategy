@@ -1,0 +1,43 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1c50f19bfd6484047b0aa7aeac3dcfae, type: 3}
+  m_Name: DeathKnight
+  m_EditorClassIdentifier: VampireSpawn.Game::VampireSpawn.Game.UnitLook
+  key: deathKnight
+  icon: 
+  recipe: 
+  model: {fileID: 5669538231628601157, guid: c40f7c9d822c08b43a34200e6ec68ec3, type: 3}
+  rig: 1
+  scale: 1.25
+  weapons:
+  - prefab: {fileID: 8011566013882336049, guid: 2d1b288c4815e28498d754a794475903, type: 3}
+    hand: 0
+    hold: 1
+    position: {x: 0, y: 0, z: 0}
+    rotation: {x: 0, y: 0, z: 0}
+  animator: {fileID: 22100000, guid: df70526b63d281b4b8a562ec70988bd3, type: 2}
+  sounds:
+    attack:
+      clips: []
+      volume: 1
+    hurt:
+      clips:
+      - {fileID: 8300000, guid: 407da2c642d44404eb566e4d7783f447, type: 3}
+      - {fileID: 8300000, guid: 9ba8575a83fd6f84d84c693672b27b80, type: 3}
+      volume: 0.8
+    death:
+      clips:
+      - {fileID: 8300000, guid: b23a504c700262846adb0d37ada0720d, type: 3}
+      volume: 0.85
+    step:
+      clips: []
+      volume: 1

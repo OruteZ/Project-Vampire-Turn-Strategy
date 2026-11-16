@@ -32,13 +32,13 @@ namespace VampireSpawn.Tests
         }
 
         [Test]
-        public void EveryUnitTypeHasThreeBranchesOfOnePrice()
+        public void EveryUnitTypeHasThreeUpgradesOfDifferentPrices()
         {
             foreach (var t in GameData.Types)
             {
                 var b = GameData.Branches(t.Key);
                 Assert.AreEqual(3, b.Length, t.Key);
-                Assert.AreEqual(1, b.Select(u => u.Cost).Distinct().Count(), t.Key + " branches share a price");
+                Assert.AreEqual(3, b.Select(u => u.Cost).Distinct().Count(), t.Key + " upgrades each have their own price");
                 Assert.IsTrue(b[0].Inherit, t.Key + " branch 1 carries over to a spawn");
                 Assert.IsFalse(b[1].Inherit || b[2].Inherit, t.Key + " branches 2 and 3 do not");
             }

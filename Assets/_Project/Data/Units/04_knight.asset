@@ -16,19 +16,19 @@ MonoBehaviour:
   tier: 2
   pop: 3
   silver: 0
-  hp: 14
-  atk: 5
-  def: 2
+  hp: 16
+  atk: 2
+  def: 1
   mov: 2
   rng: 1
   bane: 0
   heal: 0
-  skills: 
-  unlockAt: 7
+  skills: 12000000
+  unlockAt: 8
   upgrades:
   - id: knight_hp
-    cost: 90
-    hp: 4
+    cost: 60
+    hp: 6
     atk: 0
     def: 0
     mov: 0
@@ -37,17 +37,17 @@ MonoBehaviour:
     heal: 0
     ability: 0
   - id: knight_def
-    cost: 90
-    hp: 0
+    cost: 110
+    hp: 2
     atk: 0
-    def: 2
+    def: 1
     mov: 0
     rng: 0
     bane: 0
     heal: 0
     ability: 0
   - id: knight_charge
-    cost: 90
+    cost: 80
     hp: 0
     atk: 0
     def: 0

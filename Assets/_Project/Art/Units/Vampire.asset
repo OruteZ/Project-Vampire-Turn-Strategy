@@ -17,6 +17,7 @@ MonoBehaviour:
   recipe: 
   model: {fileID: 5669538231628601157, guid: c40f7c9d822c08b43a34200e6ec68ec3, type: 3}
   rig: 1
+  scale: 1.3
   weapons:
   - prefab: {fileID: 2534750377913445900, guid: 8875e2c829b723643b54932381e8d09f, type: 3}
     hand: 0

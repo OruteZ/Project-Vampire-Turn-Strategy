@@ -7,6 +7,7 @@ namespace VampireSpawn.Game
         public int Id { get; private set; }
         public float HpFraction { get; private set; } = 1f;
         public bool Lying { get; private set; }
+        public float Height => art.unitHeight * art.hexSize * (look != null && look.scale > 0f ? look.scale : 1f);
         public UnitSounds Sounds { get; set; }
 
         static readonly int WalkParam = Animator.StringToHash("Walk");
@@ -60,7 +61,7 @@ namespace VampireSpawn.Game
             model.name = prefab.name;
             model.localPosition = Vector3.zero;
             model.localRotation = Quaternion.Euler(0f, yaw, 0f);
-            FitHeight(model, art.unitHeight * art.hexSize);
+            FitHeight(model, Height);
             if (armed) Arm(model, look);
             animator = model.GetComponentInChildren<Animator>();
             if (animator == null) return;

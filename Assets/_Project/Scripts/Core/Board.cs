@@ -68,6 +68,32 @@ namespace VampireSpawn.Core
                 || (o == Occupant.Enemy && side != Side.Enemy);
         }
 
+        // A shot is a straight line between hex centres; only rock stops it (water and pits do not). hex-grid.md 5.
+        // A line that runs exactly along an edge is nudged to each side in turn, and either side being open is enough.
+        public bool Sees(Hex a, Hex b)
+        {
+            var n = Hex.Distance(a, b);
+            if (n <= 1) return true;
+            return Clear(a, b, n, 1e-6) || Clear(a, b, n, -1e-6);
+        }
+
+        bool Clear(Hex a, Hex b, int n, double nudge)
+        {
+            double aq = a.Col, ar = a.Row - (a.Col - (a.Col & 1)) / 2, bq = b.Col, br = b.Row - (b.Col - (b.Col & 1)) / 2;
+            for (var i = 1; i < n; i++)
+            {
+                var t = (double)i / n;
+                double q = aq + (bq - aq) * t + nudge, r = ar + (br - ar) * t + 2 * nudge, s = -q - r;
+                double rq = Math.Round(q), rr = Math.Round(r), rs = Math.Round(s);
+                double dq = Math.Abs(rq - q), dr = Math.Abs(rr - r), ds = Math.Abs(rs - s);
+                if (dq > dr && dq > ds) rq = -rr - rs; else if (dr > ds) rr = -rq - rs;
+                int col = (int)rq, row = (int)rr + (col - (col & 1)) / 2;
+                var h = new Hex(col, row);
+                if (InBounds(h) && At(h) == Terrain.Rock) return false;
+            }
+            return true;
+        }
+
         public int Cost(Hex h) => At(h) == Terrain.Rough ? 2 : 1;
 
         public List<(Hex hex, int steps)> Reachable(Hex from, int mov, Side side, Func<Hex, Occupant> occupant) =>

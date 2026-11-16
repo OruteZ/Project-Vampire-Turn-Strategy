@@ -79,7 +79,7 @@ namespace VampireSpawn.Core
             {
                 foreach (var e in units.Where(x => x.Role == kind).ToList())
                 {
-                    if (!units.Contains(e) || e.JustRisen || e.Asleep || e.JustWoke || e.JustArrived) continue;
+                    if (!units.Contains(e) || e.Asleep || e.JustWoke || e.JustArrived) continue;
                     if (kind == Role.Vampire && full) continue;
                     MeleeAct(e);
                     if (CheckEnd()) return;
@@ -187,14 +187,17 @@ namespace VampireSpawn.Core
 
         Unit PickTarget(Unit att, List<Unit> list)
         {
+            // docs/content/units.md: an enemy that can reach a taunting unit strikes it and nothing else.
+            var wall = list.Where(t => t.Has(Ability.Taunt)).ToList();
+            if (wall.Count > 0) list = wall;
             var best = list[0];
             foreach (var t in list.Skip(1))
                 if (TargetScore(att, t) > TargetScore(att, best)) best = t;
             return best;
         }
 
-        // docs/systems/ai.md 2: allies within range, no line of sight.
-        List<Unit> AlliesInReach(Unit e, Hex h) => Targets.Where(a => Hex.Distance(h, a.Pos) <= e.Rng).ToList();
+        // docs/systems/ai.md 2: allies within range and in line of sight.
+        List<Unit> AlliesInReach(Unit e, Hex h) => Targets.Where(a => InRange(e, h, a.Pos)).ToList();
 
         void MeleeAct(Unit e)
         {
@@ -217,8 +220,7 @@ namespace VampireSpawn.Core
                 .OrderBy(r => r.steps).Select(r => (Hex?)r.hex).FirstOrDefault();
             if (spot.HasValue)
             {
-                MoveEnemy(e, spot.Value);
-                if (!units.Contains(e)) return;
+                if (MoveEnemy(e, spot.Value) || !units.Contains(e)) return;
                 adj = AlliesInReach(e, e.Pos);
             }
             else if (adj.Count == 0)
@@ -249,16 +251,19 @@ namespace VampireSpawn.Core
                         if (d < bestDist || (d == bestDist && steps < bestSteps)) { bestDist = d; bestSteps = steps; best = h; }
                     }
                 }
-                if (best.HasValue && best.Value != e.Pos) MoveEnemy(e, best.Value);
+                if (best.HasValue && best.Value != e.Pos && MoveEnemy(e, best.Value)) return;
                 if (!units.Contains(e)) return;
                 adj = AlliesInReach(e, e.Pos);
             }
             if (adj.Count > 0) ApplyHit(e, PickTarget(e, adj));
         }
 
-        void MoveEnemy(Unit e, Hex to)
+        // True when a trap on the way stopped it (it then does not attack this phase).
+        bool MoveEnemy(Unit e, Hex to)
         {
-            Walk(e, to);
+            var trap = Board.PathTo(e.Pos, to, e.Side, OccupantAt).Where(h => h != e.Pos && UnitAt(h) == null).Select(TrapAt).FirstOrDefault(t => t != null);
+            Walk(e, trap != null ? trap.Pos : to);
+            if (trap != null) Spring(trap, e);
             foreach (var a in Allies.ToList())
             {
                 if (!units.Contains(e)) break;
@@ -269,6 +274,7 @@ namespace VampireSpawn.Core
                 Say(new Message("log.pike", a.Name, e.Name), "h");
                 if (e.Hp <= 0) { Kill(e, a, DeathCause.Blow); break; }
             }
+            return trap != null;
         }
     }
 }

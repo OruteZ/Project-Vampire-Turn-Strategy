@@ -122,20 +122,21 @@ namespace VampireSpawn.Tests
         }
 
         [Test]
-        public void OneBranchPerTypeAndOldSavesKeepTheFirst()
+        public void EveryUpgradeOfATypeCanBeBoughtAndOldSavesDropUnknownOnes()
         {
             var all = Campaign.Stages.Select(s => s.Id);
             var c = Campaign.Parse("{\"gold\":999,\"cleared\":{" + string.Join(",", all.Select(id => "\"" + id + "\":true")) + "},\"bonus\":{},\"ups\":{}}");
             var b = GameData.Branches("sword");
-            Assert.IsTrue(c.Buy(b[0].Id));
-            Assert.IsFalse(c.Buy(b[1].Id), "the other two branches are locked");
-            Assert.AreEqual(b[0], c.Chosen("sword"));
-            Assert.IsTrue(c.Buy(GameData.Branches("pspear")[2].Id), "another type is free to choose");
+            foreach (var up in b) Assert.IsTrue(c.Buy(up.Id), up.Id);
+            Assert.AreEqual(999 - b.Sum(u => u.Cost), c.Gold);
+            Assert.IsFalse(c.Buy(b[0].Id), "not twice");
+            var plain = Battle.Preview("sword", null); var full = Battle.Preview("sword", c.Upgrades);
+            Assert.AreEqual(plain.Atk + b.Sum(u => u.Mod.Atk), full.Atk, "the three stack");
 
             var old = Campaign.Parse("{\"gold\":5,\"cleared\":{},\"bonus\":{},\"ups\":{\"" + b[2].Id + "\":true,\"" + b[1].Id + "\":true,\"gone_upgrade\":true}}");
             Assert.IsTrue(old.Repaired);
-            CollectionAssert.AreEqual(new[] { b[2].Id }, old.Upgrades, "first one kept, unknown id dropped");
-            Assert.AreEqual(5 + b[1].Cost, old.Gold, "the dropped branch is refunded");
+            CollectionAssert.AreEqual(new[] { b[2].Id, b[1].Id }, old.Upgrades, "both kept, unknown id dropped");
+            Assert.AreEqual(5, old.Gold);
             Assert.IsFalse(Campaign.Parse(old.ToJson()).Repaired);
         }
 
@@ -242,36 +243,16 @@ namespace VampireSpawn.Tests
             Assert.IsTrue(b.Log.Any(l => Loc.Text(l.Text).Contains(Loc.T("tag.splash"))));
         }
 
-        // docs/content/units.md "판타지 직업 개편" C.
+        // docs/content/units.md "역할 구분"
         [Test]
-        public void WerewolfTurnsWithTheMoonAndLeavesAHumanCorpse()
+        public void AnEnemyThatCanReachAKnightStrikesOnlyTheKnight()
         {
-            var type = GameData.Type("werewolf");
-            var b = new Battle(Field(new[] { P(EnemyType.Vampire, 6, 6), P("skeleton", 3, 2) }), new[] { "werewolf_feast" }, new[] { P("werewolf", 3, 3) });
+            var b = new Battle(Field(new[] { P(EnemyType.Vampire, 6, 6), P("skeleton", 3, 2) }), null, new[] { P("knight", 3, 3), P("sword", 2, 2) });
             b.Start();
-            var wolf = Ally(b, 3, 3);
-            b.EndTurn(); b.EndTurn();
-            Assert.AreEqual(2, b.Moon);
-            Assert.IsFalse(wolf.Wolf, "moon 2: still human");
-            var events = b.EndTurn().Events;
-            Assert.IsTrue(wolf.Wolf, "moon 3");
-            Assert.AreEqual(type.Atk + 2, wolf.Atk);
-            Assert.AreEqual(type.Mov + 1, wolf.Mov);
-            Assert.IsTrue(events.Any(e => e.Kind == BattleEventKind.Shifted && e.UnitId == wolf.Id && e.Value == 1));
-            var hurt = wolf.Hp;
-            Assert.Less(hurt, wolf.MaxHp, "the skeleton next to it has hit it");
-            Assert.IsTrue(b.Attack(wolf.Id, b.UnitAt(At(3, 2)).Id).Ok);
-            Assert.AreEqual(hurt + 2, wolf.Hp, "feast: 2 back on the kill");
-
-            var fall = new Battle(Field(new[] { P(EnemyType.Vampire, 3, 2) }, 99), null, new[] { P("werewolf", 3, 3), P("knight", 0, 6) });
-            fall.Start();
-            for (var i = 0; i < 8 && fall.Corpses.Count == 0; i++) fall.EndTurn();
-            Assert.AreEqual(type.Atk, fall.Corpses.Single(c => c.Type == "werewolf").Atk, "the corpse keeps the human attack");
-
-            var crescent = new Battle(Field(new[] { P(EnemyType.Vampire, 6, 6) }), new[] { "werewolf_early" }, new[] { P("werewolf", 3, 3) });
-            crescent.Start();
-            crescent.EndTurn(); crescent.EndTurn();
-            Assert.IsTrue(Ally(crescent, 3, 3).Wolf, "crescent call: from moon 2");
+            var sword = b.Allies.First(u => u.Type == "sword");
+            b.EndTurn();
+            Assert.AreEqual(sword.MaxHp, sword.Hp, "without the knight the skeleton would pick the frail sword");
+            Assert.Less(b.Allies.First(u => u.Type == "knight").Hp, GameData.Type("knight").Hp);
         }
 
         [Test]
@@ -287,6 +268,27 @@ namespace VampireSpawn.Tests
                 Assert.DoesNotThrow(() => b.Move(b.Allies.First().Id, At(3, 4)), g + " judged after a move");
                 Assert.DoesNotThrow(() => b.EndTurn(), g + " judged at the end of a turn");
             }
+        }
+
+        // docs/content/units.md scout
+        [Test]
+        public void ATrapHurtsAndStopsTheEnemyThatStepsOnIt()
+        {
+            var stage = new Stage("demo", GameData.Types.Select(t => t.Key).ToArray(), 99, 99, 0, Goal.Boss, new Bonus(BonusType.NoEat, 0, 0), new Boss(30, 1, 0, 0, 0),
+                Enumerable.Repeat(".......", 7).ToArray(), new[] { new Placement(EnemyType.Vampire, 6, 6), new Placement("skeleton", 3, 1) }, new Placement[0]);
+            var b = new Battle(stage, null, new[] { new Placement("scout", 3, 4) });
+            b.Start();
+            var scout = b.Allies.Single();
+            var s = b.Enemies.Single(e => e.Kind == "skeleton");
+            Assert.IsTrue(b.SetTrap(scout.Id, new Hex(3, 3)).Ok);
+            Assert.IsFalse(b.CanTrap(scout, new Hex(3, 5)), "laying a trap is the turn's action");
+            b.EndTurn();
+            b.EndTurn();
+            Assert.AreEqual(new Hex(3, 3), s.Pos, "stopped on the trap");
+            Assert.AreEqual(1, s.Hp, "skeleton 4 - trap 3");
+            Assert.AreEqual(2, b.TrapsLeft(scout), "three traps a battle");
+            Assert.AreEqual(scout.MaxHp, scout.Hp, "a trapped enemy does not attack that phase");
+            Assert.AreEqual(0, b.Traps.Count, "a trap works once");
         }
     }
 }

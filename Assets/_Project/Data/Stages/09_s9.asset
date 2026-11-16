@@ -22,7 +22,7 @@ MonoBehaviour:
   - hunter
   - gravedigger
   - doctor
-  - werewolf
+  - scout
   pop: 12
   silver: 2
   reward: 35
@@ -38,9 +38,9 @@ MonoBehaviour:
   bonusGold: 15
   bossHp: 20
   bossAtk: 5
-  bossDef: 1
+  bossDef: 0
   bossMov: 2
-  bossHeal: 5
+  bossHeal: 12
   map:
   - '###.......###'
   - '###..T.T..###'
@@ -62,15 +62,15 @@ MonoBehaviour:
     wave: 
     stance: 0
     alert: 0
-  - kind: skeletonHeavy
-    col: 5
+  - kind: gargoyle
+    col: 6
     row: 2
     arrive: 0
     wave: 
-    stance: 2
-    alert: 0
+    stance: 1
+    alert: 3
   - kind: skeletonHeavy
-    col: 7
+    col: 5
     row: 2
     arrive: 0
     wave: 
@@ -160,7 +160,7 @@ MonoBehaviour:
     wave: deep
     stance: 0
     alert: 0
-  - kind: skeleton
+  - kind: ghoul
     col: 0
     row: 10
     arrive: 0

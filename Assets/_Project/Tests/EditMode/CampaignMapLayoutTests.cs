@@ -12,10 +12,11 @@ namespace VampireSpawn.Tests
         static ArtCatalog Art => AssetDatabase.LoadAssetAtPath<ArtCatalog>("Assets/_Project/Art/ArtCatalog.asset");
 
         [Test]
-        public void EveryCampaignStageHasARegion()
+        public void EveryCampaignStageHasARegionOrSharesTheLastOne()
         {
-            var missing = Campaign.Stages.Where(s => CampaignMapLayout.Region(s.Id) == null).Select(s => s.Id).ToArray();
-            Assert.That(missing, Is.Empty, "stages with no region on the map");
+            var own = Campaign.Stages.Select(s => CampaignMapLayout.Region(s.Id) != null).ToList();
+            Assert.That(own[0], Is.True, "the first stage has a region");
+            Assert.That(own.SkipWhile(x => x).Any(x => x), Is.False, "stages without a region come only after the last region (they share it)");
         }
 
         [Test]

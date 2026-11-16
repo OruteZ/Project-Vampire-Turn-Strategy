@@ -20,7 +20,7 @@ namespace VampireSpawn.Tests
                 Assert.That(map, Is.Not.Null, "CampaignMapView in Camp.unity");
                 var terrain = map.terrain;
                 Assert.That(terrain, Is.Not.Null, "baked terrain");
-                foreach (var s in Campaign.Stages)
+                foreach (var s in Campaign.Stages.Where(s => CampaignMapLayout.Region(s.Id) != null))
                 {
                     var region = terrain.Find("Region " + s.Id);
                     Assert.That(region, Is.Not.Null, "Region " + s.Id);

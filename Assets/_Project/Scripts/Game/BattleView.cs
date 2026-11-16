@@ -156,7 +156,7 @@ namespace VampireSpawn.Game
                     if (units.TryGetValue(e.UnitId, out var hurt)) hurt.SetHp(e.Value, Battle.Find(e.UnitId)?.MaxHp ?? MaxHpOf(hurt, e.Value));
                     break;
                 case BattleEventKind.Popup:
-                    if (units.TryGetValue(e.UnitId, out var shown)) Popup.Spawn(shown.transform.position + Vector3.up * (Art.unitHeight * Art.hexSize + 0.6f), Loc.Text(e.Text), e.Style, speed / Pace);
+                    if (units.TryGetValue(e.UnitId, out var shown)) Popup.Spawn(shown.transform.position + Vector3.up * (shown.Height + 0.6f), Loc.Text(e.Text), e.Style, speed / Pace);
                     break;
                 case BattleEventKind.Died:
                     if (units.TryGetValue(e.UnitId, out var dead)) { dead.Trigger("Death"); Sound.Play(dead.Sounds, s => s.death); falling[e.At] = dead; Remove(units, e.UnitId, Wait(1.2f)); }

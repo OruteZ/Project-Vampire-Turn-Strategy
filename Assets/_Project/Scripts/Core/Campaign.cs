@@ -54,10 +54,10 @@ namespace VampireSpawn.Core
         public Battle NewBattle(Stage stage, IEnumerable<Placement> formation = null) =>
             new Battle(stage, stage.Id == "demo" ? null : upgrades, formation);
 
-        // docs/systems/progression.md 5-6: one branch per unit type; buying it locks the other two.
-        public Upgrade Chosen(string unit) => GameData.Branches(unit).FirstOrDefault(u => upgrades.Contains(u.Id));
+        public bool Owns(Upgrade up) => up != null && upgrades.Contains(up.Id);
 
-        public bool CanBuy(Upgrade up) => up != null && UpgradesOpen(up.Unit) && Chosen(up.Unit) == null && Gold >= up.Cost;
+        // docs/systems/progression.md 5-6: all three upgrades of a type can be bought; only gold limits it.
+        public bool CanBuy(Upgrade up) => up != null && UpgradesOpen(up.Unit) && !Owns(up) && Gold >= up.Cost;
 
         public bool Buy(string upgradeId)
         {
@@ -100,23 +100,16 @@ namespace VampireSpawn.Core
             Read(raw, "cleared", c.cleared);
             Read(raw, "bonus", c.bonus);
             Read(raw, "ups", c.upgrades);
-            c.KeepOneBranchEach();
+            c.DropUnknownUpgrades();
             return c;
         }
 
-        void KeepOneBranchEach()
+        void DropUnknownUpgrades()
         {
-            var kept = new List<Upgrade>();
-            foreach (var id in upgrades)
-            {
-                var up = GameData.Upgrades.FirstOrDefault(u => u.Id == id);
-                if (up == null) continue;
-                if (kept.Any(k => k.Unit == up.Unit)) { Gold += up.Cost; continue; }
-                kept.Add(up);
-            }
+            var kept = upgrades.Where(id => GameData.Upgrades.Any(u => u.Id == id)).Distinct().ToList();
             Repaired = kept.Count != upgrades.Count;
             upgrades.Clear();
-            upgrades.AddRange(kept.Select(u => u.Id));
+            upgrades.AddRange(kept);
         }
 
         static void Read(string raw, string field, List<string> into)

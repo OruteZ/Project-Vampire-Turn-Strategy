@@ -29,6 +29,7 @@ namespace VampireSpawn.Game.Screens
         Rect empty;
         CampLayer shownLayer;
         int focus;
+        bool[] shared;
 
         public static CampMarkers Build(Transform host, VisualElement layer, ArtCatalog art, CampaignMapView map, Action<int> pick)
         {
@@ -64,6 +65,14 @@ namespace VampireSpawn.Game.Screens
             shownLayer = nav.Layer;
             focus = nav.Stage;
             this.empty = empty;
+            // Stages that share one region show a single marker: the one to play next, or the last once all are cleared.
+            shared = new bool[markers.Length];
+            for (var i = 0; i < markers.Length; i++)
+            {
+                var group = Enumerable.Range(0, markers.Length).Where(k => map.RegionStage(k) == map.RegionStage(i)).ToList();
+                var next = group.Where(k => c.StageOpen(k) && !c.IsCleared(Campaign.Stages[k])).DefaultIfEmpty(group.Any(k => c.StageOpen(k)) ? group.Last() : group.First()).First();
+                shared[i] = i != next;
+            }
             for (var i = 0; i < markers.Length; i++)
             {
                 var m = markers[i];
@@ -113,7 +122,7 @@ namespace VampireSpawn.Game.Screens
             {
                 var m = markers[i];
                 var p = shownLayer == CampLayer.Barracks ? null : map.ScreenPoint(i);
-                var show = p.HasValue && empty.Contains(p.Value);
+                var show = p.HasValue && empty.Contains(p.Value) && (shared == null || !shared[i]);
                 m.Root.style.display = show ? DisplayStyle.Flex : DisplayStyle.None;
                 if (show)
                 {

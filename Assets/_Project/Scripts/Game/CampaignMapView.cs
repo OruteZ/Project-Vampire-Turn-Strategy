@@ -84,7 +84,7 @@ namespace VampireSpawn.Game
         public void Look(CampLayer layer, int stage, Rect empty, Vector2 margin, bool snap = false)
         {
             var r = RegionOf(stage);
-            var chosen = layer == CampLayer.Barracks ? Shot("Shot Camp") : layer == CampLayer.Info && r != null ? Shot("Shot " + Campaign.Stages[stage].Id) : Shot("Shot Wide");
+            var chosen = layer == CampLayer.Barracks ? Shot("Shot Camp") : layer == CampLayer.Info && r != null ? Shot("Shot " + Campaign.Stages[RegionStage(stage)].Id) : Shot("Shot Wide");
             foreach (var cam in Shots()) cam.enabled = cam == chosen;
             this.empty = empty;
             panning = layer == CampLayer.Map ? chosen : null;
@@ -167,8 +167,20 @@ namespace VampireSpawn.Game
         // objects people may move by hand. CampaignMapLayout only feeds the bake (campaign-map.md 10).
         public const string PathsName = "Paths", StartName = "Start", CampTemplateName = "Camp Template";
 
-        Transform RegionOf(int stageIndex) =>
-            terrain != null && stageIndex >= 0 && stageIndex < Campaign.Stages.Length ? terrain.Find("Region " + Campaign.Stages[stageIndex].Id) : null;
+        // Stages past the last region on the map are inside the castle and share its region (docs/areas/battle.md, 20 stages).
+        // -1 when the stage is out of range or nothing is baked.
+        public int RegionStage(int stageIndex)
+        {
+            if (terrain == null || stageIndex < 0 || stageIndex >= Campaign.Stages.Length) return -1;
+            for (var i = stageIndex; i >= 0; i--) if (terrain.Find("Region " + Campaign.Stages[i].Id) != null) return i;
+            return -1;
+        }
+
+        Transform RegionOf(int stageIndex)
+        {
+            var i = RegionStage(stageIndex);
+            return i < 0 ? null : terrain.Find("Region " + Campaign.Stages[i].Id);
+        }
 
         static Vector3 PointOr(Transform parent, string name, Vector3 fallback)
         {
@@ -381,7 +393,7 @@ namespace VampireSpawn.Game
             for (var i = 0; i < Campaign.Stages.Length; i++)
             {
                 var r = RegionOf(i);
-                if (!campaign.IsCleared(Campaign.Stages[i]) || r == null) continue;
+                if (!campaign.IsCleared(Campaign.Stages[i]) || r == null || RegionStage(i) != i) continue;
                 var at = PointOr(r, "Brazier", r.position);
                 var brazier = art.MapProp(CampaignMapLayout.Brazier);
                 if (brazier != null) BoardView.Place(brazier, progress, at, 0.9f, 0f);

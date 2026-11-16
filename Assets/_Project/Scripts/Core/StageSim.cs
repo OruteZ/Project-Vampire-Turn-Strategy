@@ -34,9 +34,9 @@ namespace VampireSpawn.Core
             return sb.ToString();
         }
 
-        public static Run Play(Stage stage)
+        public static Run Play(Stage stage, IEnumerable<string> owned = null, IEnumerable<Placement> formation = null)
         {
-            var b = new Battle(stage);
+            var b = new Battle(stage, owned, formation);
             b.Start();
             var peak = b.Enemies.Count();
             while ((b.Phase == Phase.Player || b.Reinforcing) && b.Turn <= TurnCap)
@@ -90,7 +90,7 @@ namespace VampireSpawn.Core
         static bool TryHit(Battle b, Unit u)
         {
             if (u.Acted) return false;
-            var t = b.Enemies.Where(e => !e.Asleep && Hex.Distance(u.Pos, e.Pos) <= u.Rng).OrderBy(e => e.Hp).FirstOrDefault();
+            var t = b.Enemies.Where(e => !e.Asleep && b.InRange(u, u.Pos, e.Pos)).OrderBy(e => e.Hp).FirstOrDefault();
             return t != null && b.Attack(u.Id, t.Id).Ok;
         }
 

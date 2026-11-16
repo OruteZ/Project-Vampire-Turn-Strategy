@@ -35,6 +35,7 @@ namespace VampireSpawn.Core
         public bool ActedAgain { get; internal set; }
         public bool Asleep { get; internal set; }
         public bool JustRisen { get; internal set; }
+        public int TrapsLaid { get; internal set; }
         public bool JustWoke { get; internal set; }
         public bool JustArrived { get; internal set; }
         public bool Wolf { get; internal set; }
@@ -47,6 +48,15 @@ namespace VampireSpawn.Core
         public string Kind => Role == Role.Ally ? Type : Role == Role.Minion ? Minion : Role.ToString().ToLowerInvariant();
         public bool IsUndead => Role == Role.Vampire || Role == Role.Spawn;
         public bool Has(Ability a) => abil.Contains(a);
+    }
+
+    // A scout's trap (docs/content/units.md "정찰병"). Enemies do not see it.
+    public sealed class Trap
+    {
+        public int Id { get; internal set; }
+        public Hex Pos { get; internal set; }
+        public int Owner { get; internal set; }
+        public int Damage { get; internal set; }
     }
 
     public sealed class Corpse
@@ -98,6 +108,9 @@ namespace VampireSpawn.Core
         readonly List<LogEntry> log = new List<LogEntry>();
         public IReadOnlyList<Unit> Units => units;
         public IReadOnlyList<Corpse> Corpses => corpses;
+        public IReadOnlyList<Trap> Traps => traps;
+        public Trap TrapAt(Hex h) => traps.FirstOrDefault(t => t.Pos == h);
+        readonly List<Trap> traps = new List<Trap>();
         public IReadOnlyList<LogEntry> Log => log;
 
         readonly HashSet<string> upgrades;
@@ -183,7 +196,8 @@ namespace VampireSpawn.Core
             foreach (var id in upgrades)
                 if (GameData.Upgrades.All(u => u.Id != id)) throw new ArgumentException("unknown upgrade " + id);
             foreach (var e in stage.Enemies)
-                if (e.Reinforcement) pending.Add(e);
+                if (e.Kind == EnemyType.Corpse) corpses.Add(Fallen(new Hex(e.Col, e.Row)));
+                else if (e.Reinforcement) pending.Add(e);
                 else units.Add(Placed(e, new Hex(e.Col, e.Row)));
             if (stage.Escort is EscortStats es)
                 units.Add(new Unit
@@ -203,6 +217,8 @@ namespace VampireSpawn.Core
         public Unit Escort => units.FirstOrDefault(u => u.Role == Role.Escort);
         public IEnumerable<Unit> Enemies => units.Where(u => u.Side == Side.Enemy);
         public Unit Vampire => units.FirstOrDefault(u => u.Role == Role.Vampire);
+        // Ranged attacks (range 2 or more) need a clear line (rock blocks it) and cannot hit the hex next to the shooter (hex-grid.md 4-1, 4-2).
+        public bool InRange(Unit u, Hex from, Hex to) => Hex.Distance(from, to) <= u.Rng && (u.Rng <= 1 || Hex.Distance(from, to) >= 2 && Board.Sees(from, to));
         public Unit UnitAt(Hex h) => units.FirstOrDefault(u => u.Pos == h);
         public Corpse CorpseAt(Hex h) => corpses.FirstOrDefault(c => c.Pos == h);
         public Unit Find(int id) => units.FirstOrDefault(u => u.Id == id);
@@ -242,7 +258,7 @@ namespace VampireSpawn.Core
         }
 
         // docs/content/units.md "판타지 직업 개편" C.
-        const int WolfMoon = 3, WolfAtk = 2, WolfMov = 1, FeastHeal = 2;
+        const int WolfMoon = 4, WolfAtk = 2, WolfMov = 1, FeastHeal = 2;
 
         bool WolfNow(Unit u) => u.Has(Ability.Moonblood) && moon >= (u.Has(Ability.Crescent) ? WolfMoon - 1 : WolfMoon);
 
@@ -264,6 +280,13 @@ namespace VampireSpawn.Core
             }
         }
 
+        Corpse Fallen(Hex at)
+        {
+            var m = GameData.Minion(EnemyType.Spawn);
+            var t = GameData.Type(EnemyType.SpawnOf);
+            return new Corpse { Id = nextId++, Pos = at, Name = t.Name, Type = t.Key, Glyph = t.Glyph, MaxHp = m.Hp, Atk = m.Atk, Def = m.Def, Mov = m.Mov };
+        }
+
         Unit MakeEnemy(string kind, Hex at)
         {
             if (kind == EnemyType.Vampire)
@@ -273,6 +296,17 @@ namespace VampireSpawn.Core
                 {
                     Id = nextId++, Role = Role.Vampire, Name = Stage.BossName, Glyph = new Message("vampire.glyph"), Pos = at,
                     Hp = b.Hp, MaxHp = b.Hp, Atk = b.Atk, Def = b.Def, Mov = b.Mov, Rng = 1, Heal = b.Heal, Asleep = true,
+                };
+            }
+            // A villager that rose before the battle began (docs/content/enemies.md 5): a real spawn, so allies it kills rise too.
+            if (kind == EnemyType.Spawn)
+            {
+                var m = GameData.Minion(kind);
+                var t = GameData.Type(EnemyType.SpawnOf);
+                return new Unit
+                {
+                    Id = nextId++, Role = Role.Spawn, Type = t.Key, Name = new Message("name.spawn", t.Name), Glyph = t.Glyph, Origin = t.Name, Pos = at,
+                    Hp = m.Hp, MaxHp = m.Hp, Atk = m.Atk, Def = m.Def, Mov = m.Mov, Rng = 1,
                 };
             }
             var s = GameData.Minion(kind);
@@ -423,7 +457,7 @@ namespace VampireSpawn.Core
             if (!Begin(Phase.Player, out var no)) return no;
             var u = Ready(id);
             var t = Find(targetId);
-            if (u == null || t == null || t.Side != Side.Enemy || t.Asleep || Hex.Distance(u.Pos, t.Pos) > u.Rng)
+            if (u == null || t == null || t.Side != Side.Enemy || t.Asleep || !InRange(u, u.Pos, t.Pos))
                 return CommandResult.Rejected(new Message("reason.cannotAttack"));
             ApplyHit(u, t);
             u.Acted = u.Moved = true;
@@ -442,7 +476,7 @@ namespace VampireSpawn.Core
             if (!Begin(Phase.Player, out var no)) return no;
             var u = Ready(id);
             var t = Find(targetId);
-            if (u == null || t == null || t.Role != Role.Ally || t == u || Hex.Distance(u.Pos, t.Pos) > u.Rng)
+            if (u == null || t == null || t.Role != Role.Ally || t == u || !InRange(u, u.Pos, t.Pos))
                 return CommandResult.Rejected(new Message("reason.cannotExecute"));
             Strike(u, t, DeathCause.Execute);
             u.Acted = u.Moved = true;
@@ -450,7 +484,9 @@ namespace VampireSpawn.Core
             return Done();
         }
 
-        public bool CanBury(Unit u, Corpse c) => u != null && c != null && u.Side == Side.Ally && !u.Acted && u.Has(Ability.Bury) && Hex.Distance(u.Pos, c.Pos) == 1;
+        public const int BuryRange = 2;
+
+        public bool CanBury(Unit u, Corpse c) => u != null && c != null && u.Side == Side.Ally && !u.Acted && u.Has(Ability.Bury) && Hex.Distance(u.Pos, c.Pos) <= BuryRange;
 
         // docs/content/units.md 4-3.
         public CommandResult Bury(int id, int corpseId)
@@ -498,6 +534,38 @@ namespace VampireSpawn.Core
             Say(new Message("log.mend", u.Name, t.Name, heal), "h");
             u.Acted = u.Moved = true;
             return Done();
+        }
+
+        public const int TrapDamage = 3, BarbsDamage = 2, TrapsHeld = 3, SatchelHeld = 4;
+
+        // A scout carries this many traps into a battle and gets none back.
+        public int TrapsLeft(Unit u) => (u.Has(Ability.Satchel) ? SatchelHeld : TrapsHeld) - u.TrapsLaid;
+
+        public bool CanTrap(Unit u, Hex h) => u != null && u.Side == Side.Ally && !u.Acted && u.Has(Ability.Trap) && TrapsLeft(u) > 0 && Hex.Distance(u.Pos, h) == 1
+            && Board.InBounds(h) && Board.Walkable(h) && UnitAt(h) == null && CorpseAt(h) == null && TrapAt(h) == null;
+
+        public CommandResult SetTrap(int id, Hex at)
+        {
+            if (!Begin(Phase.Player, out var no)) return no;
+            var u = Ready(id);
+            if (!CanTrap(u, at)) return CommandResult.Rejected(new Message("reason.cannotTrap"));
+            u.TrapsLaid++;
+            traps.Add(new Trap { Id = nextId++, Pos = at, Owner = u.Id, Damage = TrapDamage + (u.Has(Ability.Barbs) ? BarbsDamage : 0) });
+            Say(new Message("log.trapSet", u.Name), "h");
+            u.Acted = u.Moved = true;
+            return Done();
+        }
+
+        // The enemy that stepped on it is hurt and does nothing more this phase.
+        void Spring(Trap t, Unit e)
+        {
+            traps.Remove(t);
+            e.Hp -= t.Damage;
+            Emit(BattleEvent.Hit(e.Id, 0, t.Damage));
+            Emit(BattleEvent.HpChanged(e.Id, e.Hp));
+            Emit(BattleEvent.Popup(e.Id, PopupKind.Damage, new Message("popup.damage", t.Damage)));
+            Say(new Message("log.trapSprung", e.Name, t.Damage), "h");
+            if (e.Hp <= 0) Kill(e, Find(t.Owner), DeathCause.Blow);
         }
 
         public CommandResult Wait(int id)
@@ -556,7 +624,7 @@ namespace VampireSpawn.Core
             foreach (var o in Splashed(att, def).ToList())
             {
                 o.Hp -= 1;
-                if (o.Stance == Stance.Guard) o.Stance = Stance.Charge;
+                Provoke(att, o);
                 Emit(BattleEvent.Hit(o.Id, 0, 1));
                 Emit(BattleEvent.HpChanged(o.Id, o.Hp));
                 Emit(BattleEvent.Popup(o.Id, PopupKind.Damage, new Message("popup.damage", 1)));
@@ -565,12 +633,18 @@ namespace VampireSpawn.Core
             }
         }
 
+        // A guard charges once hit. A unit told to hold its ground does too when hit from where it cannot hit back (docs/systems/triggers.md 3).
+        void Provoke(Unit att, Unit def)
+        {
+            if (def.Stance == Stance.Guard || def.Stance == Stance.Hold && att.Side != def.Side && Hex.Distance(att.Pos, def.Pos) > def.Rng) def.Stance = Stance.Charge;
+        }
+
         // The damage half of an attack, shared with attacking an ally (docs/systems/spawn.md 2). True when def died.
         bool Strike(Unit att, Unit def, DeathCause cause)
         {
             var (d, tags) = DamageParts(att, def);
             def.Hp -= d;
-            if (def.Stance == Stance.Guard) def.Stance = Stance.Charge;
+            Provoke(att, def);
             Emit(BattleEvent.Hit(def.Id, att.Id, d));
             Emit(BattleEvent.HpChanged(def.Id, def.Hp));
             Emit(BattleEvent.Popup(def.Id, PopupKind.Damage, new Message("popup.damage", d)));

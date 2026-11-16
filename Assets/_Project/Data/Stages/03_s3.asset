@@ -17,7 +17,7 @@ MonoBehaviour:
   - pspear
   - parcher
   - sword
-  pop: 7
+  pop: 8
   silver: 0
   reward: 25
   goal: 0
@@ -30,11 +30,11 @@ MonoBehaviour:
   bonusType: 2
   bonusValue: 0
   bonusGold: 10
-  bossHp: 12
+  bossHp: 14
   bossAtk: 4
   bossDef: 0
   bossMov: 2
-  bossHeal: 4
+  bossHeal: 7
   map:
   - '##..T..##'
   - '#.......#'
@@ -99,14 +99,14 @@ MonoBehaviour:
   - kind: skeleton
     col: 4
     row: 9
-    arrive: 4
+    arrive: 5
     wave: 
     stance: 0
     alert: 0
   - kind: skeleton
     col: 3
     row: 8
-    arrive: 4
+    arrive: 5
     wave: 
     stance: 0
     alert: 0
@@ -115,20 +115,20 @@ MonoBehaviour:
   reinforcements: []
   sample:
   - kind: sword
+    col: 4
+    row: 6
+  - kind: sword
     col: 3
     row: 6
   - kind: pspear
     col: 5
     row: 6
   - kind: pspear
-    col: 4
-    row: 6
-  - kind: pspear
-    col: 4
-    row: 7
-  - kind: parcher
     col: 2
-    row: 7
+    row: 6
   - kind: parcher
     col: 6
+    row: 6
+  - kind: parcher
+    col: 4
     row: 7

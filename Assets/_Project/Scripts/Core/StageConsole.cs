@@ -42,6 +42,7 @@ namespace VampireSpawn.Core
                     case "b": r = B.Bury(int.Parse(c[1]), int.Parse(c[2])); break;
                     case "h": r = B.Mend(int.Parse(c[1]), int.Parse(c[2])); break;
                     case "w": r = B.Wait(int.Parse(c[1])); break;
+                    case "t": r = B.SetTrap(int.Parse(c[1]), ParseHex(c[2])); break;
                     case "p": r = B.Place(c[1], ParseHex(c[2])); break;
                     case "r": r = B.Recall(int.Parse(c[1])); break;
                     case "go": r = B.Start(); break;
@@ -131,7 +132,7 @@ namespace VampireSpawn.Core
                         for (var c = 0; c < B.Board.Cols; c++)
                         {
                             var h = new Hex(c, r);
-                            if (Hex.Distance(f, h) <= e.Rng && B.Board.Walkable(h) && seen.Add(h))
+                            if (B.InRange(e, f, h) && B.Board.Walkable(h) && seen.Add(h))
                                 hits[h] = hits.TryGetValue(h, out var x) ? (x.n + 1, x.atk + e.Atk) : (1, e.Atk);
                         }
             }
