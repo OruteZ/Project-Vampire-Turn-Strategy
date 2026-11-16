@@ -1,1200 +1,800 @@
-s1	pspear2+parcher4		Wiped	0	6	13	0	0	0	0
+s1	pspear3+parcher3		Slain	1	4	12	0	0	0	0
 s1	pspear3+parcher3		Slain	1	3	11	0	0	0	0
+s1	pspear1+parcher5		Slain	1	1	12	0	0	0	0
+s1	pspear1+parcher5		Slain	1	2	11	0	0	0	0
+s1	pspear5+parcher1		Slain	1	4	13	0	0	0	0
+s1	pspear3+parcher3		Slain	1	4	12	0	0	0	0
 s1	pspear2+parcher4		Slain	1	1	12	0	0	0	0
-s1	pspear5+parcher1		Slain	1	3	11	0	0	0	0
-s1	pspear1+parcher5		Slain	1	2	11	0	0	0	0
-s1	pspear2+parcher4		Slain	1	1	11	0	0	0	0
-s1	pspear1+parcher5		Wiped	0	6	15	0	0	0	0
-s1	pspear1+parcher5		Slain	1	1	11	0	0	0	0
+s1	pspear5+parcher1		Slain	1	2	12	0	0	0	0
 s1	pspear5+parcher1		Slain	1	3	13	0	0	0	0
-s1	pspear3+parcher3		Slain	1	1	10	0	0	0	0
-s1	pspear3+parcher3		Slain	1	2	11	0	0	0	0
-s1	pspear3+parcher3		Slain	1	1	12	0	0	0	0
-s1	pspear5+parcher1		Slain	1	1	13	0	0	0	0
-s1	pspear5+parcher1		Slain	1	0	12	0	0	0	0
-s1	pspear4+parcher2		Slain	1	2	11	0	0	0	0
-s1	pspear1+parcher5		Slain	1	2	11	0	0	0	0
-s1	pspear4+parcher2		Wiped	0	6	15	0	0	0	0
-s1	pspear3+parcher3		Slain	1	3	11	0	0	0	0
-s1	pspear5+parcher1		Slain	1	2	12	0	0	0	0
-s1	pspear4+parcher2		Slain	1	3	11	0	0	0	0
-s10	doctor3+parcher3+archer2	doctor_mov	Wiped	0	8	14	0	0	0	0
-s10	sword1+hunter2+archer1	archer_bane	Slain	1	1	9	0	0	0	0
-s10	hunter2+archer3	archer_rng	Wiped	0	5	11	0	0	0	0
-s10	knight2+sword2+parcher3	sword_atk	Wiped	0	7	16	0	0	0	0
-s10	sword3+parcher1+archer3	parcher_mov	Slain	1	5	15	0	0	0	1
-s10	knight2+sword2+hunter1	knight_charge,sword_cleave,hunter_mov	Slain	1	2	13	0	0	0	0
-s10	gravedigger2+pspear4+doctor3	gravedigger_twice,pspear_formation	Wiped	0	9	23	3	25	0	0
-s10	knight2+gravedigger1+hunter2	knight_def,hunter_bane	Slain	1	0	9	0	0	0	0
-s10	gravedigger1+sword3+pspear6	gravedigger_twice	Slain	1	5	14	2	0	0	0
-s10	parcher1+archer6	parcher_rng,archer_atk	Slain	1	3	10	0	0	0	0
-s10	gravedigger3+sword3+pspear1	pspear_formation	Wiped	0	7	18	1	0	0	0
-s10	sword2+pspear2+doctor3+archer1	sword_def,pspear_formation,doctor_def	Wiped	0	8	25	0	23	0	0
-s10	knight2+doctor4	doctor_heal	Wiped	0	6	19	0	7	0	0
-s10	knight2+gravedigger1+archer3	gravedigger_twice	Slain	1	0	10	0	0	0	0
-s10	knight2+pspear1+parcher3+archer2		Wiped	0	7	16	0	0	0	1
-s10	werewolf2+pspear3+hunter1+parcher2	pspear_formation	Slain	1	5	16	0	0	0	0
-s10	werewolf2+sword2+archer1+parcher2	sword_def,archer_bane	Slain	1	2	12	0	0	0	0
-s10	knight1+gravedigger2+archer3	knight_charge,gravedigger_twice,archer_rng	Wiped	0	6	17	0	0	0	0
-s10	doctor2+parcher10	parcher_mov	Wiped	0	12	22	0	7	0	0
-s10	knight2+werewolf1+pspear2+parcher3	parcher_mov	Wiped	0	8	18	0	0	0	0
-s11	doctor5+parcher2+archer1		Overrun	0	7	10	0	8	0	0
-s11	knight2+sword2+scout2+parcher1	knight_charge,sword_def	Held	1	4	10	0	0	4	0
-s11	sword3+pspear3+scout2+archer1	pspear_formation	Held	1	8	10	0	0	4	0
-s11	gravedigger1+scout3+hunter1+doctor2	gravedigger_twice,doctor_heal	Overrun	0	5	9	0	2	6	0
-s11	werewolf2+sword2+scout2+parcher1	werewolf_early,sword_def,parcher_ambush	Held	1	5	10	0	0	4	0
-s11	werewolf3+hunter2	werewolf_hp	Held	1	2	10	0	0	0	0
-s11	sword3+pspear3+hunter2	pspear_hp	Held	1	6	10	0	0	0	0
-s11	werewolf2+gravedigger1+sword2+pspear2	werewolf_early,pspear_hp	Overrun	0	5	10	0	0	0	0
-s11	werewolf2+gravedigger3+pspear2	werewolf_early,gravedigger_twice,pspear_hp	Held	1	6	10	0	0	0	0
-s11	sword3+pspear3+scout3	pspear_formation	Held	1	8	10	0	0	6	0
-s11	sword5+pspear1+doctor1+archer1	sword_atk,doctor_def,archer_bane	Held	1	5	10	0	4	0	0
-s11	werewolf1+gravedigger2+pspear2+hunter2	gravedigger_twice,hunter_mov	Held	1	6	10	0	0	0	0
-s11	pspear3+hunter2+doctor3	pspear_hp	Held	1	6	10	0	9	0	0
-s11	knight3+pspear1+doctor2	doctor_heal	Held	1	3	10	0	10	0	0
-s11	werewolf2+gravedigger2+pspear3+parcher1	parcher_mov	Held	1	6	10	0	0	0	0
-s11	werewolf1+hunter2+doctor2+archer1	archer_bane	Held	1	4	10	0	8	0	0
-s11	knight2+werewolf3	knight_charge,werewolf_hp	Held	1	3	10	0	0	0	0
-s11	scout4+archer3		Held	1	5	10	0	0	8	0
-s11	werewolf2+sword1+scout1+parcher5	sword_cleave,parcher_rng	Held	1	7	10	0	0	2	0
-s11	gravedigger2+doctor2+archer3	gravedigger_mov,doctor_def,archer_atk	Held	1	6	10	1	1	0	0
-s12	doctor5+parcher2+archer1		EscortFell	0	5	15	0	19	0	0
-s12	knight1+sword2+scout3+parcher1	knight_charge,sword_def	EscortFell	0	3	11	0	0	6	0
-s12	werewolf2+parcher8	werewolf_hp	EscortFell	0	0	7	0	0	0	0
-s12	werewolf2+scout2+hunter1	werewolf_hp,scout_satchel	Arrived	1	0	13	0	0	6	0
-s12	gravedigger3+sword2+doctor2	gravedigger_rite,sword_def	Arrived	1	2	26	1	30	0	0
-s12	knight1+werewolf3+gravedigger1	knight_hp,werewolf_early,gravedigger_mov	Arrived	1	0	13	0	0	0	0
-s12	pspear2+doctor2+parcher1+archer3	doctor_def,parcher_ambush	EscortFell	0	1	10	0	8	0	0
-s12	sword3+scout1+hunter2	sword_atk,scout_mov	Arrived	1	1	21	0	0	2	0
-s12	hunter2+archer3+parcher2	hunter_mov,archer_atk,parcher_mov	Arrived	1	1	14	0	0	0	0
-s12	sword1+hunter2+doctor2+archer1	sword_atk	Arrived	1	0	22	0	8	0	0
-s12	werewolf2+gravedigger4	gravedigger_twice	EscortFell	0	0	9	0	0	0	0
-s12	werewolf1+gravedigger2+pspear2+hunter1	gravedigger_twice,hunter_mov	EscortFell	0	1	11	0	0	0	0
-s12	pspear2+hunter2+doctor3	pspear_hp	Arrived	1	0	18	0	18	0	0
-s12	knight3+pspear1+doctor2	doctor_heal	Arrived	1	0	21	0	13	0	0
-s12	werewolf2+gravedigger2+pspear3+parcher1	parcher_mov	EscortFell	0	2	13	0	0	0	0
-s12	werewolf1+hunter2+doctor2		Arrived	1	0	17	0	9	0	0
-s12	gravedigger1+sword6	gravedigger_rite,sword_cleave	EscortFell	0	3	11	1	0	0	0
-s12	sword4+doctor3	doctor_def	cap	0	0	31	0	22	0	0
-s12	knight2+sword1+hunter1+parcher3	sword_cleave,hunter_ward,parcher_ambush	Arrived	1	1	12	0	0	0	0
-s12	knight1+sword2+hunter2+parcher1	knight_hp,sword_def,hunter_mov	Arrived	1	0	14	0	0	0	0
-s13	doctor6+parcher2+archer1		Wiped	0	9	20	0	14	0	0
-s13	knight2+sword2+scout2+parcher1	knight_charge,sword_def	Wiped	0	7	20	0	0	4	0
-s13	werewolf2+parcher10	werewolf_hp	Wiped	0	12	15	0	0	0	0
-s13	werewolf2+scout2+hunter2	werewolf_hp,scout_satchel	Wiped	0	6	16	0	0	6	0
-s13	gravedigger3+sword3+doctor2	gravedigger_rite,sword_def	Slain	1	1	15	0	7	0	1
-s13	knight1+werewolf3+gravedigger1+sword1	knight_hp,werewolf_early,gravedigger_mov	Wiped	0	6	19	0	0	0	0
-s13	gravedigger5+sword2+pspear1	sword_cleave,pspear_pike	Slain	1	4	15	3	0	0	0
-s13	gravedigger5+archer1+parcher4	archer_atk,parcher_mov	Wiped	0	10	19	4	0	0	0
-s13	knight3+scout3	scout_mov	Wiped	0	6	17	0	0	6	0
-s13	sword3+pspear3+scout3	pspear_formation	Wiped	0	9	19	0	0	6	0
-s13	gravedigger1+pspear12+scout1	pspear_hp	Wiped	0	14	14	0	0	2	0
-s13	knight1+scout5+parcher2	knight_def,parcher_ambush	Wiped	0	8	26	0	0	10	0
-s13	knight2+gravedigger2+archer3	knight_charge	Wiped	0	7	18	0	0	0	0
-s13	sword3+pspear3+archer3		Wiped	0	9	21	0	0	0	0
-s13	werewolf3+pspear2+scout1+hunter1	werewolf_early	cap	0	6	31	0	0	2	0
-s13	sword3+pspear5+parcher5	sword_def,pspear_formation	Wiped	0	13	18	0	0	0	0
-s13	knight3+archer3	knight_charge,archer_rng	Wiped	0	6	15	0	0	0	0
-s13	doctor1+parcher14	doctor_mov	Wiped	0	15	20	0	6	0	0
-s13	werewolf2+doctor4+archer1		Slain	1	0	13	0	7	0	0
-s13	sword3+parcher1+archer4		Slain	1	2	12	0	0	0	0
-s14	doctor6+parcher2+archer1		Wiped	0	9	21	0	17	0	0
-s14	knight2+sword2+scout2+parcher1	knight_charge,sword_def	Wiped	0	7	19	0	0	4	0
-s14	werewolf2+parcher10	werewolf_hp	Wiped	0	12	18	0	0	0	0
-s14	werewolf2+scout2+hunter2	werewolf_hp,scout_satchel	Slain	1	0	9	0	0	6	0
-s14	gravedigger3+sword3+doctor2	gravedigger_rite,sword_def	Slain	1	1	15	0	10	0	1
-s14	knight1+werewolf3+gravedigger1+sword1	knight_hp,werewolf_early,gravedigger_mov	Wiped	0	6	18	1	0	0	0
-s14	gravedigger5+sword2+pspear1	sword_cleave,pspear_pike	Wiped	0	8	17	2	0	0	0
-s14	gravedigger5+archer1+parcher4	archer_atk,parcher_mov	Wiped	0	10	22	5	0	0	0
-s14	knight3+scout3	scout_mov	Wiped	0	6	18	0	0	6	0
-s14	sword3+pspear3+scout3	pspear_formation	Wiped	0	9	17	0	0	6	0
-s14	gravedigger1+pspear12+scout1	pspear_hp	Wiped	0	13	23	2	0	2	1
-s14	knight1+scout5+parcher2	knight_def,parcher_ambush	Wiped	0	8	18	0	0	10	0
-s14	knight2+gravedigger2+archer3	knight_charge	Slain	1	2	12	1	0	0	0
-s14	sword3+pspear3+archer3		Wiped	0	9	16	0	0	0	0
-s14	werewolf3+pspear2+scout1+hunter1	werewolf_early	Slain	1	2	11	0	0	2	0
-s14	sword3+pspear5+parcher5	sword_def,pspear_formation	Wiped	0	12	19	0	0	0	1
-s14	knight3+archer3	knight_charge,archer_rng	Slain	1	0	8	0	0	0	0
-s14	doctor1+parcher14	doctor_mov	Wiped	0	15	23	0	7	0	0
-s14	werewolf2+doctor4+archer1		Slain	1	0	14	0	16	0	1
-s14	sword3+parcher1+archer4		Slain	1	5	14	0	0	0	0
-s15	doctor6+parcher2+archer1		Overrun	0	2	7	0	4	0	0
-s15	knight2+sword2+scout2+parcher1	knight_charge,sword_def	Held	1	2	10	0	0	4	0
-s15	werewolf2+parcher10	werewolf_hp	Held	1	8	10	0	0	0	0
-s15	werewolf2+scout2+hunter2	werewolf_hp,scout_satchel	Held	1	1	10	0	0	6	0
-s15	gravedigger3+sword3+doctor2	gravedigger_rite,sword_def	Held	1	3	10	0	9	0	0
-s15	knight1+werewolf3+gravedigger1+sword1	knight_hp,werewolf_early,gravedigger_mov	Held	1	2	10	0	0	0	0
-s15	gravedigger5+sword2+pspear1	sword_cleave,pspear_pike	Overrun	0	3	9	0	0	0	0
-s15	gravedigger5+archer1+parcher4	archer_atk,parcher_mov	Held	1	5	10	0	0	0	0
-s15	knight3+scout3	scout_mov	Overrun	0	3	10	0	0	6	0
-s15	sword3+pspear3+scout3	pspear_formation	Overrun	0	4	8	0	0	6	0
-s15	gravedigger1+pspear12+scout1	pspear_hp	Held	1	4	10	0	0	2	0
-s15	knight1+scout5+parcher2	knight_def,parcher_ambush	Held	1	6	10	0	0	10	0
-s15	knight2+gravedigger2+archer3	knight_charge	Overrun	0	4	10	0	0	0	0
-s15	sword3+pspear3+archer3		Held	1	6	10	0	0	0	0
-s15	werewolf3+pspear2+scout1+hunter1	werewolf_early	Held	1	4	10	0	0	2	0
-s15	sword3+pspear5+parcher5	sword_def,pspear_formation	Held	1	11	10	0	0	0	0
-s15	knight3+archer3	knight_charge,archer_rng	Held	1	1	10	0	0	0	0
-s15	doctor1+parcher14	doctor_mov	Held	1	12	10	0	5	0	0
-s15	werewolf2+doctor4+archer1		Held	1	2	10	0	15	0	0
-s15	sword3+parcher1+archer4		Overrun	0	1	7	0	0	0	0
-s16	doctor6+parcher2+archer1		Wiped	0	9	14	0	7	0	0
-s16	knight2+sword2+scout3+parcher1	knight_charge,sword_def	Wiped	0	8	20	0	0	6	0
-s16	werewolf2+parcher11	werewolf_hp	Wiped	0	13	19	0	0	0	0
-s16	werewolf2+scout2+hunter2	werewolf_hp,scout_satchel	Slain	1	1	10	0	0	6	0
-s16	gravedigger3+sword3+doctor2	gravedigger_rite,sword_def	Slain	1	0	9	0	5	0	0
-s16	knight1+werewolf3+gravedigger1+sword1+parcher1	knight_hp,werewolf_early,gravedigger_mov,parcher_ambush	Wiped	0	6	24	0	0	0	1
-s16	knight3+werewolf1+pspear3+scout1	knight_def,scout_barbs	Wiped	0	8	16	0	0	2	0
-s16	gravedigger2+sword1+pspear11		Wiped	0	14	14	1	0	0	0
-s16	scout3+parcher11	parcher_mov	Wiped	0	14	17	0	0	6	0
-s16	sword3+pspear3+scout4	pspear_formation	Wiped	0	10	17	0	0	8	0
-s16	gravedigger1+pspear13+scout1	pspear_hp	Wiped	0	14	24	0	0	2	1
-s16	knight1+scout6+parcher2	knight_def,parcher_ambush	Wiped	0	9	18	0	0	12	0
-s16	knight2+gravedigger2+archer3	knight_charge	Slain	1	1	11	0	0	0	0
-s16	sword4+pspear3+archer3		Wiped	0	10	13	0	0	0	0
-s16	werewolf3+pspear3+scout1+hunter1	werewolf_early	Wiped	0	8	15	0	0	2	0
-s16	sword3+pspear6+parcher5	sword_def,pspear_formation	Wiped	0	13	19	0	0	0	1
-s16	knight3+scout1+archer3	knight_charge,scout_barbs,archer_atk	Slain	1	0	8	0	0	2	0
-s16	werewolf3+hunter2	werewolf_hp	Slain	1	2	13	0	0	0	0
-s16	werewolf3+doctor3+archer1		Wiped	0	7	18	0	9	0	0
-s16	sword4+parcher1+archer4		Slain	1	2	10	0	0	0	0
-s17	doctor6+parcher2+archer1		Wiped	0	9	14	0	11	0	0
-s17	knight2+sword2+scout2+parcher1	knight_charge,sword_def	Slain	1	1	11	0	0	4	0
-s17	werewolf2+parcher10	werewolf_hp	Wiped	0	12	16	0	0	0	0
-s17	werewolf2+scout2+hunter2	werewolf_hp,scout_satchel	Slain	1	0	8	0	0	6	0
-s17	gravedigger3+sword3+doctor2	gravedigger_rite,sword_def	Slain	1	0	14	0	18	0	0
-s17	knight1+werewolf3+gravedigger1+sword1	knight_hp,werewolf_early,gravedigger_mov	Slain	1	1	10	0	0	0	0
-s17	gravedigger5+sword2+pspear1	sword_cleave,pspear_pike	Wiped	0	8	14	0	0	0	0
-s17	gravedigger5+archer1+parcher4	archer_atk,parcher_mov	Wiped	0	10	16	3	0	0	0
-s17	knight3+scout3	scout_mov	Wiped	0	6	18	0	0	6	0
-s17	sword3+pspear3+scout3	pspear_formation	Wiped	0	9	16	0	0	6	0
-s17	gravedigger1+pspear12+scout1	pspear_hp	Wiped	0	14	20	3	0	2	0
-s17	knight1+scout5+parcher2	knight_def,parcher_ambush	Wiped	0	8	18	0	0	10	0
-s17	knight2+gravedigger2+archer3	knight_charge	Slain	1	2	11	0	0	0	0
-s17	sword3+pspear3+archer3		Wiped	0	9	17	0	0	0	0
-s17	werewolf3+pspear2+scout1+hunter1	werewolf_early	Slain	1	1	8	0	0	2	0
-s17	sword3+pspear5+parcher5	sword_def,pspear_formation	Wiped	0	13	18	0	0	0	0
-s17	knight3+archer3	knight_charge,archer_rng	Slain	1	2	13	0	0	0	0
-s17	doctor1+parcher14	doctor_mov	Wiped	0	14	16	0	4	0	1
-s17	werewolf2+doctor4+archer1		Slain	1	0	10	0	8	0	0
-s17	sword3+parcher1+archer4		Wiped	0	8	17	0	0	0	0
-s18	doctor7+parcher2+archer1		Wiped	0	10	17	0	17	0	0
-s18	knight2+sword2+scout3+parcher1	knight_charge,sword_def	Wiped	0	8	15	0	0	6	0
-s18	werewolf2+parcher12	werewolf_hp	Wiped	0	14	18	0	0	0	0
-s18	werewolf2+scout3+hunter2	werewolf_hp,scout_satchel	Slain	1	4	14	0	0	8	0
-s18	gravedigger3+sword3+doctor3	gravedigger_rite,sword_def	Slain	1	0	15	0	29	0	1
-s18	knight1+werewolf3+gravedigger1+sword2	knight_hp,werewolf_early,gravedigger_mov	Slain	1	1	11	0	0	0	0
-s18	gravedigger6+sword2+pspear1	sword_cleave,pspear_pike	Wiped	0	9	14	3	0	0	0
-s18	gravedigger5+archer1+parcher6	archer_atk,parcher_mov	Slain	1	7	15	1	0	0	0
-s18	knight3+gravedigger1+scout3	gravedigger_mov,scout_mov	cap	0	6	31	0	0	6	0
-s18	knight3+pspear3+doctor3	doctor_heal	Wiped	0	9	20	0	18	0	0
-s18	knight1+werewolf1+doctor3+parcher6	knight_charge,werewolf_early,parcher_ambush	Slain	1	1	11	0	8	0	0
-s18	sword1+hunter2+archer5	sword_cleave,archer_atk	Slain	1	0	8	0	0	0	0
-s18	pspear6+hunter2+doctor3	pspear_hp	Slain	1	1	12	0	13	0	0
-s18	knight3+pspear1+doctor4	doctor_heal	Slain	1	1	21	0	39	0	0
-s18	werewolf2+gravedigger4+pspear3+parcher1	parcher_mov	Wiped	0	10	16	0	0	0	0
-s18	werewolf2+hunter2+doctor2+archer1	archer_bane	Slain	1	0	10	0	6	0	0
-s18	knight2+werewolf3+pspear3	knight_charge,werewolf_hp,pspear_formation	Slain	1	2	12	0	0	0	0
-s18	pspear3+doctor3+parcher3+archer3	pspear_pike	Wiped	0	12	13	0	7	0	0
-s18	knight3+sword3+archer1	archer_rng	Wiped	0	7	20	0	0	0	0
-s18	werewolf3+doctor1+parcher7	werewolf_hp,doctor_heal,parcher_ambush	Slain	1	0	11	0	8	0	0
-s19	doctor7+parcher2+archer1		Held	1	6	12	0	17	0	0
-s19	knight2+sword2+scout3+parcher1	knight_charge,sword_def	Held	1	5	12	0	0	6	0
-s19	werewolf2+parcher12	werewolf_hp	Held	1	10	12	0	0	0	0
-s19	werewolf2+scout3+hunter2	werewolf_hp,scout_satchel	Held	1	2	12	0	0	9	0
-s19	gravedigger3+sword3+doctor3	gravedigger_rite,sword_def	Held	1	2	12	0	16	0	0
-s19	knight1+werewolf3+gravedigger1+sword2	knight_hp,werewolf_early,gravedigger_mov	Held	1	6	12	0	0	0	0
-s19	gravedigger6+sword2+pspear1	sword_cleave,pspear_pike	Overrun	0	8	12	0	0	0	0
-s19	gravedigger5+archer1+parcher6	archer_atk,parcher_mov	Held	1	10	12	0	0	0	0
-s19	knight3+gravedigger1+scout3	gravedigger_mov,scout_mov	Overrun	0	4	12	0	0	6	0
-s19	knight3+pspear3+doctor3	doctor_heal	Held	1	1	12	0	20	0	0
-s19	knight1+werewolf1+doctor3+parcher6	knight_charge,werewolf_early,parcher_ambush	Overrun	0	4	12	0	12	0	0
-s19	sword1+hunter2+archer5	sword_cleave,archer_atk	Held	1	7	12	0	0	0	0
-s19	pspear6+hunter2+doctor3	pspear_hp	Held	1	3	12	0	19	0	0
-s19	knight3+pspear1+doctor4	doctor_heal	Held	1	3	12	0	14	0	0
-s19	werewolf2+gravedigger4+pspear3+parcher1	parcher_mov	Held	1	9	12	0	0	0	0
-s19	werewolf2+hunter2+doctor2+archer1	archer_bane	Held	1	3	12	0	7	0	0
-s19	knight2+werewolf3+pspear3	knight_charge,werewolf_hp,pspear_formation	Held	1	4	12	0	0	0	0
-s19	pspear3+doctor3+parcher3+archer3	pspear_pike	Held	1	8	12	0	8	0	0
-s19	knight3+sword3+archer1	archer_rng	Overrun	0	2	12	0	0	0	0
-s19	werewolf3+doctor1+parcher7	werewolf_hp,doctor_heal,parcher_ambush	Held	1	2	12	0	6	0	0
-s2	pspear2+parcher4	parcher_ambush	Held	1	1	8	0	0	0	0
-s2	pspear1+parcher5		Held	1	3	8	0	0	0	0
-s2	pspear4+parcher2	parcher_mov	Held	1	1	8	0	0	0	0
-s2	pspear3+parcher3	pspear_pike	Held	1	3	8	0	0	0	0
-s2	pspear2+parcher4	pspear_pike,parcher_ambush	Held	1	2	8	0	0	0	0
-s2	pspear5+parcher1	pspear_formation	Held	1	0	8	0	0	0	0
-s2	pspear3+parcher3	parcher_mov	Held	1	3	8	0	0	0	0
-s2	pspear1+parcher5	parcher_rng	Held	1	0	8	0	0	0	0
-s2	pspear3+parcher3	pspear_hp	Held	1	0	8	0	0	0	0
-s2	pspear4+parcher2		Held	1	2	8	0	0	0	0
-s2	pspear1+parcher5	pspear_pike,parcher_rng	Held	1	1	8	0	0	0	0
-s2	pspear1+parcher5	pspear_pike	Held	1	1	8	0	0	0	0
-s2	pspear3+parcher3	pspear_formation,parcher_ambush	Held	1	0	8	0	0	0	0
-s2	pspear3+parcher3		Held	1	2	8	0	0	0	0
-s2	pspear3+parcher3	pspear_formation,parcher_ambush	Held	1	1	8	0	0	0	0
-s2	pspear4+parcher2	pspear_pike	Held	1	0	8	0	0	0	0
-s2	pspear2+parcher4	pspear_hp,parcher_mov	Held	1	0	8	0	0	0	0
-s2	pspear1+parcher5	pspear_formation,parcher_rng	Held	1	1	8	0	0	0	0
-s2	pspear3+parcher3	parcher_mov	Held	1	1	8	0	0	0	0
-s2	pspear1+parcher5		Held	1	1	8	0	0	0	0
-s20	doctor8+parcher2+archer1		Wiped	0	11	21	0	16	0	0
-s20	knight2+sword3+scout3+parcher1	knight_charge,sword_def	Slain	1	6	16	0	0	6	0
-s20	werewolf2+parcher14	werewolf_hp	Wiped	0	16	19	0	0	0	0
-s20	werewolf2+scout4+hunter2	werewolf_hp,scout_satchel	Slain	1	1	14	0	0	12	0
-s20	gravedigger3+sword4+doctor3	gravedigger_rite,sword_def	Slain	1	0	15	0	14	0	1
-s20	knight1+werewolf3+gravedigger1+sword2+parcher2	knight_hp,werewolf_early,gravedigger_mov,parcher_ambush	Slain	1	2	14	1	0	0	0
-s20	knight3+werewolf2+pspear3+scout1	knight_def,scout_barbs	Wiped	0	9	18	0	0	2	0
-s20	gravedigger2+sword1+pspear14		Wiped	0	17	20	4	0	0	0
-s20	scout3+parcher14	parcher_mov	Wiped	0	17	20	0	0	6	0
-s20	sword4+pspear3+scout4	pspear_formation	Wiped	0	11	16	0	0	8	0
-s20	gravedigger1+pspear16+scout1	pspear_hp	Wiped	0	18	20	3	0	2	0
-s20	knight1+scout7+parcher2	knight_def,parcher_ambush	Wiped	0	10	18	0	0	13	0
-s20	knight3+gravedigger2+archer3	knight_charge	Slain	1	1	9	0	0	0	0
-s20	sword4+pspear3+archer4		Wiped	0	11	16	0	0	0	0
-s20	werewolf3+pspear3+scout1+hunter2	werewolf_early	Slain	1	7	16	0	0	2	0
-s20	sword3+pspear7+parcher7	sword_def,pspear_formation	Wiped	0	17	27	0	0	0	0
-s20	knight3+scout2+archer3	knight_charge,scout_barbs,archer_atk	Slain	1	0	9	0	0	4	0
-s20	werewolf4+hunter2	werewolf_hp	Slain	1	0	10	0	0	0	0
-s20	werewolf3+doctor4+archer1		Slain	1	0	11	0	14	0	0
-s20	sword4+parcher1+archer5		Slain	1	8	15	0	0	0	0
-s3	sword2+pspear3+parcher1	parcher_ambush	Slain	1	3	11	0	0	0	0
-s3	sword1+pspear3+parcher3		Wiped	0	7	12	0	0	0	0
-s3	sword3+pspear1+parcher1	pspear_hp,parcher_ambush	Slain	1	2	11	0	0	0	0
-s3	sword2+pspear3+parcher1	parcher_ambush	Slain	1	4	12	0	0	0	0
-s3	pspear3+parcher5	parcher_ambush	Slain	1	3	11	0	0	0	0
-s3	sword2+pspear1+parcher3		Wiped	0	5	12	0	0	0	1
-s3	sword2+pspear1+parcher3	parcher_mov	Slain	1	0	8	0	0	0	0
-s3	pspear2+parcher6	parcher_ambush	Slain	1	4	11	0	0	0	0
-s3	sword2+pspear2+parcher2		Wiped	0	5	12	0	0	0	1
-s3	pspear6+parcher2	pspear_formation,parcher_ambush	Slain	1	1	10	0	0	0	0
-s3	pspear7+parcher1	pspear_hp,parcher_mov	Slain	1	2	13	0	0	0	0
-s3	sword2+pspear2+parcher1	pspear_hp	Wiped	0	5	10	0	0	0	0
-s3	sword3+pspear1+parcher1		Wiped	0	5	13	0	0	0	0
-s3	sword1+pspear3+parcher3	pspear_formation,parcher_ambush	Wiped	0	7	12	0	0	0	0
-s3	sword2+pspear3+parcher1	pspear_pike	Wiped	0	6	12	0	0	0	0
-s3	sword1+pspear3+parcher3	pspear_formation	Wiped	0	7	15	0	0	0	0
-s3	sword3+pspear2	pspear_formation	Slain	1	1	9	0	0	0	0
-s3	sword1+pspear3+parcher3	pspear_pike,parcher_rng	Wiped	0	7	15	0	0	0	0
-s3	sword3+parcher2		Slain	1	3	10	0	0	0	0
-s3	sword2+pspear1+parcher3	pspear_pike	Slain	1	4	11	0	0	0	0
-s4	gravedigger2+pspear3+parcher2	pspear_pike	Wiped	0	7	12	0	0	0	0
-s4	gravedigger1+sword2+parcher2	parcher_mov	Slain	1	3	13	0	0	0	0
-s4	sword1+pspear1+parcher6	parcher_rng	Slain	1	7	14	0	0	0	0
-s4	gravedigger2+pspear5		Wiped	0	7	14	2	0	0	0
-s4	gravedigger1+sword2+pspear2+parcher1	sword_cleave	Wiped	0	6	12	0	0	0	0
-s4	gravedigger2+sword1+pspear2+parcher1	sword_atk,pspear_formation	Slain	1	3	12	0	0	0	0
-s4	gravedigger1+sword3+parcher1		Slain	1	2	10	0	0	0	0
-s4	gravedigger2+sword1+pspear1+parcher2	sword_cleave,pspear_pike,parcher_ambush	Slain	1	2	10	0	0	0	0
-s4	gravedigger1+parcher7	parcher_ambush	Slain	1	0	7	0	0	0	0
-s4	sword3+pspear1+parcher2	pspear_formation	Wiped	0	6	13	0	0	0	0
-s4	gravedigger2+sword1+pspear2	pspear_formation	Wiped	0	5	13	0	0	0	0
-s4	gravedigger2+pspear3+parcher2	pspear_pike	Wiped	0	6	12	0	0	0	1
-s4	gravedigger2+sword2+pspear1	pspear_formation	Slain	1	2	10	0	0	0	0
-s4	gravedigger4+parcher1		Slain	1	2	11	0	0	0	0
-s4	gravedigger1+parcher7	parcher_ambush	Slain	1	0	7	0	0	0	0
-s4	gravedigger2+parcher5	parcher_rng	Slain	1	5	12	2	0	0	0
-s4	sword3+parcher2	sword_def	Slain	1	1	8	0	0	0	0
-s4	gravedigger1+sword3+pspear1	sword_cleave,pspear_formation	Slain	1	3	13	0	0	0	0
-s4	gravedigger1+sword1+pspear3+parcher2	sword_def,parcher_ambush	Slain	1	3	9	1	0	0	0
-s4	gravedigger1+pspear4+parcher3		Wiped	0	8	15	0	0	0	0
-s5	gravedigger2+parcher3+archer1	parcher_rng	Wiped	0	6	19	0	0	0	0
-s5	pspear3+archer1+parcher4	pspear_pike,parcher_rng	Slain	1	4	11	0	0	0	0
-s5	pspear1+parcher8	pspear_pike	Wiped	0	9	19	0	0	0	0
-s5	gravedigger1+sword1+pspear2+archer1	gravedigger_rite,sword_cleave,pspear_hp	Slain	1	1	9	0	0	0	0
-s5	sword1+pspear3+archer1+parcher2	sword_atk	Slain	1	4	13	0	0	0	0
-s5	sword2+pspear2+parcher3	sword_def	Wiped	0	7	16	0	0	0	0
-s5	pspear7+parcher2		Wiped	0	9	18	0	0	0	0
-s5	gravedigger2+sword2+pspear1	gravedigger_twice,sword_def	Slain	1	2	12	0	0	0	0
-s5	gravedigger2+pspear3+parcher2	pspear_formation	Wiped	0	7	16	0	0	0	0
-s5	gravedigger1+sword2+pspear3	gravedigger_twice,sword_def	Slain	1	1	10	0	0	0	0
-s5	gravedigger2+sword1+pspear3	sword_cleave	Wiped	0	6	17	3	0	0	0
-s5	pspear3+archer3	pspear_formation	Slain	1	5	15	0	0	0	0
-s5	sword1+pspear3+archer2	sword_atk,pspear_hp	Slain	1	2	9	0	0	0	0
-s5	gravedigger1+sword1+pspear1+archer2	sword_cleave	Wiped	0	5	21	0	0	0	0
-s5	sword3+parcher3	sword_atk,parcher_mov	Wiped	0	6	18	0	0	0	0
-s5	sword3+parcher3		Wiped	0	6	19	0	0	0	0
-s5	gravedigger1+sword3	gravedigger_rite,sword_def	Slain	1	1	11	0	0	0	0
-s5	sword1+pspear3+archer1+parcher2		Slain	1	6	18	0	0	0	0
-s5	sword3+parcher3		Slain	1	2	10	0	0	0	0
-s5	gravedigger2+sword1+pspear3	pspear_pike	Slain	1	4	15	1	0	0	0
-s6	gravedigger1+parcher3+archer2	gravedigger_twice,parcher_mov	Overrun	0	4	10	0	0	0	0
-s6	gravedigger1+doctor3+archer1	gravedigger_mov,archer_rng	Held	1	2	10	0	9	0	0
-s6	gravedigger1+archer3+parcher2	gravedigger_rite,archer_rng,parcher_rng	Held	1	3	10	0	0	0	0
-s6	sword3+pspear3		Overrun	0	5	10	0	0	0	0
-s6	gravedigger1+pspear1+doctor2+parcher3	parcher_ambush	Held	1	3	10	0	8	0	0
-s6	doctor2+parcher2+archer2		Held	1	2	10	0	8	0	0
-s6	doctor3+archer2	archer_atk	Held	1	4	10	0	6	0	0
-s6	doctor1+parcher8	parcher_mov	Overrun	0	9	10	0	2	0	0
-s6	pspear2+doctor1+archer2+parcher2	parcher_mov	Held	1	2	10	0	6	0	0
-s6	doctor3+parcher2+archer1	parcher_mov	Held	1	2	10	0	10	0	0
-s6	pspear1+doctor1+archer3+parcher1	archer_bane,parcher_rng	Overrun	0	1	10	0	5	0	0
-s6	sword2+doctor3		Overrun	0	4	10	0	5	0	0
-s6	gravedigger2+sword3	gravedigger_rite	Overrun	0	0	8	0	0	0	0
-s6	gravedigger3+pspear2+parcher2	gravedigger_rite	Overrun	0	3	9	0	0	0	0
-s6	doctor4+archer1	archer_atk	Held	1	1	10	0	8	0	0
-s6	sword2+pspear2+doctor2	pspear_hp	Held	1	4	10	0	6	0	0
-s6	sword1+pspear2+doctor2+archer1	pspear_hp,archer_rng	Held	1	2	10	0	3	0	0
-s6	sword1+doctor3+archer1	sword_cleave,archer_atk	Overrun	0	5	10	0	1	0	0
-s6	gravedigger2+sword2+parcher2		Overrun	0	4	9	0	0	0	0
-s6	gravedigger3+pspear2+parcher2		Overrun	0	5	10	0	0	0	0
-s7	knight2+parcher1+archer2	parcher_rng,archer_atk	Slain	1	1	8	0	0	0	0
-s7	knight1+gravedigger1+doctor3	gravedigger_mov,doctor_heal	Wiped	0	5	18	0	14	0	0
-s7	knight1+gravedigger2+archer1+parcher2	archer_rng,parcher_ambush	Slain	1	2	13	0	0	0	0
-s7	knight1+sword2+parcher3		Wiped	0	6	16	0	0	0	0
-s7	gravedigger2+pspear1+doctor2+parcher2	doctor_heal	Slain	1	1	20	0	10	0	1
-s7	sword2+pspear1+doctor2+parcher2	pspear_formation,doctor_heal,parcher_ambush	Slain	1	1	18	0	13	0	1
-s7	gravedigger3+parcher5	gravedigger_mov,parcher_rng	Slain	1	1	10	1	0	0	0
-s7	gravedigger2+sword2+pspear3		Wiped	0	6	13	1	0	0	1
-s7	knight2+pspear3+parcher2	pspear_pike,parcher_rng	Slain	1	0	10	0	0	0	0
-s7	knight1+pspear3+parcher5	pspear_formation	Wiped	0	9	19	0	0	0	0
-s7	knight1+sword1+doctor3	sword_cleave,doctor_mov	cap	0	0	31	0	5	0	0
-s7	sword1+pspear2+doctor3		cap	0	0	31	0	3	0	0
-s7	knight1+gravedigger3+sword1	sword_atk	Slain	1	4	17	2	0	0	0
-s7	archer3+parcher5		Slain	1	7	15	0	0	0	0
-s7	knight1+gravedigger4	gravedigger_rite	Slain	1	1	12	0	0	0	0
-s7	pspear1+doctor2+archer2+parcher2	parcher_rng	Wiped	0	7	17	0	4	0	0
-s7	knight1+doctor4		cap	0	0	31	0	4	0	0
-s7	knight2+sword1+pspear2	sword_def	Wiped	0	4	15	0	0	0	1
-s7	knight3+parcher2		Wiped	0	5	15	0	0	0	0
-s7	knight1+gravedigger2+archer2	gravedigger_mov	Slain	1	0	8	0	0	0	0
-s8	werewolf2+parcher2+archer1	archer_atk	cap	0	0	31	0	0	0	0
-s8	knight2+gravedigger2		EscortFell	0	1	10	0	0	0	0
-s8	werewolf1+sword1+pspear3+doctor1	sword_def,pspear_pike,doctor_def	Arrived	1	0	14	0	7	0	0
-s8	sword3+pspear3	pspear_hp	EscortFell	0	2	14	0	0	0	0
-s8	sword3+archer2		cap	0	1	31	0	0	0	0
-s8	pspear8+doctor1		Arrived	1	0	22	0	18	0	0
-s8	gravedigger3+pspear2+archer1	gravedigger_twice,pspear_pike	Arrived	1	5	16	0	0	0	0
-s8	knight1+pspear3+parcher4		Wiped	0	8	18	0	0	0	0
-s8	knight3		cap	0	0	31	0	0	0	0
-s8	knight2+parcher1+archer1	parcher_mov,archer_atk	Arrived	1	0	19	0	0	0	0
-s8	knight2+doctor2	knight_charge,doctor_mov	Arrived	1	0	21	0	8	0	0
-s8	sword3+pspear2+doctor1	doctor_def	EscortFell	0	0	13	0	11	0	0
-s8	werewolf3+pspear1	pspear_formation	Arrived	1	0	16	0	0	0	0
-s8	werewolf2+pspear2		Arrived	1	3	13	0	0	0	0
-s8	gravedigger1+pspear1+archer2+parcher3	archer_atk,parcher_ambush	Arrived	1	1	15	0	0	0	0
-s8	gravedigger3+sword2		EscortFell	0	3	13	0	0	0	0
-s8	werewolf2+pspear3		EscortFell	0	1	15	0	0	0	1
-s8	knight3+parcher1		Arrived	1	0	23	0	0	0	0
-s8	sword2+pspear1+archer1+parcher3	pspear_pike,archer_bane	Arrived	1	2	15	0	0	0	0
-s8	knight3	knight_charge	Arrived	1	0	22	0	0	0	0
-s9	doctor2+parcher3+archer2	doctor_mov	Slain	1	2	24	0	9	0	0
-s9	sword1+hunter2+archer1		Slain	1	0	14	0	0	0	0
-s9	hunter1+parcher9		Wiped	0	11	15	0	0	0	0
-s9	gravedigger1+hunter2+parcher3		Wiped	0	8	20	1	0	0	0
-s9	werewolf1+sword1+doctor1+archer2	doctor_heal	Slain	1	0	13	0	6	0	0
-s9	werewolf1+pspear1+doctor3+parcher2	werewolf_early,pspear_pike,doctor_heal,parcher_rng	cap	0	7	31	0	23	0	0
-s9	gravedigger1+archer2+parcher6	gravedigger_mov,parcher_ambush	Wiped	0	10	19	0	0	0	0
-s9	werewolf3+gravedigger1+pspear1	werewolf_feast	cap	0	5	31	1	0	0	0
-s9	knight2+werewolf1+parcher3	knight_hp,werewolf_hp	Slain	1	1	15	0	0	0	0
-s9	werewolf2+archer3	archer_atk	Slain	1	0	15	0	0	0	0
-s9	gravedigger2+sword3+pspear1	pspear_formation	Slain	1	3	16	0	0	0	0
-s9	sword1+pspear2+doctor3+archer1	sword_def,pspear_formation,doctor_def	cap	0	6	31	0	25	0	1
-s9	knight2+doctor3	doctor_heal	Wiped	0	6	25	0	31	0	0
-s9	knight1+gravedigger1+archer3	gravedigger_twice	Slain	1	4	14	0	0	0	0
-s9	knight1+pspear2+parcher3+archer2		Slain	1	4	14	0	0	0	1
-s9	werewolf2+pspear2+hunter1+parcher1	pspear_formation	Slain	1	4	28	0	0	0	0
-s9	knight1+sword3+archer1+parcher1	sword_def,archer_bane	Slain	1	1	9	0	0	0	0
-s9	knight1+gravedigger2+archer2	knight_charge,gravedigger_twice,archer_rng	Slain	1	1	11	0	0	0	0
-s9	doctor2+parcher8	parcher_mov	Wiped	0	11	28	0	18	0	0
-s9	knight2+werewolf1+pspear2+parcher1	parcher_mov	Wiped	0	7	20	0	0	0	0
-s1	pspear3+parcher3		Slain	1	4	12	0	0	0	0
-s1	pspear1+parcher5		Slain	1	4	14	0	0	0	0
-s1	pspear3+parcher3		Slain	1	0	11	0	0	0	0
-s1	pspear5+parcher1		Slain	1	3	11	0	0	0	0
-s1	pspear3+parcher3		Slain	1	3	11	0	0	0	0
-s1	pspear3+parcher3		Slain	1	4	12	0	0	0	0
-s1	pspear4+parcher2		Slain	1	4	15	0	0	0	0
-s1	pspear5+parcher1		Slain	1	2	12	0	0	0	0
-s1	pspear4+parcher2		Slain	1	1	13	0	0	0	0
 s1	pspear5+parcher1		Slain	1	2	14	0	0	0	0
-s1	pspear3+parcher3		Slain	1	2	11	0	0	0	0
-s1	pspear5+parcher1		Slain	1	3	14	0	0	0	0
-s1	pspear3+parcher3		Slain	1	2	11	0	0	0	0
-s1	pspear1+parcher5		Slain	1	0	10	0	0	0	0
-s1	pspear1+parcher5		Slain	1	1	11	0	0	0	0
-s1	pspear1+parcher5		Slain	1	2	11	0	0	0	0
-s1	pspear1+parcher5		Slain	1	2	12	0	0	0	0
-s1	pspear1+parcher5		Slain	1	1	12	0	0	0	0
-s1	pspear4+parcher2		Slain	1	3	13	0	0	0	0
-s1	pspear2+parcher4		Wiped	0	6	11	0	0	0	0
-s10	knight2+hunter1+doctor2	knight_hp,hunter_ward,doctor_mov	Slain	1	0	11	0	8	0	0
-s10	gravedigger1+pspear10+doctor1	gravedigger_mov,pspear_hp	Wiped	0	10	28	0	12	0	2
-s10	doctor2+archer3+parcher4	doctor_heal,archer_atk,parcher_rng	Wiped	0	9	14	0	1	0	0
-s10	gravedigger2+sword3+parcher1+archer1	gravedigger_mov,sword_atk,parcher_rng	Wiped	0	7	14	2	0	0	0
-s10	knight1+werewolf1+gravedigger2+doctor2	werewolf_feast,doctor_mov	Slain	1	1	16	0	14	0	0
-s10	knight1+gravedigger2+sword3	gravedigger_rite,sword_def	Wiped	0	6	20	2	0	0	0
-s10	pspear11+parcher3	parcher_rng	Wiped	0	14	20	0	0	0	0
-s10	hunter2+doctor3+parcher1	hunter_ward,doctor_heal,parcher_mov	Slain	1	0	15	0	11	0	0
-s10	knight2+werewolf1+parcher2+archer1		Wiped	0	6	21	0	0	0	0
-s10	werewolf2+gravedigger1+pspear2+archer2	gravedigger_twice,pspear_pike,archer_atk	Wiped	0	7	18	0	0	0	0
-s10	knight2+werewolf1+pspear2+parcher3	knight_def,werewolf_early	Wiped	0	8	20	0	0	0	0
-s10	knight1+archer5	knight_charge	Slain	1	1	10	0	0	0	0
-s10	gravedigger3+doctor3+parcher2	gravedigger_mov,doctor_def,parcher_ambush	Slain	1	0	11	0	7	0	0
-s10	gravedigger3+sword1+hunter1+parcher3	gravedigger_twice,hunter_mov,parcher_mov	Slain	1	4	14	2	0	0	0
-s10	knight1+sword3+hunter1+parcher2	knight_def,parcher_ambush	Slain	1	0	10	0	0	0	0
-s10	knight1+werewolf1+gravedigger2+sword2	knight_def,werewolf_early,sword_atk	Wiped	0	6	22	0	0	0	0
-s10	knight1+werewolf1+sword3+pspear2	knight_def,werewolf_hp,sword_atk	Slain	1	2	18	0	0	0	0
-s10	pspear3+hunter2	pspear_pike,hunter_mov	Wiped	0	5	14	0	0	0	0
-s10	gravedigger2+sword2+hunter2	hunter_ward	Slain	1	1	11	0	0	0	0
-s10	werewolf2+doctor3+archer1	werewolf_early,doctor_mov,archer_atk	Wiped	0	6	25	0	26	0	0
-s11	knight2+gravedigger2+hunter1+doctor1	knight_hp,gravedigger_twice,hunter_mov,doctor_def	Held	1	2	10	0	3	0	0
-s11	scout1+hunter1+doctor1+parcher8	hunter_bane,parcher_mov	Held	1	9	10	0	3	2	0
-s11	werewolf1+sword1+hunter2	hunter_mov	Wiped	0	4	9	0	0	0	0
-s11	scout2+doctor5	doctor_heal	Overrun	0	6	9	0	5	4	0
-s11	werewolf1+gravedigger1+pspear10	pspear_formation	Held	1	7	10	1	0	0	0
-s11	doctor3+archer2+parcher5		Held	1	9	10	0	9	0	0
-s11	knight1+gravedigger3+hunter1+archer1	hunter_ward	Held	1	5	10	0	0	0	0
-s11	werewolf3+pspear3+scout1	werewolf_early,pspear_pike	Held	1	6	10	0	0	2	0
-s11	pspear13+archer1	archer_atk	Held	1	8	10	0	0	0	0
-s11	gravedigger5+scout2	gravedigger_rite	Held	1	6	10	0	0	4	0
-s11	scout1+doctor6	doctor_mov	Wiped	0	7	10	0	8	2	0
-s11	scout3+hunter2+parcher2	parcher_rng	Wiped	0	7	10	0	0	6	0
-s11	sword3+doctor3+parcher3	doctor_heal	Held	1	6	10	0	4	0	0
-s11	sword3+scout3+parcher2	parcher_mov	Held	1	6	10	0	0	6	0
-s11	sword3+doctor3+parcher2	sword_atk,doctor_mov	Wiped	0	8	9	0	6	0	0
-s11	pspear1+scout1+archer6	pspear_pike	Overrun	0	7	10	0	0	2	0
-s11	pspear1+scout5+doctor2		Overrun	0	7	10	0	3	10	0
-s11	scout2+hunter2+parcher5	parcher_rng	Held	1	8	10	0	0	4	0
-s11	werewolf1+pspear8+doctor2	werewolf_feast,pspear_pike	Held	1	5	10	0	13	0	0
-s11	knight3+hunter2	hunter_ward	Held	1	3	10	0	0	0	0
-s12	knight2+gravedigger1+hunter1+doctor1	knight_hp,gravedigger_twice,hunter_mov,doctor_def	Arrived	1	1	11	0	0	0	0
-s12	scout1+hunter1+doctor1+parcher7	scout_barbs,doctor_mov	EscortFell	0	9	18	0	9	2	0
-s12	knight1+scout1+doctor3+parcher3	knight_hp,scout_barbs,parcher_ambush	Arrived	1	1	20	0	24	2	0
-s12	knight1+sword2+scout2+doctor1	scout_satchel,doctor_heal	cap	0	0	31	0	10	6	0
-s12	pspear2+parcher11	parcher_ambush	EscortFell	0	7	13	0	0	0	0
-s12	werewolf3+scout1+parcher2	werewolf_feast	Arrived	1	0	12	0	0	2	0
-s12	gravedigger2+sword1+scout2+parcher4	gravedigger_rite,sword_def,scout_mov	EscortFell	0	2	9	0	0	4	0
-s12	knight1+pspear9+doctor1	knight_def,doctor_heal	EscortFell	0	9	23	0	12	0	1
-s12	sword2+pspear3+scout2+parcher2	sword_def,pspear_pike	EscortFell	0	3	10	0	0	4	0
-s12	gravedigger2+scout3+hunter1	scout_barbs	Arrived	1	2	21	0	0	6	0
-s12	knight1+werewolf2+sword2		Arrived	1	0	13	0	0	0	0
-s12	werewolf1+pspear7+doctor2	werewolf_early,doctor_heal	Arrived	1	0	15	0	18	0	0
-s12	pspear8+doctor3	pspear_formation,doctor_mov	cap	0	10	31	0	31	0	0
-s12	knight1+gravedigger4+scout1	gravedigger_rite	EscortFell	0	4	14	0	0	2	0
-s12	werewolf3+parcher5	parcher_rng	EscortFell	0	2	10	0	0	0	0
-s12	knight3+werewolf1	werewolf_hp	Arrived	1	0	13	0	0	0	0
-s12	knight3+sword1+pspear3	knight_hp,sword_atk,pspear_formation	Arrived	1	0	12	0	0	0	0
-s12	pspear8+hunter2	pspear_pike	Arrived	1	2	27	0	0	0	1
-s12	knight3+pspear1+archer2		Arrived	1	1	19	0	0	0	0
-s12	gravedigger4+hunter2	hunter_mov	Arrived	1	1	15	0	0	0	0
-s13	knight2+gravedigger1+hunter2+doctor1	knight_hp,gravedigger_twice,hunter_mov,doctor_def	Slain	1	1	15	1	10	0	0
-s13	scout1+hunter1+doctor1+parcher9	scout_barbs,doctor_mov	Wiped	0	12	25	0	6	2	0
-s13	knight2+scout1+doctor2+parcher3	knight_hp,scout_barbs,parcher_ambush	cap	0	7	31	0	28	2	0
-s13	knight1+sword2+scout2+doctor2	scout_satchel,doctor_heal	Slain	1	1	16	0	12	6	0
-s13	pspear2+parcher14	parcher_ambush	Slain	1	9	12	0	0	0	0
-s13	werewolf4+scout1+parcher2	werewolf_feast	Slain	1	0	11	0	0	2	0
-s13	gravedigger2+sword1+scout3+parcher4	gravedigger_rite,sword_def,scout_mov	Wiped	0	10	18	3	0	6	0
-s13	knight1+pspear11+doctor1	knight_def,doctor_heal	Wiped	0	13	26	0	22	0	0
-s13	sword3+pspear3+scout2+parcher2	sword_def,pspear_pike	Wiped	0	10	26	0	0	4	0
-s13	gravedigger2+scout3+hunter1+archer1	scout_barbs	Slain	1	2	9	0	0	6	0
-s13	doctor1+parcher14		Wiped	0	15	23	0	9	0	0
-s13	werewolf1+pspear9+doctor2	werewolf_early,doctor_heal	cap	0	10	31	0	36	0	0
-s13	pspear10+doctor3	pspear_formation,doctor_mov	cap	0	10	31	0	39	0	1
-s13	knight1+gravedigger5+scout1	gravedigger_rite	Wiped	0	7	22	4	0	2	0
-s13	werewolf3+parcher7	parcher_rng	Wiped	0	10	18	0	0	0	0
-s13	knight4+werewolf1	werewolf_hp	Wiped	0	5	18	0	0	0	0
-s13	knight3+werewolf1+sword1+pspear2	knight_hp,werewolf_hp,sword_cleave,pspear_hp	Slain	1	1	18	0	0	0	0
-s13	pspear10+scout2+archer1		Wiped	0	13	13	0	0	4	0
-s13	werewolf2+sword1+hunter2+parcher1	hunter_ward	Slain	1	2	12	0	0	0	0
-s13	gravedigger2+sword1+archer2+parcher6	sword_def,archer_atk	Wiped	0	11	17	4	0	0	0
-s14	knight2+gravedigger1+hunter2+doctor1	knight_hp,gravedigger_twice,hunter_mov,doctor_def	Wiped	0	6	25	0	2	0	0
-s14	scout1+hunter1+doctor1+parcher9	scout_barbs,doctor_mov	Wiped	0	12	19	0	9	2	0
-s14	knight2+scout1+doctor2+parcher3	knight_hp,scout_barbs,parcher_ambush	Wiped	0	8	18	0	12	2	0
-s14	knight1+sword2+scout2+doctor2	scout_satchel,doctor_heal	Wiped	0	7	30	0	12	6	0
-s14	pspear2+parcher14	parcher_ambush	Wiped	0	16	22	0	0	0	0
-s14	werewolf4+scout1+parcher2	werewolf_feast	Slain	1	3	14	0	0	2	0
-s14	gravedigger2+sword1+scout3+parcher4	gravedigger_rite,sword_def,scout_mov	Wiped	0	10	20	2	0	6	0
-s14	knight1+pspear11+doctor1	knight_def,doctor_heal	Wiped	0	13	29	0	24	0	0
-s14	sword3+pspear3+scout2+parcher2	sword_def,pspear_pike	Wiped	0	10	17	0	0	4	0
-s14	gravedigger2+scout3+hunter1+archer1	scout_barbs	Slain	1	4	12	1	0	6	0
-s14	doctor1+parcher14		Wiped	0	14	25	0	8	0	1
-s14	werewolf1+pspear9+doctor2	werewolf_early,doctor_heal	Slain	1	3	19	0	22	0	0
-s14	pspear10+doctor3	pspear_formation,doctor_mov	cap	0	7	31	0	45	0	0
-s14	knight1+gravedigger5+scout1	gravedigger_rite	Wiped	0	7	20	3	0	2	0
-s14	werewolf3+parcher7	parcher_rng	Wiped	0	9	25	0	0	0	1
-s14	knight4+werewolf1	werewolf_hp	Wiped	0	5	15	0	0	0	0
-s14	knight3+werewolf1+sword1+pspear2	knight_hp,werewolf_hp,sword_cleave,pspear_hp	Wiped	0	7	20	0	0	0	0
-s14	pspear10+scout2+archer1		Wiped	0	13	20	0	0	4	0
-s14	werewolf2+sword1+hunter2+parcher1	hunter_ward	Wiped	0	6	16	0	0	0	0
-s14	gravedigger2+sword1+archer2+parcher6	sword_def,archer_atk	Wiped	0	11	21	5	0	0	0
-s15	knight2+gravedigger1+hunter2+doctor1	knight_hp,gravedigger_twice,hunter_mov,doctor_def	Overrun	0	1	10	0	4	0	0
-s15	scout1+hunter1+doctor1+parcher9	scout_barbs,doctor_mov	Overrun	0	5	7	0	1	2	0
-s15	knight2+scout1+doctor2+parcher3	knight_hp,scout_barbs,parcher_ambush	Held	1	2	10	0	9	2	0
-s15	knight1+sword2+scout2+doctor2	scout_satchel,doctor_heal	Held	1	2	10	0	8	6	0
-s15	pspear2+parcher14	parcher_ambush	Held	1	8	10	0	0	0	0
-s15	werewolf4+scout1+parcher2	werewolf_feast	Held	1	2	10	0	0	2	0
-s15	gravedigger2+sword1+scout3+parcher4	gravedigger_rite,sword_def,scout_mov	Held	1	3	10	1	0	6	0
-s15	knight1+pspear11+doctor1	knight_def,doctor_heal	Held	1	5	10	0	6	0	0
-s15	sword3+pspear3+scout2+parcher2	sword_def,pspear_pike	Overrun	0	6	10	0	0	4	0
-s15	gravedigger2+scout3+hunter1+archer1	scout_barbs	Overrun	0	4	8	1	0	6	0
-s15	doctor1+parcher14		Overrun	0	10	10	0	3	0	0
-s15	werewolf1+pspear9+doctor2	werewolf_early,doctor_heal	Held	1	5	10	0	10	0	0
-s15	pspear10+doctor3	pspear_formation,doctor_mov	Held	1	8	10	0	14	0	0
-s15	knight1+gravedigger5+scout1	gravedigger_rite	Held	1	6	10	0	0	2	0
-s15	werewolf3+parcher7	parcher_rng	Overrun	0	5	9	0	0	0	0
-s15	knight4+werewolf1	werewolf_hp	Overrun	0	1	6	0	0	0	0
-s15	knight3+werewolf1+sword1+pspear2	knight_hp,werewolf_hp,sword_cleave,pspear_hp	Held	1	0	10	0	0	0	0
-s15	pspear10+scout2+archer1		Held	1	6	10	0	0	4	0
-s15	werewolf2+sword1+hunter2+parcher1	hunter_ward	Held	1	3	10	0	0	0	0
-s15	gravedigger2+sword1+archer2+parcher6	sword_def,archer_atk	Held	1	5	10	0	0	0	0
-s16	knight2+gravedigger1+hunter2+doctor1	knight_hp,gravedigger_twice,hunter_mov,doctor_def	Slain	1	0	8	0	3	0	0
-s16	scout1+hunter1+doctor1+parcher10	scout_barbs,doctor_mov	Wiped	0	13	14	0	3	2	0
-s16	knight2+scout1+doctor3+parcher3	knight_hp,scout_barbs,parcher_ambush	Wiped	0	9	23	0	26	2	0
-s16	knight1+sword2+scout3+doctor2	scout_satchel,doctor_heal	Slain	1	5	22	0	18	9	0
-s16	pspear2+parcher15	parcher_ambush	Wiped	0	17	17	0	0	0	0
-s16	werewolf4+scout1+parcher2	werewolf_feast	Slain	1	5	15	0	0	2	0
-s16	gravedigger3+sword1+scout3+parcher3	gravedigger_rite,sword_def,scout_mov	Wiped	0	10	23	1	0	6	0
-s16	knight1+pspear12+doctor1	knight_def,doctor_heal	Wiped	0	13	22	0	10	0	1
-s16	sword3+pspear3+scout3+parcher2	sword_def,pspear_pike	Wiped	0	11	15	0	0	6	0
-s16	gravedigger2+scout3+hunter1+archer2	scout_barbs	Slain	1	1	10	0	0	6	0
-s16	doctor1+parcher15		Wiped	0	16	17	0	6	0	0
-s16	werewolf1+pspear10+doctor2	werewolf_early,doctor_heal	Wiped	0	13	26	0	8	0	0
-s16	pspear11+doctor3	pspear_formation,doctor_mov	Slain	1	1	20	0	29	0	2
-s16	knight1+gravedigger6+scout1	gravedigger_rite	Wiped	0	8	15	2	0	2	0
-s16	werewolf3+parcher8	parcher_rng	Wiped	0	11	21	0	0	0	0
-s16	knight4+werewolf1	werewolf_hp	Wiped	0	5	13	0	0	0	0
-s16	knight3+werewolf1+sword1+pspear3	knight_hp,werewolf_hp,sword_cleave,pspear_hp	Wiped	0	8	19	0	0	0	0
-s16	pspear11+scout2+archer1		Wiped	0	14	23	0	0	4	0
-s16	werewolf2+sword2+hunter2+parcher1	hunter_ward	Slain	1	2	11	0	0	0	0
-s16	gravedigger2+sword1+archer2+parcher7	sword_def,archer_atk	Slain	1	4	12	1	0	0	1
-s17	knight2+gravedigger1+hunter2+doctor1	knight_hp,gravedigger_twice,hunter_mov,doctor_def	Slain	1	0	9	0	2	0	0
-s17	scout1+hunter1+doctor1+parcher9	scout_barbs,doctor_mov	Wiped	0	12	16	0	7	2	0
-s17	knight2+scout1+doctor2+parcher3	knight_hp,scout_barbs,parcher_ambush	Slain	1	2	13	0	14	2	0
-s17	knight1+sword2+scout2+doctor2	scout_satchel,doctor_heal	Slain	1	2	19	0	18	5	1
-s17	pspear2+parcher14	parcher_ambush	Wiped	0	16	15	0	0	0	0
-s17	werewolf4+scout1+parcher2	werewolf_feast	Slain	1	0	9	0	0	2	0
-s17	gravedigger2+sword1+scout3+parcher4	gravedigger_rite,sword_def,scout_mov	Wiped	0	9	20	2	0	6	1
-s17	knight1+pspear11+doctor1	knight_def,doctor_heal	Wiped	0	13	21	0	10	0	0
-s17	sword3+pspear3+scout2+parcher2	sword_def,pspear_pike	Wiped	0	10	14	0	0	4	0
-s17	gravedigger2+scout3+hunter1+archer1	scout_barbs	Slain	1	4	14	1	0	6	0
-s17	doctor1+parcher14		Wiped	0	15	17	0	4	0	0
-s17	werewolf1+pspear9+doctor2	werewolf_early,doctor_heal	Wiped	0	12	17	0	14	0	0
-s17	pspear10+doctor3	pspear_formation,doctor_mov	Slain	1	7	25	0	38	0	0
-s17	knight1+gravedigger5+scout1	gravedigger_rite	Wiped	0	7	14	0	0	2	0
-s17	werewolf3+parcher7	parcher_rng	Slain	1	6	13	0	0	0	0
-s17	knight4+werewolf1	werewolf_hp	Slain	1	0	10	0	0	0	0
-s17	knight3+werewolf1+sword1+pspear2	knight_hp,werewolf_hp,sword_cleave,pspear_hp	Slain	1	2	14	0	0	0	0
-s17	pspear10+scout2+archer1		Wiped	0	13	15	0	0	4	0
-s17	werewolf2+sword1+hunter2+parcher1	hunter_ward	Slain	1	0	7	0	0	0	0
-s17	gravedigger2+sword1+archer2+parcher6	sword_def,archer_atk	Wiped	0	10	15	2	0	0	1
-s18	knight2+gravedigger2+hunter2+doctor1	knight_hp,gravedigger_twice,hunter_mov,doctor_def	Slain	1	0	11	0	6	0	0
-s18	scout1+hunter1+doctor1+parcher11	scout_barbs,doctor_mov	Wiped	0	14	17	0	9	2	0
-s18	knight2+scout1+doctor3+parcher3	knight_hp,scout_barbs,parcher_ambush	Wiped	0	9	24	0	23	2	0
-s18	knight1+sword2+scout3+doctor2	scout_satchel,doctor_heal	Wiped	0	8	17	0	2	9	0
-s18	pspear2+parcher16	parcher_ambush	Wiped	0	18	19	0	0	0	0
-s18	werewolf4+scout1+parcher2	werewolf_feast	Wiped	0	7	23	0	0	2	0
-s18	gravedigger3+sword1+scout3+parcher4	gravedigger_rite,sword_def,scout_mov	Wiped	0	11	16	4	0	6	0
-s18	knight1+pspear13+doctor1	knight_def,doctor_heal	Wiped	0	14	26	0	20	0	1
-s18	sword3+pspear3+scout3+parcher2	sword_def,pspear_pike	Wiped	0	10	22	0	0	6	1
-s18	gravedigger2+scout3+hunter2+archer1	scout_barbs	Slain	1	2	10	1	0	6	0
-s18	doctor1+parcher16		Wiped	0	17	15	0	3	0	0
-s18	werewolf1+pspear11+doctor2	werewolf_early,doctor_heal	Wiped	0	14	17	0	13	0	0
-s18	pspear12+doctor3	pspear_formation,doctor_mov	Wiped	0	15	18	0	19	0	0
-s18	knight1+gravedigger6+scout1	gravedigger_rite	Wiped	0	8	18	1	0	2	0
-s18	werewolf3+parcher9	parcher_rng	Slain	1	1	10	0	0	0	0
-s18	knight5+werewolf1	werewolf_hp	Wiped	0	6	18	0	0	0	0
-s18	knight3+werewolf1+sword1+pspear4	knight_hp,werewolf_hp,sword_cleave,pspear_hp	Wiped	0	9	25	0	0	0	0
-s18	pspear12+scout2+archer1		Wiped	0	15	16	0	0	4	0
-s18	werewolf2+sword2+hunter2+parcher1	hunter_ward	Slain	1	0	8	0	0	0	0
-s18	gravedigger2+sword1+archer2+parcher8	sword_def,archer_atk	Slain	1	6	14	3	0	0	0
-s19	knight2+gravedigger2+hunter2+doctor1	knight_hp,gravedigger_twice,hunter_mov,doctor_def	Held	1	3	12	0	2	0	0
-s19	scout1+hunter1+doctor1+parcher11	scout_barbs,doctor_mov	Held	1	11	12	0	7	2	0
-s19	knight2+scout1+doctor3+parcher3	knight_hp,scout_barbs,parcher_ambush	Held	1	2	12	0	15	2	0
-s19	knight1+sword2+scout3+doctor2	scout_satchel,doctor_heal	Held	1	2	12	0	10	9	0
-s19	pspear2+parcher16	parcher_ambush	Overrun	0	16	12	0	0	0	0
-s19	werewolf4+scout1+parcher2	werewolf_feast	Held	1	4	12	0	0	2	0
-s19	gravedigger3+sword1+scout3+parcher4	gravedigger_rite,sword_def,scout_mov	Overrun	0	8	11	0	0	6	0
-s19	knight1+pspear13+doctor1	knight_def,doctor_heal	Held	1	4	12	0	9	0	0
-s19	sword3+pspear3+scout3+parcher2	sword_def,pspear_pike	Overrun	0	10	12	0	0	6	0
-s19	gravedigger2+scout3+hunter2+archer1	scout_barbs	Overrun	0	8	11	0	0	6	0
-s19	doctor1+parcher16		Overrun	0	16	12	0	4	0	0
-s19	werewolf1+pspear11+doctor2	werewolf_early,doctor_heal	Held	1	4	12	0	11	0	0
-s19	pspear12+doctor3	pspear_formation,doctor_mov	Held	1	4	12	0	19	0	0
-s19	knight1+gravedigger6+scout1	gravedigger_rite	Held	1	5	12	0	0	2	0
-s19	werewolf3+parcher9	parcher_rng	Overrun	0	9	12	0	0	0	0
-s19	knight5+werewolf1	werewolf_hp	Held	1	3	12	0	0	0	0
-s19	knight3+werewolf1+sword1+pspear4	knight_hp,werewolf_hp,sword_cleave,pspear_hp	Held	1	3	12	0	0	0	0
-s19	pspear12+scout2+archer1		Overrun	0	13	12	0	0	4	0
-s19	werewolf2+sword2+hunter2+parcher1	hunter_ward	Overrun	0	7	12	0	0	0	0
-s19	gravedigger2+sword1+archer2+parcher8	sword_def,archer_atk	Held	1	11	12	0	0	0	0
-s2	pspear3+parcher3	pspear_pike,parcher_mov	Held	1	1	8	0	0	0	0
-s2	pspear4+parcher2	parcher_mov	Held	1	2	8	0	0	0	0
-s2	pspear3+parcher3		Held	1	1	8	0	0	0	0
-s2	pspear5+parcher1	pspear_hp,parcher_mov	Held	1	0	8	0	0	0	0
-s2	pspear5+parcher1	pspear_pike	Held	1	2	8	0	0	0	0
-s2	pspear3+parcher3	pspear_pike	Held	1	1	8	0	0	0	0
-s2	pspear5+parcher1	pspear_hp,parcher_rng	Held	1	0	8	0	0	0	0
-s2	pspear2+parcher4	pspear_pike	Held	1	2	8	0	0	0	0
-s2	pspear5+parcher1	pspear_pike,parcher_mov	Held	1	1	8	0	0	0	0
-s2	pspear2+parcher4	pspear_formation,parcher_ambush	Held	1	2	8	0	0	0	0
-s2	pspear1+parcher5	parcher_rng	Held	1	1	8	0	0	0	0
-s2	pspear2+parcher4	parcher_ambush	Held	1	1	8	0	0	0	0
-s2	pspear3+parcher3		Held	1	2	8	0	0	0	0
-s2	pspear4+parcher2	pspear_hp,parcher_mov	Held	1	0	8	0	0	0	0
-s2	pspear3+parcher3	pspear_hp	Held	1	0	8	0	0	0	0
-s2	pspear3+parcher3	pspear_hp	Held	1	1	8	0	0	0	0
-s2	pspear4+parcher2	pspear_formation,parcher_rng	Held	1	0	8	0	0	0	0
-s2	pspear1+parcher5	pspear_hp	Held	1	1	8	0	0	0	0
-s2	pspear5+parcher1	parcher_ambush	Held	1	2	8	0	0	0	0
-s2	pspear1+parcher5		Held	1	1	8	0	0	0	0
-s20	knight2+gravedigger3+hunter2+doctor1	knight_hp,gravedigger_twice,hunter_mov,doctor_def	Slain	1	1	13	1	7	0	0
-s20	scout1+hunter1+doctor1+parcher13	scout_barbs,doctor_mov	Slain	1	13	25	0	16	2	0
-s20	knight3+scout1+doctor3+parcher3	knight_hp,scout_barbs,parcher_ambush	Slain	1	2	19	0	24	2	0
-s20	knight1+sword3+scout3+doctor2	scout_satchel,doctor_heal	Slain	1	5	24	0	23	9	0
-s20	pspear2+parcher18	parcher_ambush	Wiped	0	20	19	0	0	0	0
-s20	werewolf5+scout1+parcher2	werewolf_feast	Wiped	0	8	20	0	0	2	0
-s20	gravedigger3+sword1+scout4+parcher4	gravedigger_rite,sword_def,scout_mov	Wiped	0	12	19	3	0	6	0
-s20	knight1+pspear15+doctor1	knight_def,doctor_heal	Wiped	0	17	21	0	10	0	0
-s20	sword4+pspear3+scout3+parcher2	sword_def,pspear_pike	Wiped	0	12	20	0	0	6	0
-s20	gravedigger2+scout3+hunter2+archer2	scout_barbs	Slain	1	6	15	1	0	6	0
-s20	doctor1+parcher18		Wiped	0	19	24	0	11	0	0
-s20	werewolf1+pspear13+doctor2	werewolf_early,doctor_heal	Wiped	0	16	19	0	14	0	0
-s20	pspear14+doctor3	pspear_formation,doctor_mov	Wiped	0	17	29	0	26	0	0
-s20	knight1+gravedigger7+scout1	gravedigger_rite	Wiped	0	9	20	4	0	2	0
-s20	werewolf3+parcher11	parcher_rng	Wiped	0	14	23	0	0	0	0
-s20	knight5+werewolf1	werewolf_hp	Wiped	0	6	22	0	0	0	0
-s20	knight3+werewolf2+sword1+pspear3	knight_hp,werewolf_hp,sword_cleave,pspear_hp	Wiped	0	9	22	0	0	0	0
-s20	pspear14+scout2+archer1		Wiped	0	17	23	0	0	4	0
-s20	werewolf3+sword2+hunter2+parcher1	hunter_ward	Wiped	0	8	14	0	0	0	0
-s20	gravedigger2+sword1+archer2+parcher10	sword_def,archer_atk	Slain	1	8	15	2	0	0	0
-s3	sword3+pspear2	pspear_formation	Slain	1	1	10	0	0	0	0
-s3	sword2+pspear3+parcher1	pspear_hp	Slain	1	2	12	0	0	0	0
-s3	sword3+pspear1+parcher1	pspear_hp,parcher_mov	Slain	1	0	8	0	0	0	0
-s3	sword2+parcher4	parcher_mov	Slain	1	0	8	0	0	0	0
-s3	sword2+pspear3+parcher1	parcher_ambush	Slain	1	4	13	0	0	0	1
-s3	pspear5+parcher3	pspear_hp,parcher_ambush	Slain	1	2	11	0	0	0	0
-s3	sword1+pspear3+parcher3	pspear_pike,parcher_mov	Slain	1	1	8	0	0	0	0
-s3	sword1+pspear3+parcher3	parcher_rng	Slain	1	1	9	0	0	0	0
-s3	sword1+parcher6	parcher_rng	Slain	1	0	8	0	0	0	0
-s3	sword1+pspear6		Wiped	0	7	14	0	0	0	0
-s3	sword3+pspear2		Slain	1	0	8	0	0	0	0
-s3	sword2+pspear2+parcher2	pspear_hp,parcher_ambush	Slain	1	2	11	0	0	0	0
-s3	sword1+pspear3+parcher3	parcher_rng	Slain	1	2	10	0	0	0	1
-s3	sword2+pspear2+parcher2	pspear_pike,parcher_mov	Slain	1	1	10	0	0	0	0
-s3	sword2+pspear1+parcher3	pspear_hp	Wiped	0	6	15	0	0	0	0
-s3	sword2+pspear1+parcher3	pspear_pike	Slain	1	2	10	0	0	0	0
-s3	pspear5+parcher3		Wiped	0	8	16	0	0	0	0
-s3	sword2+pspear1+parcher3	pspear_pike,parcher_ambush	Slain	1	1	9	0	0	0	0
-s3	sword2+pspear2+parcher2	pspear_hp	Slain	1	1	10	0	0	0	0
-s3	sword2+pspear1+parcher3	parcher_ambush	Slain	1	1	9	0	0	0	0
-s4	gravedigger1+sword1+pspear2+parcher3	pspear_pike	Wiped	0	7	13	0	0	0	0
-s4	gravedigger2+sword1+pspear2+parcher1		Slain	1	5	12	0	0	0	0
-s4	gravedigger1+sword1+pspear1+parcher4	sword_def,parcher_mov	Slain	1	2	11	0	0	0	0
-s4	gravedigger2+sword2+parcher1	sword_def,parcher_mov	Slain	1	1	9	0	0	0	0
-s4	gravedigger1+sword2+parcher3	sword_def	Slain	1	2	10	0	0	0	0
-s4	gravedigger2+sword2+pspear1		Slain	1	4	12	0	0	0	0
-s4	gravedigger1+sword1+pspear4+parcher1	parcher_rng	Wiped	0	7	13	0	0	0	0
-s4	gravedigger2+sword2		Slain	1	1	10	0	0	0	0
-s4	gravedigger3+parcher3		Wiped	0	6	14	2	0	0	0
-s4	gravedigger2+sword2+parcher1	sword_def	Slain	1	0	8	0	0	0	0
-s4	gravedigger3+sword1+parcher1		Slain	1	2	11	0	0	0	0
-s4	gravedigger2+sword2+pspear1	sword_atk	Slain	1	1	10	0	0	0	0
-s4	gravedigger3+sword1	sword_atk	Slain	1	2	12	0	0	0	0
-s4	gravedigger2+sword1+pspear2+parcher1	pspear_hp,parcher_ambush	Wiped	0	6	13	0	0	0	0
-s4	gravedigger1+sword1+pspear3+parcher2	sword_def,pspear_hp	Slain	1	3	10	1	0	0	0
-s4	gravedigger3+pspear2+parcher1	pspear_hp	Slain	1	3	11	0	0	0	0
-s4	gravedigger2+sword1+pspear1+parcher2	sword_def,pspear_pike,parcher_rng	Slain	1	2	10	1	0	0	0
-s4	gravedigger1+sword2+pspear1+parcher2	parcher_rng	Slain	1	2	11	0	0	0	0
-s4	gravedigger2+sword1+parcher3		Wiped	0	6	13	0	0	0	0
-s4	pspear2+parcher7	pspear_hp	Wiped	0	9	13	0	0	0	0
-s5	gravedigger2+pspear1+archer2	gravedigger_rite	Slain	1	1	8	0	0	0	0
-s5	gravedigger3+sword1+parcher1		Slain	1	3	11	0	0	0	0
-s5	sword1+pspear7	sword_def,pspear_pike	Wiped	0	8	23	0	0	0	0
-s5	gravedigger3+pspear2+parcher1	pspear_pike,parcher_mov	Slain	1	1	11	0	0	0	0
-s5	gravedigger1+archer3		Slain	1	3	12	0	0	0	0
-s5	gravedigger1+pspear7	gravedigger_rite,pspear_hp	Wiped	0	7	20	1	0	0	1
-s5	gravedigger3+sword1+pspear1	sword_cleave,pspear_pike	Wiped	0	5	14	0	0	0	0
-s5	sword3+pspear2+parcher1	pspear_formation	Slain	1	1	10	0	0	0	0
-s5	sword2+pspear1+archer2		Slain	1	1	9	0	0	0	0
-s5	sword3+pspear1+parcher2	sword_atk	Slain	1	2	9	0	0	0	0
-s5	gravedigger1+sword3+pspear1	sword_cleave,pspear_pike	Slain	1	1	9	0	0	0	0
-s5	pspear7+archer1		Slain	1	3	14	0	0	0	1
-s5	gravedigger2+sword2		Slain	1	1	10	0	0	0	0
-s5	gravedigger2+sword1+parcher1+archer1	gravedigger_rite	Wiped	0	5	14	0	0	0	0
-s5	pspear3+archer1+parcher3	parcher_ambush	Slain	1	5	13	0	0	0	0
-s5	gravedigger2+pspear3+parcher1	parcher_rng	Slain	1	5	15	0	0	0	0
-s5	sword3+pspear3	sword_cleave	Slain	1	2	10	0	0	0	0
-s5	gravedigger2+sword1+parcher3	parcher_ambush	Slain	1	4	13	0	0	0	0
-s5	sword3+pspear3	sword_def	Slain	1	0	10	0	0	0	0
-s5	pspear5+archer2		Wiped	0	7	17	0	0	0	0
-s6	gravedigger2+doctor3		Overrun	0	1	9	0	6	0	0
-s6	gravedigger1+sword1+doctor2+parcher1		Overrun	0	1	9	0	4	0	0
-s6	sword1+pspear6+doctor1	pspear_pike	Held	1	5	10	0	6	0	0
-s6	sword1+pspear3+doctor2+parcher1	sword_def,pspear_hp,parcher_rng	Overrun	0	4	10	0	5	0	0
-s6	sword1+pspear2+archer2+parcher2	pspear_hp,archer_rng,parcher_mov	Held	1	2	10	0	0	0	0
-s6	pspear3+doctor2+parcher3	pspear_hp,parcher_rng	Held	1	3	10	0	7	0	0
-s6	sword1+pspear2+doctor2+archer1	sword_def	Overrun	0	2	10	0	5	0	0
-s6	doctor3+archer2	archer_rng	Overrun	0	4	10	0	6	0	0
-s6	pspear1+parcher9		Overrun	0	9	10	0	0	0	0
-s6	sword2+doctor1+archer2	sword_cleave,archer_bane	Held	1	3	10	0	5	0	0
-s6	gravedigger1+pspear1+doctor3	gravedigger_rite	Overrun	0	1	9	0	7	0	0
-s6	gravedigger2+sword3		Held	1	3	10	0	0	0	0
-s6	pspear2+doctor2+archer2		Held	1	5	10	0	6	0	0
-s6	gravedigger3+sword2	gravedigger_rite	Held	1	5	10	0	0	0	0
-s6	gravedigger1+pspear1+doctor3		Overrun	0	2	9	0	6	0	0
-s6	gravedigger3+archer2	archer_bane	Overrun	0	5	10	0	0	0	0
-s6	gravedigger3+sword1+doctor1	gravedigger_mov,sword_cleave	Overrun	0	2	9	0	6	0	0
-s6	sword2+doctor1+archer2	sword_atk	Held	1	1	10	0	5	0	0
-s6	gravedigger2+pspear1+parcher2+archer1	pspear_hp,parcher_mov	Overrun	0	6	10	0	0	0	0
-s6	gravedigger2+pspear2+archer2	gravedigger_mov,pspear_hp,archer_rng	Held	1	2	10	0	0	0	0
-s7	knight1+gravedigger1+sword2+doctor1	doctor_mov	Slain	1	0	11	0	5	0	1
-s7	sword3+parcher5	parcher_mov	Wiped	0	8	20	0	0	0	0
-s7	knight1+pspear1+doctor2+archer1	pspear_hp	Wiped	0	5	17	0	3	0	0
-s7	pspear2+doctor1+archer3+parcher1	doctor_mov,archer_rng	Slain	1	2	8	0	0	0	0
-s7	knight2+doctor2	doctor_heal	Wiped	0	4	17	0	13	0	0
-s7	pspear5+doctor3	pspear_hp,doctor_def	cap	0	4	31	0	52	0	0
-s7	gravedigger2+sword1+pspear1+doctor2	pspear_formation	Wiped	0	6	21	0	19	0	0
-s7	knight1+gravedigger2+doctor1+archer1	archer_atk	Slain	1	0	9	0	5	0	0
-s7	doctor1+archer4		Slain	1	2	8	0	0	0	0
-s7	doctor3+archer2	doctor_def,archer_rng	Slain	1	1	10	0	4	0	0
-s7	pspear9+archer1	archer_rng	Slain	1	0	10	0	0	0	0
-s7	sword1+pspear3+parcher3+archer1	sword_def,pspear_pike,parcher_mov	Slain	1	1	10	0	0	0	0
-s7	gravedigger1+pspear3+archer3	pspear_pike	Slain	1	1	9	0	0	0	1
-s7	knight1+pspear3+doctor2	doctor_def	Slain	1	0	22	0	16	0	2
-s7	sword1+doctor3+parcher3		cap	0	2	31	0	8	0	0
-s7	gravedigger2+pspear2+doctor2+parcher1	gravedigger_mov,pspear_formation,doctor_heal	Slain	1	0	13	0	13	0	0
-s7	knight2+gravedigger2+parcher1	gravedigger_twice	Wiped	0	5	14	0	0	0	0
-s7	sword1+pspear2+parcher7	sword_def,parcher_mov	Wiped	0	10	21	0	0	0	0
-s7	pspear7+doctor2		cap	0	0	31	0	2	0	0
-s7	doctor2+parcher7	parcher_ambush	cap	0	5	31	0	6	0	0
-s8	werewolf3		cap	0	0	31	0	0	0	0
-s8	knight1+gravedigger1+sword1+parcher2	gravedigger_mov,parcher_mov	Arrived	1	2	16	0	0	0	0
-s8	knight3+pspear1	knight_def	cap	0	0	31	0	0	0	0
-s8	pspear1+doctor1+archer3	archer_atk	EscortFell	0	3	14	0	1	0	1
-s8	werewolf1+sword2+pspear3	sword_def,pspear_hp	EscortFell	0	2	13	0	0	0	0
-s8	knight1+werewolf1+sword1+doctor1	knight_charge,sword_def	Arrived	1	0	19	0	9	0	0
-s8	knight2+pspear1+parcher3		Arrived	1	5	19	0	0	0	0
-s8	knight1+doctor3	knight_hp	cap	0	0	31	0	17	0	0
-s8	knight2+gravedigger2	knight_charge	Arrived	1	0	18	0	0	0	0
-s8	knight1+werewolf1+pspear4	knight_charge,pspear_pike	Arrived	1	0	14	0	0	0	0
-s8	sword3+pspear3+parcher1	sword_def,pspear_hp	Arrived	1	1	15	0	0	0	1
-s8	werewolf1+doctor3		EscortFell	0	0	13	0	17	0	1
-s8	werewolf2+archer2		Arrived	1	0	15	0	0	0	0
-s8	knight2+parcher3	knight_charge	Arrived	1	3	24	0	0	0	0
-s8	werewolf2+doctor1+parcher2	doctor_heal,parcher_mov	Arrived	1	1	23	0	6	0	0
-s8	knight1+gravedigger1+pspear3+parcher2	knight_hp,pspear_formation	EscortFell	0	5	12	1	0	0	0
-s8	sword2+pspear6	sword_def,pspear_hp	EscortFell	0	4	11	0	0	0	0
-s8	pspear4+doctor3	doctor_def	Arrived	1	3	14	0	12	0	0
-s8	knight1+parcher7	knight_charge	Wiped	0	8	20	0	0	0	0
-s8	knight2+pspear2	knight_charge,pspear_hp	EscortFell	0	1	13	0	0	0	0
-s9	knight2+gravedigger1+doctor2	knight_hp,gravedigger_twice,doctor_mov	Wiped	0	7	19	2	11	0	0
-s9	gravedigger1+pspear8+doctor1	gravedigger_mov,pspear_hp	cap	0	10	31	1	23	0	0
-s9	doctor2+archer3+parcher2	doctor_heal,archer_atk,parcher_rng	Slain	1	0	14	0	9	0	1
-s9	gravedigger2+sword3+parcher1	gravedigger_mov,sword_atk,parcher_rng	Wiped	0	8	17	1	0	0	0
-s9	werewolf3+hunter1		Slain	1	0	27	0	0	0	0
-s9	doctor4+archer2	doctor_def	Wiped	0	7	20	0	8	0	0
-s9	werewolf2+gravedigger1+doctor1+archer1	gravedigger_mov,doctor_def	Wiped	0	6	19	0	2	0	0
-s9	knight2+werewolf2	knight_charge	Wiped	0	5	18	0	0	0	0
-s9	knight1+pspear7+doctor1	pspear_pike	Slain	1	3	19	0	10	0	0
-s9	pspear9+parcher3	pspear_pike,parcher_ambush	cap	0	12	31	0	0	0	0
-s9	werewolf1+gravedigger3+pspear2	werewolf_hp	Slain	1	1	14	0	0	0	0
-s9	doctor5+archer1	doctor_def	cap	0	3	31	0	26	0	0
-s9	knight1+pspear2+hunter2		Wiped	0	7	16	0	0	0	0
-s9	gravedigger2+pspear3+hunter1+doctor1	pspear_pike	Slain	1	1	17	0	9	0	0
-s9	knight3+hunter1		Wiped	0	5	18	0	0	0	0
-s9	gravedigger2+pspear3+parcher1+archer2	pspear_hp,parcher_mov,archer_rng	Slain	1	7	20	2	0	0	0
-s9	sword1+doctor3+archer2	sword_atk	Slain	1	0	25	0	9	0	0
-s9	gravedigger2+sword2+pspear3	sword_cleave,pspear_hp	Slain	1	2	19	0	0	0	1
-s9	knight2+gravedigger1+hunter1	knight_def	Slain	1	0	11	0	0	0	0
-s9	knight3+archer1		Wiped	0	6	20	0	0	0	0
-s1	pspear3+parcher3		Slain	1	4	12	0	0	0	0
-s1	pspear4+parcher2		Slain	1	3	11	0	0	0	0
-s1	pspear3+parcher3		Slain	1	0	11	0	0	0	0
-s1	pspear3+parcher3		Slain	1	3	13	0	0	0	0
-s1	pspear4+parcher2		Slain	1	1	13	0	0	0	0
-s1	pspear4+parcher2		Slain	1	3	11	0	0	0	0
-s1	pspear5+parcher1		Slain	1	4	14	0	0	0	0
-s1	pspear3+parcher3		Wiped	0	6	15	0	0	0	0
-s1	pspear3+parcher3		Slain	1	3	13	0	0	0	0
-s1	pspear2+parcher4		Slain	1	2	12	0	0	0	0
-s1	pspear4+parcher2		Wiped	0	6	13	0	0	0	0
-s1	pspear1+parcher5		Slain	1	1	11	0	0	0	0
-s1	pspear2+parcher4		Wiped	0	6	14	0	0	0	0
-s1	pspear5+parcher1		Slain	1	0	12	0	0	0	0
-s1	pspear2+parcher4		Slain	1	1	13	0	0	0	0
-s1	pspear5+parcher1		Slain	1	2	12	0	0	0	0
-s1	pspear4+parcher2		Wiped	0	6	15	0	0	0	0
-s1	pspear1+parcher5		Slain	1	1	12	0	0	0	0
+s1	pspear5+parcher1		Slain	1	2	15	0	0	0	0
 s1	pspear3+parcher3		Slain	1	1	12	0	0	0	0
-s1	pspear5+parcher1		Slain	1	4	14	0	0	0	0
-s10	knight1+pspear2+archer3+parcher3	knight_charge,parcher_ambush	Wiped	0	9	20	0	0	0	0
-s10	werewolf2+doctor3+archer1	werewolf_hp	Slain	1	0	14	0	10	0	0
-s10	sword2+hunter2+archer2	hunter_bane,archer_rng	Slain	1	0	9	0	0	0	0
-s10	knight3+pspear1+archer2	archer_atk	Slain	1	0	9	0	0	0	0
-s10	hunter2+archer4	hunter_bane	Wiped	0	6	17	0	0	0	0
-s10	gravedigger3+doctor1+archer3	doctor_def	Slain	1	1	10	0	2	0	0
-s10	gravedigger3+sword1+archer2	sword_atk,archer_atk	Slain	1	1	10	1	0	0	0
-s10	gravedigger2+sword2+doctor1+parcher3	doctor_heal	Slain	1	2	19	1	11	0	1
-s10	werewolf3+archer2+parcher1		Slain	1	2	10	0	0	0	0
-s10	gravedigger6+archer1	gravedigger_twice,archer_atk	Slain	1	5	17	2	0	0	1
-s10	knight2+hunter2	knight_hp,hunter_mov	Slain	1	0	10	0	0	0	0
-s10	sword2+pspear7+parcher3		Slain	1	4	14	0	0	0	0
-s10	werewolf3+hunter1+doctor1	werewolf_early	Wiped	0	5	15	0	3	0	0
-s10	knight3+hunter1+doctor1	knight_charge,hunter_bane	Slain	1	2	14	0	2	0	0
-s10	pspear6+doctor1+archer3	archer_bane	Wiped	0	10	22	0	8	0	0
-s10	hunter1+parcher11	hunter_bane	Wiped	0	12	16	0	0	0	0
-s10	werewolf4+doctor1		Slain	1	0	11	0	4	0	0
-s10	pspear2+parcher12	pspear_formation,parcher_rng	Wiped	0	14	18	0	0	0	0
-s10	knight3+werewolf1+pspear2	pspear_hp	Slain	1	0	11	0	0	0	0
-s10	sword3+hunter2		Wiped	0	5	13	0	0	0	0
-s11	knight1+pspear1+archer5	pspear_formation	Overrun	0	6	9	0	0	0	0
-s11	gravedigger4+pspear1+doctor3	gravedigger_rite,pspear_hp	Held	1	4	10	0	14	0	0
-s11	pspear9+doctor3		Held	1	10	10	0	17	0	0
-s11	knight1+werewolf1+sword2+doctor2	knight_charge	Held	1	3	10	0	3	0	0
-s11	scout3+parcher2+archer3		Overrun	0	7	10	0	0	6	0
-s11	gravedigger1+scout6		Wiped	0	7	10	0	0	12	0
-s11	scout1+pspear7+parcher2+archer2	pspear_pike,parcher_rng	Held	1	9	10	0	0	2	0
-s11	sword4+pspear1+parcher6		Held	1	9	10	0	0	0	0
-s11	werewolf4+pspear1	werewolf_early,pspear_hp	Held	1	4	10	0	0	0	0
-s11	pspear3+scout4+doctor2	pspear_pike,doctor_mov	Held	1	3	10	0	5	8	0
-s11	knight1+gravedigger3+scout1+archer2	knight_hp,gravedigger_mov,archer_bane	Held	1	2	10	1	0	2	0
-s11	werewolf4+pspear1		Wiped	0	5	9	0	0	0	0
-s11	werewolf1+hunter2+doctor3	werewolf_early	Held	1	5	10	0	7	0	0
-s11	knight2+hunter2+doctor1	hunter_bane	Held	1	0	10	0	8	0	0
-s11	doctor1+archer1+parcher11	archer_bane,parcher_rng	Overrun	0	11	10	0	0	0	0
-s11	scout2+archer2+parcher7	archer_bane	Held	1	9	10	0	0	4	0
-s11	knight1+gravedigger1+hunter2	hunter_ward	Wiped	0	4	9	0	0	0	0
-s11	sword2+hunter2+doctor2	hunter_bane,doctor_heal	Held	1	5	10	0	2	0	0
-s11	pspear9+doctor2+parcher2	pspear_pike	Held	1	9	10	0	8	0	0
-s11	werewolf2+hunter2+doctor1		Held	1	3	10	0	3	0	0
-s12	knight1+pspear1+archer5	pspear_formation	Arrived	1	0	14	0	0	0	0
-s12	gravedigger3+pspear1+doctor3	gravedigger_rite,pspear_hp	EscortFell	0	4	21	0	31	0	0
-s12	pspear8+doctor3		EscortFell	0	1	14	0	17	0	1
-s12	knight1+werewolf1+sword2+doctor2	knight_charge	EscortFell	0	0	7	0	4	0	0
-s12	scout3+parcher2+archer3	archer_rng	Arrived	1	0	25	0	0	6	0
-s12	knight3+werewolf1+doctor1	knight_charge	Arrived	1	1	18	0	8	0	0
-s12	sword1+archer3+parcher6	archer_atk,parcher_mov	Arrived	1	5	13	0	0	0	0
-s12	gravedigger2+sword1+doctor2+parcher3	sword_def	Arrived	1	4	17	0	17	0	0
-s12	gravedigger1+sword3+scout2+doctor1	scout_barbs,doctor_def	EscortFell	0	3	8	0	5	4	0
-s12	sword3+pspear5+hunter1	sword_atk,pspear_hp,hunter_ward	cap	0	1	31	0	0	0	0
-s12	scout2+archer5		Arrived	1	1	12	0	0	4	0
-s12	knight2+sword3+parcher2	knight_hp,sword_atk,parcher_rng	EscortFell	0	2	12	0	0	0	0
-s12	gravedigger1+sword2+parcher8	gravedigger_twice	EscortFell	0	7	14	3	0	0	0
-s12	sword3+scout2+hunter1	sword_atk,scout_satchel	EscortFell	0	1	11	0	0	6	0
-s12	doctor4+archer2+parcher1	archer_rng	Arrived	1	0	21	0	14	0	0
-s12	scout2+doctor5	doctor_mov	Arrived	1	4	23	0	35	4	0
-s12	werewolf2+pspear2+archer3	pspear_pike	cap	0	1	31	0	0	0	0
-s12	gravedigger3+doctor3+parcher1	doctor_heal,parcher_mov	Wiped	0	7	19	0	18	0	0
-s12	werewolf1+gravedigger3+scout2	gravedigger_mov,scout_mov	Arrived	1	0	28	0	0	4	0
-s12	werewolf2+scout2+archer2		Arrived	1	0	13	0	0	4	0
-s13	knight1+pspear1+archer6	pspear_formation	Slain	1	1	10	0	0	0	0
-s13	gravedigger4+pspear1+doctor3	gravedigger_rite,pspear_hp	Slain	1	2	25	2	39	0	0
-s13	pspear10+doctor3		Wiped	0	13	27	0	31	0	0
-s13	knight1+werewolf1+sword2+doctor3	knight_charge	Slain	1	3	23	0	21	0	0
-s13	scout3+parcher2+archer4	archer_rng	Wiped	0	9	24	0	0	6	0
-s13	knight3+werewolf1+doctor1+archer1	knight_charge,archer_bane	Wiped	0	6	13	0	2	0	0
-s13	pspear1+parcher15	parcher_mov	Wiped	0	16	18	0	0	0	0
-s13	pspear3+archer6		Wiped	0	9	17	0	0	0	0
-s13	werewolf5+pspear1	werewolf_early,pspear_hp	Slain	1	1	14	0	0	0	0
-s13	pspear3+scout4+doctor2	pspear_pike,scout_mov	cap	0	8	31	0	12	8	0
-s13	werewolf1+scout6	werewolf_feast	Wiped	0	7	23	0	0	12	0
-s13	gravedigger3+pspear10	pspear_hp	Wiped	0	12	25	5	0	0	1
-s13	werewolf2+pspear1+scout1+hunter2	werewolf_early,scout_satchel	Slain	1	0	10	0	0	3	0
-s13	knight1+werewolf1+gravedigger2+hunter2	werewolf_feast,hunter_bane	Slain	1	1	12	0	0	0	0
-s13	werewolf2+scout1+hunter2+parcher2	scout_satchel,hunter_ward	Slain	1	4	12	0	0	3	0
-s13	gravedigger3+pspear3+hunter2	hunter_bane	Wiped	0	8	15	0	0	0	0
-s13	werewolf3+gravedigger3	werewolf_early,gravedigger_rite	Slain	1	1	12	1	0	0	0
-s13	sword4+pspear2+scout3	sword_atk,pspear_formation	Wiped	0	9	20	0	0	6	0
-s13	gravedigger2+sword3+archer2+parcher2	parcher_ambush	Slain	1	2	13	1	0	0	0
-s13	doctor2+parcher12	parcher_rng	Wiped	0	14	22	0	12	0	0
-s14	knight1+pspear1+archer6	pspear_formation	Slain	1	2	10	0	0	0	0
-s14	gravedigger4+pspear1+doctor3	gravedigger_rite,pspear_hp	Slain	1	2	21	1	35	0	0
-s14	pspear10+doctor3		Wiped	0	13	29	0	36	0	0
-s14	knight1+werewolf1+sword2+doctor3	knight_charge	Slain	1	1	17	0	18	0	0
-s14	scout3+parcher2+archer4	archer_rng	Slain	1	3	11	0	0	6	0
-s14	knight3+werewolf1+doctor1+archer1	knight_charge,archer_bane	Wiped	0	6	21	0	9	0	0
-s14	pspear1+parcher15	parcher_mov	Wiped	0	16	20	0	0	0	0
-s14	pspear3+archer6		Wiped	0	9	16	0	0	0	0
-s14	werewolf5+pspear1	werewolf_early,pspear_hp	Slain	1	2	14	0	0	0	0
-s14	pspear3+scout4+doctor2	pspear_pike,scout_mov	Wiped	0	9	15	0	9	8	0
-s14	werewolf1+scout6	werewolf_feast	Wiped	0	7	20	0	0	12	0
-s14	gravedigger3+pspear10	pspear_hp	Wiped	0	12	23	5	0	0	1
-s14	werewolf2+pspear1+scout1+hunter2	werewolf_early,scout_satchel	Slain	1	1	9	0	0	3	0
-s14	knight1+werewolf1+gravedigger2+hunter2	werewolf_feast,hunter_bane	Slain	1	0	10	0	0	0	0
-s14	werewolf2+scout1+hunter2+parcher2	scout_satchel,hunter_ward	Slain	1	2	10	0	0	3	0
-s14	gravedigger3+pspear3+hunter2	hunter_bane	Slain	1	4	13	0	0	0	0
-s14	werewolf3+gravedigger3	werewolf_early,gravedigger_rite	Wiped	0	6	16	1	0	0	0
-s14	sword4+pspear2+scout3	sword_atk,pspear_formation	Wiped	0	9	13	0	0	6	0
-s14	gravedigger2+sword3+archer2+parcher2	parcher_ambush	Slain	1	2	12	1	0	0	1
-s14	doctor2+parcher12	parcher_rng	Wiped	0	14	27	0	9	0	0
-s15	knight1+pspear1+archer6	pspear_formation	Overrun	0	2	8	0	0	0	0
-s15	gravedigger4+pspear1+doctor3	gravedigger_rite,pspear_hp	Overrun	0	2	8	0	8	0	0
-s15	pspear10+doctor3		Overrun	0	9	10	0	10	0	0
-s15	knight1+werewolf1+sword2+doctor3	knight_charge	Held	1	0	10	0	15	0	0
-s15	scout3+parcher2+archer4	archer_rng	Held	1	3	10	0	0	6	0
-s15	knight3+werewolf1+doctor1+archer1	knight_charge,archer_bane	Overrun	0	0	5	0	2	0	0
-s15	pspear1+parcher15	parcher_mov	Held	1	11	10	0	0	0	0
-s15	pspear3+archer6		Held	1	6	10	0	0	0	0
-s15	werewolf5+pspear1	werewolf_early,pspear_hp	Held	1	3	10	0	0	0	0
-s15	pspear3+scout4+doctor2	pspear_pike,scout_mov	Overrun	0	6	10	0	5	8	0
-s15	werewolf1+scout6	werewolf_feast	Overrun	0	4	10	0	0	12	0
-s15	gravedigger3+pspear10	pspear_hp	Held	1	5	10	0	0	0	0
-s15	werewolf2+pspear1+scout1+hunter2	werewolf_early,scout_satchel	Held	1	4	10	0	0	3	0
-s15	knight1+werewolf1+gravedigger2+hunter2	werewolf_feast,hunter_bane	Held	1	3	10	0	0	0	0
-s15	werewolf2+scout1+hunter2+parcher2	scout_satchel,hunter_ward	Held	1	3	10	0	0	3	0
-s15	gravedigger3+pspear3+hunter2	hunter_bane	Overrun	0	3	7	0	0	0	0
-s15	werewolf3+gravedigger3	werewolf_early,gravedigger_rite	Held	1	3	10	0	0	0	0
-s15	sword4+pspear2+scout3	sword_atk,pspear_formation	Overrun	0	5	10	0	0	6	0
-s15	gravedigger2+sword3+archer2+parcher2	parcher_ambush	Overrun	0	3	8	0	0	0	0
-s15	doctor2+parcher12	parcher_rng	Held	1	8	10	0	7	0	0
-s16	knight1+pspear1+archer6	pspear_formation	Slain	1	0	9	0	0	0	0
-s16	gravedigger4+pspear1+doctor4	gravedigger_rite,pspear_hp	Wiped	0	8	22	4	12	0	1
-s16	pspear11+doctor3		Wiped	0	14	21	0	14	0	0
-s16	knight1+werewolf2+sword2+doctor2	knight_charge	Wiped	0	7	15	0	7	0	0
-s16	scout3+parcher2+archer4	archer_rng	Slain	1	0	7	0	0	6	0
-s16	knight3+werewolf1+doctor1+archer1	knight_charge,archer_bane	Wiped	0	6	17	0	9	0	0
-s16	pspear1+parcher16	parcher_mov	Wiped	0	16	16	0	0	0	1
-s16	pspear3+archer7		Slain	1	1	8	0	0	0	0
-s16	werewolf5+pspear1	werewolf_early,pspear_hp	Wiped	0	6	16	0	0	0	0
-s16	pspear3+scout5+doctor2	pspear_pike,scout_mov	Wiped	0	10	14	0	13	10	0
-s16	werewolf1+scout7	werewolf_feast	Wiped	0	8	14	0	0	14	0
-s16	gravedigger3+pspear11	pspear_hp	Wiped	0	14	22	4	0	0	0
-s16	werewolf2+pspear1+scout1+hunter2	werewolf_early,scout_satchel	Wiped	0	6	16	0	0	3	0
-s16	knight1+werewolf1+gravedigger2+hunter2	werewolf_feast,hunter_bane	Slain	1	3	15	0	0	0	0
-s16	werewolf2+scout1+hunter2+parcher3	scout_satchel,hunter_ward	Wiped	0	8	14	0	0	3	0
-s16	gravedigger3+pspear3+hunter2	hunter_bane	Slain	1	0	8	0	0	0	0
-s16	werewolf3+gravedigger3+doctor1	werewolf_early,gravedigger_rite	Wiped	0	7	19	2	3	0	0
-s16	werewolf5+parcher2	werewolf_hp,parcher_rng	Slain	1	3	10	0	0	0	0
-s16	knight2+sword2+doctor1+archer2		Slain	1	0	11	0	8	0	1
-s16	scout1+parcher15		Wiped	0	16	21	0	0	2	0
-s17	knight1+pspear1+archer6	pspear_formation	Slain	1	4	12	0	0	0	0
-s17	gravedigger4+pspear1+doctor3	gravedigger_rite,pspear_hp	Slain	1	2	18	1	33	0	0
-s17	pspear10+doctor3		Wiped	0	13	19	0	21	0	0
-s17	knight1+werewolf1+sword2+doctor3	knight_charge	Slain	1	0	15	0	24	0	0
-s17	scout3+parcher2+archer4	archer_rng	Slain	1	3	10	0	0	6	0
-s17	knight3+werewolf1+doctor1+archer1	knight_charge,archer_bane	Slain	1	0	9	0	4	0	0
-s17	pspear1+parcher15	parcher_mov	Wiped	0	16	17	0	0	0	0
-s17	pspear3+archer6		Wiped	0	9	15	0	0	0	0
-s17	werewolf5+pspear1	werewolf_early,pspear_hp	Slain	1	4	18	0	0	0	0
-s17	pspear3+scout4+doctor2	pspear_pike,scout_mov	Wiped	0	9	22	0	9	8	0
-s17	werewolf1+scout6	werewolf_feast	Slain	1	5	15	0	0	12	0
-s17	gravedigger3+pspear10	pspear_hp	Wiped	0	13	24	10	0	0	0
-s17	werewolf2+pspear1+scout1+hunter2	werewolf_early,scout_satchel	Slain	1	1	9	0	0	3	0
-s17	knight1+werewolf1+gravedigger2+hunter2	werewolf_feast,hunter_bane	Slain	1	0	7	0	0	0	0
-s17	werewolf2+scout1+hunter2+parcher2	scout_satchel,hunter_ward	Slain	1	2	9	0	0	3	0
-s17	gravedigger3+pspear3+hunter2	hunter_bane	Slain	1	2	9	1	0	0	0
-s17	werewolf3+gravedigger3	werewolf_early,gravedigger_rite	Wiped	0	6	14	0	0	0	0
-s17	sword4+pspear2+scout3	sword_atk,pspear_formation	Wiped	0	9	16	0	0	6	0
-s17	gravedigger2+sword3+archer2+parcher2	parcher_ambush	Wiped	0	9	18	5	0	0	0
-s17	doctor2+parcher12	parcher_rng	Wiped	0	14	18	0	8	0	0
-s18	knight1+pspear1+archer7	pspear_formation	Slain	1	1	9	0	0	0	0
-s18	gravedigger4+pspear1+doctor4	gravedigger_rite,pspear_hp	cap	0	7	31	2	44	0	0
-s18	pspear12+doctor3		Wiped	0	15	17	0	24	0	0
-s18	knight1+werewolf2+sword2+doctor2	knight_charge	Wiped	0	7	22	0	17	0	0
-s18	scout4+parcher2+archer4	archer_rng	Slain	1	2	9	0	0	8	0
-s18	knight3+werewolf1+doctor2+archer1	knight_charge,archer_bane	Slain	1	1	11	0	5	0	0
-s18	pspear1+parcher17	parcher_mov	Wiped	0	18	18	0	0	0	0
-s18	pspear3+archer7		Slain	1	2	10	0	0	0	0
-s18	werewolf5+pspear1	werewolf_early,pspear_hp	Wiped	0	6	15	0	0	0	0
-s18	pspear3+scout5+doctor2	pspear_pike,scout_mov	Wiped	0	10	18	0	7	10	0
-s18	werewolf1+scout7	werewolf_feast	Slain	1	4	14	0	0	14	0
-s18	gravedigger3+pspear12	pspear_hp	Wiped	0	15	19	3	0	0	0
-s18	werewolf3+pspear1+scout1+hunter2	werewolf_early,scout_satchel	Slain	1	1	11	0	0	3	0
-s18	knight1+werewolf1+gravedigger3+hunter2	werewolf_feast,hunter_bane	Slain	1	2	11	0	0	0	0
-s18	werewolf2+scout1+hunter2+parcher4	scout_satchel,hunter_ward	Slain	1	2	10	0	0	3	0
-s18	gravedigger3+pspear3+hunter2	hunter_bane	Wiped	0	8	15	0	0	0	0
-s18	werewolf3+gravedigger3+doctor1	werewolf_early,gravedigger_rite	Slain	1	2	12	0	1	0	0
-s18	werewolf5+parcher2	werewolf_hp,parcher_rng	Slain	1	3	10	0	0	0	0
-s18	knight2+sword2+doctor1+archer3		Slain	1	2	16	0	9	0	0
-s18	scout1+parcher16		Wiped	0	17	16	0	0	2	0
-s19	knight1+pspear1+archer7	pspear_formation	Held	1	8	12	0	0	0	0
-s19	gravedigger4+pspear1+doctor4	gravedigger_rite,pspear_hp	Held	1	5	12	0	20	0	0
-s19	pspear12+doctor3		Held	1	4	12	0	20	0	0
-s19	knight1+werewolf2+sword2+doctor2	knight_charge	Held	1	2	12	0	10	0	0
-s19	scout4+parcher2+archer4	archer_rng	Held	1	5	12	0	0	8	0
-s19	knight3+werewolf1+doctor2+archer1	knight_charge,archer_bane	Held	1	0	12	0	13	0	0
-s19	pspear1+parcher17	parcher_mov	Held	1	17	12	0	0	0	0
-s19	pspear3+archer7		Overrun	0	8	12	0	0	0	0
-s19	werewolf5+pspear1	werewolf_early,pspear_hp	Held	1	1	12	0	0	0	0
-s19	pspear3+scout5+doctor2	pspear_pike,scout_mov	Held	1	5	12	0	12	10	0
-s19	werewolf1+scout7	werewolf_feast	Held	1	4	12	0	0	14	0
-s19	gravedigger3+pspear12	pspear_hp	Held	1	9	12	0	0	0	0
-s19	werewolf3+pspear1+scout1+hunter2	werewolf_early,scout_satchel	Held	1	5	12	0	0	3	0
-s19	knight1+werewolf1+gravedigger3+hunter2	werewolf_feast,hunter_bane	Held	1	5	12	0	0	0	0
-s19	werewolf2+scout1+hunter2+parcher4	scout_satchel,hunter_ward	Held	1	2	12	0	0	3	0
-s19	gravedigger3+pspear3+hunter2	hunter_bane	Overrun	0	7	11	0	0	0	0
-s19	werewolf3+gravedigger3+doctor1	werewolf_early,gravedigger_rite	Held	1	2	12	0	6	0	0
-s19	werewolf5+parcher2	werewolf_hp,parcher_rng	Overrun	0	2	11	0	0	0	0
-s19	knight2+sword2+doctor1+archer3		Held	1	2	12	0	6	0	0
-s19	scout1+parcher16		Overrun	0	16	12	0	0	2	0
+s1	pspear3+parcher3		Slain	1	2	11	0	0	0	0
+s1	pspear3+parcher3		Slain	1	3	12	0	0	0	0
+s1	pspear3+parcher3		Slain	1	2	12	0	0	0	0
+s1	pspear3+parcher3		Slain	1	4	12	0	0	0	0
+s1	pspear3+parcher3		Slain	1	2	12	0	0	0	0
+s1	pspear2+parcher4		Slain	1	3	11	0	0	0	0
+s1	pspear3+parcher3		Slain	1	1	12	0	0	0	0
+s1	pspear1+parcher5		Slain	1	0	10	0	0	0	0
+s10	pspear5+hunter2+parcher3	pspear_hp,hunter_mov	Slain	1	7	20	0	0	0	0
+s10	sword2+doctor2+archer3	sword_def	Slain	1	2	14	0	4	0	0
+s10	gravedigger4+pspear2+hunter1	pspear_hp	Wiped	0	7	22	3	0	0	0
+s10	knight1+gravedigger2+pspear3+archer2	knight_def,gravedigger_twice	Slain	1	1	11	0	0	0	0
+s10	sword4+pspear3+hunter1	sword_atk,pspear_pike,hunter_bane	Slain	1	2	12	0	0	0	0
+s10	werewolf3+sword2	werewolf_hp,sword_def	Wiped	0	5	17	0	0	0	0
+s10	gravedigger2+pspear4+doctor3	pspear_formation	Wiped	0	9	23	3	25	0	0
+s10	doctor6+archer1	doctor_def	Wiped	0	7	16	0	5	0	0
+s10	knight2+sword1+doctor3	knight_charge,sword_cleave	Slain	1	0	11	0	11	0	0
+s10	knight3+hunter1+parcher2		Wiped	0	6	21	0	0	0	0
+s10	knight1+werewolf2+pspear4+parcher1	knight_hp,parcher_mov	Wiped	0	7	17	0	0	0	1
+s10	sword3+hunter2	sword_atk,hunter_bane	Slain	1	2	12	0	0	0	0
+s10	knight2+pspear1+hunter1+parcher4		Slain	1	6	16	0	0	0	0
+s10	knight1+gravedigger1+hunter1+archer3	knight_hp,archer_atk	Slain	1	0	10	0	0	0	0
+s10	gravedigger1+sword1+pspear3+parcher7	sword_cleave,pspear_pike	Wiped	0	12	20	3	0	0	0
+s10	knight1+werewolf2+gravedigger1+hunter1	knight_hp,werewolf_hp,gravedigger_rite,hunter_bane	Wiped	0	5	20	0	0	0	0
+s10	werewolf1+parcher11	werewolf_early	Wiped	0	12	15	0	0	0	0
+s10	sword5+doctor2	doctor_heal	Slain	1	0	11	0	6	0	0
+s10	werewolf2+sword4		Slain	1	3	13	0	0	0	0
+s10	gravedigger3+doctor4	gravedigger_mov	Slain	1	0	11	0	7	0	0
+s11	pspear1+scout2+parcher10	pspear_hp,parcher_mov	Held	1	10	10	0	0	6	0
+s11	knight3+scout3	knight_def	Held	1	2	10	0	0	9	0
+s11	knight2+pspear3+hunter1+parcher3	knight_hp,pspear_pike,parcher_mov	Held	1	4	10	0	0	0	0
+s11	knight1+hunter1+doctor2+parcher3	knight_def,hunter_ward	Overrun	0	5	10	0	6	0	0
+s11	sword3+pspear3+hunter2	sword_atk,hunter_bane	Held	1	6	10	0	0	0	0
+s11	werewolf2+sword1+pspear7	sword_atk	Held	1	8	10	0	0	0	0
+s11	knight4+archer1	archer_bane	Held	1	3	10	0	0	0	0
+s11	hunter2+doctor3+parcher3	parcher_rng	Wiped	0	8	9	0	5	0	0
+s11	sword4+scout3		Held	1	6	10	0	0	9	0
+s11	knight1+werewolf2+pspear2+archer2	archer_atk	Held	1	5	10	0	0	0	0
+s11	gravedigger1+scout2+hunter2	gravedigger_mov,hunter_mov	Wiped	0	5	10	0	0	6	0
+s11	gravedigger2+sword3+pspear1+archer2	pspear_pike	Held	1	7	10	0	0	0	0
+s11	knight3+hunter1+parcher1+archer1	knight_hp,hunter_mov,archer_atk	Held	1	2	10	0	0	0	0
+s11	pspear13+archer1	pspear_hp	Held	1	5	10	0	0	0	0
+s11	pspear8+doctor2+parcher3		Overrun	0	10	10	0	8	0	0
+s11	werewolf2+pspear5+doctor1+archer1	werewolf_hp,pspear_pike,doctor_heal,archer_rng	Held	1	4	10	0	4	0	0
+s11	gravedigger4+doctor3	gravedigger_twice,doctor_mov	Wiped	0	7	9	0	4	0	0
+s11	werewolf4+archer1	archer_bane	Held	1	3	10	0	0	0	0
+s11	werewolf3+archer3		Held	1	4	10	0	0	0	0
+s11	werewolf2+gravedigger3+pspear1	gravedigger_rite	Overrun	0	5	10	0	0	0	0
+s12	pspear1+scout2+parcher9	pspear_hp,scout_mov,parcher_rng	Arrived	1	4	13	0	0	6	0
+s12	sword3+doctor1+archer3	sword_def	cap	0	0	31	0	7	0	0
+s12	pspear5+scout3+hunter1	scout_mov	EscortFell	0	5	16	0	0	9	1
+s12	knight3+gravedigger2+pspear1	gravedigger_twice	EscortFell	0	3	14	0	0	0	0
+s12	gravedigger1+archer4+parcher4	gravedigger_mov,archer_rng,parcher_ambush	EscortFell	0	1	9	0	0	0	1
+s12	werewolf2+sword1+pspear6	sword_atk	Arrived	1	3	12	0	0	0	0
+s12	knight4+archer1	archer_bane	EscortFell	0	0	10	0	0	0	0
+s12	hunter2+doctor2+parcher3	parcher_rng	EscortFell	0	4	14	0	6	0	0
+s12	sword4+scout3		EscortFell	0	2	9	0	0	9	0
+s12	scout3+doctor2+archer2		Arrived	1	0	14	0	6	9	0
+s12	werewolf4+pspear2	werewolf_hp	Arrived	1	1	12	0	0	0	0
+s12	werewolf1+sword3+hunter1+parcher2	werewolf_hp,sword_def,parcher_ambush	Arrived	1	1	11	0	0	0	0
+s12	werewolf2+gravedigger2+scout1+parcher2	scout_satchel	EscortFell	0	4	15	3	0	4	0
+s12	sword1+doctor6	sword_atk,doctor_def	cap	0	0	31	0	27	0	0
+s12	pspear2+scout2+hunter2+archer1	pspear_hp,archer_bane	Arrived	1	0	20	0	0	6	0
+s12	scout1+doctor3+parcher6	scout_mov,doctor_mov,parcher_mov	Arrived	1	4	23	0	41	3	0
+s12	pspear10+archer2		EscortFell	0	2	12	0	0	0	0
+s12	werewolf3+pspear5	pspear_formation	Arrived	1	2	12	0	0	0	0
+s12	sword1+pspear2+hunter2+doctor2	pspear_pike	Arrived	1	0	14	0	7	0	0
+s12	werewolf2+sword1+archer2	werewolf_early,archer_rng	Arrived	1	2	13	0	0	0	0
+s13	pspear1+scout2+parcher11	pspear_hp,scout_mov,parcher_rng	Slain	1	5	13	0	0	6	0
+s13	sword4+doctor1+archer3	sword_def	Slain	1	0	10	0	1	0	0
+s13	pspear5+scout4+hunter1	scout_mov	cap	0	9	31	0	0	12	0
+s13	knight3+gravedigger2+scout1+pspear1	gravedigger_twice	Slain	1	0	11	0	0	3	0
+s13	sword3+pspear4+hunter2	sword_atk,hunter_bane	Slain	1	1	10	0	0	0	0
+s13	werewolf2+sword1+pspear8	sword_atk	Wiped	0	11	15	0	0	0	0
+s13	knight4+archer1	archer_bane	Wiped	0	5	14	0	0	0	0
+s13	hunter2+doctor3+parcher3	parcher_rng	Wiped	0	8	17	0	6	0	0
+s13	sword5+scout3		Wiped	0	8	15	0	0	9	0
+s13	scout3+doctor2+archer3		Slain	1	6	15	0	1	9	0
+s13	werewolf4+pspear2	werewolf_hp	Wiped	0	6	19	0	0	0	0
+s13	werewolf1+sword3+hunter2+parcher1	werewolf_hp,sword_def,parcher_ambush	Slain	1	1	13	0	0	0	0
+s13	werewolf2+gravedigger3+scout1+parcher2	scout_satchel	Wiped	0	8	18	3	0	4	0
+s13	sword1+doctor7	sword_atk,doctor_def	Wiped	0	8	24	0	32	0	0
+s13	pspear4+scout2+hunter2+archer1	pspear_hp,archer_bane	Slain	1	5	16	0	0	6	0
+s13	scout1+doctor3+parcher8	scout_mov,doctor_mov,parcher_mov	Wiped	0	12	19	0	10	3	0
+s13	pspear12+archer2		Wiped	0	14	18	0	0	0	0
+s13	werewolf3+pspear7	pspear_formation	Wiped	0	10	24	0	0	0	0
+s13	sword2+pspear2+hunter2+doctor2	pspear_pike	Slain	1	2	10	0	5	0	0
+s13	werewolf3+sword1+archer2	werewolf_early,archer_rng	Wiped	0	6	17	0	0	0	0
+s14	pspear1+scout2+parcher11	pspear_hp,scout_mov,parcher_rng	Slain	1	6	13	0	0	6	0
+s14	sword4+doctor1+archer3	sword_def	Slain	1	2	11	0	2	0	1
+s14	pspear5+scout4+hunter1	scout_mov	Slain	1	7	14	0	0	12	0
+s14	knight3+gravedigger2+scout1+pspear1	gravedigger_twice	Wiped	0	7	19	0	0	3	0
+s14	sword3+pspear4+hunter2	sword_atk,hunter_bane	Wiped	0	9	16	0	0	0	0
+s14	werewolf2+sword1+pspear8	sword_atk	Wiped	0	11	23	0	0	0	0
+s14	knight4+archer1	archer_bane	Wiped	0	4	15	0	0	0	1
+s14	hunter2+doctor3+parcher3	parcher_rng	Wiped	0	8	17	0	14	0	0
+s14	sword5+scout3		Wiped	0	8	18	0	0	9	0
+s14	scout3+doctor2+archer3		Wiped	0	8	20	0	9	9	0
+s14	werewolf4+pspear2	werewolf_hp	Wiped	0	6	17	0	0	0	0
+s14	werewolf1+sword3+hunter2+parcher1	werewolf_hp,sword_def,parcher_ambush	Slain	1	2	13	0	0	0	0
+s14	werewolf2+gravedigger3+scout1+parcher2	scout_satchel	Slain	1	2	13	1	0	4	0
+s14	sword1+doctor7	sword_atk,doctor_def	Wiped	0	8	23	0	29	0	0
+s14	pspear4+scout2+hunter2+archer1	pspear_hp,archer_bane	Slain	1	1	10	0	0	6	0
+s14	scout1+doctor3+parcher8	scout_mov,doctor_mov,parcher_mov	Wiped	0	12	25	0	17	3	0
+s14	pspear12+archer2		Wiped	0	13	21	0	0	0	1
+s14	werewolf3+pspear7	pspear_formation	Wiped	0	10	20	0	0	0	0
+s14	sword2+pspear2+hunter2+doctor2	pspear_pike	Slain	1	3	18	0	14	0	0
+s14	werewolf3+sword1+archer2	werewolf_early,archer_rng	Wiped	0	6	15	0	0	0	0
+s15	pspear1+scout2+parcher11	pspear_hp,scout_mov,parcher_rng	Held	1	5	10	0	0	6	0
+s15	sword4+doctor1+archer3	sword_def	Held	1	3	10	0	3	0	0
+s15	pspear5+scout4+hunter1	scout_mov	Overrun	0	5	9	0	0	12	0
+s15	knight3+gravedigger2+scout1+pspear1	gravedigger_twice	Held	1	2	10	0	0	3	0
+s15	sword3+pspear4+hunter2	sword_atk,hunter_bane	Held	1	5	10	0	0	0	0
+s15	werewolf2+sword1+pspear8	sword_atk	Held	1	5	10	0	0	0	0
+s15	knight4+archer1	archer_bane	Held	1	3	10	0	0	0	0
+s15	hunter2+doctor3+parcher3	parcher_rng	Held	1	5	10	0	11	0	0
+s15	sword5+scout3		Overrun	0	1	7	0	0	9	0
+s15	scout3+doctor2+archer3		Held	1	3	10	0	1	9	0
+s15	werewolf4+pspear2	werewolf_hp	Held	1	2	10	0	0	0	0
+s15	werewolf1+sword3+hunter2+parcher1	werewolf_hp,sword_def,parcher_ambush	Overrun	0	0	7	0	0	0	0
+s15	werewolf2+gravedigger3+scout1+parcher2	scout_satchel	Held	1	4	10	0	0	4	0
+s15	sword1+doctor7	sword_atk,doctor_def	Overrun	0	1	7	0	8	0	0
+s15	pspear4+scout2+hunter2+archer1	pspear_hp,archer_bane	Held	1	6	10	0	0	6	0
+s15	scout1+doctor3+parcher8	scout_mov,doctor_mov,parcher_mov	Overrun	0	4	8	0	6	3	0
+s15	pspear12+archer2		Held	1	9	10	0	0	0	0
+s15	werewolf3+pspear7	pspear_formation	Overrun	0	3	10	0	0	0	0
+s15	sword2+pspear2+hunter2+doctor2	pspear_pike	Held	1	3	10	0	8	0	0
+s15	werewolf3+sword1+archer2	werewolf_early,archer_rng	Overrun	0	2	9	0	0	0	0
+s16	pspear1+scout2+parcher12	pspear_hp,scout_mov,parcher_rng	cap	0	14	31	0	0	6	0
+s16	sword4+doctor1+archer3	sword_def	Slain	1	0	8	0	2	0	0
+s16	pspear6+scout4+hunter1	scout_mov	Wiped	0	11	16	0	0	12	0
+s16	knight3+gravedigger2+scout1+pspear2	gravedigger_twice	Wiped	0	8	18	0	0	3	0
+s16	sword4+pspear3+hunter2	sword_atk,hunter_bane	Slain	1	0	8	0	0	0	0
+s16	werewolf2+sword1+pspear9	sword_atk	Wiped	0	12	17	0	0	0	0
+s16	knight5+archer1	archer_bane	Wiped	0	6	16	0	0	0	0
+s16	hunter2+doctor4+parcher3	parcher_rng	Wiped	0	9	16	0	21	0	0
+s16	sword5+scout3		Wiped	0	8	16	0	0	9	0
+s16	scout3+doctor2+archer3		Slain	1	0	9	0	5	9	0
+s16	werewolf5+pspear2	werewolf_hp	Wiped	0	7	21	0	0	0	0
+s16	werewolf1+sword3+hunter2+parcher2	werewolf_hp,sword_def,parcher_ambush	Slain	1	2	10	0	0	0	0
+s16	werewolf2+gravedigger3+scout1+parcher3	scout_satchel	Wiped	0	9	17	0	0	4	0
+s16	sword1+doctor7	sword_atk,doctor_def	Wiped	0	8	17	0	14	0	0
+s16	pspear3+scout3+hunter2+archer1	pspear_hp,archer_bane	Slain	1	1	10	0	0	9	0
+s16	scout1+doctor3+parcher9	scout_mov,doctor_mov,parcher_mov	Wiped	0	13	19	0	26	3	0
+s16	pspear13+archer2		Wiped	0	15	17	0	0	0	0
+s16	werewolf3+pspear8	pspear_formation	Wiped	0	10	16	0	0	0	1
+s16	sword2+pspear3+hunter2+doctor2	pspear_pike	Wiped	0	9	18	0	12	0	0
+s16	werewolf3+sword1+archer2	werewolf_early,archer_rng	Slain	1	4	13	0	0	0	1
+s17	pspear1+scout2+parcher11	pspear_hp,scout_mov,parcher_rng	Slain	1	10	21	0	0	6	0
+s17	sword4+doctor1+archer3	sword_def	Slain	1	1	14	0	6	0	1
+s17	pspear5+scout4+hunter1	scout_mov	Slain	1	4	10	0	0	9	0
+s17	knight3+gravedigger2+scout1+pspear1	gravedigger_twice	Wiped	0	7	16	0	0	3	0
+s17	sword3+pspear4+hunter2	sword_atk,hunter_bane	Slain	1	2	9	0	0	0	0
+s17	werewolf2+sword1+pspear8	sword_atk	Slain	1	5	11	0	0	0	0
+s17	knight4+archer1	archer_bane	Slain	1	1	12	0	0	0	0
+s17	hunter2+doctor3+parcher3	parcher_rng	Wiped	0	8	16	0	3	0	0
+s17	sword5+scout3		Slain	1	6	17	0	0	9	0
+s17	scout3+doctor2+archer3		Slain	1	4	15	0	6	9	0
+s17	werewolf4+pspear2	werewolf_hp	Slain	1	0	10	0	0	0	0
+s17	werewolf1+sword3+hunter2+parcher1	werewolf_hp,sword_def,parcher_ambush	Slain	1	0	8	0	0	0	0
+s17	werewolf2+gravedigger3+scout1+parcher2	scout_satchel	Wiped	0	8	20	1	0	4	0
+s17	sword1+doctor7	sword_atk,doctor_def	Wiped	0	8	13	0	11	0	0
+s17	pspear4+scout2+hunter2+archer1	pspear_hp,archer_bane	Slain	1	1	9	0	0	6	0
+s17	scout1+doctor3+parcher8	scout_mov,doctor_mov,parcher_mov	Wiped	0	12	18	0	12	3	0
+s17	pspear12+archer2		Wiped	0	14	14	0	0	0	0
+s17	werewolf3+pspear7	pspear_formation	Slain	1	4	10	0	0	0	0
+s17	sword2+pspear2+hunter2+doctor2	pspear_pike	Slain	1	2	12	0	8	0	0
+s17	werewolf3+sword1+archer2	werewolf_early,archer_rng	Slain	1	2	9	0	0	0	0
+s18	pspear1+scout2+parcher13	pspear_hp,scout_mov,parcher_rng	Wiped	0	16	21	0	0	6	0
+s18	sword4+doctor1+archer4	sword_def	Slain	1	0	11	0	5	0	0
+s18	pspear5+scout5+hunter1	scout_mov	Slain	1	2	10	0	0	15	0
+s18	knight3+gravedigger2+scout2+pspear1	gravedigger_twice	Wiped	0	8	18	1	0	6	0
+s18	sword4+pspear4+hunter2	sword_atk,hunter_bane	Slain	1	1	10	0	0	0	0
+s18	werewolf2+sword1+pspear10	sword_atk	Wiped	0	13	16	0	0	0	0
+s18	knight5+archer1	archer_bane	Slain	1	3	12	0	0	0	0
+s18	hunter2+doctor4+parcher3	parcher_rng	Wiped	0	9	26	0	16	0	0
+s18	sword6+scout3		Wiped	0	9	18	0	0	9	0
+s18	scout3+doctor3+archer3		cap	0	8	31	0	7	9	0
+s18	werewolf5+pspear2	werewolf_hp	Slain	1	1	11	0	0	0	0
+s18	werewolf1+sword3+hunter2+parcher3	werewolf_hp,sword_def,parcher_ambush	Slain	1	3	14	0	0	0	0
+s18	werewolf2+gravedigger3+scout1+parcher4	scout_satchel	Wiped	0	10	15	1	0	4	0
+s18	sword1+doctor8	sword_atk,doctor_def	Wiped	0	9	20	0	35	0	0
+s18	pspear4+scout3+hunter2+archer1	pspear_hp,archer_bane	Slain	1	6	16	0	0	9	0
+s18	scout1+doctor3+parcher10	scout_mov,doctor_mov,parcher_mov	Wiped	0	14	17	0	11	3	0
+s18	pspear14+archer2		Wiped	0	16	15	0	0	0	0
+s18	werewolf3+pspear9	pspear_formation	Wiped	0	12	19	0	0	0	0
+s18	sword2+pspear4+hunter2+doctor2	pspear_pike	Slain	1	3	14	0	15	0	0
+s18	werewolf4+sword1+archer2	werewolf_early,archer_rng	Slain	1	1	11	0	0	0	0
+s19	pspear1+scout2+parcher13	pspear_hp,scout_mov,parcher_rng	Held	1	8	12	0	0	6	0
+s19	sword4+doctor1+archer4	sword_def	Held	1	4	12	0	2	0	0
+s19	pspear5+scout5+hunter1	scout_mov	Held	1	5	12	0	0	15	0
+s19	knight3+gravedigger2+scout2+pspear1	gravedigger_twice	Held	1	4	12	0	0	6	0
+s19	sword4+pspear4+hunter2	sword_atk,hunter_bane	Held	1	8	12	0	0	0	0
+s19	werewolf2+sword1+pspear10	sword_atk	Held	1	6	12	0	0	0	0
+s19	knight5+archer1	archer_bane	Held	1	4	12	0	0	0	0
+s19	hunter2+doctor4+parcher3	parcher_rng	Held	1	3	12	0	11	0	0
+s19	sword6+scout3		Held	1	7	12	0	0	9	0
+s19	scout3+doctor3+archer3		Held	1	1	12	0	15	9	0
+s19	werewolf5+pspear2	werewolf_hp	Held	1	1	12	0	0	0	0
+s19	werewolf1+sword3+hunter2+parcher3	werewolf_hp,sword_def,parcher_ambush	Held	1	7	12	0	0	0	0
+s19	werewolf2+gravedigger3+scout1+parcher4	scout_satchel	Overrun	0	9	12	0	0	4	0
+s19	sword1+doctor8	sword_atk,doctor_def	Held	1	0	12	0	28	0	0
+s19	pspear4+scout3+hunter2+archer1	pspear_hp,archer_bane	Held	1	4	12	0	0	9	0
+s19	scout1+doctor3+parcher10	scout_mov,doctor_mov,parcher_mov	Held	1	9	12	0	12	3	0
+s19	pspear14+archer2		Held	1	10	12	0	0	0	0
+s19	werewolf3+pspear9	pspear_formation	Held	1	5	12	0	0	0	0
+s19	sword2+pspear4+hunter2+doctor2	pspear_pike	Held	1	5	12	0	14	0	0
+s19	werewolf4+sword1+archer2	werewolf_early,archer_rng	Held	1	1	12	0	0	0	0
+s2	pspear3+parcher3		Held	1	3	8	0	0	0	0
+s2	pspear4+parcher2	pspear_pike,parcher_mov	Held	1	1	8	0	0	0	0
+s2	pspear2+parcher4	pspear_hp,parcher_rng	Held	1	0	8	0	0	0	0
+s2	pspear3+parcher3	pspear_pike	Held	1	3	8	0	0	0	0
+s2	pspear3+parcher3	pspear_formation	Held	1	1	8	0	0	0	0
+s2	pspear4+parcher2	parcher_mov	Held	1	2	8	0	0	0	0
+s2	pspear1+parcher5		Held	1	2	8	0	0	0	0
 s2	pspear3+parcher3	parcher_mov	Held	1	1	8	0	0	0	0
-s2	pspear1+parcher5	parcher_rng	Held	1	1	8	0	0	0	0
-s2	pspear4+parcher2		Held	1	2	8	0	0	0	0
-s2	pspear2+parcher4	pspear_pike	Held	1	2	8	0	0	0	0
-s2	pspear5+parcher1	pspear_hp	Held	1	1	8	0	0	0	1
-s2	pspear3+parcher3	pspear_pike,parcher_rng	Held	1	1	8	0	0	0	0
-s2	pspear3+parcher3	parcher_ambush	Held	1	1	8	0	0	0	0
-s2	pspear1+parcher5	pspear_hp,parcher_ambush	Held	1	0	8	0	0	0	0
-s2	pspear3+parcher3		Held	1	2	8	0	0	0	0
-s2	pspear1+parcher5	parcher_rng	Held	1	1	8	0	0	0	0
-s2	pspear3+parcher3	parcher_ambush	Held	1	1	8	0	0	0	0
-s2	pspear4+parcher2	pspear_pike	Held	1	2	8	0	0	0	0
-s2	pspear3+parcher3	pspear_hp	Held	1	0	8	0	0	0	0
-s2	pspear3+parcher3	parcher_mov	Held	1	0	8	0	0	0	0
-s2	pspear4+parcher2	pspear_pike,parcher_rng	Held	1	2	8	0	0	0	0
-s2	pspear3+parcher3	pspear_pike	Held	1	2	8	0	0	0	0
-s2	pspear4+parcher2		Held	1	2	8	0	0	0	0
-s2	pspear3+parcher3	pspear_pike	Held	1	1	8	0	0	0	0
 s2	pspear3+parcher3	parcher_mov	Held	1	1	8	0	0	0	0
+s2	pspear2+parcher4	parcher_rng	Held	1	1	8	0	0	0	0
+s2	pspear5+parcher1	pspear_pike,parcher_rng	Held	1	1	8	0	0	0	0
+s2	pspear1+parcher5	pspear_pike,parcher_rng	Held	1	1	8	0	0	0	0
+s2	pspear5+parcher1	pspear_hp	Held	1	0	8	0	0	0	0
+s2	pspear3+parcher3	parcher_ambush	Held	1	2	8	0	0	0	0
+s2	pspear3+parcher3	parcher_rng	Held	1	1	8	0	0	0	0
+s2	pspear4+parcher2		Held	1	2	8	0	0	0	0
+s2	pspear5+parcher1	pspear_formation,parcher_mov	Held	1	0	8	0	0	0	0
+s2	pspear3+parcher3		Held	1	0	8	0	0	0	0
+s2	pspear4+parcher2	pspear_hp	Held	1	1	8	0	0	0	0
 s2	pspear3+parcher3		Held	1	1	8	0	0	0	0
-s20	knight1+pspear1+archer8	pspear_formation	Slain	1	4	14	0	0	0	0
-s20	gravedigger5+pspear1+doctor4	gravedigger_rite,pspear_hp	Slain	1	4	23	2	29	0	0
-s20	pspear14+doctor3		Wiped	0	17	23	0	29	0	0
-s20	knight1+werewolf2+sword2+doctor3	knight_charge	Slain	1	1	13	0	13	0	0
-s20	scout4+parcher2+archer5	archer_rng	Slain	1	1	9	0	0	8	0
-s20	knight3+werewolf1+doctor2+archer2	knight_charge,archer_bane	Slain	1	0	13	0	7	0	1
-s20	pspear1+parcher19	parcher_mov	Wiped	0	20	18	0	0	0	0
-s20	pspear3+archer8		Wiped	0	11	16	0	0	0	0
-s20	werewolf6+pspear1	werewolf_early,pspear_hp	Slain	1	6	18	0	0	0	0
-s20	pspear3+scout6+doctor2	pspear_pike,scout_mov	Wiped	0	11	24	0	11	12	0
-s20	werewolf1+scout8	werewolf_feast	Wiped	0	9	22	0	0	16	0
-s20	gravedigger3+pspear14	pspear_hp	Wiped	0	17	26	5	0	0	0
-s20	werewolf3+pspear1+scout1+hunter2	werewolf_early,scout_satchel	Slain	1	1	10	0	0	3	0
-s20	knight1+werewolf2+gravedigger2+hunter2	werewolf_feast,hunter_bane	Slain	1	1	9	0	0	0	0
-s20	werewolf3+scout1+hunter2+parcher3	scout_satchel,hunter_ward	Slain	1	2	12	0	0	3	0
-s20	gravedigger3+pspear3+hunter2	hunter_bane	Wiped	0	8	14	0	0	0	0
-s20	werewolf3+gravedigger3+sword1+doctor1	werewolf_early,gravedigger_rite,doctor_def	Slain	1	0	11	0	8	0	0
-s20	gravedigger1+sword1+parcher16		Wiped	0	18	24	1	0	0	0
-s20	knight3+pspear11		Wiped	0	13	18	0	0	0	1
-s20	knight5+sword1+pspear3	pspear_formation	Wiped	0	9	24	0	0	0	0
-s3	sword2+pspear1+parcher3	pspear_hp,parcher_mov	Slain	1	0	8	0	0	0	0
-s3	pspear2+parcher6		Wiped	0	8	14	0	0	0	0
-s3	pspear3+parcher5	pspear_pike	Wiped	0	8	12	0	0	0	0
-s3	sword1+pspear1+parcher5	parcher_mov	Slain	1	1	9	0	0	0	0
-s3	sword1+pspear2+parcher3	pspear_formation	Wiped	0	6	12	0	0	0	0
-s3	sword3+pspear2	pspear_pike	Slain	1	0	8	0	0	0	0
-s3	sword1+pspear3+parcher3		Wiped	0	7	13	0	0	0	0
-s3	sword1+pspear2+parcher4	pspear_formation,parcher_ambush	Slain	1	4	13	0	0	0	0
-s3	sword1+pspear3+parcher3	parcher_ambush	Slain	1	1	10	0	0	0	0
+s20	pspear1+scout2+parcher15	pspear_hp,scout_mov,parcher_rng	cap	0	17	31	0	0	6	0
+s20	sword5+doctor1+archer4	sword_def	Slain	1	1	10	0	5	0	0
+s20	pspear7+scout5+hunter1	scout_mov	Wiped	0	13	18	0	0	15	0
+s20	knight3+gravedigger2+scout2+pspear3	gravedigger_twice	Wiped	0	10	22	1	0	6	0
+s20	sword5+pspear4+hunter2	sword_atk,hunter_bane	Slain	1	4	12	0	0	0	0
+s20	werewolf2+sword1+pspear12	sword_atk	Wiped	0	15	15	0	0	0	0
+s20	knight6+archer1	archer_bane	Slain	1	1	10	0	0	0	0
+s20	hunter2+doctor5+parcher3	parcher_rng	Wiped	0	10	14	0	8	0	0
+s20	sword7+scout3		Wiped	0	10	18	0	0	9	0
+s20	scout3+doctor3+archer4		Wiped	0	10	17	0	8	9	0
+s20	werewolf6+pspear2	werewolf_hp	Slain	1	5	15	0	0	0	0
+s20	werewolf2+sword3+hunter2+parcher2	werewolf_hp,sword_def,parcher_ambush	Wiped	0	7	17	0	0	0	2
+s20	werewolf3+gravedigger3+scout1+parcher3	scout_satchel	Wiped	0	10	18	3	0	4	0
+s20	sword1+doctor9	sword_atk,doctor_def	Wiped	0	10	25	0	36	0	0
+s20	pspear4+scout4+hunter2+archer1	pspear_hp,archer_bane	Slain	1	1	11	0	0	12	0
+s20	scout1+doctor3+parcher12	scout_mov,doctor_mov,parcher_mov	Wiped	0	16	21	0	10	3	0
+s20	pspear16+archer2		Slain	1	6	15	0	0	0	1
+s20	werewolf3+pspear11	pspear_formation	Wiped	0	14	18	0	0	0	0
+s20	sword3+pspear4+hunter2+doctor2	pspear_pike	Slain	1	2	11	0	13	0	0
+s20	werewolf4+sword1+archer2	werewolf_early,archer_rng	Slain	1	0	10	0	0	0	0
+s3	sword1+pspear3+parcher3		Slain	1	3	11	0	0	0	0
+s3	sword2+pspear3+parcher1	pspear_hp,parcher_mov	Wiped	0	6	17	0	0	0	0
+s3	sword1+pspear3+parcher3	parcher_rng	Slain	1	1	10	0	0	0	0
+s3	sword2+pspear2+parcher2	parcher_mov	Slain	1	2	10	0	0	0	0
 s3	sword2+pspear1+parcher3	parcher_mov	Slain	1	1	8	0	0	0	0
-s3	sword2+pspear3+parcher1	pspear_hp,parcher_ambush	Slain	1	2	10	0	0	0	0
-s3	sword2+pspear3+parcher1		Slain	1	2	11	0	0	0	0
-s3	sword2+pspear3+parcher1		Slain	1	0	9	0	0	0	0
-s3	sword1+pspear3+parcher3	pspear_hp	Slain	1	3	12	0	0	0	0
-s3	sword1+pspear3+parcher3	parcher_rng	Slain	1	4	12	0	0	0	0
-s3	sword2+pspear1+parcher3		Wiped	0	6	11	0	0	0	0
-s3	sword2+pspear2+parcher2	pspear_hp,parcher_mov	Wiped	0	5	13	0	0	0	1
-s3	pspear1+parcher7	pspear_pike,parcher_mov	Wiped	0	8	12	0	0	0	0
-s3	sword3+pspear2	pspear_hp	Slain	1	1	11	0	0	0	0
-s3	pspear2+parcher6		Slain	1	3	12	0	0	0	0
-s4	gravedigger3+pspear1+parcher2	pspear_hp,parcher_mov	Wiped	0	6	17	1	0	0	0
-s4	gravedigger3+pspear3		Wiped	0	5	13	1	0	0	1
-s4	gravedigger3+pspear2		Wiped	0	5	12	0	0	0	0
-s4	gravedigger1+sword3+parcher1	parcher_mov	Wiped	0	5	12	0	0	0	0
-s4	gravedigger1+sword2+pspear1+parcher2		Slain	1	3	11	0	0	0	0
-s4	gravedigger2+sword2+parcher1	sword_atk,parcher_ambush	Slain	1	2	10	0	0	0	0
-s4	gravedigger2+sword1+pspear1+parcher2	sword_atk,pspear_hp	Slain	1	2	10	0	0	0	0
-s4	gravedigger1+sword3+pspear1	sword_def	Slain	1	0	8	0	0	0	0
-s4	gravedigger2+sword2+pspear1		Wiped	0	5	13	1	0	0	0
-s4	gravedigger1+sword1+pspear3+parcher2	pspear_hp,parcher_ambush	Slain	1	2	10	0	0	0	0
-s4	gravedigger1+parcher7	parcher_rng	Slain	1	4	10	0	0	0	0
-s4	gravedigger2+sword1+parcher3		Slain	1	4	13	0	0	0	0
-s4	sword1+pspear3+parcher4	pspear_pike	Wiped	0	8	18	0	0	0	0
-s4	gravedigger3+pspear1+parcher2	pspear_hp	Slain	1	3	11	1	0	0	0
-s4	gravedigger1+sword2+pspear1+parcher2	sword_def,pspear_hp,parcher_mov	Slain	1	2	12	0	0	0	0
-s4	gravedigger3+pspear2+parcher1	pspear_hp,parcher_mov	Wiped	0	5	12	1	0	0	1
-s4	sword1+pspear6+parcher1	sword_cleave,pspear_hp,parcher_rng	Slain	1	3	13	0	0	0	0
-s4	gravedigger1+sword1+pspear3+parcher1	parcher_rng	Wiped	0	6	11	0	0	0	0
-s4	sword1+pspear3+parcher3	sword_cleave	Wiped	0	7	11	0	0	0	0
-s4	gravedigger1+pspear3+parcher4		Wiped	0	8	12	0	0	0	0
-s5	gravedigger2+pspear3+archer1	gravedigger_rite,pspear_hp	Slain	1	1	10	0	0	0	0
-s5	sword2+pspear2+parcher3		Slain	1	5	14	0	0	0	0
-s5	gravedigger1+pspear1+archer3	gravedigger_mov	Slain	1	1	8	0	0	0	0
-s5	gravedigger2+pspear3+archer1		Wiped	0	6	17	3	0	0	0
-s5	archer3+parcher2	parcher_mov	Wiped	0	5	13	0	0	0	0
-s5	gravedigger2+sword2+parcher1	sword_atk,parcher_mov	Slain	1	3	11	0	0	0	0
-s5	gravedigger1+archer3+parcher1	parcher_ambush	Slain	1	1	9	0	0	0	0
-s5	gravedigger2+sword1+parcher1+archer1	parcher_mov	Wiped	0	5	13	0	0	0	0
-s5	gravedigger1+sword2+pspear3	gravedigger_mov,sword_def,pspear_formation	Slain	1	0	9	0	0	0	0
-s5	sword2+pspear1+parcher2+archer1	pspear_pike	Slain	1	2	9	0	0	0	0
-s5	gravedigger1+sword1+archer2+parcher1	parcher_rng	Wiped	0	5	12	0	0	0	0
-s5	gravedigger2+archer2+parcher1		Slain	1	1	8	0	0	0	0
-s5	sword1+pspear2+parcher1+archer2	sword_atk,parcher_rng	Slain	1	4	11	0	0	0	0
-s5	pspear4+archer1+parcher3	pspear_formation,parcher_mov	Wiped	0	8	19	0	0	0	0
-s5	gravedigger2+archer2		Wiped	0	4	12	0	0	0	0
-s5	gravedigger1+sword1+pspear3+archer1	sword_cleave	Slain	1	3	12	0	0	0	0
-s5	gravedigger3+parcher3	gravedigger_twice	Slain	1	4	12	0	0	0	0
-s5	gravedigger1+sword2+pspear3	pspear_formation	Slain	1	4	17	0	0	0	0
-s5	sword2+pspear1+archer2	pspear_formation	Slain	1	1	8	0	0	0	0
-s5	sword3+pspear1+parcher2	pspear_hp,parcher_ambush	Slain	1	2	9	0	0	0	0
-s6	gravedigger1+pspear3+archer2	gravedigger_mov,pspear_formation	Held	1	2	10	0	0	0	0
-s6	gravedigger1+sword1+archer3	gravedigger_rite	Held	1	3	10	0	0	0	0
-s6	gravedigger1+doctor3+parcher2	parcher_ambush	Held	1	4	10	0	11	0	0
-s6	sword1+pspear1+parcher3+archer2	pspear_pike,parcher_ambush	Held	1	3	10	0	0	0	0
-s6	sword2+archer3		Overrun	0	2	10	0	0	0	0
-s6	gravedigger2+doctor2+archer1	gravedigger_twice,archer_rng	Overrun	0	6	10	0	4	0	0
-s6	gravedigger1+sword1+doctor1+archer2	gravedigger_rite,archer_atk	Held	1	3	10	0	5	0	0
-s6	sword3+doctor1+archer1	archer_atk	Overrun	0	4	10	0	2	0	0
-s6	doctor1+parcher8	parcher_rng	Held	1	4	10	0	4	0	0
-s6	sword2+pspear1+parcher1+archer2	pspear_pike	Held	1	4	10	0	0	0	0
-s6	gravedigger1+sword2+doctor1+parcher2	gravedigger_twice,sword_cleave,parcher_rng	Held	1	3	10	0	7	0	0
-s6	sword3+pspear4	pspear_pike	Held	1	3	10	0	0	0	0
-s6	gravedigger3+pspear1+doctor1+parcher1	gravedigger_mov,parcher_ambush	Overrun	0	2	10	0	5	0	0
-s6	pspear9+parcher1	pspear_hp	Held	1	6	10	0	0	0	0
-s6	pspear3+doctor3	pspear_formation	Held	1	1	10	0	10	0	0
-s6	gravedigger3+parcher4	gravedigger_mov,parcher_mov	Held	1	7	10	0	0	0	0
-s6	gravedigger3+parcher3	gravedigger_twice,parcher_rng	Overrun	0	5	10	0	0	0	0
-s6	pspear2+parcher4+archer2	parcher_ambush	Held	1	7	10	0	0	0	0
-s6	doctor2+archer3	archer_atk	Overrun	0	1	10	0	2	0	0
-s6	gravedigger1+sword4	sword_atk	Overrun	0	4	10	0	0	0	0
-s7	knight2+pspear3+archer1		Slain	1	1	10	0	0	0	0
-s7	knight1+sword1+archer3		Slain	1	3	9	0	0	0	0
-s7	gravedigger1+pspear1+doctor3+archer1	gravedigger_rite,doctor_mov	Wiped	0	6	19	0	5	0	0
-s7	gravedigger1+archer4	gravedigger_rite	Wiped	0	5	15	0	0	0	0
-s7	sword3+archer2		Wiped	0	5	15	0	0	0	0
-s7	knight1+gravedigger1+sword3		Wiped	0	5	16	1	0	0	0
-s7	knight2+pspear1+doctor2	pspear_hp	Wiped	0	5	20	0	16	0	0
-s7	knight1+sword1+doctor1+parcher3	sword_def,doctor_heal,parcher_ambush	Slain	1	0	11	0	5	0	0
-s7	pspear3+doctor1+parcher6	pspear_pike	Slain	1	3	17	0	7	0	1
-s7	gravedigger2+pspear1+doctor2+parcher2		Slain	1	0	19	0	17	0	1
-s7	gravedigger1+doctor3+parcher2		cap	0	0	31	0	4	0	0
-s7	knight1+gravedigger1+pspear2+doctor2	gravedigger_twice,pspear_hp,doctor_def	Slain	1	3	26	2	31	0	0
-s7	sword2+archer3	sword_atk,archer_atk	Slain	1	4	13	0	0	0	0
-s7	sword2+parcher7	sword_atk	Wiped	0	9	19	0	0	0	0
-s7	knight2+parcher5	parcher_ambush	Wiped	0	7	16	0	0	0	0
-s7	sword3+pspear5	sword_cleave,pspear_formation	Slain	1	1	12	0	0	0	0
-s7	pspear3+parcher4+archer2	pspear_pike,archer_rng	Slain	1	1	9	0	0	0	0
-s7	gravedigger1+parcher3+archer3	gravedigger_twice,parcher_rng,archer_bane	Slain	1	1	7	0	0	0	0
-s7	pspear2+doctor4+parcher1	doctor_def	cap	0	0	31	0	4	0	0
-s7	knight1+gravedigger2+doctor2	gravedigger_mov,doctor_def	Slain	1	2	16	1	10	0	0
-s8	knight2+pspear1+archer1	knight_charge,archer_bane	Arrived	1	1	12	0	0	0	0
-s8	werewolf1+sword1+pspear2+parcher2	pspear_pike,parcher_mov	Wiped	0	6	11	0	0	0	0
-s8	knight3+parcher1		Arrived	1	1	13	0	0	0	0
-s8	knight2+werewolf1+pspear1		Arrived	1	1	22	0	0	0	0
-s8	werewolf2+gravedigger1+doctor1	gravedigger_twice,doctor_heal	Arrived	1	0	16	0	6	0	0
-s8	sword2+archer2	sword_atk	EscortFell	0	3	12	0	0	0	0
-s8	knight1+doctor2+parcher2	knight_def,doctor_heal,parcher_mov	Arrived	1	1	14	0	20	0	0
-s8	knight2+gravedigger2		cap	0	0	31	0	0	0	0
-s8	gravedigger3+doctor2		cap	0	0	31	0	16	0	0
-s8	werewolf1+gravedigger1+archer1+parcher3		Arrived	1	0	16	0	0	0	1
-s8	knight2+werewolf1+pspear1	knight_hp,pspear_formation	Arrived	1	0	17	0	0	0	0
-s8	sword3+pspear2+archer1	sword_atk,archer_atk	Arrived	1	3	14	0	0	0	0
-s8	gravedigger2+doctor1+archer2	archer_bane	EscortFell	0	1	13	1	5	0	0
-s8	werewolf3		cap	0	1	31	0	0	0	0
-s8	knight1+gravedigger1+pspear1+doctor2	gravedigger_twice,pspear_pike	EscortFell	0	2	16	0	16	0	0
-s8	werewolf1+archer3	archer_atk	Arrived	1	0	15	0	0	0	0
-s8	knight2+doctor2	knight_def,doctor_heal	Arrived	1	0	23	0	15	0	0
-s8	pspear3+parcher3+archer2	pspear_pike,archer_atk	Arrived	1	0	14	0	0	0	1
-s8	knight2+gravedigger2	knight_charge,gravedigger_rite	Arrived	1	0	12	0	0	0	0
-s8	gravedigger2+sword2+pspear2	sword_atk,pspear_formation	EscortFell	0	3	10	0	0	0	0
-s9	knight1+pspear2+archer3+parcher1	knight_charge,parcher_ambush	Wiped	0	8	24	0	0	0	0
-s9	werewolf2+doctor3	werewolf_hp	Slain	1	0	17	0	17	0	0
-s9	knight3+gravedigger1+pspear1	gravedigger_rite,pspear_pike	Wiped	0	5	19	0	0	0	1
-s9	knight3+pspear1+archer1	archer_atk	Slain	1	3	16	0	0	0	0
-s9	hunter2+archer3	archer_rng	Slain	1	1	16	0	0	0	1
-s9	knight3+archer1	archer_bane	Slain	1	1	11	0	0	0	0
-s9	knight1+hunter1+doctor1+archer2	knight_charge,archer_atk	Slain	1	1	14	0	5	0	0
-s9	pspear2+archer5		Wiped	0	7	13	0	0	0	1
-s9	knight3+pspear1+parcher2	pspear_hp,parcher_mov	Slain	1	4	20	0	0	0	0
-s9	gravedigger1+pspear2+hunter1+doctor2	gravedigger_mov,doctor_def	Wiped	0	8	27	2	18	0	0
-s9	gravedigger3+doctor2+archer1	gravedigger_mov,doctor_mov,archer_bane	Wiped	0	7	19	2	13	0	0
-s9	werewolf3+pspear3		Slain	1	2	19	0	0	0	0
-s9	knight2+gravedigger2+doctor1	knight_charge	Wiped	0	6	22	1	10	0	0
-s9	knight3+hunter1	knight_charge	Slain	1	1	11	0	0	0	0
-s9	gravedigger3+sword3	gravedigger_mov,sword_cleave	Wiped	0	7	19	1	0	0	0
-s9	knight2+werewolf1+sword1	knight_hp,werewolf_feast,sword_def	Wiped	0	5	19	0	0	0	1
-s9	werewolf1+gravedigger2+pspear2+hunter1	werewolf_hp,gravedigger_twice	Slain	1	1	16	0	0	0	0
-s9	werewolf3+hunter1	werewolf_feast	Slain	1	0	18	0	0	0	0
-s9	gravedigger1+hunter1+doctor3+parcher1	gravedigger_twice,parcher_ambush	Slain	1	1	27	0	14	0	0
-s9	werewolf2+pspear4+parcher2	pspear_hp,parcher_mov	Wiped	0	9	21	0	0	0	0
+s3	sword1+pspear3+parcher3		Slain	1	2	10	0	0	0	0
+s3	sword2+pspear3+parcher1	parcher_mov	Wiped	0	6	13	0	0	0	0
+s3	sword2+pspear3+parcher1	parcher_mov	Slain	1	0	9	0	0	0	0
+s3	sword2+pspear1+parcher3	pspear_formation	Slain	1	1	9	0	0	0	0
+s3	sword3+pspear2		Slain	1	1	10	0	0	0	0
+s3	sword3+parcher1	parcher_rng	Slain	1	2	11	0	0	0	0
+s3	sword2+pspear3+parcher1	pspear_formation	Slain	1	2	11	0	0	0	0
+s3	sword2+pspear2+parcher2	parcher_rng	Slain	1	0	8	0	0	0	0
+s3	sword3+pspear2		Slain	1	2	12	0	0	0	0
+s3	pspear6+parcher2		Wiped	0	8	15	0	0	0	0
+s3	sword2+pspear3+parcher1	pspear_formation,parcher_ambush	Slain	1	0	8	0	0	0	0
+s3	sword3+pspear1+parcher1	parcher_ambush	Slain	1	1	10	0	0	0	0
+s3	sword3+parcher2	parcher_rng	Slain	1	0	9	0	0	0	0
+s3	sword3+pspear1+parcher1	parcher_ambush	Slain	1	1	11	0	0	0	0
+s3	sword2+pspear2+parcher2	pspear_hp	Slain	1	3	10	0	0	0	0
+s4	sword2+pspear3+parcher2	parcher_mov	Slain	1	3	12	0	0	0	0
+s4	gravedigger1+sword2+pspear1+parcher2	pspear_hp,parcher_rng	Slain	1	2	10	0	0	0	0
+s4	gravedigger2+sword1+pspear2+parcher1	sword_def,parcher_mov	Slain	1	0	8	0	0	0	0
+s4	gravedigger2+sword1+pspear2+parcher1	sword_def,parcher_mov	Slain	1	0	8	0	0	0	0
+s4	sword3+pspear1+parcher2	pspear_hp	Wiped	0	6	13	0	0	0	0
+s4	sword3+pspear2+parcher1	sword_cleave,pspear_pike,parcher_mov	Slain	1	4	11	0	0	0	0
+s4	sword3+parcher3	sword_atk	Slain	1	3	10	0	0	0	0
+s4	gravedigger2+pspear4+parcher1	pspear_pike,parcher_rng	Slain	1	4	11	0	0	0	0
+s4	sword2+pspear2+parcher3	pspear_hp,parcher_ambush	Slain	1	5	13	0	0	0	0
+s4	sword3+pspear3	pspear_formation	Slain	1	3	11	0	0	0	0
+s4	gravedigger3+sword1+parcher1		Slain	1	2	11	0	0	0	0
+s4	sword3+pspear2+parcher1	sword_cleave,pspear_formation	Slain	1	4	12	0	0	0	0
+s4	sword3+pspear1+parcher2	sword_cleave,pspear_formation	Wiped	0	6	11	0	0	0	0
+s4	gravedigger1+sword1+pspear2+parcher3		Slain	1	5	11	0	0	0	0
+s4	gravedigger2+sword2+pspear1	sword_atk,pspear_hp	Slain	1	3	10	0	0	0	0
+s4	gravedigger2+sword1+pspear2+parcher1	pspear_hp,parcher_ambush	Slain	1	3	10	0	0	0	0
+s4	gravedigger2+sword1+pspear1+parcher2	pspear_formation,parcher_mov	Slain	1	2	10	0	0	0	0
+s4	gravedigger3+pspear3		Wiped	0	6	13	2	0	0	0
+s4	gravedigger2+sword1+pspear1+parcher1	pspear_pike,parcher_mov	Wiped	0	5	13	0	0	0	0
+s4	gravedigger1+sword3+pspear1	pspear_pike	Wiped	0	5	12	1	0	0	0
+s5	gravedigger2+pspear2+parcher3	pspear_hp	Slain	1	5	17	0	0	0	0
+s5	gravedigger1+sword3		Slain	1	2	10	0	0	0	0
+s5	pspear1+parcher8	pspear_hp,parcher_rng	Wiped	0	9	17	0	0	0	0
+s5	gravedigger3+pspear1+archer1	pspear_pike	Wiped	0	5	17	3	0	0	0
+s5	gravedigger1+sword2+parcher1+archer1		Slain	1	1	8	0	0	0	0
+s5	sword2+pspear2+parcher3	pspear_pike,parcher_rng	Wiped	0	7	16	0	0	0	0
+s5	gravedigger2+sword1+pspear2+parcher1	sword_cleave,parcher_mov	Wiped	0	6	22	0	0	0	0
+s5	archer3+parcher3		Wiped	0	6	14	0	0	0	0
+s5	gravedigger2+pspear4+parcher1	gravedigger_twice,pspear_formation	Wiped	0	7	19	2	0	0	0
+s5	gravedigger3+pspear2+parcher1	gravedigger_twice	Wiped	0	6	14	0	0	0	0
+s5	gravedigger3+archer1	gravedigger_twice	Slain	1	1	12	1	0	0	0
+s5	sword2+pspear3+archer1	sword_cleave,pspear_pike	Slain	1	1	9	0	0	0	0
+s5	sword3+pspear2+parcher1	pspear_hp	Slain	1	2	11	0	0	0	0
+s5	pspear2+archer2+parcher3		Slain	1	4	11	0	0	0	0
+s5	pspear3+archer3	pspear_hp	Slain	1	3	10	0	0	0	0
+s5	sword1+archer3+parcher1	sword_def,parcher_mov	Slain	1	2	9	0	0	0	0
+s5	gravedigger2+pspear4+parcher1	gravedigger_rite	Slain	1	6	18	0	0	0	0
+s5	gravedigger3+pspear3	gravedigger_mov	Wiped	0	6	17	0	0	0	0
+s5	pspear1+archer3+parcher1	pspear_hp,parcher_mov	Wiped	0	5	14	0	0	0	0
+s5	gravedigger4+parcher1	parcher_mov	Slain	1	2	11	0	0	0	0
+s6	pspear3+doctor2+parcher3	pspear_hp	Held	1	3	10	0	5	0	0
+s6	gravedigger3+doctor2		Overrun	0	1	10	0	7	0	0
+s6	pspear4+doctor3	pspear_pike	Overrun	0	6	10	0	6	0	0
+s6	gravedigger1+pspear1+doctor3+parcher1	gravedigger_rite	Overrun	0	0	4	0	0	0	0
+s6	pspear4+doctor3		Held	1	6	10	0	7	0	0
+s6	gravedigger3+archer2	archer_rng	Held	1	3	10	0	0	0	0
+s6	gravedigger1+archer4	gravedigger_mov,archer_bane	Held	1	3	10	0	0	0	0
+s6	gravedigger2+archer3	archer_bane	Held	1	3	10	0	0	0	0
+s6	archer1+parcher8	archer_atk	Overrun	0	8	10	0	0	0	0
+s6	gravedigger3+archer2	gravedigger_rite,archer_bane	Overrun	0	4	10	0	0	0	0
+s6	gravedigger3+archer2	gravedigger_twice	Overrun	0	2	9	0	0	0	0
+s6	gravedigger3+sword2	gravedigger_twice,sword_cleave	Held	1	3	10	0	0	0	0
+s6	sword1+pspear2+doctor2+archer1	sword_cleave,pspear_formation	Overrun	0	1	9	0	2	0	0
+s6	gravedigger2+doctor1+archer1+parcher2	archer_atk	Held	1	4	10	0	8	0	0
+s6	sword1+doctor1+parcher6	sword_def,parcher_mov	Held	1	4	10	0	6	0	0
+s6	gravedigger2+doctor1+parcher4	gravedigger_rite	Overrun	0	4	10	0	3	0	0
+s6	sword1+pspear1+doctor3+parcher1		Overrun	0	5	10	0	4	0	0
+s6	gravedigger1+pspear1+doctor1+archer2	gravedigger_mov,archer_rng	Held	1	0	10	0	6	0	0
+s6	gravedigger3+pspear1+parcher3	gravedigger_mov	Held	1	8	10	0	0	0	0
+s6	sword1+pspear8	sword_def	Held	1	4	10	0	0	0	0
+s7	gravedigger2+pspear3+parcher4	gravedigger_twice,pspear_pike,parcher_mov	Wiped	0	9	22	2	0	0	0
+s7	pspear1+parcher10		Wiped	0	11	17	0	0	0	0
+s7	sword2+archer3	sword_atk	Slain	1	1	7	0	0	0	0
+s7	gravedigger1+sword1+doctor2+archer1	gravedigger_mov	Slain	1	1	11	1	6	0	0
+s7	knight2+sword1+parcher3	sword_def,parcher_rng	Slain	1	0	9	0	0	0	0
+s7	knight1+sword3+parcher2	parcher_mov	Slain	1	2	12	0	0	0	0
+s7	pspear1+doctor2+archer3	doctor_def,archer_atk	Wiped	0	6	16	0	0	0	0
+s7	pspear7+archer2	pspear_hp,archer_rng	Slain	1	0	12	0	0	0	1
+s7	gravedigger2+sword2+pspear3	pspear_pike	Wiped	0	7	21	1	0	0	0
+s7	knight3+parcher1	parcher_rng	Slain	1	1	11	0	0	0	0
+s7	gravedigger2+sword3+pspear1	pspear_pike	Wiped	0	6	16	1	0	0	0
+s7	gravedigger2+pspear2+parcher1+archer2	archer_atk	Slain	1	2	11	2	0	0	1
+s7	gravedigger2+doctor2+parcher3	gravedigger_mov	Slain	1	1	12	0	10	0	0
+s7	knight3+parcher1		Slain	1	0	10	0	0	0	0
+s7	knight1+sword2+archer2	archer_rng	Slain	1	0	7	0	0	0	0
+s7	knight1+gravedigger2+sword1+doctor1	sword_cleave	Slain	1	1	16	0	10	0	1
+s7	sword1+pspear3+doctor3	pspear_hp,doctor_def	Slain	1	0	14	0	18	0	1
+s7	gravedigger1+pspear3+archer3	gravedigger_mov,archer_atk	Slain	1	1	8	1	0	0	0
+s7	knight1+pspear2+parcher2+archer2	pspear_pike,parcher_rng,archer_atk	Slain	1	2	10	0	0	0	0
+s7	sword1+doctor3+parcher3	sword_def,doctor_heal,parcher_ambush	Wiped	0	7	15	0	10	0	0
+s8	gravedigger3+pspear3+parcher1	gravedigger_rite,pspear_hp,parcher_mov	cap	0	2	31	2	0	0	0
+s8	knight3+pspear1	knight_def	Arrived	1	1	13	0	0	0	0
+s8	knight3+pspear1	pspear_hp	Arrived	1	1	13	0	0	0	0
+s8	pspear3+archer3	pspear_formation	Arrived	1	1	16	0	0	0	0
+s8	knight1+doctor2+parcher3	knight_charge,doctor_heal,parcher_mov	cap	0	0	31	0	16	0	0
+s8	werewolf2+doctor2		Arrived	1	0	27	0	9	0	0
+s8	sword1+doctor4	sword_atk,doctor_mov	Arrived	1	0	24	0	23	0	0
+s8	werewolf1+parcher3+archer2	parcher_ambush	EscortFell	0	5	15	0	0	0	0
+s8	sword2+doctor3	sword_def,doctor_def	cap	0	0	31	0	20	0	0
+s8	gravedigger3+sword2	gravedigger_rite	EscortFell	0	2	12	0	0	0	0
+s8	doctor3+parcher3	doctor_def,parcher_ambush	Arrived	1	3	16	0	20	0	0
+s8	doctor2+parcher6	doctor_heal	EscortFell	0	6	15	0	14	0	0
+s8	gravedigger1+doctor3+parcher1	gravedigger_rite,doctor_mov,parcher_rng	EscortFell	0	2	12	0	16	0	0
+s8	knight2+werewolf1	knight_def	Arrived	1	0	18	0	0	0	0
+s8	gravedigger3+sword1+doctor1	gravedigger_twice,doctor_mov	cap	0	2	31	0	28	0	0
+s8	gravedigger4+pspear1	gravedigger_mov,pspear_formation	Arrived	1	3	14	0	0	0	0
+s8	knight1+gravedigger2+pspear3	gravedigger_mov	EscortFell	0	3	16	0	0	0	0
+s8	sword1+pspear3+archer2	sword_cleave,pspear_hp	EscortFell	0	3	14	0	0	0	0
+s8	pspear4+doctor2+parcher2	pspear_hp	EscortFell	0	1	16	0	18	0	0
+s8	knight3	knight_hp	Arrived	1	0	15	0	0	0	0
+s9	pspear3+hunter2+parcher3	pspear_hp,parcher_mov	Slain	1	0	18	0	0	0	0
+s9	knight1+werewolf3	knight_def	Slain	1	0	15	0	0	0	0
+s9	gravedigger2+pspear3+doctor2+parcher1	pspear_hp	cap	0	8	31	1	25	0	0
+s9	hunter2+archer3	archer_rng	Slain	1	0	19	0	0	0	0
+s9	knight3+gravedigger1+parcher1	knight_charge,parcher_mov	Wiped	0	6	17	1	0	0	0
+s9	gravedigger2+pspear4+archer2	pspear_hp,archer_atk	Wiped	0	9	21	1	0	0	0
+s9	werewolf2+doctor2+parcher2	werewolf_feast,doctor_def	Slain	1	1	21	0	13	0	0
+s9	doctor5+archer1	doctor_def	Slain	1	1	28	0	26	0	1
+s9	knight2+sword1+doctor2	knight_charge,sword_cleave	Slain	1	0	13	0	12	0	0
+s9	knight3+hunter1		Wiped	0	5	18	0	0	0	0
+s9	gravedigger2+sword1+archer3	gravedigger_mov,sword_def	Slain	1	3	15	0	0	0	0
+s9	knight3+parcher3		Wiped	0	7	20	0	0	0	0
+s9	knight2+werewolf1+parcher2	werewolf_early,parcher_mov	Wiped	0	7	26	0	0	0	0
+s9	werewolf1+hunter1+parcher6	werewolf_hp,parcher_mov	Wiped	0	9	18	0	0	0	0
+s9	werewolf1+parcher9	werewolf_hp,parcher_rng	Wiped	0	11	16	0	0	0	0
+s9	doctor3+parcher6	doctor_def,parcher_ambush	Slain	1	4	28	0	27	0	1
+s9	gravedigger1+pspear3+hunter1+doctor2	gravedigger_rite,pspear_hp,doctor_heal	Wiped	0	8	22	1	6	0	0
+s9	knight1+sword3+pspear3	sword_cleave	Wiped	0	8	19	0	0	0	0
+s9	sword4+doctor2	doctor_heal	Wiped	0	7	28	0	8	0	0
+s9	werewolf2+sword3		Slain	1	3	17	0	0	0	0
+s1	pspear3+parcher3		Slain	1	4	12	0	0	0	0
+s1	pspear3+parcher3		Slain	1	3	11	0	0	0	0
+s1	pspear5+parcher1		Slain	1	2	10	0	0	0	0
+s1	pspear3+parcher3		Slain	1	3	13	0	0	0	0
+s1	pspear3+parcher3		Slain	1	3	11	0	0	0	0
+s1	pspear1+parcher5		Slain	1	4	12	0	0	0	0
+s1	pspear4+parcher2		Slain	1	4	15	0	0	0	0
+s1	pspear2+parcher4		Slain	1	1	11	0	0	0	0
+s1	pspear3+parcher3		Slain	1	3	13	0	0	0	0
+s1	pspear3+parcher3		Slain	1	1	10	0	0	0	0
+s1	pspear4+parcher2		Wiped	0	6	13	0	0	0	0
+s1	pspear3+parcher3		Slain	1	1	12	0	0	0	0
+s1	pspear4+parcher2		Slain	1	3	13	0	0	0	0
+s1	pspear2+parcher4		Slain	1	3	13	0	0	0	0
+s1	pspear3+parcher3		Slain	1	2	12	0	0	0	0
+s1	pspear2+parcher4		Wiped	0	6	15	0	0	0	0
+s1	pspear3+parcher3		Slain	1	2	12	0	0	0	0
+s1	pspear1+parcher5		Slain	1	1	12	0	0	0	0
+s1	pspear5+parcher1		Slain	1	2	12	0	0	0	0
+s1	pspear1+parcher5		Slain	1	0	10	0	0	0	0
+s10	werewolf3+hunter1		Slain	1	1	12	0	0	0	0
+s10	pspear1+archer6		Wiped	0	7	12	0	0	0	0
+s10	werewolf1+hunter2+doctor1+parcher3	parcher_mov	Wiped	0	7	15	0	1	0	0
+s10	sword2+pspear2+hunter1+archer2	sword_atk	Wiped	0	7	16	0	0	0	0
+s10	werewolf3+parcher5		Wiped	0	8	21	0	0	0	0
+s10	werewolf1+pspear11	werewolf_hp	Wiped	0	12	23	0	0	0	0
+s10	hunter1+doctor3+parcher5	parcher_rng	Wiped	0	9	19	0	5	0	0
+s10	gravedigger3+pspear2+archer1+parcher4	gravedigger_twice,archer_bane,parcher_mov	Slain	1	5	14	3	0	0	1
+s10	knight3+pspear2+parcher3	parcher_rng	Wiped	0	8	17	0	0	0	0
+s10	gravedigger4+doctor3		Wiped	0	7	27	4	22	0	0
+s10	knight3+werewolf1	knight_hp,werewolf_feast	Wiped	0	4	21	0	0	0	0
+s10	werewolf2+pspear8	werewolf_hp	Wiped	0	10	19	0	0	0	0
+s10	sword3+pspear2+parcher6	sword_atk,pspear_formation	Wiped	0	11	17	0	0	0	0
+s10	gravedigger3+sword2+pspear2+parcher2	sword_atk,pspear_formation,parcher_rng	Wiped	0	9	21	3	0	0	0
+s10	hunter2+parcher3	hunter_mov,parcher_rng	Slain	1	4	16	0	0	0	0
+s10	knight2+werewolf1+pspear3	knight_hp,werewolf_hp	Wiped	0	6	20	0	0	0	0
+s10	knight2+gravedigger3	knight_hp,gravedigger_rite	Slain	1	0	12	0	0	0	1
+s10	knight2+werewolf1+pspear3+archer1	knight_charge,werewolf_feast,archer_atk	Slain	1	0	10	0	0	0	0
+s10	werewolf1+sword3+parcher1+archer2	parcher_ambush,archer_bane	Slain	1	0	9	0	0	0	0
+s10	knight2+werewolf2+sword1	knight_def	Wiped	0	5	26	0	0	0	0
+s11	scout4+hunter2		Held	1	3	10	0	0	12	0
+s11	pspear3+archer6		Held	1	8	10	0	0	0	0
+s11	knight1+werewolf1+scout3+pspear2		Held	1	5	10	0	0	9	0
+s11	sword3+pspear3+hunter2	pspear_pike,hunter_mov	Overrun	0	6	10	0	0	0	0
+s11	knight2+sword1+scout3		Held	1	4	10	0	0	9	0
+s11	werewolf2+scout1+parcher7		Held	1	9	10	0	0	3	0
+s11	scout6+hunter1		Held	1	5	10	0	0	18	0
+s11	knight2+hunter1+doctor2	knight_hp,doctor_def	Held	1	1	10	0	7	0	0
+s11	knight3+sword3	sword_cleave	Held	1	2	10	0	0	0	0
+s11	knight2+gravedigger3+pspear3	knight_hp	Held	1	6	10	0	0	0	0
+s11	werewolf2+sword3+doctor1	werewolf_hp,sword_def,doctor_mov	Held	1	3	10	0	6	0	0
+s11	gravedigger1+scout4+pspear5	gravedigger_mov,pspear_pike	Held	1	5	10	1	0	12	0
+s11	werewolf1+gravedigger3+pspear2+archer2	gravedigger_rite	Held	1	7	10	0	0	0	0
+s11	pspear1+scout2+hunter2+doctor2	pspear_formation,hunter_mov,doctor_def	Wiped	0	7	10	0	5	4	0
+s11	gravedigger1+doctor6	doctor_mov	Overrun	0	7	10	0	10	0	0
+s11	werewolf3+gravedigger2+doctor1	gravedigger_twice,doctor_def	Held	1	3	10	0	4	0	0
+s11	sword3+doctor1+archer3	doctor_def	Wiped	0	7	10	0	1	0	0
+s11	gravedigger1+doctor2+parcher3+archer3	parcher_rng,archer_atk	Overrun	0	8	10	0	3	0	0
+s11	gravedigger1+pspear13	pspear_formation	Held	1	7	10	0	0	0	0
+s11	werewolf3+sword3	werewolf_feast	Held	1	4	10	0	0	0	0
+s12	scout4+hunter2	hunter_mov	Arrived	1	0	14	0	0	12	0
+s12	sword3+doctor3+parcher2	sword_cleave,parcher_mov	Arrived	1	0	21	0	11	0	0
+s12	sword2+doctor2+archer3	sword_atk,archer_bane	EscortFell	0	1	12	0	8	0	0
+s12	sword4+scout2+pspear1	pspear_formation	EscortFell	0	2	13	0	0	6	0
+s12	knight2+gravedigger3+parcher2		EscortFell	0	3	11	0	0	0	0
+s12	gravedigger1+sword2+hunter2+archer1	gravedigger_mov,sword_def,archer_atk	Arrived	1	2	13	0	0	0	0
+s12	werewolf4+doctor1	doctor_def	Arrived	1	0	13	0	4	0	0
+s12	werewolf1+pspear3+parcher8	werewolf_feast,parcher_rng	EscortFell	0	2	8	0	0	0	0
+s12	gravedigger6+archer1	gravedigger_rite,archer_rng	EscortFell	0	2	12	0	0	0	0
+s12	sword2+scout2+archer3	scout_barbs	Arrived	1	2	19	0	0	6	1
+s12	werewolf1+hunter2+doctor1+parcher3	doctor_heal	Arrived	1	0	14	0	4	0	0
+s12	pspear3+hunter2+parcher5	pspear_pike,hunter_mov,parcher_rng	EscortFell	0	2	13	0	0	0	0
+s12	sword1+doctor3+archer2+parcher2	doctor_mov,archer_bane,parcher_rng	Arrived	1	1	16	0	12	0	0
+s12	hunter2+parcher2	hunter_bane	EscortFell	0	2	13	0	0	0	0
+s12	knight3+werewolf1+pspear2	knight_hp,pspear_pike	Arrived	1	0	13	0	0	0	0
+s12	knight1+sword2+scout3	sword_def,scout_mov	Arrived	1	1	16	0	0	9	0
+s12	werewolf4+archer1	archer_atk	Arrived	1	0	14	0	0	0	0
+s12	werewolf1+sword1+parcher3+archer3	sword_def,parcher_rng,archer_atk	Arrived	1	0	17	0	0	0	0
+s12	gravedigger2+pspear2+parcher8	pspear_pike	EscortFell	0	4	12	0	0	0	0
+s12	knight1+pspear3+scout1+hunter2	knight_def,pspear_hp,scout_barbs	EscortFell	0	4	13	0	0	3	0
+s13	scout5+hunter2	hunter_mov	Slain	1	1	11	0	0	15	0
+s13	sword3+doctor4+parcher2	sword_cleave,parcher_mov	Wiped	0	9	18	0	20	0	0
+s13	sword3+doctor2+archer3	sword_atk,archer_bane	Slain	1	0	11	0	6	0	0
+s13	sword5+scout2+pspear1	pspear_formation	Slain	1	0	11	0	0	6	0
+s13	knight2+gravedigger3+parcher4		Wiped	0	9	25	2	0	0	0
+s13	gravedigger1+sword2+hunter2+archer2	gravedigger_mov,sword_def,archer_atk	Slain	1	0	9	0	0	0	0
+s13	werewolf4+doctor1	doctor_def	Slain	1	0	15	0	8	0	0
+s13	werewolf1+pspear3+parcher10	werewolf_feast,parcher_rng	Slain	1	5	12	0	0	0	0
+s13	gravedigger7+archer1	gravedigger_rite,archer_rng	Slain	1	3	15	2	0	0	0
+s13	sword3+scout2+archer3	scout_barbs	Wiped	0	8	18	0	0	6	0
+s13	werewolf2+hunter2+doctor1+parcher2	doctor_heal	Slain	1	0	10	0	1	0	0
+s13	pspear3+hunter2+parcher7	pspear_pike,hunter_mov,parcher_rng	Wiped	0	12	22	0	0	0	0
+s13	sword2+doctor3+archer2+parcher2	doctor_mov,archer_bane,parcher_rng	Slain	1	0	10	0	6	0	0
+s13	hunter2+parcher2	hunter_bane	Wiped	0	4	10	0	0	0	0
+s13	knight3+werewolf1+pspear2	knight_hp,pspear_pike	Wiped	0	6	26	0	0	0	0
+s13	knight1+sword3+scout3	sword_def,scout_mov	Slain	1	1	14	0	0	9	0
+s13	werewolf4+archer1	archer_atk	Slain	1	0	12	0	0	0	0
+s13	werewolf1+sword1+parcher3+archer4	sword_def,parcher_rng,archer_atk	Slain	1	3	13	0	0	0	1
+s13	gravedigger2+pspear2+parcher10	pspear_pike	Wiped	0	14	25	5	0	0	0
+s13	knight1+pspear3+scout2+hunter2	knight_def,pspear_hp,scout_barbs	Slain	1	5	21	0	0	6	0
+s14	scout5+hunter2	hunter_mov	Slain	1	0	9	0	0	15	0
+s14	sword3+doctor4+parcher2	sword_cleave,parcher_mov	Wiped	0	9	24	0	22	0	0
+s14	sword3+doctor2+archer3	sword_atk,archer_bane	Slain	1	1	11	0	4	0	0
+s14	sword5+scout2+pspear1	pspear_formation	Wiped	0	8	17	0	0	6	0
+s14	knight2+gravedigger3+parcher4		Wiped	0	8	20	0	0	0	1
+s14	gravedigger1+sword2+hunter2+archer2	gravedigger_mov,sword_def,archer_atk	Wiped	0	7	21	1	0	0	0
+s14	werewolf4+doctor1	doctor_def	Slain	1	2	16	0	9	0	0
+s14	werewolf1+pspear3+parcher10	werewolf_feast,parcher_rng	Wiped	0	14	19	0	0	0	0
+s14	gravedigger7+archer1	gravedigger_rite,archer_rng	Slain	1	4	14	3	0	0	0
+s14	sword3+scout2+archer3	scout_barbs	Slain	1	4	12	0	0	6	0
+s14	werewolf2+hunter2+doctor1+parcher2	doctor_heal	Slain	1	1	11	0	6	0	0
+s14	pspear3+hunter2+parcher7	pspear_pike,hunter_mov,parcher_rng	Wiped	0	12	18	0	0	0	0
+s14	sword2+doctor3+archer2+parcher2	doctor_mov,archer_bane,parcher_rng	Slain	1	1	11	0	11	0	1
+s14	hunter2+parcher2	hunter_bane	Wiped	0	4	11	0	0	0	0
+s14	knight3+werewolf1+pspear2	knight_hp,pspear_pike	Wiped	0	6	22	0	0	0	0
+s14	knight1+sword3+scout3	sword_def,scout_mov	Wiped	0	7	17	0	0	9	0
+s14	werewolf4+archer1	archer_atk	Wiped	0	5	19	0	0	0	0
+s14	werewolf1+sword1+parcher3+archer4	sword_def,parcher_rng,archer_atk	Slain	1	4	12	0	0	0	1
+s14	gravedigger2+pspear2+parcher10	pspear_pike	Wiped	0	14	21	6	0	0	0
+s14	knight1+pspear3+scout2+hunter2	knight_def,pspear_hp,scout_barbs	Slain	1	1	10	0	0	6	0
+s15	scout5+hunter2	hunter_mov	Held	1	3	10	0	0	15	0
+s15	sword3+doctor4+parcher2	sword_cleave,parcher_mov	Held	1	5	10	0	17	0	0
+s15	sword3+doctor2+archer3	sword_atk,archer_bane	Held	1	2	10	0	8	0	0
+s15	sword5+scout2+pspear1	pspear_formation	Held	1	6	10	0	0	6	0
+s15	knight2+gravedigger3+parcher4		Held	1	4	10	0	0	0	0
+s15	gravedigger1+sword2+hunter2+archer2	gravedigger_mov,sword_def,archer_atk	Overrun	0	3	9	0	0	0	0
+s15	werewolf4+doctor1	doctor_def	Overrun	0	2	10	0	4	0	0
+s15	werewolf1+pspear3+parcher10	werewolf_feast,parcher_rng	Overrun	0	6	10	0	0	0	0
+s15	gravedigger7+archer1	gravedigger_rite,archer_rng	Overrun	0	4	10	0	0	0	0
+s15	sword3+scout2+archer3	scout_barbs	Held	1	5	10	0	0	6	0
+s15	werewolf2+hunter2+doctor1+parcher2	doctor_heal	Overrun	0	5	9	0	2	0	0
+s15	pspear3+hunter2+parcher7	pspear_pike,hunter_mov,parcher_rng	Held	1	7	10	0	0	0	0
+s15	sword2+doctor3+archer2+parcher2	doctor_mov,archer_bane,parcher_rng	Held	1	3	10	0	6	0	0
+s15	hunter2+parcher2	hunter_bane	Overrun	0	3	8	0	0	0	0
+s15	knight3+werewolf1+pspear2	knight_hp,pspear_pike	Overrun	0	2	7	0	0	0	0
+s15	knight1+sword3+scout3	sword_def,scout_mov	Held	1	3	10	0	0	9	0
+s15	werewolf4+archer1	archer_atk	Held	1	3	10	0	0	0	0
+s15	werewolf1+sword1+parcher3+archer4	sword_def,parcher_rng,archer_atk	Held	1	2	10	0	0	0	0
+s15	gravedigger2+pspear2+parcher10	pspear_pike	Held	1	12	10	0	0	0	0
+s15	knight1+pspear3+scout2+hunter2	knight_def,pspear_hp,scout_barbs	Held	1	0	10	0	0	6	0
+s16	scout5+hunter2	hunter_mov	Slain	1	4	14	0	0	15	0
+s16	sword3+doctor4+parcher2	sword_cleave,parcher_mov	Wiped	0	9	20	0	10	0	0
+s16	sword3+doctor2+archer3	sword_atk,archer_bane	Slain	1	1	9	0	4	0	0
+s16	sword6+scout2+pspear1	pspear_formation	Slain	1	0	10	0	0	6	1
+s16	knight2+gravedigger3+parcher5		Wiped	0	10	15	2	0	0	0
+s16	gravedigger1+sword2+hunter2+archer2	gravedigger_mov,sword_def,archer_atk	Slain	1	1	9	0	0	0	0
+s16	werewolf5+doctor1	doctor_def	Slain	1	3	20	0	9	0	0
+s16	werewolf1+pspear3+parcher11	werewolf_feast,parcher_rng	Wiped	0	14	21	0	0	0	1
+s16	gravedigger7+archer1	gravedigger_rite,archer_rng	Wiped	0	7	14	1	0	0	1
+s16	sword3+scout2+archer3	scout_barbs	Slain	1	1	8	0	0	6	0
+s16	werewolf2+hunter2+doctor1+parcher3	doctor_heal	Slain	1	2	11	0	4	0	0
+s16	pspear3+hunter2+parcher8	pspear_pike,hunter_mov,parcher_rng	Wiped	0	13	24	0	0	0	0
+s16	sword2+doctor3+archer2+parcher3	doctor_mov,archer_bane,parcher_rng	Slain	1	5	16	0	11	0	0
+s16	hunter2+parcher2	hunter_bane	Wiped	0	4	9	0	0	0	0
+s16	knight4+werewolf1+pspear2	knight_hp,pspear_pike	Wiped	0	7	18	0	0	0	0
+s16	knight1+sword3+scout4	sword_def,scout_mov	Wiped	0	8	24	0	0	12	0
+s16	werewolf5+archer1	archer_atk	Wiped	0	6	13	0	0	0	0
+s16	werewolf1+sword1+parcher3+archer4	sword_def,parcher_rng,archer_atk	Slain	1	6	14	0	0	0	0
+s16	gravedigger2+pspear2+parcher11	pspear_pike	Wiped	0	15	18	2	0	0	0
+s16	knight1+pspear3+scout2+hunter2	knight_def,pspear_hp,scout_barbs	Wiped	0	7	24	0	0	6	1
+s17	scout5+hunter2	hunter_mov	Slain	1	1	10	0	0	15	0
+s17	sword3+doctor4+parcher2	sword_cleave,parcher_mov	Slain	1	0	13	0	24	0	0
+s17	sword3+doctor2+archer3	sword_atk,archer_bane	Slain	1	4	11	0	0	0	0
+s17	sword5+scout2+pspear1	pspear_formation	Wiped	0	8	17	0	0	6	0
+s17	knight2+gravedigger3+parcher4		Wiped	0	9	22	1	0	0	0
+s17	gravedigger1+sword2+hunter2+archer2	gravedigger_mov,sword_def,archer_atk	Slain	1	2	9	0	0	0	0
+s17	werewolf4+doctor1	doctor_def	Slain	1	2	11	0	6	0	0
+s17	werewolf1+pspear3+parcher10	werewolf_feast,parcher_rng	Wiped	0	14	24	0	0	0	0
+s17	gravedigger7+archer1	gravedigger_rite,archer_rng	Wiped	0	8	15	3	0	0	0
+s17	sword3+scout2+archer3	scout_barbs	Wiped	0	8	15	0	0	4	0
+s17	werewolf2+hunter2+doctor1+parcher2	doctor_heal	Slain	1	1	8	0	2	0	0
+s17	pspear3+hunter2+parcher7	pspear_pike,hunter_mov,parcher_rng	Slain	1	6	12	0	0	0	0
+s17	sword2+doctor3+archer2+parcher2	doctor_mov,archer_bane,parcher_rng	Slain	1	5	13	0	4	0	0
+s17	hunter2+parcher2	hunter_bane	Wiped	0	4	12	0	0	0	0
+s17	knight3+werewolf1+pspear2	knight_hp,pspear_pike	Slain	1	4	16	0	0	0	0
+s17	knight1+sword3+scout3	sword_def,scout_mov	Wiped	0	7	18	0	0	9	0
+s17	werewolf4+archer1	archer_atk	Slain	1	2	10	0	0	0	0
+s17	werewolf1+sword1+parcher3+archer4	sword_def,parcher_rng,archer_atk	Slain	1	5	12	0	0	0	0
+s17	gravedigger2+pspear2+parcher10	pspear_pike	Wiped	0	14	16	5	0	0	0
+s17	knight1+pspear3+scout2+hunter2	knight_def,pspear_hp,scout_barbs	Slain	1	3	12	0	0	6	0
+s18	scout6+hunter2	hunter_mov	Slain	1	2	10	0	0	18	0
+s18	sword4+doctor4+parcher2	sword_cleave,parcher_mov	Wiped	0	10	19	0	24	0	0
+s18	sword3+doctor3+archer3	sword_atk,archer_bane	Slain	1	0	10	0	4	0	0
+s18	sword6+scout2+pspear1	pspear_formation	Wiped	0	9	16	0	0	6	0
+s18	knight2+gravedigger3+parcher6		Wiped	0	11	18	2	0	0	0
+s18	gravedigger1+sword3+hunter2+archer2	gravedigger_mov,sword_def,archer_atk	Slain	1	2	13	0	0	0	1
+s18	werewolf5+doctor1	doctor_def	Wiped	0	6	21	0	13	0	0
+s18	werewolf1+pspear3+parcher12	werewolf_feast,parcher_rng	Slain	1	5	13	0	0	0	0
+s18	gravedigger8+archer1	gravedigger_rite,archer_rng	Wiped	0	9	14	1	0	0	0
+s18	sword3+scout3+archer3	scout_barbs	Slain	1	0	10	0	0	9	0
+s18	werewolf2+hunter2+doctor1+parcher4	doctor_heal	Slain	1	0	10	0	6	0	0
+s18	pspear3+hunter2+parcher9	pspear_pike,hunter_mov,parcher_rng	Wiped	0	14	19	0	0	0	0
+s18	sword3+doctor3+archer2+parcher2	doctor_mov,archer_bane,parcher_rng	Slain	1	5	16	0	9	0	0
+s18	hunter2+parcher2	hunter_bane	Wiped	0	4	9	0	0	0	0
+s18	knight4+werewolf1+pspear2	knight_hp,pspear_pike	Wiped	0	7	15	0	0	0	0
+s18	knight1+sword3+scout4	sword_def,scout_mov	Wiped	0	8	25	0	0	12	0
+s18	werewolf5+archer1	archer_atk	Slain	1	3	12	0	0	0	0
+s18	werewolf1+sword1+parcher3+archer5	sword_def,parcher_rng,archer_atk	Slain	1	1	10	0	0	0	0
+s18	gravedigger2+pspear2+parcher12	pspear_pike	Wiped	0	16	17	0	0	0	0
+s18	knight1+pspear3+scout3+hunter2	knight_def,pspear_hp,scout_barbs	Slain	1	6	15	0	0	9	0
+s19	scout6+hunter2	hunter_mov	Held	1	4	12	0	0	18	0
+s19	sword4+doctor4+parcher2	sword_cleave,parcher_mov	Held	1	4	12	0	20	0	0
+s19	sword3+doctor3+archer3	sword_atk,archer_bane	Held	1	7	12	0	4	0	0
+s19	sword6+scout2+pspear1	pspear_formation	Held	1	5	12	0	0	6	0
+s19	knight2+gravedigger3+parcher6		Held	1	9	12	0	0	0	0
+s19	gravedigger1+sword3+hunter2+archer2	gravedigger_mov,sword_def,archer_atk	Held	1	3	12	0	0	0	0
+s19	werewolf5+doctor1	doctor_def	Held	1	3	12	0	6	0	0
+s19	werewolf1+pspear3+parcher12	werewolf_feast,parcher_rng	Held	1	13	12	0	0	0	0
+s19	gravedigger8+archer1	gravedigger_rite,archer_rng	Overrun	0	6	12	0	0	0	0
+s19	sword3+scout3+archer3	scout_barbs	Held	1	7	12	0	0	9	0
+s19	werewolf2+hunter2+doctor1+parcher4	doctor_heal	Overrun	0	3	12	0	5	0	0
+s19	pspear3+hunter2+parcher9	pspear_pike,hunter_mov,parcher_rng	Held	1	11	12	0	0	0	0
+s19	sword3+doctor3+archer2+parcher2	doctor_mov,archer_bane,parcher_rng	Held	1	4	12	0	9	0	0
+s19	hunter2+parcher2	hunter_bane	Wiped	0	4	9	0	0	0	0
+s19	knight4+werewolf1+pspear2	knight_hp,pspear_pike	Held	1	1	12	0	0	0	0
+s19	knight1+sword3+scout4	sword_def,scout_mov	Held	1	4	12	0	0	12	0
+s19	werewolf5+archer1	archer_atk	Held	1	4	12	0	0	0	0
+s19	werewolf1+sword1+parcher3+archer5	sword_def,parcher_rng,archer_atk	Held	1	3	12	0	0	0	0
+s19	gravedigger2+pspear2+parcher12	pspear_pike	Held	1	15	12	0	0	0	0
+s19	knight1+pspear3+scout3+hunter2	knight_def,pspear_hp,scout_barbs	Held	1	6	12	0	0	9	0
+s2	pspear3+parcher3	parcher_ambush	Held	1	1	8	0	0	0	1
+s2	pspear3+parcher3	parcher_mov	Held	1	2	8	0	0	0	0
+s2	pspear4+parcher2		Held	1	2	8	0	0	0	0
+s2	pspear3+parcher3		Held	1	1	8	0	0	0	0
+s2	pspear4+parcher2	pspear_hp,parcher_rng	Held	1	3	8	0	0	0	0
+s2	pspear4+parcher2		Held	1	2	8	0	0	0	0
+s2	pspear3+parcher3	pspear_formation,parcher_rng	Held	1	0	8	0	0	0	0
+s2	pspear4+parcher2	pspear_pike,parcher_mov	Held	1	0	8	0	0	0	0
+s2	pspear1+parcher5	pspear_formation	Held	1	2	8	0	0	0	0
+s2	pspear3+parcher3		Held	1	1	8	0	0	0	0
+s2	pspear3+parcher3		Held	1	1	8	0	0	0	0
+s2	pspear5+parcher1	pspear_hp	Held	1	1	8	0	0	0	0
+s2	pspear3+parcher3	parcher_mov	Held	1	1	8	0	0	0	0
+s2	pspear1+parcher5		Held	1	2	8	0	0	0	0
+s2	pspear3+parcher3	pspear_formation	Held	1	0	8	0	0	0	0
+s2	pspear5+parcher1	parcher_rng	Held	1	1	8	0	0	0	0
+s2	pspear3+parcher3	pspear_pike	Held	1	2	8	0	0	0	0
+s2	pspear3+parcher3	parcher_rng	Held	1	3	8	0	0	0	0
+s2	pspear3+parcher3	pspear_formation,parcher_ambush	Held	1	2	8	0	0	0	0
+s2	pspear3+parcher3	pspear_hp	Held	1	0	8	0	0	0	1
+s20	scout7+hunter2	hunter_mov	Slain	1	0	11	0	0	21	0
+s20	sword4+doctor5+parcher2	sword_cleave,parcher_mov	Wiped	0	11	20	0	18	0	0
+s20	sword4+doctor3+archer3	sword_atk,archer_bane	Wiped	0	10	20	0	7	0	0
+s20	sword7+scout2+pspear1	pspear_formation	Slain	1	4	13	0	0	6	1
+s20	knight2+gravedigger3+parcher8		Wiped	0	13	18	4	0	0	0
+s20	gravedigger1+sword3+hunter2+archer3	gravedigger_mov,sword_def,archer_atk	Slain	1	3	11	0	0	0	0
+s20	werewolf6+doctor1	doctor_def	Slain	1	0	15	0	10	0	0
+s20	werewolf1+pspear3+parcher14	werewolf_feast,parcher_rng	Slain	1	9	17	0	0	0	1
+s20	gravedigger9+archer1	gravedigger_rite,archer_rng	Wiped	0	10	15	1	0	0	0
+s20	sword4+scout3+archer3	scout_barbs	Slain	1	5	13	0	0	9	0
+s20	werewolf3+hunter2+doctor1+parcher3	doctor_heal	Slain	1	2	13	0	4	0	0
+s20	pspear3+hunter2+parcher11	pspear_pike,hunter_mov,parcher_rng	Wiped	0	16	24	0	0	0	0
+s20	sword3+doctor3+archer2+parcher4	doctor_mov,archer_bane,parcher_rng	Wiped	0	12	16	0	4	0	0
+s20	hunter2+parcher2	hunter_bane	Wiped	0	4	10	0	0	0	0
+s20	knight5+werewolf1+pspear2	knight_hp,pspear_pike	Wiped	0	8	23	0	0	0	0
+s20	knight1+sword4+scout4	sword_def,scout_mov	Slain	1	5	18	0	0	12	0
+s20	werewolf6+archer1	archer_atk	Wiped	0	7	18	0	0	0	0
+s20	werewolf1+sword1+parcher3+archer6	sword_def,parcher_rng,archer_atk	Slain	1	1	9	0	0	0	0
+s20	gravedigger2+pspear2+parcher14	pspear_pike	Wiped	0	18	19	0	0	0	0
+s20	knight1+pspear3+scout4+hunter2	knight_def,pspear_hp,scout_barbs	Slain	1	2	14	0	0	12	0
+s3	pspear2+parcher6	pspear_pike	Wiped	0	8	10	0	0	0	0
+s3	sword1+pspear3+parcher3	parcher_ambush	Slain	1	4	12	0	0	0	0
+s3	sword1+pspear3+parcher3		Wiped	0	7	17	0	0	0	0
+s3	sword1+pspear4+parcher2	pspear_formation,parcher_mov	Slain	1	3	13	0	0	0	0
+s3	sword2+pspear3	pspear_hp	Slain	1	0	8	0	0	0	0
+s3	sword2+pspear1+parcher3		Wiped	0	5	12	0	0	0	1
+s3	sword2+pspear1+parcher3		Slain	1	4	12	0	0	0	0
+s3	sword2+parcher3		Wiped	0	5	11	0	0	0	0
+s3	pspear5+parcher3	parcher_ambush	Wiped	0	8	13	0	0	0	0
+s3	sword3+pspear1+parcher1	pspear_hp	Slain	1	0	10	0	0	0	0
+s3	sword3+pspear2		Slain	1	0	8	0	0	0	0
+s3	pspear5+parcher3		Wiped	0	8	14	0	0	0	0
+s3	sword2+pspear1+parcher3	pspear_formation	Wiped	0	6	12	0	0	0	0
+s3	sword1+pspear3+parcher3	parcher_rng	Slain	1	1	9	0	0	0	0
+s3	sword2+pspear1+parcher3	pspear_pike	Wiped	0	6	13	0	0	0	0
+s3	sword2+parcher3	parcher_rng	Slain	1	3	10	0	0	0	0
+s3	sword1+pspear3+parcher3		Slain	1	2	10	0	0	0	0
+s3	sword3+pspear1+parcher1		Slain	1	4	14	0	0	0	0
+s3	sword2+parcher3	parcher_ambush	Wiped	0	4	11	0	0	0	1
+s3	sword2+pspear1+parcher2	pspear_hp,parcher_mov	Wiped	0	5	12	0	0	0	0
+s4	gravedigger2+pspear2+parcher3	pspear_hp	Wiped	0	7	14	1	0	0	0
+s4	sword3+parcher2		Wiped	0	5	12	0	0	0	0
+s4	sword3+pspear3	pspear_hp	Slain	1	3	13	0	0	0	0
+s4	gravedigger3+sword1+pspear1		Wiped	0	5	13	0	0	0	0
+s4	gravedigger3+pspear3		Wiped	0	6	15	1	0	0	0
+s4	gravedigger2+sword1+pspear1+parcher2	pspear_formation,parcher_rng	Slain	1	2	10	1	0	0	0
+s4	gravedigger2+sword1+pspear2+parcher1	pspear_pike	Wiped	0	6	12	0	0	0	0
+s4	gravedigger2+sword1+pspear2+parcher1		Slain	1	4	11	0	0	0	0
+s4	gravedigger1+parcher7	parcher_mov	Wiped	0	8	14	0	0	0	0
+s4	sword4+pspear1	pspear_hp	Slain	1	2	9	0	0	0	0
+s4	gravedigger2+sword1+pspear3	pspear_formation	Wiped	0	6	12	1	0	0	0
+s4	gravedigger3+sword1+pspear1	sword_def	Slain	1	2	11	0	0	0	0
+s4	sword3+parcher3	sword_def	Slain	1	0	7	0	0	0	0
+s4	gravedigger1+sword2+pspear2+parcher1	pspear_hp	Slain	1	3	13	0	0	0	0
+s4	gravedigger3+sword1+pspear1	sword_def	Slain	1	2	12	0	0	0	0
+s4	gravedigger1+sword2+pspear2+parcher1	sword_cleave,pspear_formation	Slain	1	2	9	0	0	0	0
+s4	gravedigger2+sword1+pspear1+parcher2	sword_def,parcher_rng	Slain	1	3	10	1	0	0	0
+s4	gravedigger2+pspear1+parcher3		Wiped	0	6	13	1	0	0	0
+s4	pspear1+parcher8		Wiped	0	9	12	0	0	0	0
+s4	sword1+pspear1+parcher6	sword_cleave,pspear_formation,parcher_mov	Wiped	0	8	14	0	0	0	0
+s5	pspear7+archer1		Slain	1	2	13	0	0	0	0
+s5	gravedigger4+pspear1	pspear_pike	Slain	1	3	16	3	0	0	0
+s5	sword1+archer3+parcher1	sword_cleave	Slain	1	1	9	0	0	0	0
+s5	gravedigger1+sword1+pspear5	gravedigger_rite	Slain	1	6	16	0	0	0	0
+s5	gravedigger3+parcher3		Slain	1	5	17	0	0	0	0
+s5	gravedigger2+sword1+archer1	sword_cleave	Wiped	0	4	12	0	0	0	0
+s5	gravedigger2+sword2+parcher1	parcher_ambush	Wiped	0	5	13	1	0	0	0
+s5	gravedigger2+sword1+archer1+parcher1		Wiped	0	5	12	0	0	0	0
+s5	gravedigger3+archer1		Slain	1	3	15	1	0	0	0
+s5	pspear3+parcher6	pspear_hp	Wiped	0	9	19	0	0	0	0
+s5	gravedigger2+sword1+pspear3	sword_cleave	Wiped	0	6	17	3	0	0	0
+s5	sword4+parcher1	parcher_rng	Slain	1	4	17	0	0	0	0
+s5	pspear2+archer2+parcher3	parcher_rng	Slain	1	2	9	0	0	0	0
+s5	sword1+parcher7		Wiped	0	8	14	0	0	0	0
+s5	gravedigger1+pspear2+parcher3+archer1	pspear_hp	Slain	1	2	9	0	0	0	0
+s5	gravedigger1+archer2+parcher3		Wiped	0	6	13	0	0	0	0
+s5	gravedigger3+archer1+parcher1	parcher_rng	Wiped	0	5	13	0	0	0	0
+s5	gravedigger2+pspear1+archer1+parcher2	parcher_ambush	Wiped	0	6	15	0	0	0	0
+s5	sword3+pspear1+archer1	pspear_hp	Slain	1	1	9	0	0	0	0
+s5	archer1+parcher7	parcher_rng	Wiped	0	8	13	0	0	0	0
+s6	doctor2+archer3	archer_atk	Held	1	1	10	0	3	0	0
+s6	gravedigger1+sword2+pspear2+archer1	pspear_formation	Overrun	0	3	10	0	0	0	0
+s6	sword1+doctor3+archer1	sword_atk	Overrun	0	2	10	0	8	0	0
+s6	pspear7+parcher3	pspear_formation,parcher_rng	Held	1	7	10	0	0	0	0
+s6	gravedigger2+sword2+pspear2	gravedigger_rite,sword_atk	Overrun	0	4	9	0	0	0	0
+s6	gravedigger2+pspear2+archer2		Overrun	0	6	10	0	0	0	0
+s6	gravedigger4+pspear2	gravedigger_mov	Overrun	0	2	10	0	0	0	0
+s6	gravedigger4+pspear2	gravedigger_mov,pspear_pike	Held	1	3	10	0	0	0	0
+s6	sword1+pspear3+parcher3+archer1	pspear_formation,archer_bane	Held	1	6	10	0	0	0	0
+s6	pspear3+archer3+parcher1	pspear_hp,parcher_mov	Held	1	4	10	0	0	0	0
+s6	parcher3+archer3	parcher_ambush	Held	1	2	10	0	0	0	0
+s6	gravedigger1+sword2+pspear2+doctor1		Overrun	0	3	10	0	3	0	0
+s6	gravedigger1+pspear2+parcher2+archer2	gravedigger_mov,parcher_mov,archer_rng	Held	1	2	10	0	0	0	0
+s6	sword4+pspear2	sword_def	Held	1	0	10	0	0	0	0
+s6	pspear2+doctor4	pspear_formation	Held	1	5	10	0	7	0	0
+s6	pspear2+doctor1+archer3	archer_rng	Held	1	2	10	0	4	0	0
+s6	gravedigger2+sword2+doctor1	gravedigger_mov,sword_cleave	Overrun	0	1	9	0	0	0	0
+s6	gravedigger2+archer3	gravedigger_twice	Held	1	4	10	0	0	0	0
+s6	gravedigger3+pspear1+parcher3	pspear_hp	Overrun	0	5	10	0	0	0	0
+s6	sword2+archer1+parcher4	parcher_rng	Held	1	6	10	0	0	0	0
+s7	gravedigger3+archer1+parcher3	parcher_mov	Wiped	0	7	18	4	0	0	0
+s7	sword3+doctor2+parcher1		Slain	1	0	18	0	8	0	1
+s7	gravedigger3+pspear3+archer1	gravedigger_mov,pspear_formation	Slain	1	3	11	2	0	0	0
+s7	knight1+sword1+doctor1+parcher3	doctor_heal	Slain	1	1	12	0	8	0	0
+s7	sword3+parcher5		Slain	1	1	15	0	0	0	0
+s7	doctor4+parcher2		cap	0	0	31	0	6	0	0
+s7	knight1+doctor3+archer1	archer_bane	Slain	1	1	10	0	4	0	0
+s7	sword3+archer1+parcher2	parcher_rng	Slain	1	1	10	0	0	0	0
+s7	pspear2+doctor1+archer3+parcher1	pspear_formation,doctor_def,parcher_rng	Wiped	0	7	16	0	1	0	0
+s7	pspear3+archer3+parcher2	archer_bane,parcher_mov	Slain	1	0	8	0	0	0	0
+s7	knight1+sword2+doctor2	doctor_mov	Slain	1	0	21	0	11	0	1
+s7	knight2+doctor1+parcher1+archer1	archer_atk	Slain	1	0	9	0	4	0	0
+s7	knight1+gravedigger2+sword2		Wiped	0	5	16	2	0	0	0
+s7	knight1+pspear1+doctor1+archer2	pspear_formation,archer_bane	Slain	1	1	7	0	3	0	0
+s7	knight1+sword3+pspear2		Wiped	0	6	19	0	0	0	0
+s7	knight3+doctor1		Slain	1	1	12	0	6	0	0
+s7	knight2+archer1+parcher3	archer_bane	Slain	1	0	8	0	0	0	0
+s7	knight2+pspear3+parcher2	pspear_hp	Slain	1	3	16	0	0	0	0
+s7	sword2+archer2+parcher3	archer_bane,parcher_rng	Slain	1	1	7	0	0	0	0
+s7	knight1+sword3+archer1	sword_atk	Slain	1	2	13	0	0	0	0
+s8	gravedigger1+archer3+parcher2	archer_atk	Arrived	1	1	12	0	0	0	0
+s8	gravedigger1+pspear3+doctor2+parcher1	gravedigger_twice,doctor_mov,parcher_mov	EscortFell	0	2	12	0	12	0	0
+s8	pspear7+parcher3	parcher_mov	Wiped	0	10	17	0	0	0	0
+s8	gravedigger1+sword1+pspear3+archer1	gravedigger_rite,sword_atk	EscortFell	0	3	11	0	0	0	1
+s8	werewolf2+sword2		EscortFell	0	1	10	0	0	0	0
+s8	werewolf2+pspear4	pspear_formation	EscortFell	0	4	13	0	0	0	0
+s8	werewolf2+gravedigger1+parcher1	gravedigger_rite	Arrived	1	0	26	0	0	0	0
+s8	werewolf3		Arrived	1	0	12	0	0	0	0
+s8	sword3+pspear1+parcher3	sword_atk,pspear_formation,parcher_rng	EscortFell	0	2	10	0	0	0	0
+s8	doctor2+archer3	doctor_def,archer_rng	Arrived	1	1	14	0	3	0	0
+s8	knight1+gravedigger2+pspear3	knight_charge	EscortFell	0	2	8	0	0	0	0
+s8	knight2+gravedigger1+pspear2	knight_charge,gravedigger_twice	cap	0	0	31	0	0	0	0
+s8	knight1+pspear2+archer2	pspear_formation	EscortFell	0	3	11	0	0	0	0
+s8	parcher1+archer4		Arrived	1	2	15	0	0	0	0
+s8	werewolf1+gravedigger1+pspear3+doctor1	pspear_formation,doctor_mov	cap	0	4	31	0	9	0	0
+s8	knight2+werewolf1+parcher1	knight_hp,parcher_rng	Arrived	1	0	12	0	0	0	0
+s8	knight1+pspear1+archer3	knight_def	Arrived	1	2	26	0	0	0	0
+s8	werewolf2+parcher2		Arrived	1	2	13	0	0	0	0
+s8	werewolf1+archer3		Arrived	1	0	15	0	0	0	0
+s8	gravedigger2+sword1+pspear2+doctor1	doctor_def	EscortFell	0	2	7	0	4	0	0
+s9	werewolf3+hunter1		Slain	1	0	22	0	0	0	0
+s9	knight3+pspear1+parcher2	parcher_rng	Slain	1	2	11	0	0	0	0
+s9	werewolf1+gravedigger1+hunter2+parcher1	parcher_mov	Slain	1	1	21	1	0	0	0
+s9	sword2+pspear2+hunter1+archer1	sword_atk	Slain	1	3	17	0	0	0	0
+s9	werewolf1+sword1+pspear3+doctor2	sword_def	Slain	1	0	22	0	16	0	1
+s9	werewolf3+hunter1		Wiped	0	5	19	0	0	0	0
+s9	gravedigger1+sword3+pspear1+parcher3	sword_atk,parcher_rng	cap	0	0	31	0	0	0	0
+s9	gravedigger3+archer3	archer_atk	cap	0	0	31	0	0	0	0
+s9	doctor2+parcher2+archer3	parcher_rng,archer_rng	Slain	1	1	16	0	11	0	0
+s9	werewolf2+hunter2		Slain	1	0	19	0	0	0	0
+s9	werewolf1+gravedigger1+pspear1+hunter2	werewolf_early,gravedigger_twice	Slain	1	0	16	0	0	0	0
+s9	knight1+werewolf1+doctor3	werewolf_early	Wiped	0	6	26	0	10	0	0
+s9	werewolf2+parcher6		Wiped	0	9	17	0	0	0	0
+s9	knight1+werewolf3	werewolf_early	Slain	1	0	20	0	0	0	0
+s9	pspear2+archer2+parcher6	pspear_hp,archer_bane,parcher_mov	Slain	1	8	28	0	0	0	0
+s9	werewolf1+gravedigger1+sword1+doctor2	sword_cleave,doctor_def	Wiped	0	6	24	1	12	0	1
+s9	sword3+doctor2+archer1	sword_cleave,doctor_def	Slain	1	0	26	0	16	0	0
+s9	gravedigger2+doctor1+parcher2+archer2	archer_bane	Slain	1	0	29	0	12	0	0
+s9	werewolf3+sword1	werewolf_hp,sword_cleave	Slain	1	3	15	0	0	0	1
+s9	gravedigger4+archer2	archer_rng	Slain	1	4	18	0	0	0	0

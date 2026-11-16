@@ -512,7 +512,7 @@ MonoBehaviour:
       m_Items:
       - rid: 7201578077006332005
   - m_Id: 5832187899928
-    m_Localized: RNG +1, HP +1
+    m_Localized: RNG +1
     m_Metadata:
       m_Items:
       - rid: 7201578077006332005
@@ -2468,7 +2468,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 3562236932845569
-    m_Localized: A fleet-footed scout. Lays a trap on a hex next to it (two a battle).
+    m_Localized: A fleet-footed scout. Lays a trap on a hex next to it (three a battle).
       An enemy that steps on it takes 3 and neither moves on nor attacks that turn.
       Frail.
     m_Metadata:
@@ -2494,7 +2494,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 3562236937039877
-    m_Localized: Lays up to three traps a battle (two by default)
+    m_Localized: Lays up to four traps a battle (three by default)
     m_Metadata:
       m_Items: []
   - m_Id: 3562236937039878

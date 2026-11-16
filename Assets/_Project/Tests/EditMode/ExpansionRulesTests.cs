@@ -305,7 +305,7 @@ namespace VampireSpawn.Tests
             b.EndTurn();
             Assert.AreEqual(new Hex(3, 3), s.Pos, "stopped on the trap");
             Assert.AreEqual(1, s.Hp, "skeleton 4 - trap 3");
-            Assert.AreEqual(1, b.TrapsLeft(scout), "two traps a battle");
+            Assert.AreEqual(2, b.TrapsLeft(scout), "three traps a battle");
             Assert.AreEqual(scout.MaxHp, scout.Hp, "a trapped enemy does not attack that phase");
             Assert.AreEqual(0, b.Traps.Count, "a trap works once");
         }
