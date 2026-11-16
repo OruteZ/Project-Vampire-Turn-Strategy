@@ -63,15 +63,18 @@
 .res .value-text, .fight-stats .value-text { font-size: 26px; }
 
 .box { position: absolute; width: 340px; padding: 16px; -unity-slice-scale: 0.111px; }
-.roster { left: 24px; top: 154px; }
+.roster { left: 24px; bottom: 76px; width: 500px; padding: 20px; }
 .box-title { font-size: 26px; -unity-font-style: bold; color: var(--bone); }
-.roster-row { margin-top: 8px; min-height: 64px; padding: 6px 10px; -unity-slice-scale: 0.0714px; }
-.roster-icon { width: 40px; height: 40px; margin-right: 10px; flex-shrink: 0; }
+.roster > .box-title { font-size: 36px; }
+.roster-row { margin-top: 10px; min-height: 92px; padding: 8px 14px; -unity-slice-scale: 0.0714px; }
+.roster-icon { width: 60px; height: 60px; margin-right: 14px; flex-shrink: 0; }
 .roster-info { flex-grow: 1; flex-shrink: 1; }
-.roster-name { flex-grow: 1; font-size: 26px; -unity-font-style: bold; color: var(--bone); }
-.roster-info .value { margin-left: 10px; }
-.roster-info .value-icon { width: 21px; height: 21px; }
-.roster-info .value-text { font-size: 26px; }
+.roster-name { flex-grow: 1; font-size: 36px; -unity-font-style: bold; color: var(--bone); }
+.roster-info .value { margin-left: 12px; }
+.roster-info .value-icon { width: 30px; height: 30px; }
+.roster-info .value-text { font-size: 34px; }
+.roster .unit-stats .value-icon { width: 28px; height: 28px; }
+.roster .acts > .btn { width: 220px; height: 56px; margin-right: 12px; }
 .unit-stats { margin-top: 4px; }
 .unit-stats > .value { margin-left: 0; margin-right: 8px; }
 .unit-stats .value-icon { width: 20px; height: 20px; }
