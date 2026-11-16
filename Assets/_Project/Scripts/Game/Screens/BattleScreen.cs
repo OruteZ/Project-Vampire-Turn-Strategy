@@ -8,7 +8,7 @@ namespace VampireSpawn.Game.Screens
     public sealed class BattleActions
     {
         public Action Primary, Leave, Clear, Sample, Exec, Mend, Trap, Wait, Aim, Retry, Redeploy, ToCamp, CloseOver, ToggleRules, ToggleLog;
-        public Action<string> Pick;
+        public Action<string> Pick, RecallKind;
         public Action<int> Recall;
     }
 

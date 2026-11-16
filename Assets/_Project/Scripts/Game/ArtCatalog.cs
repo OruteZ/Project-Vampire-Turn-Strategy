@@ -27,6 +27,12 @@ namespace VampireSpawn.Game
             return themes[0];
         }
 
+        [Tooltip("블록아웃 테마 (docs/art/stage-dressing.md 6). 이 테마의 stages 에 든 장은 꾸미기를 이것으로 굽는다. 원정 지도는 그대로 themes 를 쓴다. 비우면 장별 테마로 돌아간다")]
+        public BoardTheme blockout;
+
+        public BoardTheme DressingTheme(string stageId) =>
+            blockout != null && blockout.stages != null && System.Array.IndexOf(blockout.stages, stageId) >= 0 ? blockout : Theme(stageId);
+
         [Tooltip("장별 꾸미기 프리팹, 이름 = 장 id (docs/art/stage-dressing.md 4). 도구 모음 > 전투 보드 > 꾸미기 프리팹 굽기로 채운다")]
         public GameObject[] stageDressings;
 

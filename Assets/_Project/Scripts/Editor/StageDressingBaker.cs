@@ -45,7 +45,7 @@ namespace VampireSpawn.Editor
                     made.Add(stage.Id);
                 }
                 var contents = PrefabUtility.LoadPrefabContents(path);
-                if (contents.GetComponentInChildren<UnityEngine.Terrain>() == null)
+                if (contents.GetComponentInChildren<UnityEngine.Terrain>() == null && art.DressingTheme(stage.Id)?.bareFloor == null)
                 {
                     AddTerrain(art, stage, contents);
                     PrefabUtility.SaveAsPrefabAsset(contents, path);
@@ -65,7 +65,7 @@ namespace VampireSpawn.Editor
             var old = root.transform.Find("Ground");
             if (old != null) Object.DestroyImmediate(old.gameObject);
             var board = new Board(stage.Map);
-            var theme = art.Theme(stage.Id);
+            var theme = art.DressingTheme(stage.Id);
             var s = art.hexSize;
             var first = BoardView.Local(new Hex(0, 0), s);
             var last = BoardView.Local(new Hex(board.Cols - 1, board.Rows - 1), s);

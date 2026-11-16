@@ -19,6 +19,17 @@ namespace VampireSpawn.Editor
             return width + "x" + height;
         }
 
+        // Hover cards open only under the pointer; the sweep moves the simulated pointer here (screen px, origin bottom-left).
+        public static string HexOnScreen(int col, int row)
+        {
+            var bv = Object.FindFirstObjectByType<VampireSpawn.Game.BoardView>();
+            var p = bv.viewCamera.WorldToScreenPoint(bv.HexToWorld(new Core.Hex(col, row)));
+            return "move " + Mathf.RoundToInt(p.x) + " " + Mathf.RoundToInt(p.y);
+        }
+
+        public static bool Has(string namePrefix) => Object.FindObjectsByType<UIDocument>(FindObjectsSortMode.None)
+            .Any(d => d.rootVisualElement != null && d.rootVisualElement.Query<VisualElement>().ToList().Any(e => e.name.StartsWith(namePrefix) && !Hidden(e)));
+
         public static string Report()
         {
             var found = new List<string>();
@@ -55,11 +66,7 @@ namespace VampireSpawn.Editor
                 if (!drawn) continue;
                 var path = Path(e);
                 if (Spill(screen, e.worldBound) is var s && s != "") found.Add("off-screen\t" + path + "\t" + s);
-                if (label != null && label.resolvedStyle.whiteSpace == WhiteSpace.NoWrap && label.resolvedStyle.textOverflow != TextOverflow.Ellipsis)
-                {
-                    var need = label.MeasureTextSize(label.text, 0, VisualElement.MeasureMode.Undefined, 0, VisualElement.MeasureMode.Undefined);
-                    if (need.x > label.contentRect.width + 4f) found.Add("text>box\t" + path + "\tR" + (need.x - label.contentRect.width).ToString("0") + " \"" + Clip(label.text) + "\"");
-                }
+                if (label != null && TextSpill(label) is var (kind, how) && kind != null) found.Add(kind + "\t" + path + "\t" + how + " \"" + Clip(label.text) + "\"");
                 for (var p = e.parent; p != null; p = p.parent)
                     if (p.ClassListContains("decor")) break;
                     else if (Frames.Any(p.ClassListContains))
@@ -68,6 +75,26 @@ namespace VampireSpawn.Editor
                         break;
                     }
             }
+        }
+
+        // A label's box can sit inside its frame while its text runs past the box, so the frame check alone never sees it (#129).
+        static (string, string) TextSpill(Label l)
+        {
+            var box = l.contentRect;
+            var size = l.resolvedStyle.fontSize;
+            if (l.resolvedStyle.whiteSpace == WhiteSpace.NoWrap)
+            {
+                var need = l.MeasureTextSize(l.text, 0, VisualElement.MeasureMode.Undefined, 0, VisualElement.MeasureMode.Undefined);
+                if (need.x <= box.width + 4f) return (null, null);
+                if (l.resolvedStyle.textOverflow != TextOverflow.Ellipsis) return ("text>box", "R" + (need.x - box.width).ToString("0"));
+                // Ellipsis cuts on purpose, but not down to nothing (a long tag squeezed the unit name away, #129).
+                return box.width < size * 2f ? ("text-hidden", "w" + box.width.ToString("0")) : (null, null);
+            }
+            // Only lines the wrap added count: one line taller than a tight box was already accepted (docs/dev/ui-audit.md slack).
+            var line = l.MeasureTextSize(l.text, 0, VisualElement.MeasureMode.Undefined, 0, VisualElement.MeasureMode.Undefined).y;
+            var wrapped = l.MeasureTextSize(l.text, box.width + 4f, VisualElement.MeasureMode.Exactly, 0, VisualElement.MeasureMode.Undefined).y;
+            var room = Mathf.Max(box.height, line) + Mathf.Max(4f, size * 0.4f);
+            return wrapped > room ? ("text>box", "B" + (wrapped - box.height).ToString("0")) : (null, null);
         }
 
         static bool Hidden(VisualElement e)

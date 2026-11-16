@@ -11,6 +11,11 @@
     --steel-dim: #4a5d6e;
 }
 
+/* Unity's default theme draws a Label on one line, so text longer than its box ran out of it (#129, docs/areas/ui.md). Wrap by default; a label that cuts says nowrap with its ellipsis. */
+Label {
+    white-space: normal;
+}
+
 .display {
     -unity-font-style: bold;
 }

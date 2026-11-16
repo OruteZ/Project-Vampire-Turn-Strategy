@@ -20,12 +20,14 @@
 | 메뉴 UI | Assets/Synty/InterfaceDarkFantasyMenus | INTERFACE_Dark_Fantasy_Menus | uGUI 프리팹 228 |
 | 메인 메뉴 바탕 | Assets/Synty/PolygonDarkFantasy/Scenes/Demo_Cathedral_01.unity | POLYGON_Dark_Fantasy | 백작성·큰 달 데모 씬. Build Settings 에 있고 `MenuFlow` 가 겹쳐 불러 그 씬 카메라로 그린다 (#116) |
 | UI 공용 스프라이트·셰이더 | Assets/Synty/InterfaceCore | INTERFACE 둘 다 | |
+| 블록아웃 (회색 블록·격자) | Assets/Synty/PolygonPrototype | POLYGON_Prototype | 1~20장 전투 맵 블록아웃 바닥 재질 `PolygonPrototype_Grid_06`, 테마 `Themes/Prototype` (#138, docs/art/stage-dressing.md 6) |
 
 ## 결정
 | 결정 | 상태 | 날짜 | 출처 |
 |---|---|---|---|
 | 보드 둘레를 장별 Synty 소품으로 꾸미고, 카메라가 화면 전체를 그린다 | 시험 중 | 2026-11-07 | #34 "synty 에셋을 사용해서 게임 스테이지처럼 보이도록 꾸며줘" |
 | 전투 보드 꾸미기는 장별 프리팹(`Assets/_Project/Art/Stages/<장 id>.prefab`)으로 굽고, 구운 뒤엔 프리팹이 기준(사람·에이전트가 직접 고침). 장별 조명도 프리팹 안에 두고, 베이크 조명이 필요한 장만 나중에 씬으로 | 시험 중 | 2026-11-09 | #101 "그래 뭐 그럼 그렇게 하자" |
+| 지도가 굳기 전까지 1~20장 전투 맵은 완전한 프로토타입: 회색 격자 납작한 판 하나(`BoardTheme.bareFloor`) 위에 규칙이 짓는 것(화톳불·햇빛, 문, 관·유닛)만. 지형·막힌 칸 소품·둘레 장식 없음, 막힌 칸·물은 칸 격자 선이 없는 것으로만 구분 (`ArtCatalog.blockout`). 장별 테마는 지우지 않고 두고, 원정 지도는 장별 테마 그대로 | 시험 중 | 2026-11-16 | #138 "바꿔 줘", "장식 싹 밀고 바닥이랑 중요 오브젝트 (횃불, 관 등) 만", "타일 사이사이 장애물도 지우고, 바닥도 평평한 큐브로" + 통짜 판 하나 |
 | 무기는 쥐는 법(`Hold`: 칼날·창·자루·그대로)으로 붙이고, 루트 모션은 모델만 움직인다(칸 자리·걷기는 코드) | 시험 중 | 2026-11-07 | #42 요청 2 "모든 유닛이 도구를 정상적으로", "Loot Motion을 키는쪽으로" |
 | 배치 때 아군은 북쪽, 적은 남쪽을 본다. 잠든 뱀파이어는 관만 보인다 | 시험 중 | 2026-11-07 | #42 요청 2 "적방향 (북쪽)", "관만 보여줄 것" |
 | 검사·기사·궁수·농민은 그대로, 특수 직업만 판타지로: 역병 의사 → 성녀, 사냥꾼 → 연금술사(약병 투척), 웨어울프는 새 병종. key 는 그대로 | 시험 중 | 2026-11-11 | #111 "검사기사궁수 빼고 특수직업군을 판타지로 해줘" |
@@ -38,6 +40,7 @@
 - 생성 API 가 모델 이름을 거부하면(예: "does not exist") 쓸 수 있는 모델을 확인해 보고한 뒤 바꾼다
 - 함정: 유닛·칸 표시·마우스 고르기 높이는 모두 `BoardView.OnGround`/`Stand` 를 거친다. 새로 칸 위에 무언가 세울 때 `TileTop` 을 더하지 말고 이것을 쓴다 (battle-terrain.md 4)
 - 함정: `TerrainData` 는 `heightmapResolution` 을 먼저 정하고 `size` 를 정한다. 거꾸로 하면 크기가 되돌아간다
+- 함정: `POLYGON_Prototype` 패키지에는 이미 있는 `PolygonGeneric`·`SyntyPackageHelper` 1303개가 같은 GUID 로 들어 있어 통째로 임포트하면 다른 판으로 덮인다. #138 은 `PolygonPrototype` 1073개만 남긴 패키지로 다시 묶어 임포트했다
 - 함정: 꾸미기 프리팹 굽기는 프리팹이 없는 장만 짓는다(손맞춤 보존). 한 장을 규칙대로 다시 보려면 그 프리팹을 지우고 누른다. 맵 칸을 바꾸면 `StageDressingTests` 가 그 장을 잡는다 (docs/art/stage-dressing.md 4)
 - 함정: 애니메이션 팩마다 Sidekick 전용판 클립(`A_MOD_*`)이 따로 있다. Sidekick 캐릭터에는 그쪽을 쓴다. 무기 자리 뼈는 Sidekick `prop_r`/`prop_l`, Polygon 캐릭터 `Hand_R`/`Hand_L`
 - 함정: `SM_Chr_PlagueDoctor_01` 은 죽마(`Stilt`) 부착물이 발밑으로 뻗어 키 맞추기(`FitHeight`)에서 몸이 작아지고 죽마가 바닥 아래로 내려간다 (#111 확인 목록)

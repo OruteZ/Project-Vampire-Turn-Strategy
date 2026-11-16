@@ -23,7 +23,7 @@ namespace VampireSpawn.Game
         class Drag { public int Id; public Vector2 Start; public bool Moved; public Hex? Target; }
         Drag drag;
         float flashUntil;
-        bool wasBusy, wasDown, escDown;
+        bool wasBusy, wasDown, wasRight, escDown;
 
         BoardView Board => battle.board;
 
@@ -92,6 +92,11 @@ namespace VampireSpawn.Game
             else if (down && drag != null) DragTo(pos);
             if (!down && wasDown) Release(pos);
             wasDown = down;
+            var right = m.rightButton.isPressed;
+            if (right && !wasRight && drag == null && !battle.IsBusy && !PointerBlocked() && Session.Battle.Phase == Phase.Deploy
+                && HexAt(pos) is Hex rh && Session.Battle.UnitAt(rh) is Unit ru && ru.Side == Side.Ally)
+                Run(s => s.Recall(ru.Id));
+            wasRight = right;
         }
 
         void Press(Vector2 pos)

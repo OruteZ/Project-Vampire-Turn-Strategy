@@ -29,7 +29,7 @@ namespace VampireSpawn.Game
         // A big hit (battle-camera.md 6-2): ordinary damage in the data is 1-3.
         const int BigDamage = 4;
         // Player view, battle-camera.md 11: distance is a fraction of the fitted distance.
-        const float ViewSeconds = 0.12f, WheelStep = 0.85f, NearDistance = 0.3f, TurnDegrees = 90f, PanRate = 0.8f;
+        const float ViewSeconds = 0.12f, WheelStep = 0.85f, NearDistance = 0.3f, TurnDegrees = 90f, PanRate = 0.8f, DragDegrees = 0.3f;
 
         BattleView view;
         Camera cam;
@@ -46,7 +46,7 @@ namespace VampireSpawn.Game
         int? followId, previewedTarget, moonTargetId, vampireId;
         readonly HashSet<int> allies = new HashSet<int>(), notable = new HashSet<int>();
         int rises;
-        bool moonOn, riseOn, drainOn, drainNext, finished;
+        bool moonOn, riseOn, drainOn, drainNext, finished, turning;
         float previewUntil, openingUntil, saturation, saturationVelocity, vignetteAmount, vignetteVelocity;
         float shakeUntil, shakeStart = -1f, stopUntil, slowUntil;
 
@@ -283,6 +283,9 @@ namespace VampireSpawn.Game
                 viewPan += turn * new Vector3(x, 0f, y) * rate;
             }
             var m = Mouse.current;
+            if (m != null && m.middleButton.wasPressedThisFrame) turning = !(input != null && input.PointerBlocked());
+            if (m == null || !m.middleButton.isPressed) turning = false;
+            if (turning) viewYaw += m.delta.ReadValue().x * DragDegrees;
             var wheel = m != null ? m.scroll.ReadValue().y : 0f;
             if (wheel != 0f && !(input != null && input.PointerBlocked()))
             {
