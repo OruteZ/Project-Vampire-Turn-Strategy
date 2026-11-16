@@ -117,6 +117,23 @@
    - 같은 세트피스가 한 화면에 둘 이상 보이면 돌리거나 바꾼다
 4. 자동 시험(StageDressingTests)이 계속 통과해야 한다. 마무리 판단(보기 좋은가)은 사용자 몫이고, 사용자가 Unity 에서 직접 옮긴 것이 최종이다.
 
+## 6. 블록아웃 단계 (#138)
+
+지도(칸 배치)가 아직 바뀌는 동안은 1~20장을 회색 블록으로 꾸민다. 칸 배치를 읽기 쉽고, 지도가 바뀌어 다시 구워도 잃을 손작업이 없다. 2절 장별 테마와 5절 세트피스는 지도가 굳은 장부터 다시 쓴다.
+
+1. 테마 `Assets/_Project/Art/Themes/Prototype.asset` 을 `ArtCatalog.blockout` 에 건다. 이 테마의 `stages`(s1~s20)에 든 장은 굽기 때 이 테마를 쓴다. 원정 지도의 지역 바닥색은 `themes` 그대로다. demo 는 장별 테마 그대로.
+2. 재료는 Synty POLYGON Prototype (`Assets/Synty/PolygonPrototype`):
+
+| 무엇 | 프리팹 | 재질 |
+|---|---|---|
+| 막힌 칸 | `SM_Buildings_Block_1x1_01` (가로로 이어 세움, 폭 1.6칸) | `PolygonPrototype_Grid_07` 밝은 회색 격자 (`BoardTheme.blockerMaterial`) |
+| 둘레 높은 것 | `SM_Prop_Tree_Round_01`·`Tree_Pine_01`·`Tree_Square_01`, `SM_Buildings_Column_2x3_01`, `SM_Primitive_Cube_01`·`Cylander_01` | `PolygonPrototype_Grid_06` 어두운 회색 격자 (`BoardTheme.propMaterial`) |
+| 둘레 낮은 것 | `SM_Generic_Small_Rocks_01`, `SM_Generic_Grass_Patch_01`, `SM_Prop_Crate_01`, `SM_Prop_Barrel_01` | 위와 같음 |
+| 바닥 | `Stages/Layers/PrototypeGrid` (`PolygonPrototype_Grid_01.png`, 반복 10, 색 보정 0.22~0.36 회색으로 선을 흐리게) | |
+
+3. 주변광 #6b6b75, 안개 #1f1f24 (장별 테마보다 밝게, 칸이 잘 보이게). 화톳불·햇빛·물·빈 칸은 그대로 (코드·지형이 짓는다).
+4. 장별 꾸밈으로 돌아갈 때: 그 장 id 를 `Prototype.stages` 에서 빼고, 그 장 프리팹과 `<id> Terrain.asset` 을 지운 뒤 굽는다. 모두 돌아갈 때는 `ArtCatalog.blockout` 을 비운다.
+
 ## 정한 세부 (docs/design 에 없는 것)
 
 - **장별 프리팹으로 굽고, 구운 뒤엔 프리팹이 기준이다 (#101).** 근거: 사용자 결정 2026-11-09 (레벨 디자인을 사람·에이전트가 직접 고칠 수 있게. 장별 씬 대신 프리팹, 베이크 조명이 필요한 장만 나중에 씬으로).

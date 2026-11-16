@@ -163,7 +163,7 @@ namespace VampireSpawn.Game
         public static GameObject BuildDressing(ArtCatalog art, Stage stage)
         {
             var board = new Board(stage.Map);
-            var theme = art.Theme(stage.Id);
+            var theme = art.DressingTheme(stage.Id);
             var s = art.hexSize;
             var root = new GameObject(stage.Id);
             var look = root.AddComponent<StageDressing>();
@@ -182,7 +182,7 @@ namespace VampireSpawn.Game
                     var h = new Hex(c, r);
                     if (board.At(h) != Terrain.Rock || blockers == null || blockers.Length == 0 || IsDoor(stage, h)) continue;
                     var yaw = themed && theme.alignBlockers ? (c + r) % 2 * 180f : (c * 53 + r * 97) % 360;
-                    Place(blockers[(c * 7 + r * 13) % blockers.Length], props, Local(h, s) + Vector3.up * art.tileHeight, (themed ? theme.blockerWidth : 1.5f) * s, yaw, (themed ? 1.3f : 99f) * s, themed && theme.alignBlockers);
+                    Paint(Place(blockers[(c * 7 + r * 13) % blockers.Length], props, Local(h, s) + Vector3.up * art.tileHeight, (themed ? theme.blockerWidth : 1.5f) * s, yaw, (themed ? 1.3f : 99f) * s, themed && theme.alignBlockers), themed ? theme.blockerMaterial : null);
                 }
 
             if (theme == null) return root;
@@ -200,12 +200,18 @@ namespace VampireSpawn.Game
                     if (tallOk && h % 100 < 40)
                     {
                         var width = r <= -Ring + 1 ? 3f + h % 3 * 0.5f : 1.4f + h % 7 * 0.2f;
-                        Place(theme.border[h / 100 % theme.border.Length], props, at, width * s, h % 360, (r <= -Ring + 1 ? 6f : 3.5f) * s);
+                        Paint(Place(theme.border[h / 100 % theme.border.Length], props, at, width * s, h % 360, (r <= -Ring + 1 ? 6f : 3.5f) * s), theme.propMaterial);
                     }
                     else if (theme.scatter != null && theme.scatter.Length > 0 && h % 100 >= 40 && h % 100 < 70)
-                        Place(theme.scatter[h / 100 % theme.scatter.Length], props, at, (0.35f + h % 4 * 0.07f) * s, h % 360, 0.5f * s);
+                        Paint(Place(theme.scatter[h / 100 % theme.scatter.Length], props, at, (0.35f + h % 4 * 0.07f) * s, h % 360, 0.5f * s), theme.propMaterial);
                 }
             return root;
+        }
+
+        static void Paint(GameObject go, Material m)
+        {
+            if (m == null) return;
+            foreach (var r in go.GetComponentsInChildren<Renderer>()) r.sharedMaterials = System.Linq.Enumerable.Repeat(m, r.sharedMaterials.Length).ToArray();
         }
 
         public void Clear()

@@ -16,6 +16,8 @@ namespace VampireSpawn.Game
         public float blockerWidth = 1.6f;
         [Tooltip("보드 둘레의 높은 소품. 카메라 쪽(남쪽)에는 두지 않는다")] public GameObject[] border;
         [Tooltip("보드 둘레의 낮은 소품. 어디든 둔다")] public GameObject[] scatter;
+        [Tooltip("비우지 않으면 막힌 칸 소품을 이 재질로 칠한다 (블록아웃, docs/art/stage-dressing.md 6)")] public Material blockerMaterial;
+        [Tooltip("비우지 않으면 둘레 소품을 이 재질로 칠한다")] public Material propMaterial;
         [Tooltip("굽기 때 꾸미기 프리팹에 넣는 처음 안개·주변광. 구운 뒤엔 프리팹의 StageDressing 값이 쓰인다")] public Color fog = new Color(0.07f, 0.07f, 0.1f);
         public Color ambient = new Color(0.25f, 0.25f, 0.32f);
     }

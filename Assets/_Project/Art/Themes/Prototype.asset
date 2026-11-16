@@ -1,0 +1,59 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f552e373fc84df64c9214c5fd2592bde, type: 3}
+  m_Name: Prototype
+  m_EditorClassIdentifier: VampireSpawn.Game::VampireSpawn.Game.BoardTheme
+  stages:
+  - s1
+  - s2
+  - s3
+  - s4
+  - s5
+  - s6
+  - s7
+  - s8
+  - s9
+  - s10
+  - s11
+  - s12
+  - s13
+  - s14
+  - s15
+  - s16
+  - s17
+  - s18
+  - s19
+  - s20
+  ground: {r: 0.17, g: 0.16, b: 0.19, a: 1}
+  floor: {fileID: 8574412962073106934, guid: 9164b89ef0302a645ba0037d00d97079, type: 2}
+  patches: {fileID: 0}
+  patchShare: 0
+  blockers:
+  - {fileID: 1346524299210880, guid: fcc4229f634be704aa0dd336ad33c2b5, type: 3}
+  alignBlockers: 1
+  blockerWidth: 1.6
+  border:
+  - {fileID: 1588875552787716, guid: 6796c808204bd0d448c1f3bf10a57ad6, type: 3}
+  - {fileID: 1376922330662362, guid: bc154b00e9c8e974b9e631f7c82352eb, type: 3}
+  - {fileID: 1756970795277310, guid: 0c19a7133235cfa469f2fcae1a85fabf, type: 3}
+  - {fileID: 1498094019683184, guid: 7a452e5924cd9994487b6bf6e78c5b14, type: 3}
+  - {fileID: 1720045518790498, guid: d48f60124060f8548b8a1868eb1885ad, type: 3}
+  - {fileID: 1867484491354900, guid: b2d92927d045c864583503163dc5f248, type: 3}
+  scatter:
+  - {fileID: 1789117675568830, guid: c77201b26fc729742973d2d4e601743f, type: 3}
+  - {fileID: 1648607492136232, guid: aaa9fac6c56c64d4eaceb647b35c69ed, type: 3}
+  - {fileID: 1852967516923486, guid: e1b9e21039285c042b92ea66c7f1c444, type: 3}
+  - {fileID: 1547116696582102, guid: f750d5f061e724f4c827ab6b376e2550, type: 3}
+  blockerMaterial: {fileID: 2100000, guid: 6615f1708a4932646adcdc55932feefa, type: 2}
+  propMaterial: {fileID: 2100000, guid: a3cd22eceea5e8548b10cdb5d9b49a25, type: 2}
+  fog: {r: 0.12, g: 0.12, b: 0.14, a: 1}
+  ambient: {r: 0.42, g: 0.42, b: 0.46, a: 1}

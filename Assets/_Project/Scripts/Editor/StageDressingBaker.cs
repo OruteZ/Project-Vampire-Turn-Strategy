@@ -65,7 +65,7 @@ namespace VampireSpawn.Editor
             var old = root.transform.Find("Ground");
             if (old != null) Object.DestroyImmediate(old.gameObject);
             var board = new Board(stage.Map);
-            var theme = art.Theme(stage.Id);
+            var theme = art.DressingTheme(stage.Id);
             var s = art.hexSize;
             var first = BoardView.Local(new Hex(0, 0), s);
             var last = BoardView.Local(new Hex(board.Cols - 1, board.Rows - 1), s);
