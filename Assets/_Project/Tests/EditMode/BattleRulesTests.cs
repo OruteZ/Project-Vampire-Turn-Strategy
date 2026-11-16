@@ -47,6 +47,18 @@ namespace VampireSpawn.Tests
         }
 
         [Test]
+        public void ClearAlliesOfAKindKeepsTheOthers()
+        {
+            var b = Demo();
+            var kind = b.Allies.First().Type;
+            var others = b.Allies.Count(u => u.Type != kind);
+            Assert.Greater(others, 0, "demo sample mixes kinds");
+            Assert.IsTrue(b.ClearAllies(kind).Ok);
+            Assert.IsFalse(b.Allies.Any(u => u.Type == kind));
+            Assert.AreEqual(others, b.Allies.Count());
+        }
+
+        [Test]
         public void AttackingAnAllyDealsAttackDamageAndUsesTheAttack()
         {
             var b = Demo();

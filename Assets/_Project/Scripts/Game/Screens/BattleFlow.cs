@@ -69,6 +69,7 @@ namespace VampireSpawn.Game.Screens
                 Sample = () => input.Run(s => s.UseSample()),
                 Pick = k => input.Act(s => s.Pick(k)),
                 Recall = id => input.Run(s => s.Recall(id)),
+                RecallKind = k => input.Run(s => s.ClearAllies(k)),
                 Exec = () => input.Act(s => s.ToggleExecute()),
                 Mend = () => input.Act(s => s.ToggleMend()),
                 Trap = () => input.Act(s => s.ToggleTrap()),
@@ -203,7 +204,7 @@ namespace VampireSpawn.Game.Screens
         {
             var kb = UnityEngine.InputSystem.Keyboard.current;
             if (kb == null) return;
-            var digits = new[] { kb.digit1Key, kb.digit2Key, kb.digit3Key, kb.digit4Key, kb.digit5Key };
+            var digits = new[] { kb.digit1Key, kb.digit2Key, kb.digit3Key, kb.digit4Key, kb.digit5Key, kb.digit6Key, kb.digit7Key, kb.digit8Key, kb.digit9Key };
             var digit = 0;
             for (var i = 0; i < digits.Length; i++) if (keys.Pressed((i + 1).ToString(), digits[i].isPressed)) digit = i + 1;
             var space = keys.Pressed("space", kb.spaceKey.isPressed);
@@ -216,7 +217,9 @@ namespace VampireSpawn.Game.Screens
             }
             if (View.IsBusy || enemyPlaying || OverShown) return;
             var b = Session.Battle;
-            if (digit > 0) BattleScreen.Slots(Session, actions).FirstOrDefault(x => x.Key == digit && x.Ready)?.Act?.Invoke();
+            var kinds = b.Stage.Units;
+            if (digit > 0 && b.Phase == Phase.Deploy) { if (digit <= kinds.Length) actions.Pick(kinds[digit - 1]); }
+            else if (digit > 0) BattleScreen.Slots(Session, actions).FirstOrDefault(x => x.Key == digit && x.Ready)?.Act?.Invoke();
             if (space && (b.Phase == Phase.Deploy ? b.Reinforcing || b.Allies.Any() : b.Phase == Phase.Player)) Primary();
         }
 

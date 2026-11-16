@@ -167,10 +167,10 @@ namespace VampireSpawn.Core
             return r;
         }
 
-        public CommandResult ClearAllies()
+        public CommandResult ClearAllies(string kind = null)
         {
             Flash = default;
-            var r = Battle.ClearAllies();
+            var r = Battle.ClearAllies(kind);
             if (r.Ok) Inspect(null);
             return r;
         }

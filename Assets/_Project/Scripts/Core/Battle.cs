@@ -389,11 +389,11 @@ namespace VampireSpawn.Core
             return Done();
         }
 
-        public CommandResult ClearAllies()
+        public CommandResult ClearAllies(string kind = null)
         {
             if (!Begin(Phase.Deploy, out var no)) return no;
-            units.RemoveAll(u => u.Role == Role.Ally && (!Reinforcing || newcomers.Contains(u.Id)));
-            newcomers.Clear();
+            units.RemoveAll(u => u.Role == Role.Ally && (!Reinforcing || newcomers.Contains(u.Id)) && (kind == null || u.Type == kind));
+            newcomers.RemoveWhere(id => Find(id) == null);
             return Done();
         }
 
