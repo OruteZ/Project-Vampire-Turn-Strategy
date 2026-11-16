@@ -87,5 +87,33 @@ namespace VampireSpawn.Tests
             Assert.AreEqual("스폰(궁수)을", Josa("스폰(궁수)", "을", "를"));
             Assert.AreEqual("뱀파이어 백작을", Josa("뱀파이어 백작", "을", "를"));
         }
+
+        [Test]
+        public void ConsecutiveWalksWithNoSharedHexPlayTogether()
+        {
+            static Hex H(int c, int r) => new Hex(c, r);
+            static BattleEvent W(int id, Hex from, params Hex[] path) => BattleEvent.Walk(id, path, from);
+            var hit = BattleEvent.Hit(1, 2);
+            var apart = new[] { W(1, H(0, 0), H(0, 1)), W(2, H(5, 5), H(5, 6)), W(3, H(9, 9), H(9, 8)), hit, W(4, H(2, 2), H(2, 3)) };
+            Assert.AreEqual(3, BattleEvent.WalkRun(apart, 0), "three apart walks, cut by the hit");
+            Assert.AreEqual(0, BattleEvent.WalkRun(apart, 3), "not a walk");
+            Assert.AreEqual(1, BattleEvent.WalkRun(apart, 4), "last walk alone");
+            var vacated = new[] { W(1, H(0, 0), H(0, 1)), W(2, H(1, 0), H(0, 0)) };
+            Assert.AreEqual(1, BattleEvent.WalkRun(vacated, 0), "second walks into the hex the first left");
+            var crossing = new[] { W(1, H(0, 0), H(1, 1), H(2, 2)), W(2, H(2, 0), H(1, 1), H(0, 2)) };
+            Assert.AreEqual(1, BattleEvent.WalkRun(crossing, 0), "paths cross");
+        }
+
+        [Test]
+        public void EnemyWalkStartsWhereTheUnitStood()
+        {
+            var b = Demo();
+            Assert.IsTrue(b.Start().Ok);
+            var before = b.Enemies.ToDictionary(u => u.Id, u => u.Pos);
+            var walks = b.EndTurn().Events.Where(e => e.Kind == BattleEventKind.Walk && before.ContainsKey(e.UnitId)).ToList();
+            Assert.IsNotEmpty(walks);
+            foreach (var w in walks.GroupBy(w => w.UnitId).Select(g => g.First()))
+                Assert.AreEqual(before[w.UnitId], w.At);
+        }
     }
 }

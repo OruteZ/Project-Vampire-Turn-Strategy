@@ -109,14 +109,41 @@ namespace VampireSpawn.Game
         {
             playing = true;
             while (pending.Count > 0)
-                foreach (var e in pending.Dequeue())
-                    yield return Play(e);
+            {
+                var list = pending.Dequeue();
+                for (var i = 0; i < list.Count; i++)
+                {
+                    var run = BattleEvent.WalkRun(list, i);
+                    if (run < 2) { yield return Play(list[i]); continue; }
+                    yield return PlayTogether(list, i, run);
+                    i += run - 1;
+                }
+            }
             playing = false;
+        }
+
+        IEnumerator PlayTogether(IReadOnlyList<BattleEvent> list, int start, int count)
+        {
+            var left = count;
+            var ids = new List<int>();
+            for (var k = start; k < start + count; k++)
+            {
+                ids.Add(list[k].UnitId);
+                StartCoroutine(Then(Play(list[k], k == start), () => left--));
+            }
+            if (director != null) director.FollowGroup(ids);
+            while (left > 0) yield return null;
+        }
+
+        static IEnumerator Then(IEnumerator play, Action done)
+        {
+            yield return play;
+            done();
         }
 
         float Wait(float seconds) => speed > 0f ? seconds * Pace / speed : 0f;
 
-        IEnumerator Play(BattleEvent e)
+        IEnumerator Play(BattleEvent e, bool steps = true)
         {
             Played?.Invoke(e);
             Sound.Play(s => BattleSounds.Of(s, e));
@@ -130,7 +157,7 @@ namespace VampireSpawn.Game
                         var from = walker.transform.position;
                         var to = Ground(h);
                         walker.Face(to);
-                        Sound.Play(walker.Sounds, s => s.step);
+                        if (steps) Sound.Play(walker.Sounds, s => s.step);
                         for (float t = 0f; t < 1f; t += Time.deltaTime / Mathf.Max(0.0001f, Wait(StepSeconds)))
                         {
                             walker.transform.position = board.OnGround(Vector3.Lerp(from, to, t));

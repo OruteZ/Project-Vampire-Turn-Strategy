@@ -44,6 +44,7 @@ namespace VampireSpawn.Game
         Shot shot;
         Vector3 focus, at, atVelocity;
         int? followId, previewedTarget, moonTargetId, vampireId;
+        List<int> group;
         readonly HashSet<int> allies = new HashSet<int>(), notable = new HashSet<int>();
         int rises;
         bool moonOn, riseOn, drainOn, drainNext, finished, turning;
@@ -112,6 +113,7 @@ namespace VampireSpawn.Game
         {
             shot = default;
             followId = null;
+            group = null;
             rises = 0;
             moonOn = riseOn = drainOn = drainNext = false;
         }
@@ -140,6 +142,7 @@ namespace VampireSpawn.Game
         void OnPlayed(BattleEvent e)
         {
             if (Battle == null || cam == null || Speed <= 0f) return;
+            group = null;
             switch (e.Kind)
             {
                 case BattleEventKind.Rose:
@@ -249,6 +252,25 @@ namespace VampireSpawn.Game
 
         Vector3 Where(int? id) => id.HasValue && view.ViewOf(id.Value) is UnitView v ? v.transform.position : focus;
 
+        // docs/art/battle-camera.md 4-1: a group walk follows the walkers' average position.
+        public void FollowGroup(List<int> ids)
+        {
+            if (Battle == null || cam == null || Speed <= 0f || !ids.Exists(IsEnemy)) return;
+            riseOn = moonOn = false;
+            followId = null;
+            group = ids;
+            shot = Follow;
+        }
+
+        Vector3 Center(List<int> ids)
+        {
+            var sum = Vector3.zero;
+            var n = 0;
+            foreach (var id in ids)
+                if (view.ViewOf(id) is UnitView v) { sum += v.transform.position; n++; }
+            return n > 0 ? sum / n : focus;
+        }
+
         Vector3 Between(int? a, int? b)
         {
             var hasA = a.HasValue && view.ViewOf(a.Value) != null;
@@ -322,7 +344,8 @@ namespace VampireSpawn.Game
             var fx = GameSettings.CameraFx;
             Time.timeScale = !fx ? 1f : Now < stopUntil ? 0f : Now < slowUntil ? SlowScale : 1f;
             if (!view.IsBusy) Idle();
-            if (followId.HasValue) focus = Where(followId);
+            if (group != null) focus = Center(group);
+            else if (followId.HasValue) focus = Where(followId);
             if (!fx) shot = default;
 
             var smooth = SmoothSeconds / Speed;

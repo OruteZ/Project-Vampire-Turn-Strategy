@@ -587,7 +587,7 @@ namespace VampireSpawn.Core
         void Walk(Unit u, Hex to)
         {
             var path = Board.PathTo(u.Pos, to, u.Side, OccupantAt);
-            Emit(BattleEvent.Walk(u.Id, path));
+            Emit(BattleEvent.Walk(u.Id, path, u.Pos));
             if (path.Count > 0) u.Pos = path[path.Count - 1];
         }
 

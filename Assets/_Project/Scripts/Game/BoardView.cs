@@ -67,7 +67,19 @@ namespace VampireSpawn.Game
                 for (var c = 0; c < Board.Cols; c++)
                     BuildTile(new Hex(c, r));
             BuildGrid();
+            if (art.overlay != null) RegionOutline.Create(this, "TorchRange", TorchRange());
             FitCamera();
+        }
+
+        // battle-terrain.md 3-2: walkable cells a brazier lights; touching ranges merge into one border.
+        IEnumerable<Hex> TorchRange()
+        {
+            for (var r = 0; r < Board.Rows; r++)
+                for (var c = 0; c < Board.Cols; c++)
+                {
+                    var h = new Hex(c, r);
+                    if (Board.Walkable(h) && (Board.At(h) == Terrain.Torch || Board.Neighbors(h).Any(n => Board.At(n) == Terrain.Torch))) yield return h;
+                }
         }
 
         void LateUpdate()
