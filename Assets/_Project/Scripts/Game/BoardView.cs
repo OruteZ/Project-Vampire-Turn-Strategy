@@ -174,6 +174,21 @@ namespace VampireSpawn.Game
             const int Ring = 4, RingX = 8;
             props.SetParent(root.transform, false);
 
+            if (theme != null && theme.bareFloor != null)
+            {
+                var first = Local(new Hex(0, 0), s);
+                var last = Local(new Hex(board.Cols - 1, board.Rows - 1), s);
+                var floor = GameObject.CreatePrimitive(PrimitiveType.Cube);
+                Kill(floor.GetComponent<Collider>());
+                floor.name = "Floor";
+                floor.transform.SetParent(root.transform, false);
+                // Top face at TileTop, where Height() stands units when there is no Terrain.
+                floor.transform.localPosition = new Vector3((first.x + last.x) * 0.5f, art.tileHeight - 0.25f, (first.z + last.z) * 0.5f);
+                floor.transform.localScale = new Vector3(160f, 0.5f, 140f);
+                floor.GetComponent<MeshRenderer>().sharedMaterial = theme.bareFloor;
+                return root;
+            }
+
             var themed = theme != null && theme.blockers != null && theme.blockers.Length > 0;
             var blockers = themed ? theme.blockers : art.rockProps;
             for (var r = 0; r < board.Rows; r++)
@@ -182,7 +197,7 @@ namespace VampireSpawn.Game
                     var h = new Hex(c, r);
                     if (board.At(h) != Terrain.Rock || blockers == null || blockers.Length == 0 || IsDoor(stage, h)) continue;
                     var yaw = themed && theme.alignBlockers ? (c + r) % 2 * 180f : (c * 53 + r * 97) % 360;
-                    Paint(Place(blockers[(c * 7 + r * 13) % blockers.Length], props, Local(h, s) + Vector3.up * art.tileHeight, (themed ? theme.blockerWidth : 1.5f) * s, yaw, (themed ? 1.3f : 99f) * s, themed && theme.alignBlockers), themed ? theme.blockerMaterial : null);
+                    Place(blockers[(c * 7 + r * 13) % blockers.Length], props, Local(h, s) + Vector3.up * art.tileHeight, (themed ? theme.blockerWidth : 1.5f) * s, yaw, (themed ? 1.3f : 99f) * s, themed && theme.alignBlockers);
                 }
 
             if (theme == null) return root;
@@ -200,18 +215,12 @@ namespace VampireSpawn.Game
                     if (tallOk && h % 100 < 40)
                     {
                         var width = r <= -Ring + 1 ? 3f + h % 3 * 0.5f : 1.4f + h % 7 * 0.2f;
-                        Paint(Place(theme.border[h / 100 % theme.border.Length], props, at, width * s, h % 360, (r <= -Ring + 1 ? 6f : 3.5f) * s), theme.propMaterial);
+                        Place(theme.border[h / 100 % theme.border.Length], props, at, width * s, h % 360, (r <= -Ring + 1 ? 6f : 3.5f) * s);
                     }
                     else if (theme.scatter != null && theme.scatter.Length > 0 && h % 100 >= 40 && h % 100 < 70)
-                        Paint(Place(theme.scatter[h / 100 % theme.scatter.Length], props, at, (0.35f + h % 4 * 0.07f) * s, h % 360, 0.5f * s), theme.propMaterial);
+                        Place(theme.scatter[h / 100 % theme.scatter.Length], props, at, (0.35f + h % 4 * 0.07f) * s, h % 360, 0.5f * s);
                 }
             return root;
-        }
-
-        static void Paint(GameObject go, Material m)
-        {
-            if (m == null) return;
-            foreach (var r in go.GetComponentsInChildren<Renderer>()) r.sharedMaterials = System.Linq.Enumerable.Repeat(m, r.sharedMaterials.Length).ToArray();
         }
 
         public void Clear()

@@ -25,6 +25,12 @@ namespace VampireSpawn.Tests
             var props = prefab.transform.Find("Props");
             Assert.IsNotNull(props, stage.Id + " Props");
             var s = art.hexSize;
+            if (art.DressingTheme(stage.Id)?.bareFloor != null)
+            {
+                Assert.IsNotNull(prefab.transform.Find("Floor"), stage.Id + " bare floor (stage-dressing.md 6)");
+                Assert.AreEqual(0, props.childCount, stage.Id + " bare stage has no props");
+                return;
+            }
             var ground = prefab.GetComponentInChildren<UnityEngine.Terrain>();
             Assert.IsNotNull(ground, stage.Id + " Terrain (battle-terrain.md 5)");
             Assert.AreEqual(ground.terrainData, ground.GetComponent<TerrainCollider>()?.terrainData, stage.Id + " TerrainCollider uses the same data");

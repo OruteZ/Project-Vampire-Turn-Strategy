@@ -34,16 +34,14 @@ MonoBehaviour:
   - s19
   - s20
   ground: {r: 0.17, g: 0.16, b: 0.19, a: 1}
-  floor: {fileID: 8574412962073106934, guid: 9164b89ef0302a645ba0037d00d97079, type: 2}
+  floor: {fileID: 0}
   patches: {fileID: 0}
   patchShare: 0
-  blockers:
-  - {fileID: 1346524299210880, guid: fcc4229f634be704aa0dd336ad33c2b5, type: 3}
+  blockers: []
   alignBlockers: 1
   blockerWidth: 1.6
   border: []
   scatter: []
-  blockerMaterial: {fileID: 2100000, guid: 6615f1708a4932646adcdc55932feefa, type: 2}
-  propMaterial: {fileID: 0}
+  bareFloor: {fileID: 2100000, guid: a3cd22eceea5e8548b10cdb5d9b49a25, type: 2}
   fog: {r: 0.12, g: 0.12, b: 0.14, a: 1}
   ambient: {r: 0.42, g: 0.42, b: 0.46, a: 1}

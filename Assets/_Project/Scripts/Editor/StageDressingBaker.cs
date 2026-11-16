@@ -45,7 +45,7 @@ namespace VampireSpawn.Editor
                     made.Add(stage.Id);
                 }
                 var contents = PrefabUtility.LoadPrefabContents(path);
-                if (contents.GetComponentInChildren<UnityEngine.Terrain>() == null)
+                if (contents.GetComponentInChildren<UnityEngine.Terrain>() == null && art.DressingTheme(stage.Id)?.bareFloor == null)
                 {
                     AddTerrain(art, stage, contents);
                     PrefabUtility.SaveAsPrefabAsset(contents, path);
