@@ -109,35 +109,35 @@ namespace VampireSpawn.Game
                 new MapProp("SM_Bld_Ruin_02", 0, 2.5f, 180, 9), new MapProp("SM_Bld_Wall_Archway_02", 0, -1.5f, 0, 4), new MapProp("SM_Prop_Statue_01", -4, 0, 90, 1.5f),
                 new MapProp("SM_Prop_Pew_Large_01_Damaged_01", 1.5f, 0.8f, 0, 2.5f), new MapProp("SM_Prop_Bell_Large_01", 4, 3, 20, 1.6f) },
                 Fill = new MapFill { Count = 7, R1 = 5, R2 = 7, Names = W(W(3.5f, Range("SM_Env_Tree_Dead_", 1, 4)), W(1f, "SM_Env_Rocks_Small_01"), W(3f, "SM_Bld_Wall_Ruin_End_01")) } },
-            new MapRegion { Stage = "s4", Anchor = new Vector2(2, 42), Brazier = new Vector2(-3, -3), Camp = new Vector2(-9, 50), Props = new[] {
-                new MapProp("SM_Prop_Crypt_01", 0, 4.5f, 180, 5), new MapProp("SM_Bld_Gates_Cemetary_01", 0, -3.5f, 0, 4), new MapProp("SM_Bld_Fence_Cemetary_01", -3.8f, -3.5f, 0, 3),
-                new MapProp("SM_Bld_Fence_Cemetary_02", 3.8f, -3.5f, 0, 3), new MapProp("SM_Env_Tree_Dead_02", 4, 3, 40, 4) },
-                Fill = new MapFill { Count = 10, R1 = 2, R2 = 6, Names = W(W(0.9f, Range("SM_Prop_Tomb_Stone_", 1, 6)), W(2f, "SM_Prop_Tomb_01"), W(1f, "SM_Prop_Bone_Pile_01")) } },
-            new MapRegion { Stage = "s5", Anchor = new Vector2(-22, 54), Brazier = new Vector2(3, -3), Camp = new Vector2(-16, 66), Props = new[] {
+            new MapRegion { Stage = "s4", Anchor = new Vector2(2, 42), Brazier = new Vector2(3, -3), Camp = new Vector2(-9, 50), Props = new[] {
                 new MapProp("SM_Env_Rock_Cliff_01", -6.5f, 2, 90, 9, 9), new MapProp("SM_Env_Rock_Cliff_03", 6.5f, 3, 270, 9, 9), new MapProp("SM_Env_Cliff_Basalt_02", -5, 7, 0, 7, 8),
                 new MapProp("SM_Prop_Torch_01", -1.8f, -3, 0, 0.6f), new MapProp("SM_Prop_Torch_02", 1.8f, 0, 0, 0.6f), new MapProp("SM_Prop_Torch_01", -1.8f, 3, 0, 0.6f),
                 new MapProp(Fire, -1.8f, -3, 0, 0, lift: 1.6f), new MapProp(Fire, 1.8f, 0, 0, 0, lift: 1.6f), new MapProp(Fire, -1.8f, 3, 0, 0, lift: 1.6f) },
                 Lights = new[] { new MapLight(-1.8f, 1.8f, -3, 1.4f, 6f), new MapLight(1.8f, 1.8f, 0, 1.4f, 6f), new MapLight(-1.8f, 1.8f, 3, 1.4f, 6f) },
                 Fill = new MapFill { Count = 7, R1 = 5, R2 = 8, Names = W(W(3f, Range("SM_Gen_Env_Tree_Pine_", 1, 3)), W(2f, Range("SM_Env_Basalt_", 1, 3)),
                     W(1f, "SM_Gen_Env_Rock_Pebbles_01")) } },
-            new MapRegion { Stage = "s6", Anchor = new Vector2(-4, 68), Brazier = new Vector2(3, -5), Camp = new Vector2(10, 68.5f), Props = new[] {
-                new MapProp("SM_Bld_Ruin_05", 0, 3.5f, 180, 8), new MapProp("SM_Bld_Base_Wall_Half_01", -5, -1, 90, 4), new MapProp("SM_Bld_Base_Wall_Half_01", 5, -1, 90, 4),
-                new MapProp("SM_Bld_Base_Wall_Half_02", -3.5f, -4, 0, 4), new MapProp("SM_Bld_Base_Wall_Half_02", 3.5f, -4, 0, 4), new MapProp("SM_Prop_Statue_People_01", 0, 0.5f, 180, 1.5f) },
-                Fill = new MapFill { Count = 8, R1 = 4, R2 = 7, Names = W(W(2f, Range("SM_Gen_Env_Bush_Large_", 1, 4)), W(1.2f, Range("SM_Gen_Env_Shrub_", 1, 3)),
-                    W(0.8f, Range("SM_Gen_Env_Flowers_", 1, 4)), W(4f, "SM_Gen_Env_Tree_03")) } },
-            new MapRegion { Stage = "s7", Anchor = new Vector2(22, 78), Brazier = new Vector2(-4, -3), Camp = new Vector2(18, 86.5f), MarkerHeight = 5f, Props = new[] {
-                new MapProp("SM_Bld_Buttress_Pillar_04", -3, 1, 0, 2), new MapProp("SM_Bld_Buttress_Pillar_04", 3, 1, 0, 2), new MapProp("SM_Bld_Pillar_05", 7, 3, 0, 3),
-                new MapProp("SM_Prop_Flag_Hero_Damaged_01", -3, -0.5f, 0, 1.2f), new MapProp("SM_Prop_Flag_Hero_Damaged_02", 3, -0.5f, 0, 1.2f), new MapProp(Brazier, 5, -1, 0, 0.9f),
-                new MapProp(Fire, 5, -1, 0, 0, lift: 0.55f) },
-                Lights = new[] { new MapLight(5, 1.4f, -1, 1.6f, 7f) },
-                Fill = new MapFill { Count = 6, R1 = 4, R2 = 7, SouthOf = 0, Names = W(W(3f, Range("SM_Gen_Env_Tree_Pine_", 1, 3)), W(1f, "SM_Env_Rocks_Small_02")) } },
-            new MapRegion { Stage = "s8", Anchor = new Vector2(4, 90), Brazier = new Vector2(-4, -2), Camp = new Vector2(-2, 95.5f), Props = new[] {
+            new MapRegion { Stage = "s5", Anchor = new Vector2(-22, 54), Brazier = new Vector2(-3, -3), Camp = new Vector2(-16, 66), Props = new[] {
+                new MapProp("SM_Prop_Crypt_01", 0, 4.5f, 180, 5), new MapProp("SM_Bld_Gates_Cemetary_01", 0, -3.5f, 0, 4), new MapProp("SM_Bld_Fence_Cemetary_01", -3.8f, -3.5f, 0, 3),
+                new MapProp("SM_Bld_Fence_Cemetary_02", 3.8f, -3.5f, 0, 3), new MapProp("SM_Env_Tree_Dead_02", 4, 3, 40, 4) },
+                Fill = new MapFill { Count = 10, R1 = 2, R2 = 6, Names = W(W(0.9f, Range("SM_Prop_Tomb_Stone_", 1, 6)), W(2f, "SM_Prop_Tomb_01"), W(1f, "SM_Prop_Bone_Pile_01")) } },
+            new MapRegion { Stage = "s6", Anchor = new Vector2(-4, 68), Brazier = new Vector2(-4, -2), Camp = new Vector2(10, 68.5f), Props = new[] {
                 new MapProp("SM_Prop_Fire_Pit_01", 0, 0, 0, 2), new MapProp(Fire, 0, 0, 0, 0, lift: 0.3f), new MapProp("SM_Prop_Gallows_01", -3.5f, 2.5f, 30, 3),
                 new MapProp("SM_Prop_Notice_Board_01", 2, -2.5f, -20, 1.5f), new MapProp("SM_Prop_Shed_01", 4.5f, 3, -60, 4), new MapProp("SM_Bld_Ruin_03", -5.5f, 4.5f, 0, 6),
                 new MapProp("SM_Prop_Barricade_01", -2.5f, -4, 10, 3), new MapProp("SM_Prop_Barricade_03", 3, -4.5f, -15, 3) },
                 Lights = new[] { new MapLight(0, 1.2f, 0, 2f, 8f) },
                 Fill = new MapFill { Count = 8, R1 = 3.5f, R2 = 7, Names = W(W(0.9f, "SM_Prop_Crate_01", "SM_Prop_Crate_02", "SM_Prop_Barrel_01", "SM_Prop_Sack_02"),
                     W(0.5f, "SM_Prop_Lantern_01"), W(2f, "SM_Prop_Gibbet_01"), W(3f, "SM_Prop_Wagon_01_Damaged_01")) } },
+            new MapRegion { Stage = "s7", Anchor = new Vector2(22, 78), Brazier = new Vector2(3, -5), Camp = new Vector2(18, 86.5f), Props = new[] {
+                new MapProp("SM_Bld_Ruin_05", 0, 3.5f, 180, 8), new MapProp("SM_Bld_Base_Wall_Half_01", -5, -1, 90, 4), new MapProp("SM_Bld_Base_Wall_Half_01", 5, -1, 90, 4),
+                new MapProp("SM_Bld_Base_Wall_Half_02", -3.5f, -4, 0, 4), new MapProp("SM_Bld_Base_Wall_Half_02", 3.5f, -4, 0, 4), new MapProp("SM_Prop_Statue_People_01", 0, 0.5f, 180, 1.5f) },
+                Fill = new MapFill { Count = 8, R1 = 4, R2 = 7, Names = W(W(2f, Range("SM_Gen_Env_Bush_Large_", 1, 4)), W(1.2f, Range("SM_Gen_Env_Shrub_", 1, 3)),
+                    W(0.8f, Range("SM_Gen_Env_Flowers_", 1, 4)), W(4f, "SM_Gen_Env_Tree_03")) } },
+            new MapRegion { Stage = "s8", Anchor = new Vector2(4, 90), Brazier = new Vector2(-4, -3), Camp = new Vector2(-2, 95.5f), MarkerHeight = 5f, Props = new[] {
+                new MapProp("SM_Bld_Buttress_Pillar_04", -3, 1, 0, 2), new MapProp("SM_Bld_Buttress_Pillar_04", 3, 1, 0, 2), new MapProp("SM_Bld_Pillar_05", 7, 3, 0, 3),
+                new MapProp("SM_Prop_Flag_Hero_Damaged_01", -3, -0.5f, 0, 1.2f), new MapProp("SM_Prop_Flag_Hero_Damaged_02", 3, -0.5f, 0, 1.2f), new MapProp(Brazier, 5, -1, 0, 0.9f),
+                new MapProp(Fire, 5, -1, 0, 0, lift: 0.55f) },
+                Lights = new[] { new MapLight(5, 1.4f, -1, 1.6f, 7f) },
+                Fill = new MapFill { Count = 6, R1 = 4, R2 = 7, SouthOf = 0, Names = W(W(3f, Range("SM_Gen_Env_Tree_Pine_", 1, 3)), W(1f, "SM_Env_Rocks_Small_02")) } },
             new MapRegion { Stage = "s9", Anchor = new Vector2(-12, 97), Brazier = new Vector2(3, -2), Camp = new Vector2(-20, 93), MarkerHeight = 5f, Props = new[] {
                 new MapProp("SM_Bld_Bridge_Base_01", 0, 3, 0, 6), new MapProp("SM_Bld_Wall_Door_Large_01", 0, 6.5f, 180, 6), new MapProp("SM_Bld_Buttress_Pillar_03", -4, 6.5f, 0, 2.5f),
                 new MapProp("SM_Bld_Buttress_Pillar_03", 4, 6.5f, 0, 2.5f), new MapProp("SM_Prop_Gargoyle_Statue_01", -2.5f, -1, 0, 1.4f),

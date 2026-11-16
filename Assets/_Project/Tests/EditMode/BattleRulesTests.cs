@@ -26,7 +26,7 @@ namespace VampireSpawn.Tests
         [Test]
         public void DamageIsAtLeastOne()
         {
-            var b = new Battle(GameData.Stages.First(s => s.Id == "s7"), new[] { "knight_def" });
+            var b = new Battle(GameData.Stages.First(s => s.Id == "s8"), new[] { "knight_def" });
             var knight = b.Allies.First(u => u.Kind == "knight");
             var skeleton = b.Enemies.First(u => u.Kind == "skeleton");
             Assert.AreEqual(2, knight.Def, "knight 1 + plate armour 1");

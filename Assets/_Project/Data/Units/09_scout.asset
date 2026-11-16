@@ -24,7 +24,7 @@ MonoBehaviour:
   bane: 0
   heal: 0
   skills: 0f000000
-  unlockAt: 11
+  unlockAt: 6
   upgrades:
   - id: scout_mov
     cost: 70

@@ -242,36 +242,16 @@ namespace VampireSpawn.Tests
             Assert.IsTrue(b.Log.Any(l => Loc.Text(l.Text).Contains(Loc.T("tag.splash"))));
         }
 
-        // docs/content/units.md "판타지 직업 개편" C.
+        // docs/content/units.md "역할 구분"
         [Test]
-        public void WerewolfTurnsWithTheMoonAndLeavesAHumanCorpse()
+        public void AnEnemyThatCanReachAKnightStrikesOnlyTheKnight()
         {
-            var type = GameData.Type("werewolf");
-            var b = new Battle(Field(new[] { P(EnemyType.Vampire, 6, 6), P("skeleton", 3, 2) }), new[] { "werewolf_feast" }, new[] { P("werewolf", 3, 3) });
+            var b = new Battle(Field(new[] { P(EnemyType.Vampire, 6, 6), P("skeleton", 3, 2) }), null, new[] { P("knight", 3, 3), P("sword", 2, 2) });
             b.Start();
-            var wolf = Ally(b, 3, 3);
-            b.EndTurn(); b.EndTurn(); b.EndTurn();
-            Assert.AreEqual(3, b.Moon);
-            Assert.IsFalse(wolf.Wolf, "moon 3: still human");
-            var events = b.EndTurn().Events;
-            Assert.IsTrue(wolf.Wolf, "moon 4");
-            Assert.AreEqual(type.Atk + 2, wolf.Atk);
-            Assert.AreEqual(type.Mov + 1, wolf.Mov);
-            Assert.IsTrue(events.Any(e => e.Kind == BattleEventKind.Shifted && e.UnitId == wolf.Id && e.Value == 1));
-            var hurt = wolf.Hp;
-            Assert.Less(hurt, wolf.MaxHp, "the skeleton next to it has hit it");
-            Assert.IsTrue(b.Attack(wolf.Id, b.UnitAt(At(3, 2)).Id).Ok);
-            Assert.AreEqual(hurt + 2, wolf.Hp, "feast: 2 back on the kill");
-
-            var fall = new Battle(Field(new[] { P(EnemyType.Vampire, 3, 2) }, 99), null, new[] { P("werewolf", 3, 3), P("knight", 0, 6) });
-            fall.Start();
-            for (var i = 0; i < 8 && fall.Corpses.Count == 0; i++) fall.EndTurn();
-            Assert.AreEqual(type.Atk, fall.Corpses.Single(c => c.Type == "werewolf").Atk, "the corpse keeps the human attack");
-
-            var crescent = new Battle(Field(new[] { P(EnemyType.Vampire, 6, 6) }), new[] { "werewolf_early" }, new[] { P("werewolf", 3, 3) });
-            crescent.Start();
-            crescent.EndTurn(); crescent.EndTurn(); crescent.EndTurn();
-            Assert.IsTrue(Ally(crescent, 3, 3).Wolf, "crescent call: from moon 3");
+            var sword = b.Allies.First(u => u.Type == "sword");
+            b.EndTurn();
+            Assert.AreEqual(sword.MaxHp, sword.Hp, "without the knight the skeleton would pick the frail sword");
+            Assert.Less(b.Allies.First(u => u.Type == "knight").Hp, GameData.Type("knight").Hp);
         }
 
         [Test]

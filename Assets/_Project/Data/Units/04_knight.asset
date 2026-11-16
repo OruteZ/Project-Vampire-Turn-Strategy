@@ -16,15 +16,15 @@ MonoBehaviour:
   tier: 2
   pop: 3
   silver: 0
-  hp: 14
-  atk: 3
+  hp: 16
+  atk: 2
   def: 1
   mov: 2
   rng: 1
   bane: 0
   heal: 0
-  skills: 
-  unlockAt: 7
+  skills: 12000000
+  unlockAt: 8
   upgrades:
   - id: knight_hp
     cost: 90

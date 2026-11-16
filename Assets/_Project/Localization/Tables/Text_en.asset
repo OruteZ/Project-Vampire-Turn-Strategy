@@ -465,8 +465,7 @@ MonoBehaviour:
       m_Items:
       - rid: 7201578077006332005
   - m_Id: 5832187899919
-    m_Localized: 'Regular infantry. A striker: hits hard, but unarmoured and cannot
-      hold for long.'
+    m_Localized: The damage dealer. Hits hardest of all, but is as frail as a peasant.
     m_Metadata:
       m_Items:
       - rid: 7201578077006332005
@@ -537,8 +536,8 @@ MonoBehaviour:
       m_Items:
       - rid: 7201578077006332005
   - m_Id: 5832187899933
-    m_Localized: 'A tank: holds the longest, but hits no harder than a soldier. As
-      a spawn, the most stubborn.'
+    m_Localized: The tank. An enemy that can reach a knight strikes only the knight
+      (taunt). High health and armour, but hits like a peasant.
     m_Metadata:
       m_Items:
       - rid: 7201578077006332005
@@ -699,19 +698,18 @@ MonoBehaviour:
       m_Items:
       - rid: 7201578077006332005
   - m_Id: 5832192094212
-    m_Localized: Crossroads Cemetery
+    m_Localized: Torchlit Pass
     m_Metadata:
       m_Items:
       - rid: 7201578077006332005
   - m_Id: 5832192094213
-    m_Localized: Villagers lie dead at three gates of the crossroads graveyard. They
-      rise when the first night falls, unless a gravedigger within two hexes buries
-      them first.
+    m_Localized: Torches light the middle of the pass, but archers watch from the
+      slopes. Climb the dark side paths to reach them.
     m_Metadata:
       m_Items:
       - rid: 7201578077006332005
   - m_Id: 5832192094214
-    m_Localized: Gravekeeper Vampire
+    m_Localized: Noble Vampire of the Pass
     m_Metadata:
       m_Items:
       - rid: 7201578077006332005
@@ -721,18 +719,19 @@ MonoBehaviour:
       m_Items:
       - rid: 7201578077006332005
   - m_Id: 5832192094216
-    m_Localized: Torchlit Pass
+    m_Localized: Crossroads Cemetery
     m_Metadata:
       m_Items:
       - rid: 7201578077006332005
   - m_Id: 5832192094217
-    m_Localized: Torches light the middle of the pass, but archers watch from the
-      slopes. Climb the dark side paths to reach them.
+    m_Localized: Villagers lie dead at three gates of the crossroads graveyard. They
+      rise when the first night falls, unless a gravedigger within two hexes buries
+      them first.
     m_Metadata:
       m_Items:
       - rid: 7201578077006332005
   - m_Id: 5832192094218
-    m_Localized: Noble Vampire of the Pass
+    m_Localized: Gravekeeper Vampire
     m_Metadata:
       m_Items:
       - rid: 7201578077006332005
@@ -742,19 +741,18 @@ MonoBehaviour:
       m_Items:
       - rid: 7201578077006332005
   - m_Id: 5832192094220
-    m_Localized: The Abandoned Manor
+    m_Localized: Village Below the Castle
     m_Metadata:
       m_Items:
       - rid: 7201578077006332005
   - m_Id: 5832192094221
-    m_Localized: The manor hall has four doors. Hold for ten nights. With the saintess
-      tending the wounded, more will live. Reach the chapel torch to the east and
-      the villagers hiding there will come to the hall.
+    m_Localized: Bring the guide to the drain. The alleys are narrow, and the woken
+      vampire may come down the same one.
     m_Metadata:
       m_Items:
       - rid: 7201578077006332005
   - m_Id: 5832192094222
-    m_Localized: Mistress of the Manor
+    m_Localized: The Count's Chamberlain
     m_Metadata:
       m_Items:
       - rid: 7201578077006332005
@@ -764,18 +762,19 @@ MonoBehaviour:
       m_Items:
       - rid: 7201578077006332005
   - m_Id: 5832192094224
-    m_Localized: Border Watchtower
+    m_Localized: The Abandoned Manor
     m_Metadata:
       m_Items:
       - rid: 7201578077006332005
   - m_Id: 5832192094225
-    m_Localized: The watchtower has a single door, held by a heavy skeleton with
-      a captain behind it. You need a knight to stand before the door.
+    m_Localized: The manor hall has four doors. Hold for ten nights. With the saintess
+      tending the wounded, more will live. Reach the chapel torch to the east and
+      the villagers hiding there will come to the hall.
     m_Metadata:
       m_Items:
       - rid: 7201578077006332005
   - m_Id: 5832192094226
-    m_Localized: Black Knight Vampire
+    m_Localized: Mistress of the Manor
     m_Metadata:
       m_Items:
       - rid: 7201578077006332005
@@ -785,18 +784,18 @@ MonoBehaviour:
       m_Items:
       - rid: 7201578077006332005
   - m_Id: 5832192094228
-    m_Localized: Village Below the Castle
+    m_Localized: Border Watchtower
     m_Metadata:
       m_Items:
       - rid: 7201578077006332005
   - m_Id: 5832192094229
-    m_Localized: Bring the guide to the drain. The alleys are narrow, and the woken
-      vampire may come down the same one.
+    m_Localized: The watchtower has a single door, and the heavy skeleton and the
+      captain inside come charging out. A knight in the doorway draws every blow.
     m_Metadata:
       m_Items:
       - rid: 7201578077006332005
   - m_Id: 5832192094230
-    m_Localized: The Count's Chamberlain
+    m_Localized: Black Knight Vampire
     m_Metadata:
       m_Items:
       - rid: 7201578077006332005
@@ -2054,7 +2053,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 1793766033518592
-    m_Localized: the great hall
+    m_Localized: the drain
     m_Metadata:
       m_Items: []
   - m_Id: 1797914418278400
@@ -2541,6 +2540,18 @@ MonoBehaviour:
       m_Items: []
   - m_Id: 3582748580966400
     m_Localized: SP
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3661052889591808
+    m_Localized: the guide
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3661052931534848
+    m_Localized: the great hall
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3661052939923456
+    m_Localized: Taunt
     m_Metadata:
       m_Items: []
   references:

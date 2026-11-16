@@ -187,6 +187,9 @@ namespace VampireSpawn.Core
 
         Unit PickTarget(Unit att, List<Unit> list)
         {
+            // docs/content/units.md: an enemy that can reach a taunting unit strikes it and nothing else.
+            var wall = list.Where(t => t.Has(Ability.Taunt)).ToList();
+            if (wall.Count > 0) list = wall;
             var best = list[0];
             foreach (var t in list.Skip(1))
                 if (TargetScore(att, t) > TargetScore(att, best)) best = t;

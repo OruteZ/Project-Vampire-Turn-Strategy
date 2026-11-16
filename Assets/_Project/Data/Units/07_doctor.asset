@@ -24,7 +24,7 @@ MonoBehaviour:
   bane: 0
   heal: 4
   skills: 0a000000
-  unlockAt: 6
+  unlockAt: 7
   upgrades:
   - id: doctor_mov
     cost: 60

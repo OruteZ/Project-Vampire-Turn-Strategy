@@ -22,7 +22,6 @@ MonoBehaviour:
   - hunter
   - gravedigger
   - doctor
-  - werewolf
   - scout
   pop: 18
   silver: 2

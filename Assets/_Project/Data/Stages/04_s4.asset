@@ -17,7 +17,7 @@ MonoBehaviour:
   - pspear
   - parcher
   - sword
-  - gravedigger
+  - archer
   pop: 9
   silver: 0
   reward: 25
@@ -28,29 +28,28 @@ MonoBehaviour:
   escortDef: 0
   escortMov: 0
   escortAt: {x: 0, y: 0}
-  bonusType: 0
-  bonusValue: 12
-  bonusGold: 10
-  bossHp: 16
-  bossAtk: 4
+  bonusType: 2
+  bonusValue: 0
+  bonusGold: 15
+  bossHp: 24
+  bossAtk: 5
   bossDef: 0
   bossMov: 2
-  bossHeal: 8
+  bossHeal: 10
   map:
-  - '###.....###'
-  - '###..T..###'
-  - '#####.#####'
-  - '###ddddd###'
-  - '###ddddd###'
-  - ...ddddd...
-  - '###ddddd###'
-  - '###ddddd###'
-  - '#####.#####'
-  - '###.....###'
-  - '###.....###'
+  - '##.....##'
+  - '#.......#'
+  - '##,#.#,##'
+  - '#...T...#'
+  - '#.#...#.#'
+  - ..#.T.#..
+  - ..#...#..
+  - .##.#.##.
+  - ddddddddd
+  - ddddddddd
   enemies:
   - kind: vampire
-    col: 5
+    col: 4
     row: 0
     arrive: 0
     wave: 
@@ -58,77 +57,49 @@ MonoBehaviour:
     alert: 0
   - kind: skeleton
     col: 3
-    row: 0
+    row: 4
     arrive: 0
     wave: 
     stance: 0
     alert: 0
-  - kind: skeleton
-    col: 7
-    row: 0
-    arrive: 0
-    wave: 
-    stance: 0
-    alert: 0
-  - kind: skeleton
-    col: 4
-    row: 1
-    arrive: 0
-    wave: 
-    stance: 0
-    alert: 0
-  - kind: skeleton
-    col: 6
-    row: 1
-    arrive: 0
-    wave: 
-    stance: 0
-    alert: 0
-  - kind: skeleton
-    col: 10
-    row: 5
-    arrive: 5
-    wave: 
-    stance: 0
-    alert: 0
-  - kind: skeleton
-    col: 9
-    row: 5
-    arrive: 5
-    wave: 
-    stance: 0
-    alert: 0
-  - kind: ghoul
-    col: 4
-    row: 10
-    arrive: 8
-    wave: 
-    stance: 0
-    alert: 0
-  - kind: skeleton
-    col: 6
-    row: 10
-    arrive: 8
-    wave: 
-    stance: 0
-    alert: 0
-  - kind: corpse
-    col: 2
-    row: 5
-    arrive: 0
-    wave: 
-    stance: 0
-    alert: 0
-  - kind: corpse
-    col: 8
-    row: 5
-    arrive: 0
-    wave: 
-    stance: 0
-    alert: 0
-  - kind: corpse
+  - kind: skeletonCaptain
     col: 5
-    row: 8
+    row: 4
+    arrive: 0
+    wave: 
+    stance: 0
+    alert: 0
+  - kind: skeletonArcher
+    col: 4
+    row: 1
+    arrive: 0
+    wave: 
+    stance: 2
+    alert: 0
+  - kind: skeletonArcher
+    col: 1
+    row: 4
+    arrive: 0
+    wave: 
+    stance: 2
+    alert: 0
+  - kind: skeletonArcher
+    col: 7
+    row: 4
+    arrive: 0
+    wave: 
+    stance: 2
+    alert: 0
+  - kind: skeleton
+    col: 3
+    row: 6
+    arrive: 0
+    wave: 
+    stance: 0
+    alert: 0
+  - kind: skeleton
+    col: 5
+    row: 6
     arrive: 0
     wave: 
     stance: 0
@@ -138,23 +109,20 @@ MonoBehaviour:
   reinforcements: []
   sample:
   - kind: sword
+    col: 3
+    row: 8
+  - kind: archer
     col: 4
-    row: 3
-  - kind: sword
-    col: 6
-    row: 3
+    row: 9
   - kind: pspear
     col: 5
-    row: 3
+    row: 8
+  - kind: parcher
+    col: 1
+    row: 8
+  - kind: parcher
+    col: 7
+    row: 8
   - kind: pspear
     col: 4
-    row: 4
-  - kind: pspear
-    col: 6
-    row: 4
-  - kind: pspear
-    col: 3
-    row: 3
-  - kind: pspear
-    col: 7
-    row: 3
+    row: 8

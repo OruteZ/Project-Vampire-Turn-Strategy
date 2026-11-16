@@ -24,7 +24,7 @@ MonoBehaviour:
   bane: 0
   heal: 0
   skills: 
-  unlockAt: 5
+  unlockAt: 4
   upgrades:
   - id: archer_atk
     cost: 70

@@ -22,7 +22,6 @@ MonoBehaviour:
   - hunter
   - gravedigger
   - doctor
-  - werewolf
   - scout
   pop: 16
   silver: 2
@@ -168,7 +167,7 @@ MonoBehaviour:
   - kind: knight
     col: 5
     row: 5
-  - kind: werewolf
+  - kind: scout
     col: 4
     row: 5
   - kind: sword

@@ -1,7 +1,7 @@
 #!/bin/bash
 # tut.sh <tag>: on each unit's unlock stage, 20 random builds that field two of it against 20 that leave it out.
 D="$(cd "$(dirname "$0")" && pwd)"; out="$D/scratch/$1"; rm -f "$out".*
-for p in sword:s3 gravedigger:s4 archer:s5 doctor:s6 knight:s7 werewolf:s8 hunter:s9 scout:s11; do k=${p%%:*}; s=${p##*:}
+for p in sword:s3 archer:s4 gravedigger:s5 scout:s6 doctor:s7 knight:s8 hunter:s9; do k=${p%%:*}; s=${p##*:}
   ( SP_FORCE=$k "$D/sp" builds $s 20 11 > "$out.$k.with" 2>/dev/null ) &
   ( SP_BAN=$k "$D/sp" builds $s 20 12 > "$out.$k.without" 2>/dev/null ) &
 done; wait
