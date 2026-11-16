@@ -220,6 +220,10 @@ namespace VampireSpawn.Game.Screens
             var unit = panel.Q("bk-unit");
             ToolkitKit.Picture(unit.Q(className: "bk-unit-icon"), art.Ui(art.Icon(kind)), Ui.Steel);
             unit.Q<Label>().text = Loc.Text(types[sel].Name);
+            var cost = unit.Q("bk-cost");
+            cost.Clear();
+            ToolkitKit.Value(cost, art, Kit.Icon.Pop, types[sel].Pop.ToString(), Ui.Candle, Ui.Bone, Loc.T("battle.pop"), tip);
+            if (types[sel].Silver > 0) ToolkitKit.Value(cost, art, Kit.Icon.Silver, types[sel].Silver.ToString(), Ui.Candle, Ui.Bone, Loc.T("battle.silver"), tip);
             var stats = panel.Q("bk-stats");
             var now = Battle.Preview(kind, c.Upgrades);
             Stats(stats, now, null);

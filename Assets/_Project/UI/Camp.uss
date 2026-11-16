@@ -69,6 +69,9 @@
 .bk-unit { position: absolute; left: 32px; top: 188px; width: 496px; height: 40px; flex-direction: row; align-items: center; }
 .bk-unit-icon { width: 40px; height: 40px; margin-right: 12px; }
 .bk-unit-name { font-size: 20px; color: var(--bone); width: 300px; }
+.bk-cost { flex-grow: 1; flex-direction: row; justify-content: flex-end; align-items: center; }
+.bk-cost > .value { margin-left: 14px; }
+.bk-cost .value-text { font-size: 18px; }
 .bk-stats { position: absolute; left: 84px; top: 240px; width: 412px; height: 32px; flex-direction: row; align-items: center; }
 .bk-stats > .value { margin-right: 14px; }
 .bk-stats .value-text { font-size: 15px; -unity-font-style: normal; }

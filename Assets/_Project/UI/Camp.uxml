@@ -65,6 +65,7 @@
             <ui:VisualElement name="bk-unit" class="bk-unit" picking-mode="Ignore">
                 <ui:VisualElement class="bk-unit-icon" picking-mode="Ignore" />
                 <ui:Label class="bk-unit-name display" picking-mode="Ignore" />
+                <ui:VisualElement name="bk-cost" class="bk-cost" picking-mode="Ignore" />
             </ui:VisualElement>
             <ui:VisualElement name="bk-stats" class="bk-stats" picking-mode="Ignore" />
             <ui:VisualElement name="bk-break" class="break bk-break" picking-mode="Ignore" />
