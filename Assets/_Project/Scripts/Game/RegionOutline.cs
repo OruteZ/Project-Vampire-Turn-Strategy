@@ -8,16 +8,19 @@ namespace VampireSpawn.Game
     [RequireComponent(typeof(MeshFilter), typeof(MeshRenderer))]
     public sealed class RegionOutline : MonoBehaviour
     {
+        public enum Look { Flow, Solid }
+
+        // Switchable live in the inspector during play.
+        public Look look = Look.Flow;
         public Color color = Screens.Ui.Candle;
         public float width = 0.08f;
-        // In hexSize units. dash 0 = solid line.
-        public float dash = 0.25f, gap = 0.15f;
-        // Dash crawl along the border, hexSize per second; 0 = still.
-        public float flow = 0.3f;
+        // Flow only, in hexSize units and hexSize per second.
+        public float dash = 0.25f, gap = 0.15f, flow = 0.3f;
         public float lift = 0.05f;
 
         BoardView board;
         HexLines lines;
+        Look drawn;
         Mesh mesh;
         readonly List<List<Vector3>> loops = new List<List<Vector3>>();
 
@@ -44,12 +47,12 @@ namespace VampireSpawn.Game
                 lines = new HexLines(p => transform.InverseTransformPoint(board.OnHologram(transform.TransformPoint(p), lift)));
             }
             Trace(cells, board.art.hexSize, loops);
-            Draw(0f);
+            Draw(Time.time * flow);
         }
 
         void Update()
         {
-            if (board != null && flow != 0f && dash > 0f) Draw(Time.time * flow);
+            if (board != null && (look == Look.Flow || drawn != look)) Draw(Time.time * flow);
         }
 
         // Each cell's edges run the same way round, so the border edges chain head to tail into closed loops.
@@ -95,7 +98,7 @@ namespace VampireSpawn.Game
             var w = width * s;
             foreach (var loop in loops)
             {
-                if (dash <= 0f)
+                if (look == Look.Solid || dash <= 0f)
                 {
                     for (var i = 0; i < loop.Count; i++) lines.Segment(loop[i], loop[(i + 1) % loop.Count], w, color);
                     continue;
@@ -124,6 +127,7 @@ namespace VampireSpawn.Game
                 }
             }
             lines.Apply(mesh);
+            drawn = look;
         }
     }
 }
