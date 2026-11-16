@@ -196,7 +196,8 @@ namespace VampireSpawn.Core
             foreach (var id in upgrades)
                 if (GameData.Upgrades.All(u => u.Id != id)) throw new ArgumentException("unknown upgrade " + id);
             foreach (var e in stage.Enemies)
-                if (e.Reinforcement) pending.Add(e);
+                if (e.Kind == EnemyType.Corpse) corpses.Add(Fallen(new Hex(e.Col, e.Row)));
+                else if (e.Reinforcement) pending.Add(e);
                 else units.Add(Placed(e, new Hex(e.Col, e.Row)));
             if (stage.Escort is EscortStats es)
                 units.Add(new Unit
@@ -277,6 +278,13 @@ namespace VampireSpawn.Core
                 Emit(BattleEvent.Shifted(u.Id, u.Wolf));
                 Say(new Message(u.Wolf ? "log.wolf" : "log.unwolf", u.Name), "h");
             }
+        }
+
+        Corpse Fallen(Hex at)
+        {
+            var m = GameData.Minion(EnemyType.Spawn);
+            var t = GameData.Type(EnemyType.SpawnOf);
+            return new Corpse { Id = nextId++, Pos = at, Name = t.Name, Type = t.Key, Glyph = t.Glyph, MaxHp = m.Hp, Atk = m.Atk, Def = m.Def, Mov = m.Mov };
         }
 
         Unit MakeEnemy(string kind, Hex at)

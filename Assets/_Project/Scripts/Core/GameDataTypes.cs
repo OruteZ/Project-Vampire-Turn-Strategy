@@ -66,6 +66,8 @@ namespace VampireSpawn.Core
         public const string Vampire = "vampire";
         // Data key of a spawn placed by the stage, and the unit type it looks like.
         public const string Spawn = "spawn", SpawnOf = "pspear";
+        // Data key of a villager already dead when the battle begins: it rises as that spawn unless buried first.
+        public const string Corpse = "corpse";
 
         public readonly string Key;
         public readonly int Hp, Atk, Def, Mov, Rng;
@@ -228,7 +230,7 @@ namespace VampireSpawn.Core
             Reinforcements = reinforcements ?? Array.Empty<Reinforcement>();
         }
 
-        public Placement[] Minions => Enemies.Where(e => e.Kind != EnemyType.Vampire).ToArray();
+        public Placement[] Minions => Enemies.Where(e => e.Kind != EnemyType.Vampire && e.Kind != EnemyType.Corpse).ToArray();
 
         public Message Objective => Goal switch
         {

@@ -111,7 +111,8 @@ namespace VampireSpawn.Core
             var taken = new HashSet<(int, int)>();
             foreach (var e in s.Enemies)
             {
-                if (e.Kind != EnemyType.Vampire && Minions.All(m => m.Key != e.Kind)) p.Add($"{at}: 없는 적 {e.Kind}");
+                if (e.Kind == EnemyType.Corpse) { if (e.Reinforcement || Tile(e.Col, e.Row) == 'd') p.Add($"{at}: 시신 {e.Col},{e.Row} 은(는) 처음부터, 배치 구역 밖에만 둘 수 있다"); }
+                else if (e.Kind != EnemyType.Vampire && Minions.All(m => m.Key != e.Kind)) p.Add($"{at}: 없는 적 {e.Kind}");
                 var t = Tile(e.Col, e.Row);
                 if (t == '\0' || t == '#' || t == '~' || t == '_') p.Add($"{at}: 적 {e.Kind} 이(가) 설 수 없는 칸 {e.Col},{e.Row}");
                 if (!e.Reinforcement && !taken.Add((e.Col, e.Row))) p.Add($"{at}: {e.Col},{e.Row} 에 유닛이 겹친다");

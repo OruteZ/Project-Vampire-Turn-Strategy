@@ -704,8 +704,9 @@ MonoBehaviour:
       m_Items:
       - rid: 7201578077006332005
   - m_Id: 5832192094213
-    m_Localized: At the crossroads graveyard the already risen come down the west
-      road. Allies they fell rise too, unless the gravedigger buries the body first.
+    m_Localized: Villagers lie dead at three gates of the crossroads graveyard. They
+      rise when the first night falls, unless a gravedigger within two hexes buries
+      them first.
     m_Metadata:
       m_Items:
       - rid: 7201578077006332005

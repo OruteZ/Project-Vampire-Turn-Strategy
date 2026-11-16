@@ -255,5 +255,19 @@ namespace VampireSpawn.Tests
             Assert.IsFalse(b.Attack(b.Allies.Single().Id, b.Enemies.Single(e => e.Kind == "skeleton").Id).Ok, "the enemy is next to the archer");
             Assert.AreEqual(Role.Spawn, b.UnitAt(new Hex(0, 0)).Role, "data key spawn makes a spawn, not a minion");
         }
+
+        // docs/content/enemies.md 5
+        [Test]
+        public void AStageCorpseRisesAtTheFirstNightUnlessBuried()
+        {
+            var foes = new[] { new Placement(EnemyType.Vampire, 6, 6), new Placement(EnemyType.Corpse, 3, 3), new Placement(EnemyType.Corpse, 0, 0) };
+            var b = new Battle(Field(foes), null, new[] { new Placement("gravedigger", 3, 5) });
+            b.Start();
+            Assert.AreEqual(2, b.Corpses.Count);
+            Assert.IsTrue(b.Bury(b.Allies.Single().Id, b.CorpseAt(new Hex(3, 3)).Id).Ok, "two hexes away");
+            b.EndTurn();
+            Assert.AreEqual(0, b.Corpses.Count);
+            Assert.AreEqual(1, b.Enemies.Count(e => e.Role == Role.Spawn), "only the one left unburied rose");
+        }
     }
 }

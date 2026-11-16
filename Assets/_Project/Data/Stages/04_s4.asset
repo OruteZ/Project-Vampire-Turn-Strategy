@@ -84,20 +84,6 @@ MonoBehaviour:
     wave: 
     stance: 0
     alert: 0
-  - kind: spawn
-    col: 0
-    row: 5
-    arrive: 3
-    wave: 
-    stance: 0
-    alert: 0
-  - kind: spawn
-    col: 1
-    row: 5
-    arrive: 3
-    wave: 
-    stance: 0
-    alert: 0
   - kind: skeleton
     col: 10
     row: 5
@@ -123,6 +109,27 @@ MonoBehaviour:
     col: 6
     row: 10
     arrive: 8
+    wave: 
+    stance: 0
+    alert: 0
+  - kind: corpse
+    col: 2
+    row: 5
+    arrive: 0
+    wave: 
+    stance: 0
+    alert: 0
+  - kind: corpse
+    col: 8
+    row: 5
+    arrive: 0
+    wave: 
+    stance: 0
+    alert: 0
+  - kind: corpse
+    col: 5
+    row: 8
+    arrive: 0
     wave: 
     stance: 0
     alert: 0
