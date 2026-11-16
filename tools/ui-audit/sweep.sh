@@ -31,28 +31,33 @@ declare -A SCREENS=(
   [5-rules]="$BF T.GetField(\"rulesOpen\",F).SetValue(bf,true); T.GetMethod(\"RenderBattle\",F).Invoke(bf,null); return 1;"
   [6-log]="$BF T.GetField(\"rulesOpen\",F).SetValue(bf,false); T.GetField(\"logOpen\",F).SetValue(bf,true); T.GetMethod(\"RenderBattle\",F).Invoke(bf,null); return 1;"
   [8a-wave]="$WAVE var best = System.Linq.Enumerable.First(System.Linq.Enumerable.OrderByDescending(VampireSpawn.Core.Campaign.Stages, st => System.Linq.Enumerable.Max(System.Linq.Enumerable.Append(System.Linq.Enumerable.Select(st.Enemies, p => W(st, p)), -1)))); VampireSpawn.Game.Screens.App.GoBattle(best, false); return 1;"
-  [8b-arrival]="$BF $WAVE var b = bf.input.Session.Battle; bf.input.Run(s=>s.UseSample()); bf.input.Run(s=>s.Start()); var p = System.Linq.Enumerable.First(System.Linq.Enumerable.OrderByDescending(b.Pending, x => W(b.Stage, x))); return VampireSpawn.Editor.UiAudit.HexOnScreen(p.Col, p.Row);"
+  [8b-arrival]="$BF $WAVE var b = bf.input.Session.Battle; if (b.Phase == VampireSpawn.Core.Phase.Deploy) { bf.input.Run(s=>s.UseSample()); bf.input.Run(s=>s.Start()); } var p = System.Linq.Enumerable.First(System.Linq.Enumerable.OrderByDescending(b.Pending, x => W(b.Stage, x))); return VampireSpawn.Editor.UiAudit.HexOnScreen(p.Col, p.Row);"
   [8c-enemy]="$BF var u = System.Linq.Enumerable.First(System.Linq.Enumerable.OrderByDescending(System.Linq.Enumerable.Where(bf.input.Session.Battle.Units, x => x.Side == VampireSpawn.Core.Side.Enemy), x => x.Stance == VampireSpawn.Core.Stance.Guard ? 1 : 0)); return VampireSpawn.Editor.UiAudit.HexOnScreen(u.Pos.Col, u.Pos.Row);"
   [7-over]="$BF T.GetField(\"logOpen\",F).SetValue(bf,false); T.GetMethod(\"Finish\",F).Invoke(bf,null); return 1;"
 )
 # Hover cards exist only under the pointer: these steps return "move x y", the sweep moves the pointer there and checks the card appeared.
+# A resize lands a frame or more late, so a hover can miss; these steps are safe to rerun and get 3 tries.
 declare -A EXPECT=([8b-arrival]="Arrival " [8c-enemy]="Panel ")
 SIZES="${SIZES:-1920x1080 1280x720 1920x1200 1440x1080 1280x1024 2560x1080}"
 
+bash "$V" play >/dev/null || exit 1
+ev "UnityEngine.Localization.Settings.LocalizationSettings.SelectedLocale = UnityEngine.Localization.Settings.LocalizationSettings.AvailableLocales.GetLocale(\"${LOCALE:-ko}\"); return 1;" >/dev/null
+sleep 1
 for size in $SIZES; do
   w=${size%x*}; h=${size#*x}
-  # After a few Resize calls simulated pointer moves stop reaching the game (verify-unity Gotchas); a fresh play session per size keeps the hover steps working.
-  bash "$V" stop >/dev/null 2>&1
-  bash "$V" play >/dev/null || exit 1
-  ev "UnityEngine.Localization.Settings.LocalizationSettings.SelectedLocale = UnityEngine.Localization.Settings.LocalizationSettings.AvailableLocales.GetLocale(\"${LOCALE:-ko}\"); return 1;" >/dev/null
-  sleep 1
   ev "return VampireSpawn.Editor.UiAudit.Resize($w,$h);" >/dev/null
+  sleep 1
   for key in $(printf '%s\n' "${!SCREENS[@]}" | sort | grep -E "${ONLY:-.}"); do
-    read -r act x y <<<"$(ev "${SCREENS[$key]}")"
-    [ "$act" = move ] && bash "$V" click "$x" "$y" move >/dev/null
-    sleep 1
+    for try in 1 2 3; do
+      read -r act x y <<<"$(ev "${SCREENS[$key]}")"
+      [ "$act" = move ] && bash "$V" click "$x" "$y" move >/dev/null
+      sleep 1
+      [ -z "${EXPECT[$key]:-}" ] && break
+      card=$(ev "return VampireSpawn.Editor.UiAudit.Has(\"${EXPECT[$key]}\") ? 1 : 0;")
+      [ "$card" = 1 ] && break
+    done
     # A step that hovers must show its card, or the sweep checked nothing.
-    if [ -n "${EXPECT[$key]:-}" ] && [ "$(ev "return VampireSpawn.Editor.UiAudit.Has(\"${EXPECT[$key]}\") ? 1 : 0;")" != 1 ]; then
+    if [ -n "${EXPECT[$key]:-}" ] && [ "$card" != 1 ]; then
       printf '## %s %s\n%s issues=1\nno-card\t%s\thover did not open the card\n\n' "$key" "$size" "$size" "${EXPECT[$key]}" >> "$REPORT"; continue
     fi
     # A fresh battle opens with the start camera sweep (BattleCamera); the board is framed only after it settles (~6 s).
