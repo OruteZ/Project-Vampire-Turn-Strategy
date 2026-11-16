@@ -30,7 +30,7 @@ namespace VampireSpawn.Core
         public static BattleEvent Log(Message text, string style) => new BattleEvent(BattleEventKind.Log, text: text, style: style);
         public static BattleEvent Banner(BannerKind kind, Message text) =>
             new BattleEvent(BattleEventKind.Banner, text: text, style: kind == BannerKind.PlayerTurn ? "player" : "enemy", value: (int)kind);
-        public static BattleEvent Walk(int unitId, IReadOnlyList<Hex> path) => new BattleEvent(BattleEventKind.Walk, unitId, path: path);
+        public static BattleEvent Walk(int unitId, IReadOnlyList<Hex> path, Hex from) => new BattleEvent(BattleEventKind.Walk, unitId, path: path, at: from);
         public static BattleEvent Popup(int unitId, PopupKind kind, Message text) =>
             new BattleEvent(BattleEventKind.Popup, unitId, text, kind == PopupKind.Damage ? "dmg" : kind == PopupKind.Drain ? "blood" : "heal", value: (int)kind);
         public static BattleEvent Hit(int unitId, int attackerId, int damage = 0) => new BattleEvent(BattleEventKind.Hit, unitId, otherId: attackerId, value: damage);
@@ -45,6 +45,20 @@ namespace VampireSpawn.Core
         public static BattleEvent Arrived(int unitId, Hex at) => new BattleEvent(BattleEventKind.Arrived, unitId, at: at);
         public static BattleEvent Shifted(int unitId, bool wolf) => new BattleEvent(BattleEventKind.Shifted, unitId, value: wolf ? 1 : 0);
         public static BattleEvent MoonChanged(int moon) => new BattleEvent(BattleEventKind.MoonChanged, value: moon);
+
+        // docs/art/battle-camera.md 4-1: how many walks from start can play at once (consecutive, no shared hex); 0 if start is not a walk.
+        public static int WalkRun(IReadOnlyList<BattleEvent> events, int start)
+        {
+            var used = new HashSet<Hex>();
+            var n = 0;
+            for (var i = start; i < events.Count && events[i].Kind == BattleEventKind.Walk; i++, n++)
+            {
+                var hexes = new List<Hex>(events[i].Path) { events[i].At };
+                if (n > 0 && hexes.Exists(used.Contains)) break;
+                used.UnionWith(hexes);
+            }
+            return n;
+        }
 
         public override string ToString() => Format(m => m.ToString());
 
