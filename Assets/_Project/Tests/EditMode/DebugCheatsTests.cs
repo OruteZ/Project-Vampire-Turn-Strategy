@@ -26,7 +26,7 @@ namespace VampireSpawn.Tests
             for (var n = 1; n <= 3; n++)
             {
                 var c = DebugCheats.With(new Campaign(), ups: DebugCheats.Branch(n));
-                foreach (var t in GameData.Types) Assert.AreEqual(GameData.Branches(t.Key)[n - 1], c.Chosen(t.Key), t.Key + " branch " + n);
+                foreach (var t in GameData.Types) Assert.IsTrue(c.Owns(GameData.Branches(t.Key)[n - 1]), t.Key + " branch " + n);
             }
         }
 

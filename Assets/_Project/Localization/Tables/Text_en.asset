@@ -1434,8 +1434,8 @@ MonoBehaviour:
       m_Items:
       - rid: 7201578077006332005
   - m_Id: 9846568841324
-    m_Localized: Spend gold to choose one of three paths for each unit type. It applies
-      to every unit of that type.
+    m_Localized: Spend gold on three upgrades for each unit type. You can buy all
+      three, each at its own price. They apply to every unit of that type.
     m_Metadata:
       m_Items: []
   - m_Id: 9846568841325
@@ -1674,7 +1674,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 504315978248192
-    m_Localized: 'Units ready to choose a path: {0}'
+    m_Localized: 'Units with an upgrade you can afford: {0}'
     m_Metadata:
       m_Items:
       - rid: 7201578077006332005
@@ -1913,7 +1913,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 1147185491931145
-    m_Localized: Choose one of three paths. The choice is permanent.
+    m_Localized: All three upgrades can be bought. Each has its own price.
     m_Metadata:
       m_Items: []
   - m_Id: 1147185491931146
@@ -1927,7 +1927,7 @@ MonoBehaviour:
       m_Items:
       - rid: 7201578077006332005
   - m_Id: 1147185491931148
-    m_Localized: '{0}''s other two paths will be locked. This cannot be undone.'
+    m_Localized: An upgrade for {0}. This cannot be undone.
     m_Metadata:
       m_Items:
       - rid: 7201578077006332005

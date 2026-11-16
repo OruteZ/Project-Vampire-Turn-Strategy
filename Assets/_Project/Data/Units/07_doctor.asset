@@ -27,7 +27,7 @@ MonoBehaviour:
   unlockAt: 7
   upgrades:
   - id: doctor_mov
-    cost: 60
+    cost: 40
     hp: 0
     atk: 0
     def: 0
@@ -37,7 +37,7 @@ MonoBehaviour:
     heal: 0
     ability: 0
   - id: doctor_heal
-    cost: 60
+    cost: 80
     hp: 0
     atk: 0
     def: 0
@@ -47,7 +47,7 @@ MonoBehaviour:
     heal: 2
     ability: 0
   - id: doctor_def
-    cost: 60
+    cost: 50
     hp: 0
     atk: 0
     def: 1

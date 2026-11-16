@@ -27,7 +27,7 @@ MonoBehaviour:
   unlockAt: 1
   upgrades:
   - id: parcher_mov
-    cost: 30
+    cost: 20
     hp: 0
     atk: 0
     def: 0
@@ -37,7 +37,7 @@ MonoBehaviour:
     heal: 0
     ability: 0
   - id: parcher_ambush
-    cost: 30
+    cost: 40
     hp: 0
     atk: 0
     def: 0
@@ -47,7 +47,7 @@ MonoBehaviour:
     heal: 0
     ability: 2
   - id: parcher_rng
-    cost: 30
+    cost: 35
     hp: 0
     atk: 0
     def: 0

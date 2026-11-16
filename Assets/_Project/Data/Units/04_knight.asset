@@ -27,7 +27,7 @@ MonoBehaviour:
   unlockAt: 8
   upgrades:
   - id: knight_hp
-    cost: 90
+    cost: 60
     hp: 6
     atk: 0
     def: 0
@@ -37,7 +37,7 @@ MonoBehaviour:
     heal: 0
     ability: 0
   - id: knight_def
-    cost: 90
+    cost: 110
     hp: 2
     atk: 0
     def: 1
@@ -47,7 +47,7 @@ MonoBehaviour:
     heal: 0
     ability: 0
   - id: knight_charge
-    cost: 90
+    cost: 80
     hp: 0
     atk: 0
     def: 0

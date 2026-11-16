@@ -224,29 +224,23 @@ namespace VampireSpawn.Game.Screens
             var now = Battle.Preview(kind, c.Upgrades);
             Stats(stats, now, null);
 
-            var chosen = c.Chosen(kind);
-            var rule = panel.Q<Label>("bk-rule");
-            rule.text = chosen != null ? Loc.T("camp.branchChosen", Loc.Text(chosen.Name)) : Loc.T("camp.branchRule");
-            rule.EnableInClassList("chosen", chosen != null);
+            panel.Q<Label>("bk-rule").text = Loc.T("camp.branchRule");
             var lockedBy = Loc.T("camp.lockedBy", Loc.Text(Campaign.Stages[Mathf.Clamp(types[sel].UnlockAt - 1, 0, Campaign.Stages.Length - 1)].Title));
-            var branchLocked = chosen != null ? Loc.T("camp.branchLocked", Loc.Text(chosen.Name)) : null;
 
             var ups = panel.Q<ScrollView>("bk-ups");
             ups.Clear();
             foreach (var up in GameData.Branches(kind))
             {
-                var own = up.Id == chosen?.Id;
-                var shut = chosen != null && !own;
+                var own = c.Owns(up);
                 var row = new VisualElement();
                 row.AddToClassList("up");
                 row.EnableInClassList("owned", own);
                 ToolkitKit.Frame(row, art, Ui.Steel);
                 if (own) ToolkitKit.Picture(row.Q(className: "panel-frame"), art.Ui(ToolkitKit.FrameBox), Color.Lerp(Color.white, Ui.Candle, 0.6f));
-                row.EnableInClassList("shut", shut);
-                SetTip(row, Loc.T(up.Inherit ? "camp.inherit" : "camp.noInherit") + (shut ? " · " + branchLocked : ""));
+                SetTip(row, Loc.T(up.Inherit ? "camp.inherit" : "camp.noInherit"));
                 var head = new VisualElement { pickingMode = PickingMode.Ignore };
                 head.AddToClassList("up-name");
-                if (up.Inherit) head.Add(Small("up-fang", Kit.Icon.Fang, shut ? Ui.Dim : Ui.Spawn));
+                if (up.Inherit) head.Add(Small("up-fang", Kit.Icon.Fang, Ui.Spawn));
                 head.Add(new Label(Loc.Text(up.Name)) { pickingMode = PickingMode.Ignore });
                 row.Add(head);
                 if (own) { var check = new Label("✓") { pickingMode = PickingMode.Ignore }; check.AddToClassList("up-owned"); row.Add(check); }
@@ -258,12 +252,12 @@ namespace VampireSpawn.Game.Screens
                 var act = new VisualElement { pickingMode = PickingMode.Ignore };
                 act.AddToClassList("up-act");
                 row.Add(act);
-                if (tabState != TabState.Open || shut)
+                if (tabState != TabState.Open)
                 {
                     var lk = Small("up-lock", Kit.Icon.Lock, Ui.Dim);
                     lk.pickingMode = PickingMode.Position;
                     act.Add(lk);
-                    SetTip(lk, shut ? branchLocked : lockedBy);
+                    SetTip(lk, lockedBy);
                     continue;
                 }
                 var price = new VisualElement { pickingMode = PickingMode.Ignore };

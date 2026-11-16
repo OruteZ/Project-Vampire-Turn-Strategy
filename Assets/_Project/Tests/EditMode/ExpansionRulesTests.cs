@@ -122,20 +122,21 @@ namespace VampireSpawn.Tests
         }
 
         [Test]
-        public void OneBranchPerTypeAndOldSavesKeepTheFirst()
+        public void EveryUpgradeOfATypeCanBeBoughtAndOldSavesDropUnknownOnes()
         {
             var all = Campaign.Stages.Select(s => s.Id);
             var c = Campaign.Parse("{\"gold\":999,\"cleared\":{" + string.Join(",", all.Select(id => "\"" + id + "\":true")) + "},\"bonus\":{},\"ups\":{}}");
             var b = GameData.Branches("sword");
-            Assert.IsTrue(c.Buy(b[0].Id));
-            Assert.IsFalse(c.Buy(b[1].Id), "the other two branches are locked");
-            Assert.AreEqual(b[0], c.Chosen("sword"));
-            Assert.IsTrue(c.Buy(GameData.Branches("pspear")[2].Id), "another type is free to choose");
+            foreach (var up in b) Assert.IsTrue(c.Buy(up.Id), up.Id);
+            Assert.AreEqual(999 - b.Sum(u => u.Cost), c.Gold);
+            Assert.IsFalse(c.Buy(b[0].Id), "not twice");
+            var plain = Battle.Preview("sword", null); var full = Battle.Preview("sword", c.Upgrades);
+            Assert.AreEqual(plain.Atk + b.Sum(u => u.Mod.Atk), full.Atk, "the three stack");
 
             var old = Campaign.Parse("{\"gold\":5,\"cleared\":{},\"bonus\":{},\"ups\":{\"" + b[2].Id + "\":true,\"" + b[1].Id + "\":true,\"gone_upgrade\":true}}");
             Assert.IsTrue(old.Repaired);
-            CollectionAssert.AreEqual(new[] { b[2].Id }, old.Upgrades, "first one kept, unknown id dropped");
-            Assert.AreEqual(5 + b[1].Cost, old.Gold, "the dropped branch is refunded");
+            CollectionAssert.AreEqual(new[] { b[2].Id, b[1].Id }, old.Upgrades, "both kept, unknown id dropped");
+            Assert.AreEqual(5, old.Gold);
             Assert.IsFalse(Campaign.Parse(old.ToJson()).Repaired);
         }
 

@@ -27,7 +27,7 @@ MonoBehaviour:
   unlockAt: 6
   upgrades:
   - id: scout_mov
-    cost: 70
+    cost: 50
     hp: 0
     atk: 0
     def: 0
@@ -47,7 +47,7 @@ MonoBehaviour:
     heal: 0
     ability: 16
   - id: scout_satchel
-    cost: 70
+    cost: 90
     hp: 0
     atk: 0
     def: 0

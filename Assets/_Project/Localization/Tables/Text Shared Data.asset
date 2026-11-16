@@ -1547,14 +1547,6 @@ MonoBehaviour:
     m_Key: camp.branchRule
     m_Metadata:
       m_Items: []
-  - m_Id: 1147185491931146
-    m_Key: camp.branchChosen
-    m_Metadata:
-      m_Items: []
-  - m_Id: 1147185491931147
-    m_Key: camp.branchLocked
-    m_Metadata:
-      m_Items: []
   - m_Id: 1147185491931148
     m_Key: camp.buyWarn
     m_Metadata:
