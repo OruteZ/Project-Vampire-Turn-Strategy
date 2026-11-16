@@ -175,7 +175,7 @@ namespace VampireSpawn.Game
         public static GameObject BuildDressing(ArtCatalog art, Stage stage)
         {
             var board = new Board(stage.Map);
-            var theme = art.Theme(stage.Id);
+            var theme = art.DressingTheme(stage.Id);
             var s = art.hexSize;
             var root = new GameObject(stage.Id);
             var look = root.AddComponent<StageDressing>();
@@ -185,6 +185,21 @@ namespace VampireSpawn.Game
             // Sideways the ring runs twice as far, so 21:9 shows world past the HUD too.
             const int Ring = 4, RingX = 8;
             props.SetParent(root.transform, false);
+
+            if (theme != null && theme.bareFloor != null)
+            {
+                var first = Local(new Hex(0, 0), s);
+                var last = Local(new Hex(board.Cols - 1, board.Rows - 1), s);
+                var floor = GameObject.CreatePrimitive(PrimitiveType.Cube);
+                Kill(floor.GetComponent<Collider>());
+                floor.name = "Floor";
+                floor.transform.SetParent(root.transform, false);
+                // Top face at TileTop, where Height() stands units when there is no Terrain.
+                floor.transform.localPosition = new Vector3((first.x + last.x) * 0.5f, art.tileHeight - 0.25f, (first.z + last.z) * 0.5f);
+                floor.transform.localScale = new Vector3(160f, 0.5f, 140f);
+                floor.GetComponent<MeshRenderer>().sharedMaterial = theme.bareFloor;
+                return root;
+            }
 
             var themed = theme != null && theme.blockers != null && theme.blockers.Length > 0;
             var blockers = themed ? theme.blockers : art.rockProps;

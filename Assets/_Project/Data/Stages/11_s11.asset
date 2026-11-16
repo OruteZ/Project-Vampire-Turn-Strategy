@@ -23,7 +23,7 @@ MonoBehaviour:
   - gravedigger
   - doctor
   - scout
-  pop: 15
+  pop: 14
   silver: 2
   reward: 40
   goal: 1
@@ -178,6 +178,20 @@ MonoBehaviour:
     col: 5
     row: 4
     arrive: 5
+    wave: 
+    stance: 0
+    alert: 0
+  - kind: gargoyle
+    col: 0
+    row: 4
+    arrive: 7
+    wave: 
+    stance: 0
+    alert: 0
+  - kind: gargoyle
+    col: 10
+    row: 4
+    arrive: 7
     wave: 
     stance: 0
     alert: 0

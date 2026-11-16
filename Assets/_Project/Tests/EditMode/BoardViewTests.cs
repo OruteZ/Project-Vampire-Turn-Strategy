@@ -26,11 +26,12 @@ namespace VampireSpawn.Tests
                 view.Show(stage);
                 var children = Enumerable.Range(0, go.transform.childCount).Select(k => go.transform.GetChild(k)).ToList();
                 Assert.AreEqual(1, children.Count(c => c.name == "Dressing"), stage.Id + " baked dressing (stage-dressing.md 4-6)");
-                Assert.IsNotNull(view.Ground, stage.Id + " terrain (battle-terrain.md 1-1)");
+                var bare = view.art.DressingTheme(stage.Id)?.bareFloor != null;
+                Assert.AreEqual(!bare, view.Ground != null, stage.Id + " terrain unless a bare blockout floor (battle-terrain.md 1-1, stage-dressing.md 6)");
                 var look = view.art.Dressing(stage.Id).GetComponent<StageDressing>();
                 Assert.AreEqual(look.fog, RenderSettings.fogColor, stage.Id + " fog from the stage prefab (stage-dressing.md 4-10)");
                 Assert.AreEqual(look.ambient, RenderSettings.ambientLight, stage.Id + " ambient from the stage prefab");
-                Assert.AreEqual(stage.Map.Any(line => line.Contains("~")), view.art.Dressing(stage.Id).transform.Find("Water") != null, stage.Id + " water plane only where the stage has water (battle-terrain.md 2-2)");
+                Assert.AreEqual(!bare && stage.Map.Any(line => line.Contains("~")), view.art.Dressing(stage.Id).transform.Find("Water") != null, stage.Id + " water plane only where the stage has water (battle-terrain.md 2-2)");
                 var tiles = children.Where(c => c.name.StartsWith("Tile ")).ToList();
                 var theme = view.art.Theme(stage.Id);
                 CollectionAssert.Contains(theme.stages, stage.Id, stage.Id + " has its own theme (stage-dressing.md 2)");
