@@ -119,7 +119,7 @@
 
 ## 6. 블록아웃 단계 (#138)
 
-지도(칸 배치)가 아직 바뀌는 동안은 1~20장을 회색 블록으로 꾸민다. 칸 배치를 읽기 쉽고, 지도가 바뀌어 다시 구워도 잃을 손작업이 없다. 2절 장별 테마와 5절 세트피스는 지도가 굳은 장부터 다시 쓴다.
+지도(칸 배치)가 아직 바뀌는 동안은 1~20장을 완전한 프로토타입 모습으로 둔다: 바닥과 게임 규칙이 정한 것(막힌 칸, 화톳불·햇빛, 물, 관·유닛)만 있고 보드 둘레 장식은 없다 (#138 "에셋 위에 배치된 장식 싹 밀고 바닥이랑 중요 오브젝트만"). 1절 원칙 3(보드 밖은 그 장의 세상)은 이 단계에서 쓰지 않는다. 2절 장별 테마와 5절 세트피스는 지도가 굳은 장부터 다시 쓴다.
 
 1. 테마 `Assets/_Project/Art/Themes/Prototype.asset` 을 `ArtCatalog.blockout` 에 건다. 이 테마의 `stages`(s1~s20)에 든 장은 굽기 때 이 테마를 쓴다. 원정 지도의 지역 바닥색은 `themes` 그대로다. demo 는 장별 테마 그대로.
 2. 재료는 Synty POLYGON Prototype (`Assets/Synty/PolygonPrototype`):
@@ -127,8 +127,7 @@
 | 무엇 | 프리팹 | 재질 |
 |---|---|---|
 | 막힌 칸 | `SM_Buildings_Block_1x1_01` (가로로 이어 세움, 폭 1.6칸) | `PolygonPrototype_Grid_07` 밝은 회색 격자 (`BoardTheme.blockerMaterial`) |
-| 둘레 높은 것 | `SM_Prop_Tree_Round_01`·`Tree_Pine_01`·`Tree_Square_01`, `SM_Buildings_Column_2x3_01`, `SM_Primitive_Cube_01`·`Cylander_01` | `PolygonPrototype_Grid_06` 어두운 회색 격자 (`BoardTheme.propMaterial`) |
-| 둘레 낮은 것 | `SM_Generic_Small_Rocks_01`, `SM_Generic_Grass_Patch_01`, `SM_Prop_Crate_01`, `SM_Prop_Barrel_01` | 위와 같음 |
+| 둘레 높은·낮은 것 | 없음 (`border`·`scatter` 비움) | |
 | 바닥 | `Stages/Layers/PrototypeGrid` (`PolygonPrototype_Grid_01.png`, 반복 10, 색 보정 0.22~0.36 회색으로 선을 흐리게) | |
 
 3. 주변광 #6b6b75, 안개 #1f1f24 (장별 테마보다 밝게, 칸이 잘 보이게). 화톳불·햇빛·물·빈 칸은 그대로 (코드·지형이 짓는다).
