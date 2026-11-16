@@ -41,7 +41,7 @@
 .corner { position: absolute; left: 12px; bottom: 18px; height: 40px; flex-direction: row; align-items: flex-end; }
 .corner > * { margin-right: 4px; }
 .corner > .btn { width: 220px; height: 40px; }
-.hint { position: absolute; left: 50%; bottom: 228px; width: 1400px; height: 34px; margin-left: -700px; font-size: 26px; color: var(--muted); -unity-text-align: middle-center; }
+.hint { position: absolute; left: 50%; bottom: 228px; width: 1400px; min-height: 34px; margin-left: -700px; font-size: 26px; color: var(--muted); -unity-text-align: middle-center; }
 
 /* ---------- rules window (battle-hud.md 6) ---------- */
 .veil { position: absolute; left: 0; top: 0; right: 0; bottom: 0; background-color: rgba(18, 19, 26, 0.85); }
@@ -56,14 +56,14 @@
 .deploy-title { position: absolute; left: 24px; top: 24px; width: 340px; height: 110px; }
 .stage-name { height: 48px; }
 .stage-name > .ring-badge { margin-right: 12px; }
-.stage-name > Label { flex-shrink: 1; font-size: 29px; -unity-font-style: bold; overflow: hidden; text-overflow: ellipsis; }
+.stage-name > Label { flex-shrink: 1; font-size: 29px; -unity-font-style: bold; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .res { margin-top: 8px; }
 .res > .value { margin-right: 24px; }
 .res .value-icon, .fight-stats .value-icon { width: 28px; height: 28px; }
 .res .value-text, .fight-stats .value-text { font-size: 26px; }
 
 .box { position: absolute; width: 340px; padding: 16px; -unity-slice-scale: 0.111px; }
-.roster { left: 24px; bottom: 76px; width: 500px; padding: 20px; }
+.roster { left: 24px; bottom: 76px; width: 572px; padding: 20px; }
 .box-title { font-size: 26px; -unity-font-style: bold; color: var(--bone); }
 .roster > .box-title { font-size: 36px; }
 .roster-row { margin-top: 10px; min-height: 92px; padding: 8px 14px; -unity-slice-scale: 0.0714px; }
@@ -75,7 +75,8 @@
 .roster-info .value-text { font-size: 34px; }
 .roster .unit-stats .value-icon { width: 28px; height: 28px; }
 .roster-row > .key { right: auto; bottom: auto; left: 4px; top: 4px; height: 30px; font-size: 26px; }
-.roster .acts > .btn { width: 220px; height: 56px; margin-right: 12px; }
+.roster .acts > .btn { width: 262px; height: 56px; margin-right: 12px; }
+.roster .acts > .btn:last-child { margin-right: 0; }
 .unit-stats { margin-top: 4px; }
 .unit-stats > .value { margin-left: 0; margin-right: 8px; }
 .unit-stats .value-icon { width: 20px; height: 20px; }
@@ -100,7 +101,7 @@
 .log-line { margin-top: 4px; justify-content: flex-end; }
 .log-lines .log-line { justify-content: flex-start; align-items: flex-start; }
 .log-icon { width: 16px; height: 16px; margin-right: 6px; flex-shrink: 0; }
-.log-text { font-size: 26px; color: var(--muted); flex-shrink: 1; overflow: hidden; text-overflow: ellipsis; }
+.log-text { font-size: 26px; color: var(--muted); flex-shrink: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .log-lines .log-text { white-space: normal; width: 270px; }
 
 /* ---------- unit panels (ui-style.md 8-2) ---------- */
@@ -112,9 +113,9 @@
 .unit-body > * { flex-shrink: 0; }
 .unit.deploy-side > .unit-body { padding-bottom: 56px; }
 .unit-body > * { margin-bottom: 6px; }
-.unit-head { align-items: flex-end; }
+.unit-head { align-items: flex-end; flex-wrap: wrap; }
 .unit-weapon { width: 26px; height: 26px; margin-right: 10px; flex-shrink: 0; }
-.unit-name { font-size: 26px; -unity-font-style: bold; color: var(--bone); flex-shrink: 1; overflow: hidden; text-overflow: ellipsis; margin-right: 10px; }
+.unit-name { font-size: 26px; -unity-font-style: bold; color: var(--bone); flex-shrink: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; margin-right: 10px; }
 .unit-tag { font-size: 26px; color: #a650c4; }
 .stat { flex-direction: row; align-items: flex-end; }
 .stat-icon { width: 24px; height: 24px; margin-right: 6px; }
@@ -149,8 +150,8 @@
 .damage { position: absolute; left: 76px; top: -8px; width: 60px; height: 28px; flex-direction: row; align-items: center; }
 .damage > Label { font-size: 26px; -unity-font-style: bold; }
 .damage > .icon { width: 24px; height: 24px; }
-.head-name { position: absolute; left: -84px; width: 240px; height: 18px; font-size: 26px; -unity-font-style: bold; color: var(--bone); -unity-text-align: lower-center; }
-.head-hp { position: absolute; left: 0; right: 0; top: 50%; height: 20px; margin-top: -10px; padding: 0; font-size: 26px; -unity-font-style: bold; color: var(--bone); -unity-text-align: middle-center; }
+.head-name { position: absolute; left: -164px; width: 400px; white-space: nowrap; height: 18px; font-size: 26px; -unity-font-style: bold; color: var(--bone); -unity-text-align: lower-center; }
+.head-hp { position: absolute; left: -24px; right: -24px; white-space: nowrap; top: 50%; height: 20px; margin-top: -10px; padding: 0; font-size: 26px; -unity-font-style: bold; color: var(--bone); -unity-text-align: middle-center; }
 .head-mov { position: absolute; left: -64px; width: 200px; height: 24px; flex-direction: row; justify-content: center; align-items: flex-end; }
 .head-mov > .icon { width: 20px; height: 20px; margin: 0 1px; }
 .head-mov > Label { font-size: 26px; -unity-font-style: bold; color: #c8304a; margin-right: 1px; }
@@ -171,7 +172,7 @@
 .over { display: none; }
 .over.shown { display: flex; }
 .over > .veil { background-color: rgba(18, 19, 26, 0.7); }
-.over-box { width: 960px; padding: 36px; align-items: center; }
+.over-box { width: 1040px; padding: 36px; align-items: center; }
 .over-box > * { margin-bottom: 16px; }
 /* uGUI fitted the crest to 150 px wide; Prefab fits the whole box, so the box is 150 wide. */
 .emblem { width: 150px; height: 170px; }

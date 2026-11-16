@@ -37,7 +37,7 @@
 /* The crest prefab draws about 1.9x its box wide and 1.3x tall, so a 72 box fills the gap left of March. */
 .info-crest { position: absolute; left: 106px; top: 390px; width: 72px; height: 72px; }
 .info-badge { position: absolute; left: 32px; top: 36px; width: 48px; height: 48px; justify-content: center; align-items: center; }
-.info-name { position: absolute; left: 96px; top: 32px; width: 400px; height: 56px; font-size: 29px; color: var(--bone); -unity-text-align: middle-left; overflow: hidden; text-overflow: ellipsis; }
+.info-name { position: absolute; left: 96px; top: 32px; width: 400px; height: 56px; font-size: 29px; color: var(--bone); -unity-text-align: middle-left; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .close { left: 504px; top: 16px; width: 40px; height: 40px; }
 .close .icon { width: 20px; height: 20px; -unity-background-image-tint-color: var(--muted); }
 .close .key { right: -2px; bottom: -14px; }
@@ -74,7 +74,7 @@
 .bk-stats .value-text { font-size: 15px; -unity-font-style: normal; }
 .bk-stats .value-icon { width: 22px; height: 22px; }
 .bk-break { top: 280px; height: 16px; }
-.bk-rule { position: absolute; left: 32px; top: 300px; width: 496px; height: 20px; font-size: 13px; color: var(--muted); -unity-text-align: middle-left; overflow: hidden; text-overflow: ellipsis; padding: 0; margin: 0; }
+.bk-rule { position: absolute; left: 32px; top: 300px; width: 496px; height: 20px; font-size: 13px; color: var(--muted); -unity-text-align: middle-left; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; padding: 0; margin: 0; }
 .bk-ups { position: absolute; left: 32px; top: 328px; width: 496px; height: 480px; }
 
 .up {
@@ -101,7 +101,7 @@
 .dialog-veil { position: absolute; left: 0; top: 0; right: 0; bottom: 0; background-color: rgba(18, 19, 26, 0.6); display: none; }
 .asking .dialog-veil { display: flex; }
 .dialog { position: absolute; left: 50%; top: 50%; width: 480px; height: 264px; margin-left: -240px; margin-top: -132px; -unity-slice-scale: 0.111px; }
-.dialog-name { position: absolute; left: 32px; top: 32px; width: 416px; height: 32px; font-size: 22px; -unity-font-style: bold; color: var(--bone); -unity-text-align: middle-center; overflow: hidden; text-overflow: ellipsis; padding: 0; margin: 0; }
+.dialog-name { position: absolute; left: 32px; top: 32px; width: 416px; height: 32px; font-size: 22px; -unity-font-style: bold; color: var(--bone); -unity-text-align: middle-center; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; padding: 0; margin: 0; }
 .dialog-ask { position: absolute; left: 32px; top: 72px; width: 416px; height: 24px; font-size: 15px; color: var(--muted); -unity-text-align: middle-center; padding: 0; margin: 0; }
 .dialog-warn { position: absolute; left: 32px; top: 104px; width: 416px; height: 40px; font-size: 13px; color: #c8304a; white-space: normal; -unity-text-align: middle-center; padding: 0; margin: 0; }
 .dialog-price { position: absolute; left: 32px; top: 152px; width: 416px; height: 32px; flex-direction: row; justify-content: center; align-items: center; }

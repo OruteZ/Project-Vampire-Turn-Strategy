@@ -70,4 +70,6 @@
 - 함정: UI Toolkit 은 둥근 채움(Image.fillMethod Radial)이 없다. 보름달 위상은 `generateVisualContent` + Painter2D 로 그린다(`BattleHud.MoonPhase`: 오른쪽 반원 + 반타원 명암 경계)
 - 함정: 다른 씬을 겹쳐(additive) 불러도 하늘·안개·주변광은 활성 씬 것만 쓴다. 메인 메뉴는 데모 씬을 `SetActiveScene` 한다. UI Toolkit 화면 뿌리에 `background-color` 가 있으면 뒤의 3D 가 전부 가려진다(USS 를 바꾼 뒤 에디터가 다시 읽지 않으면 `AssetDatabase.Refresh`)
 - 함정: `BoardView.LateUpdate` 는 `Board` 가 남아 있으면 카메라를 보드에 다시 맞춘다(`Clear()` 뒤에도 남는다). 원정 지도가 카메라를 쓰는 동안 막아야 한다 (campaign-map.md 구현 메모)
+- 함정: UI Toolkit 기본 테마는 Label 을 한 줄(nowrap)로 그린다. 상자 폭보다 긴 글은 줄을 바꾸지 않고 상자 밖으로 나가고, 상자(라벨) 자체는 틀 안에 있어 "틀 밖" 검사에 안 걸린다. 그래서 `white-space: normal` 을 깜빡한 라벨마다 새 문구(조건·설명·경고)가 들어올 때 다시 깨졌다(#129, 정예 증원 카드). `Theme.uss` 의 `Label { white-space: normal }` 이 기본을 줄바꿈으로 바꾼다. "…" 로 자르는 라벨만 `white-space: nowrap` 을 같이 쓴다. 한 줄(row)에 이름과 꼬리표를 같이 두면 긴 꼬리표가 이름을 0 폭까지 밀어낸다. 그런 줄은 `flex-wrap: wrap` (`.unit-head`)
+- 함정: 호버 카드(유닛·증원·시체)는 포인터 밑에서만 생긴다. sweep 은 `8b-arrival`·`8c-enemy` 에서 포인터를 옮겨 띄우고, 카드가 안 뜨면 `no-card` 로 실패한다(검사 안 한 것을 통과로 보이지 않게). 새 호버 카드를 만들면 sweep 단계도 더한다 (docs/dev/ui-audit.md)
 - 함정: `FX_*`, `SM_Bld_Base_*` 프리팹은 PolygonDarkFantasy 와 PolygonGeneric 에 같은 이름이 있다. 이름으로 찾을 때 PolygonDarkFantasy 쪽을 쓴다
