@@ -60,6 +60,49 @@ namespace VampireSpawn.Core
             return n;
         }
 
+        // docs/art/battle-camera.md 4-2: walks play before the attack events they can skip; a walk tangled with them stays and walls the rest.
+        public static List<BattleEvent> MovesFirst(IReadOnlyList<BattleEvent> events)
+        {
+            var result = new List<BattleEvent>(events.Count);
+            var pinned = new HashSet<int>();
+            var at = 0;
+            for (var i = 0; i < events.Count; i++)
+            {
+                var e = events[i];
+                if (e.Kind != BattleEventKind.Walk)
+                {
+                    result.Add(e);
+                    if (!Skippable(e.Kind) || pinned.Contains(e.UnitId)) at = result.Count;
+                    continue;
+                }
+                if (CanSkip(events, i, result, at)) result.Insert(at++, e);
+                else { result.Add(e); pinned.Add(e.UnitId); at = result.Count; }
+            }
+            return result;
+        }
+
+        static bool Skippable(BattleEventKind k) => k is BattleEventKind.Log or BattleEventKind.Hint or BattleEventKind.Hit
+            or BattleEventKind.HpChanged or BattleEventKind.Popup or BattleEventKind.Died or BattleEventKind.CorpseLeft;
+
+        static bool CanSkip(IReadOnlyList<BattleEvent> events, int i, List<BattleEvent> result, int at)
+        {
+            var w = events[i];
+            for (var j = i + 1; j < events.Count; j++)
+            {
+                if (events[j].Kind == BattleEventKind.Log) continue;
+                if (events[j].Kind != BattleEventKind.Walk && events[j].UnitId == w.UnitId) return false;
+                break;
+            }
+            var hexes = new HashSet<Hex>(w.Path) { w.At };
+            for (var j = at; j < result.Count; j++)
+            {
+                var s = result[j];
+                if (s.UnitId == w.UnitId || (s.Kind == BattleEventKind.Hit && s.OtherId == w.UnitId)) return false;
+                if ((s.Kind == BattleEventKind.Died || s.Kind == BattleEventKind.CorpseLeft) && hexes.Contains(s.At)) return false;
+            }
+            return true;
+        }
+
         public override string ToString() => Format(m => m.ToString());
 
         public string Format(System.Func<Message, string> text) => Kind switch

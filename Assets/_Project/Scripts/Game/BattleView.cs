@@ -110,7 +110,7 @@ namespace VampireSpawn.Game
             playing = true;
             while (pending.Count > 0)
             {
-                var list = pending.Dequeue();
+                var list = BattleEvent.MovesFirst(pending.Dequeue());
                 for (var i = 0; i < list.Count; i++)
                 {
                     var run = BattleEvent.WalkRun(list, i);

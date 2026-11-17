@@ -14,7 +14,7 @@ namespace VampireSpawn.Game.Screens
         // Crest_*_Large_01 is a demon skull; Large_03 has none, so the hunters' menu wears it (ui-style.md 5-3).
         public const string Crest = "Crest_DarkFantasyMenus_Large_03";
 
-        public static UIDocument Build(Transform host, ArtCatalog art, Campaign campaign, Action demo, Action camp, int selected, Action<int> hover, Action settings)
+        public static UIDocument Build(Transform host, ArtCatalog art, Campaign campaign, Action demo, Action camp, int selected, Action settings)
         {
             var doc = ToolkitKit.Document(host, "Menu (UI Toolkit)", art.panel, art.menuDocument);
             var root = doc.rootVisualElement;
@@ -23,10 +23,10 @@ namespace VampireSpawn.Game.Screens
             var tip = root.Q<Label>("tip");
 
             var s0 = GameData.Stages[0];
-            var demoMeta = Card(root.Q("demo"), art, Kit.Icon.Sword, Loc.T("menu.demo"), Loc.T("menu.demoDesc"), demo, selected == 0, () => hover?.Invoke(0), tip);
+            var demoMeta = Card(root.Q("demo"), art, Kit.Icon.Sword, Loc.T("menu.demo"), Loc.T("menu.demoDesc"), demo, selected == 0, tip);
             ToolkitKit.Value(demoMeta, art, Kit.Icon.Pop, s0.Pop.ToString(), Ui.Candle, Ui.Candle);
             if (s0.Silver > 0) ToolkitKit.Value(demoMeta, art, Kit.Icon.Silver, s0.Silver.ToString(), Ui.Candle, Ui.Candle);
-            var campMeta = Card(root.Q("camp"), art, Kit.Icon.Home, Loc.T("menu.campaign"), Loc.T("menu.campaignDesc"), camp, selected == 1, () => hover?.Invoke(1), tip);
+            var campMeta = Card(root.Q("camp"), art, Kit.Icon.Home, Loc.T("menu.campaign"), Loc.T("menu.campaignDesc"), camp, selected == 1, tip);
             ToolkitKit.Value(campMeta, art, Kit.Icon.Flag, Campaign.Stages.Count(campaign.IsCleared) + "/" + Campaign.Stages.Length, Ui.Steel, Ui.Bone);
             ToolkitKit.Value(campMeta, art, Kit.Icon.Gold, campaign.Gold.ToString(), Ui.Candle, Ui.Candle);
 
@@ -42,7 +42,7 @@ namespace VampireSpawn.Game.Screens
             return doc;
         }
 
-        static VisualElement Card(VisualElement card, ArtCatalog art, string icon, string title, string desc, Action click, bool on, Action enter, Label tip)
+        static VisualElement Card(VisualElement card, ArtCatalog art, string icon, string title, string desc, Action click, bool on, Label tip)
         {
             card.EnableInClassList("on", on);
             ToolkitKit.Picture(card.Q(className: "card-icon"), art.Ui(icon));
@@ -50,7 +50,6 @@ namespace VampireSpawn.Game.Screens
             UiSound.Add(card);
             card.RegisterCallback<ClickEvent>(_ => click?.Invoke());
             ToolkitKit.Tip(card, desc, tip);
-            card.RegisterCallback<PointerEnterEvent>(_ => enter?.Invoke());
             return card.Q(className: "card-meta");
         }
 
