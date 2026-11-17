@@ -119,6 +119,7 @@ namespace VampireSpawn.Game
             dressing.name = "Dressing";
             Ground = dressing.GetComponentInChildren<UnityEngine.Terrain>();
             Light(dressing.GetComponent<StageDressing>());
+            if (dressing.transform.Find("Props") is Transform props) props.gameObject.AddComponent<SeeThrough>();
         }
 
         // battle-terrain.md 3: a faint draped outline on every walkable cell; light is left to the light sources (3-1).
