@@ -48,16 +48,12 @@ namespace VampireSpawn.Editor
             }
 
             EditorGUILayout.LabelField("진도", EditorStyles.boldLabel);
-            clearedCount = EditorGUILayout.IntSlider(new GUIContent("깬 장 수", "앞에서부터 이만큼 깬 것으로 한다. 다음 장이 열린다"), Mathf.Min(clearedCount, stages.Length), 0, stages.Length);
+            clearedCount = EditorGUILayout.IntSlider(new GUIContent("깬 장 수", "처음부터 앞의 이만큼을 깬 원정으로 바꾼다. 은화는 그 장들의 보상, 병영 강화는 비운다"), Mathf.Min(clearedCount, stages.Length), 0, stages.Length);
             withBonus = EditorGUILayout.Toggle("보너스도 받은 것으로", withBonus);
             using (new EditorGUILayout.HorizontalScope())
             {
-                if (GUILayout.Button("진도 적용"))
-                {
-                    var cleared = DebugCheats.FirstStages(clearedCount);
-                    Apply(DebugCheats.With(c, cleared: cleared, bonus: withBonus ? cleared : c.BonusDone.Where(cleared.Contains)));
-                }
-                if (GUILayout.Button("모두 깸")) Apply(DebugCheats.With(c, cleared: DebugCheats.FirstStages(stages.Length), bonus: withBonus ? DebugCheats.FirstStages(stages.Length) : null));
+                if (GUILayout.Button("진도 적용")) Apply(DebugCheats.Progress(clearedCount, withBonus));
+                if (GUILayout.Button("모두 깸")) Apply(DebugCheats.Progress(stages.Length, withBonus));
                 if (GUILayout.Button("처음부터") && EditorUtility.DisplayDialog("원정 초기화", "은화·진도·강화를 모두 지웁니다.", "지우기", "취소"))
                     Apply(new Campaign());
             }

@@ -18,6 +18,14 @@ namespace VampireSpawn.Game
 
         public static string[] FirstStages(int count) => Campaign.Stages.Take(count).Select(s => s.Id).ToArray();
 
+        // progression.md 23: a fresh campaign that won the first n stages, so gold is what those clears pay and no upgrades are bought.
+        public static Campaign Progress(int count, bool withBonus)
+        {
+            var c = new Campaign();
+            foreach (var s in Campaign.Stages.Take(count)) c.Finish(s, true, withBonus);
+            return c;
+        }
+
         // progression.md 19: every unit type on its n-th branch (1-based); types without that branch get none.
         public static string[] Branch(int n) => GameData.Types.Select(t => GameData.Branches(t.Key).ElementAtOrDefault(n - 1)?.Id).Where(id => id != null).ToArray();
 
