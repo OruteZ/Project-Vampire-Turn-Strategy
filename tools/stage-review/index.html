@@ -2,7 +2,7 @@
 <html lang="ko">
 <head>
 <meta charset="utf-8">
-<title>스테이지 꾸밈 피드백</title>
+<title>스테이지 피드백</title>
 <style>
   * { box-sizing: border-box; }
   body { margin: 0; font: 14px "Malgun Gothic", sans-serif; background: #1d1d22; color: #ddd; display: flex; height: 100vh; }
@@ -24,6 +24,10 @@
   #views { display: flex; gap: 12px; align-items: flex-start; }
   #stack { position: relative; display: inline-block; line-height: 0; }
   #stack img, #before img { max-width: 100%; max-height: 72vh; }
+  #attr { pointer-events: none; }
+  .legend span { display: inline-block; width: 12px; height: 12px; border-radius: 2px; margin: 0 3px 0 8px; vertical-align: -1px; }
+  .kind { font-size: 12px; padding: 1px 6px; border-radius: 6px; background: #345; }
+  .kind.rule { background: #636; }
   #stack canvas { position: absolute; left: 0; top: 0; width: 100%; height: 100%; cursor: crosshair; touch-action: none; }
   #before { flex: 1; min-width: 0; }
   #before:empty { display: none; }
@@ -43,7 +47,7 @@
 </head>
 <body>
 <div id="side">
-  <h1>스테이지 꾸밈 피드백</h1>
+  <h1>스테이지 피드백</h1>
   <div class="row" style="margin: 0 12px 8px"><button id="capAll">전체 다시 찍기</button></div>
   <div id="capState" class="muted" style="margin: 0 12px"></div>
   <pre id="log"></pre>
@@ -54,7 +58,12 @@
 <script>
 let state = null, cur = null, view = 'top', color = '#ff3b3b', size = 6, erase = false, strokes = [], compare = '';
 const COLORS = ['#ff3b3b', '#ffd23b', '#3bff6a', '#3bb4ff', '#ffffff', '#000000'];
-const TERRAIN = { '.': '평지', '#': '막힌 칸', '~': '물', 'T': '화톳불', 'S': '햇빛', 'd': '배치 칸', ',': '거친 땅', '_': '빈 칸' };
+let showAttr = true, editCells = false, target = '#', changes = [], kind = '꾸밈';
+// Rule cells (docs/systems/hex-grid.md 1-0): what the battle rules read, not how the cell looks.
+const TERRAIN = { '.': '평지', '#': '벽 (이동·사격 막음)', '_': '틈 (이동만 막음)', 'T': '화톳불', 'S': '햇빛', 'd': '배치 칸', ',': '거친 땅' };
+const SHORT = { '.': '평지', '#': '벽', '_': '틈', 'T': '화톳불', 'S': '햇빛', 'd': '배치', ',': '거친 땅' };
+const FILL = { '#': 'rgba(230,60,60,.45)', '_': 'rgba(160,90,230,.45)', 'T': 'rgba(255,150,40,.45)', 'S': 'rgba(255,230,90,.45)', 'd': 'rgba(70,140,255,.35)', ',': 'rgba(150,100,50,.45)' };
+const cellText = x => `(${x.c}, ${x.r}) ${SHORT[x.from]}→${SHORT[x.to]}`;
 
 async function api(path, body) {
   const r = await fetch(path, body ? { method: 'POST', body: JSON.stringify(body) } : {});
@@ -75,7 +84,7 @@ async function refresh(keepDrawing) {
     d.className = 'stage' + (cur === s.meta.id ? ' sel' : '');
     const wait = s.feedback.filter(f => f.status === '대기').length;
     d.innerHTML = `<span>${s.meta.id.replace('s', '')}. ${s.meta.title}</span>` + (wait ? `<span class="badge">${wait}</span>` : '');
-    d.onclick = () => { if (strokes.length && !confirm('그린 것을 버리고 옮길까요?')) return; cur = s.meta.id; strokes = []; compare = ''; refresh(); };
+    d.onclick = () => { if ((strokes.length || changes.length) && !confirm('그린 것을 버리고 옮길까요?')) return; cur = s.meta.id; strokes = []; changes = []; compare = ''; refresh(); };
     list.appendChild(d);
   }
   if (!keepDrawing) render();
@@ -105,19 +114,29 @@ function render() {
       <span class="muted">비교</span>
       <select id="cmp"><option value="">없음</option>${s.history.map(h => `<option ${h === compare ? 'selected' : ''}>${h}</option>`).join('')}</select>
     </div>
+    ${view === 'top' ? `<div class="row">
+      <button id="attrBtn" class="${showAttr ? 'on' : ''}">칸 속성 보기</button>
+      <button id="editBtn" class="${editCells ? 'on' : ''}">칸 고치기</button>
+      <select id="target">${Object.keys(TERRAIN).map(k => `<option value="${k}" ${k === target ? 'selected' : ''}>${TERRAIN[k]}</option>`).join('')}</select>
+      <span class="legend muted">${Object.keys(FILL).map(k => `<span style="background:${FILL[k]}"></span>${SHORT[k]}`).join('')}</span>
+    </div>
+    ${editCells ? '<div class="muted">칸을 누르면 고른 속성으로 바꾸자는 표시가 붙고, 다시 누르면 취소됩니다. 그리기는 칸 고치기를 끄면 됩니다.</div>' : ''}` : ''}
     <div id="views">
       <div id="pane">
-        <div id="stack"><img id="shot" src="${src(view)}"><canvas id="draw"></canvas></div>
+        <div id="stack"><img id="shot" src="${src(view)}"><canvas id="attr"></canvas><canvas id="draw"></canvas></div>
         <div id="cell"></div>
       </div>
       <div id="before">${compare ? `<div class="muted">이전 (${compare})</div><img src="/data/history/${s.meta.id}/${compare}/${s.meta.id}.${view}.png">` : ''}</div>
     </div>
     <textarea id="text" placeholder="피드백 (예: 북쪽 길 끝에 큰 성문을 랜드마크로. 빨강 동그라미 친 곳은 비워 줘)"></textarea>
+    <div class="row"><span class="muted">종류</span><select id="kind">${['꾸밈', '규칙'].map(k => `<option ${k === kind ? 'selected' : ''}>${k}</option>`).join('')}</select>
+      <span class="muted">꾸밈 = 보이는 것만 / 규칙 = 칸 속성·지도처럼 전투 규칙이 바뀌는 것 (기획서를 먼저 고친 뒤 반영)</span></div>
+    <div id="changes" class="muted"></div>
     <div class="row"><button id="save">피드백 저장</button><span class="muted">저장한 피드백은 Claude 세션에서 "피드백 반영해" 라고 하면 반영됩니다</span></div>
     <h3>피드백</h3>
     <div id="fbs">${s.feedback.length ? '' : '<p class="muted">아직 없음</p>'}</div>`;
 
-  main.querySelectorAll('[data-v]').forEach(b => b.onclick = () => { if (strokes.length && !confirm('그린 것을 버리고 바꿀까요?')) return; view = b.dataset.v; strokes = []; render(); });
+  main.querySelectorAll('[data-v]').forEach(b => b.onclick = () => { if (strokes.length && !confirm('그린 것을 버리고 바꿀까요?')) return; view = b.dataset.v; strokes = []; if (view !== 'top') editCells = false; render(); });
   main.querySelectorAll('[data-c]').forEach(b => b.onclick = () => { color = b.dataset.c; erase = false; render(); });
   document.getElementById('size').onchange = e => size = +e.target.value;
   document.getElementById('erase').onclick = () => { erase = !erase; render(); };
@@ -126,16 +145,23 @@ function render() {
   document.getElementById('cmp').onchange = e => { compare = e.target.value; render(); };
   document.getElementById('capOne').onclick = () => capture(s.meta.id);
   document.getElementById('save').onclick = save;
+  document.getElementById('kind').onchange = e => kind = e.target.value;
+  if (view === 'top') {
+    document.getElementById('attrBtn').onclick = () => { showAttr = !showAttr; render(); };
+    document.getElementById('editBtn').onclick = () => { editCells = !editCells; if (editCells) showAttr = true; render(); };
+    document.getElementById('target').onchange = e => target = e.target.value;
+  }
+  listChanges();
 
   const fbs = document.getElementById('fbs');
   for (const f of [...s.feedback].reverse()) {
     const d = document.createElement('div'); d.className = 'fb';
     const st = f.status === '대기' ? 'wait' : 'done';
     d.innerHTML = `<a href="/data/${f.image}" target="_blank"><img src="/data/${f.image}"></a>
-      <div><div class="row"><span class="st ${st}">${f.status}</span><span class="muted">${f.created} · ${f.view === 'top' ? '전경' : '전투 시점'}</span>
+      <div><div class="row"><span class="kind ${f.kind === '규칙' ? 'rule' : ''}">${f.kind || '꾸밈'}</span><span class="st ${st}">${f.status}</span><span class="muted">${f.created} · ${f.view === 'top' ? '전경' : '전투 시점'}</span>
       ${f.status === '대기' ? '<button class="del">지우기</button>' : ''}</div>
       <div class="text"></div>${f.reply ? '<div class="reply"></div>' : ''}</div>`;
-    d.querySelector('.text').textContent = f.text;
+    d.querySelector('.text').textContent = (f.cells && f.cells.length ? '칸: ' + f.cells.map(cellText).join(', ') + '\n' : '') + f.text;
     if (f.reply) d.querySelector('.reply').textContent = 'Claude: ' + f.reply;
     const del = d.querySelector('.del');
     if (del) del.onclick = async () => { if (confirm('이 피드백을 지울까요?')) { await api('/api/feedback/delete', { stage: s.meta.id, id: f.id }); refresh(); } };
@@ -143,11 +169,14 @@ function render() {
   }
 
   const img = document.getElementById('shot'), cv = document.getElementById('draw');
-  img.onload = () => { cv.width = img.naturalWidth; cv.height = img.naturalHeight; redraw(); };
+  const at = document.getElementById('attr');
+  img.onload = () => { cv.width = at.width = img.naturalWidth; cv.height = at.height = img.naturalHeight; redraw(); };
   img.onerror = () => { document.getElementById('stack').innerHTML = '<p class="muted">스크린샷이 없습니다. "이 장 다시 찍기" 를 누르세요.</p>'; };
   let stroke = null;
   const pt = e => { const r = cv.getBoundingClientRect(); return [(e.clientX - r.left) * cv.width / r.width, (e.clientY - r.top) * cv.height / r.height]; };
-  cv.onpointerdown = e => { cv.setPointerCapture(e.pointerId); stroke = { color, size: size * cv.width / 1280, erase, pts: [pt(e)] }; strokes.push(stroke); redraw(); };
+  cv.onpointerdown = e => {
+    if (editCells && view === 'top') { toggleCell(cellAt(pt(e), s.meta)); return; }
+    cv.setPointerCapture(e.pointerId); stroke = { color, size: size * cv.width / 1280, erase, pts: [pt(e)] }; strokes.push(stroke); redraw(); };
   cv.onpointermove = e => { if (stroke) { stroke.pts.push(pt(e)); redraw(); } showCell(pt(e), s.meta); };
   cv.onpointerup = () => stroke = null;
   cv.onpointerleave = () => document.getElementById('cell').textContent = '';
@@ -166,12 +195,58 @@ function redraw() {
     g.stroke();
   }
   g.globalCompositeOperation = 'source-over';
+  drawAttr();
+}
+
+// Top shot: board-local x,z <-> pixel (stage-dressing.md 4-4).
+function px(m, w, h, x, z) { return [(x - m.minX) / (m.maxX - m.minX) * w, (m.maxZ - z) / (m.maxZ - m.minZ) * h]; }
+function centre(m, c, r) { return [1.5 * m.hexSize * c, -Math.sqrt(3) * m.hexSize * (r + 0.5 * (c & 1))]; }
+
+function drawAttr() {
+  const at = document.getElementById('attr'); if (!at) return;
+  const g = at.getContext('2d'); g.clearRect(0, 0, at.width, at.height);
+  const s = stage(); if (view !== 'top' || !s) return;
+  const m = s.meta, W = at.width, H = at.height;
+  const hex = (c, r) => {
+    const [x, z] = centre(m, c, r); g.beginPath();
+    for (let i = 0; i < 6; i++) g.lineTo(...px(m, W, H, x + 0.96 * m.hexSize * Math.cos(i * Math.PI / 3), z + 0.96 * m.hexSize * Math.sin(i * Math.PI / 3)));
+    g.closePath();
+  };
+  const label = (c, r, t) => { const [x, z] = centre(m, c, r); g.fillStyle = '#fff'; g.fillText(t, ...px(m, W, H, x, z)); };
+  g.textAlign = 'center'; g.textBaseline = 'middle'; g.font = `bold ${Math.round(W / 70)}px Malgun Gothic`;
+  if (showAttr)
+    for (let r = 0; r < m.rows; r++) for (let c = 0; c < m.cols; c++) {
+      const ch = (m.map[r] || '')[c]; if (!FILL[ch]) continue;
+      hex(c, r); g.fillStyle = FILL[ch]; g.fill();
+      if (ch !== 'd') label(c, r, SHORT[ch]);
+    }
+  for (const x of changes) {
+    hex(x.c, x.r); g.fillStyle = FILL[x.to] || 'rgba(255,255,255,.25)'; g.fill();
+    g.lineWidth = W / 220; g.strokeStyle = '#fff'; g.stroke();
+    label(x.c, x.r, '→' + SHORT[x.to]);
+  }
+}
+
+function toggleCell(cell) {
+  if (!cell || !cell.inside) return;
+  const i = changes.findIndex(x => x.c === cell.c && x.r === cell.r);
+  if (i >= 0) changes.splice(i, 1);
+  else if (cell.ch !== target) { changes.push({ c: cell.c, r: cell.r, from: cell.ch, to: target }); kind = '규칙'; document.getElementById('kind').value = kind; }
+  redraw(); listChanges();
+}
+
+function listChanges() {
+  const el = document.getElementById('changes'); if (el) el.textContent = changes.length ? '고칠 칸: ' + changes.map(cellText).join(', ') : '';
 }
 
 // Top shot only: pixel → board-local x,z → nearest cell (BoardView.Local, stage-dressing.md 4-4).
-function showCell([u, v], m) {
-  const el = document.getElementById('cell');
-  if (view !== 'top') { el.textContent = ''; return; }
+function showCell(p, m) {
+  const cell = cellAt(p, m);
+  document.getElementById('cell').textContent = !cell ? '' : cell.inside ? `칸 (${cell.c}, ${cell.r}) ${TERRAIN[cell.ch] ?? cell.ch ?? ''}` : `보드 밖 (${cell.c}, ${cell.r})`;
+}
+
+function cellAt([u, v], m) {
+  if (view !== 'top') return null;
   const cv = document.getElementById('draw');
   const x = m.minX + u / cv.width * (m.maxX - m.minX), z = m.maxZ - v / cv.height * (m.maxZ - m.minZ);
   const col = Math.round(x / (1.5 * m.hexSize));
@@ -186,18 +261,17 @@ function showCell([u, v], m) {
   }
   const [c, r] = best;
   const inside = c >= 0 && c < m.cols && r >= 0 && r < m.rows;
-  const ch = inside ? (m.map[r] || '')[c] : null;
-  el.textContent = inside ? `칸 (${c}, ${r}) ${TERRAIN[ch] ?? ch ?? ''}` : `보드 밖 (${c}, ${r})`;
+  return { c, r, inside, ch: inside ? (m.map[r] || '')[c] : null };
 }
 
 async function save() {
   const text = document.getElementById('text').value.trim();
-  if (!text && !strokes.length) { alert('그림이나 글을 남겨 주세요'); return; }
+  if (!text && !strokes.length && !changes.length) { alert('그림이나 글을 남겨 주세요'); return; }
   const img = document.getElementById('shot'), cv = document.getElementById('draw');
   const out = document.createElement('canvas'); out.width = cv.width; out.height = cv.height;
-  const g = out.getContext('2d'); g.drawImage(img, 0, 0); g.drawImage(cv, 0, 0);
-  await api('/api/feedback', { stage: cur, view, text, drawing: out.toDataURL('image/png') });
-  strokes = [];
+  const g = out.getContext('2d'); g.drawImage(img, 0, 0); if (view === 'top') g.drawImage(document.getElementById('attr'), 0, 0); g.drawImage(cv, 0, 0);
+  await api('/api/feedback', { stage: cur, view, text, kind, cells: changes, drawing: out.toDataURL('image/png') });
+  strokes = []; changes = []; kind = '꾸밈';
   refresh();
 }
 

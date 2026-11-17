@@ -144,6 +144,7 @@ class StageReview
         var fb = new Dictionary<string, object>
         {
             { "id", name }, { "stage", id }, { "view", b["view"] }, { "text", b["text"] },
+            { "kind", b.ContainsKey("kind") && (string)b["kind"] == "규칙" ? "규칙" : "꾸밈" }, { "cells", b.ContainsKey("cells") ? b["cells"] : new object[0] },
             { "image", "feedback/" + id + "/" + name + ".png" }, { "created", DateTime.Now.ToString("yyyy-MM-dd HH:mm") },
             { "status", "대기" }, { "reply", "" },
         };
