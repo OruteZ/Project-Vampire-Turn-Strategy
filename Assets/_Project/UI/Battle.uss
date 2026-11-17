@@ -53,14 +53,17 @@
 .rules-close > .btn { width: 100px; height: 36px; }
 
 /* ---------- deploy (battle-hud.md 2) ---------- */
-.deploy-title { position: absolute; left: 24px; top: 24px; width: 340px; height: 110px; }
+.deploy-title { position: absolute; left: 24px; top: 24px; width: 340px; height: 48px; }
 .stage-name { height: 48px; }
 .stage-name > .ring-badge { margin-right: 12px; }
 .stage-name > Label { flex-shrink: 1; font-size: 29px; -unity-font-style: bold; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.res { margin-top: 8px; }
-.res > .value { margin-right: 24px; }
-.res .value-icon, .fight-stats .value-icon { width: 28px; height: 28px; }
-.res .value-text, .fight-stats .value-text { font-size: 26px; }
+.res { position: absolute; left: 50%; bottom: 232px; height: 88px; translate: -50% 0; padding: 0 28px; align-items: center; background-color: rgba(18, 19, 26, 0.75); border-radius: 44px; }
+.res > .value { margin: 0 20px; }
+.res .value-icon { width: 64px; height: 64px; margin-right: 10px; }
+.res .value-text { font-size: 64px; -unity-font-style: bold; }
+.hint.deploy { bottom: 340px; }
+.fight-stats .value-icon { width: 28px; height: 28px; }
+.fight-stats .value-text { font-size: 26px; }
 
 .box { position: absolute; width: 340px; padding: 16px; -unity-slice-scale: 0.111px; }
 .roster { left: 24px; bottom: 76px; width: 572px; padding: 20px; }

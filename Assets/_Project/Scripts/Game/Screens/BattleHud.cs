@@ -98,7 +98,7 @@ namespace VampireSpawn.Game.Screens
             Hover(s, st, a);
             EndTurn(root, b, st, a);
             Corner(root, st, a);
-            if (BattleScreen.ShowsHint(s, st.EnemyPlaying)) L(root, BattleScreen.Hint(s, st.EnemyPlaying), "hint");
+            if (BattleScreen.ShowsHint(s, st.EnemyPlaying)) L(root, BattleScreen.Hint(s, st.EnemyPlaying), st.Deploying(b) ? "hint deploy" : "hint");
             if (st.RulesOpen) RulesPopup(root, a);
             UseFonts(root);
         }
@@ -289,7 +289,7 @@ namespace VampireSpawn.Game.Screens
             if (num > 0 && !st.Demo) RingBadge(name, art, num.ToString(), 40, last ? Ui.Blood : Ui.Steel, Ui.Deep, Ui.Bone);
             L(name, Loc.Text(stg.Title), "display", last ? Ui.Blood : Ui.Bone);
             Tip(name, BattleScreen.Subtitle(stg, st.Demo), 400);
-            var res = E(title, "res row");
+            var res = E(root, "res row");
             Value(res, Kit.Icon.Pop, b.Used(t => t.Pop) + "/" + b.PopCap, Ui.Candle, Ui.Candle, Loc.T("battle.pop"));
             if (b.SilverCap > 0) Value(res, Kit.Icon.Silver, b.Used(t => t.Silver) + "/" + b.SilverCap, Ui.Candle, Ui.Candle, Loc.T("battle.silver"));
             Value(res, Kit.Icon.Flag, b.Allies.Count().ToString(), Ui.Steel, Ui.Bone, Loc.T("battle.deployed"));
