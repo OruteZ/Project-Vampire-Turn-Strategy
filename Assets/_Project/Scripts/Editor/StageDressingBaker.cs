@@ -60,6 +60,8 @@ namespace VampireSpawn.Editor
             return "꾸미기 프리팹: 새로 " + made.Count + " (" + string.Join(", ", made) + "), 지형 더함 " + grounded.Count + " (" + string.Join(", ", grounded) + "), 전체 " + all.Count;
         }
 
+        static GapLook? Look(Stage stage, BoardTheme theme, Board board, Hex h) => board.At(h) == Terrain.Gap ? BoardView.Look(stage, theme, h) : (GapLook?)null;
+
         static void AddTerrain(ArtCatalog art, Stage stage, GameObject root)
         {
             var old = root.transform.Find("Ground");
@@ -73,9 +75,9 @@ namespace VampireSpawn.Editor
             var origin = new Vector3((xMin + xMax) * 0.5f - Width * 0.5f, -Below, (zMin + zMax) * 0.5f - Depth * 0.5f);
             var seed = stage.Id.Aggregate(17, (k, ch) => unchecked(k * 31 + ch)) & 0xffff;
             float ox = seed % 251 * 1.37f, oz = seed / 251 * 0.91f;
-            var river = River(board, s, ox, oz);
+            var river = River(board, s, ox, oz, h => Look(stage, theme, board, h) == GapLook.Water);
             var voids = Enumerable.Range(0, board.Rows).SelectMany(r => Enumerable.Range(0, board.Cols).Select(c => new Hex(c, r)))
-                .Where(h => board.At(h) == Terrain.Void).Select(h => { var w = BoardView.Local(h, s); return new Vector2(w.x, w.z); }).ToList();
+                .Where(h => Look(stage, theme, board, h) == GapLook.Pit).Select(h => { var w = BoardView.Local(h, s); return new Vector2(w.x, w.z); }).ToList();
             // Distance past the river bank; negative inside the channel (battle-terrain.md 2-2).
             float Bank(float x, float z)
             {
@@ -177,12 +179,12 @@ namespace VampireSpawn.Editor
         }
 
         // battle-terrain.md 2-2: segments joining touching water cells, plus a meandering run off the board from each edge water cell. Widths are in cells.
-        static List<(Vector2 a, Vector2 b, float wa, float wb)> River(Board board, float s, float ox, float oz)
+        static List<(Vector2 a, Vector2 b, float wa, float wb)> River(Board board, float s, float ox, float oz, System.Func<Hex, bool> wet)
         {
             var cells = new List<(Hex h, Vector2 p)>();
             for (var r = 0; r < board.Rows; r++)
                 for (var c = 0; c < board.Cols; c++)
-                    if (board.At(new Hex(c, r)) == Terrain.Water) { var w = BoardView.Local(new Hex(c, r), s); cells.Add((new Hex(c, r), new Vector2(w.x, w.z))); }
+                    if (wet(new Hex(c, r))) { var w = BoardView.Local(new Hex(c, r), s); cells.Add((new Hex(c, r), new Vector2(w.x, w.z))); }
             var segs = new List<(Vector2, Vector2, float, float)>();
             for (var i = 0; i < cells.Count; i++)
             {
@@ -191,7 +193,7 @@ namespace VampireSpawn.Editor
                     if (Vector2.Distance(cells[i].p, cells[j].p) <= 1.8f * s) segs.Add((cells[i].p, cells[j].p, 1f, 1f));
                 // A run that stops one land cell short of the edge (a crossing, s9's moat) carries on past that cell.
                 var h = cells[i].h;
-                bool Land(int c, int r) => board.At(new Hex(c, r)) != Terrain.Water;
+                bool Land(int c, int r) => !wet(new Hex(c, r));
                 var (dir, skip) = h.Col == 0 ? (Vector2.left, 0) : h.Col == board.Cols - 1 ? (Vector2.right, 0)
                     : h.Col == 1 && Land(0, h.Row) ? (Vector2.left, 1) : h.Col == board.Cols - 2 && Land(board.Cols - 1, h.Row) ? (Vector2.right, 1)
                     : h.Row == 0 ? (Vector2.up, 0) : h.Row == board.Rows - 1 ? (Vector2.down, 0) : (Vector2.zero, 0);

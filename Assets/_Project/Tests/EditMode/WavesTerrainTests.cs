@@ -130,23 +130,23 @@ namespace VampireSpawn.Tests
             Assert.AreEqual(Terrain.Plain, b.Board.At(new Hex(3, 1)));
         }
 
-        // docs/content/stages.md 1-3: '_' is a missing cell, not a wall. Nothing stands on it, but shots fly over it.
+        // docs/systems/hex-grid.md 1: '_' is a missing cell, not a wall. Nothing stands on it, but shots fly over it.
         [Test]
-        public void AVoidCellHoldsNothingButShotsCrossIt()
+        public void AGapCellHoldsNothingButShotsCrossIt()
         {
             var map = new[] { ".......", ".......", ".......", "..._...", ".......", "ddddddd", "ddd_ddd" };
             var b = new Battle(Staged(map, new[] { new Placement(EnemyType.Vampire, 6, 0), new Placement("skeleton", 3, 2, stance: Stance.Hold) }, new Trigger[0]), null, new[] { new Placement("parcher", 3, 5) });
-            Assert.AreEqual(Terrain.Void, b.Board.At(new Hex(3, 3)));
+            Assert.AreEqual(Terrain.Gap, b.Board.At(new Hex(3, 3)));
             Assert.IsFalse(b.Board.Walkable(new Hex(3, 3)));
-            Assert.IsFalse(b.InDeploy(new Hex(3, 6)), "no deploying onto a void");
+            Assert.IsFalse(b.InDeploy(new Hex(3, 6)), "no deploying onto a gap");
             Assert.IsFalse(b.Place("pspear", new Hex(3, 6)).Ok);
             b.Start();
             var archer = b.Allies.Single();
-            Assert.IsFalse(b.Move(archer.Id, new Hex(3, 3)).Ok, "no walking onto a void");
-            Assert.IsTrue(b.Board.Reachable(archer.Pos, 9, Side.Ally, b.OccupantAt).All(r => b.Board.At(r.hex) != Terrain.Void));
+            Assert.IsFalse(b.Move(archer.Id, new Hex(3, 3)).Ok, "no walking onto a gap");
+            Assert.IsTrue(b.Board.Reachable(archer.Pos, 9, Side.Ally, b.OccupantAt).All(r => b.Board.At(r.hex) != Terrain.Gap));
             Assert.IsTrue(b.Move(archer.Id, new Hex(3, 4)).Ok);
             var skeleton = b.Enemies.Single(e => e.Kind == "skeleton");
-            Assert.IsTrue(b.Attack(archer.Id, skeleton.Id).Ok, "range 2 over the void");
+            Assert.IsTrue(b.Attack(archer.Id, skeleton.Id).Ok, "range 2 over the gap");
         }
 
         [Test]
@@ -177,14 +177,13 @@ namespace VampireSpawn.Tests
             Assert.AreEqual(new Hex(0, 0), b.Enemies.Single(e => e.Stance == Stance.Hold).Pos);
         }
 
-        // docs/systems/hex-grid.md 5
+        // docs/systems/hex-grid.md 4-1
         [Test]
-        public void RockBlocksAShotButWaterAndPitsDoNot()
+        public void RockBlocksAShotButAGapDoesNot()
         {
-            var board = new Board(new[] { "..#..", "..~..", ".._.." });
+            var board = new Board(new[] { "..#..", ".._.." });
             Assert.IsFalse(board.Sees(new Hex(0, 0), new Hex(4, 0)), "rock in between");
-            Assert.IsTrue(board.Sees(new Hex(0, 1), new Hex(4, 1)), "water does not block");
-            Assert.IsTrue(board.Sees(new Hex(0, 2), new Hex(4, 2)), "a pit does not block");
+            Assert.IsTrue(board.Sees(new Hex(0, 1), new Hex(4, 1)), "a gap does not block");
             Assert.IsTrue(board.Sees(new Hex(1, 0), new Hex(2, 0)), "next to each other");
 
             var b = new Battle(Staged(new[] { "..#....", ".......", ".......", ".......", ".......", ".......", "......." },

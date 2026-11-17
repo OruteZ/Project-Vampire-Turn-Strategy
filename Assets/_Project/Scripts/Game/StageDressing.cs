@@ -29,7 +29,7 @@ namespace VampireSpawn.Game
                 {
                     var h = new Hex(c, r);
                     var t = board.At(h);
-                    Gizmos.color = t == Terrain.Rock ? Color.red : t == Terrain.Water ? Color.cyan : Color.white;
+                    Gizmos.color = t == Terrain.Rock ? Color.red : t == Terrain.Gap ? (BoardView.Look(stage, art.DressingTheme(stage.Id), h) == GapLook.Water ? Color.cyan : Color.yellow) : Color.white;
                     for (var i = 0; i < 6; i++)
                     {
                         var p = transform.TransformPoint(HexLines.Corner(BoardView.Local(h, art.hexSize), art.hexSize * 0.95f, i));

@@ -4,7 +4,8 @@ using System.Linq;
 
 namespace VampireSpawn.Core
 {
-    public enum Terrain { Plain, Rock, Torch, Water, Sun, Deploy, Rough, Void }
+    // Rules only (hex-grid.md 1-0): Rock blocks walking and shots, Gap blocks walking only. What a blocked cell looks like is the stage's look map.
+    public enum Terrain { Plain, Rock, Torch, Sun, Deploy, Rough, Gap }
     public enum Side { Ally, Enemy }
     public enum Occupant { Empty, Ally, Enemy, Corpse }
 
@@ -28,11 +29,10 @@ namespace VampireSpawn.Core
             '.' => Terrain.Plain,
             '#' => Terrain.Rock,
             'T' => Terrain.Torch,
-            '~' => Terrain.Water,
             'S' => Terrain.Sun,
             'd' => Terrain.Deploy,
             ',' => Terrain.Rough,
-            '_' => Terrain.Void,
+            '_' => Terrain.Gap,
             _ => throw new ArgumentException("unknown map tile '" + ch + "'"),
         };
 
@@ -41,7 +41,7 @@ namespace VampireSpawn.Core
 
         public bool InBounds(Hex h) => h.Col >= 0 && h.Col < Cols && h.Row >= 0 && h.Row < Rows;
         public Terrain At(Hex h) => terrain[h.Col, h.Row];
-        public bool Walkable(Hex h) => At(h) != Terrain.Rock && At(h) != Terrain.Water && At(h) != Terrain.Void;
+        public bool Walkable(Hex h) => At(h) != Terrain.Rock && At(h) != Terrain.Gap;
 
         public List<Hex> Neighbors(Hex h)
         {
@@ -68,7 +68,7 @@ namespace VampireSpawn.Core
                 || (o == Occupant.Enemy && side != Side.Enemy);
         }
 
-        // A shot is a straight line between hex centres; only rock stops it (water and pits do not). hex-grid.md 5.
+        // A shot is a straight line between hex centres; only rock stops it, gaps do not. hex-grid.md 4-1.
         // A line that runs exactly along an edge is nudged to each side in turn, and either side being open is enough.
         public bool Sees(Hex a, Hex b)
         {

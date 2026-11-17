@@ -22,6 +22,10 @@ MonoBehaviour:
   - {fileID: 5361431197472674691, guid: 632eee49de0562648bc267266b3016cb, type: 3}
   - {fileID: 4047619411423330996, guid: 9629320e0d4448e43aafe804522b3c22, type: 3}
   - {fileID: 4733503901829419923, guid: 3941e6e2f78e6eb43a03216c2c433d13, type: 3}
+  lowWallProps:
+  - {fileID: 5556646022776177178, guid: cc2c8919ed7e2d24195f74324d13abde, type: 3}
+  - {fileID: 7707113445619017980, guid: 851b44735fabd8d45b9248efddde7d7c, type: 3}
+  - {fileID: 3348043337743650940, guid: b98ea09d0ef397e43937643115be0e8d, type: 3}
   brazier: {fileID: 8371062267507710030, guid: 887ca6f05d8eb0940be8f3d4916be6b1, type: 3}
   fire: {fileID: 5879195395630746260, guid: 66935891f0cc76c46869337a4d1b7fd5, type: 3}
   embers: {fileID: 1028970867693538119, guid: ad0ae052968bc3b45a7809f7f3b2fcda, type: 3}

@@ -80,5 +80,20 @@ namespace VampireSpawn.Tests
             StringAssert.Contains("쓸 수 없는 병종", problems);
             StringAssert.Contains("강화 id", problems);
         }
+
+        // docs/art/stage-dressing.md 8: a look belongs to a gap cell only, and the old water glyph is gone from the rule map.
+        [Test]
+        public void ValidateNamesBrokenLooks()
+        {
+            var root = Copy();
+            var s = root.stages[3];
+            var c = s.map[0][0] == '_' ? 1 : 0;
+            s.looks = s.map.Select(row => new string('.', row.Length)).ToList();
+            s.looks[0] = s.looks[0].Remove(c, 1).Insert(c, "~");
+            root.stages[4].map[0] = "~" + root.stages[4].map[0].Substring(1);
+            var problems = string.Join("\n", root.Problems());
+            StringAssert.Contains("은(는) 틈(_) 칸에만", problems);
+            StringAssert.Contains("옛 물 ~ 는 칸 _ + 모습 ~", problems);
+        }
     }
 }

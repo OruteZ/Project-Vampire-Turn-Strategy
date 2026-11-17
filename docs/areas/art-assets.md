@@ -60,6 +60,7 @@
 | 바닥 | 장별 Unity Terrain (꾸미기 프리팹 안, `Art/Stages/<장 id> Terrain.asset`). 칠은 `Art/Stages/Layers/` Grass·Dirt·Stone (Synty `Generic_Grass`·`Generic_Dirt`·`PolygonDarkFantasy_Stone_01`), 테마의 `floor`·`patches` (docs/art/battle-terrain.md) |
 | 칸 | 지형에 붙은 홀로그램 격자 선 (`Overlay.mat`, `BoardView` 의 `Grid`). 빛 받는 칸·햇빛 칸은 채움 |
 | 바위 `#` | 테마 막힌 칸 소품 (없으면 `SM_Env_Rock_01~03`) |
+| 낮은 담 (틈 `_` + 모습 `=`) | 테마 `lowWalls` (없으면 `ArtCatalog.lowWallProps`: `SM_Bld_Railing_01`, `SM_Bld_Railing_01_Damaged_01`, `SM_Bld_Railing_Half_01`), docs/art/stage-dressing.md 8 |
 | 화톳불 `T` | `SM_Prop_Brazier_01` + `FX_Fire_01` + 점광원 |
 | 햇빛 `S` | 위에서 비추는 스폿라이트 |
 | 물 `~` | 지형을 파낸 웅덩이 + `Hex_Water.mat` 수면 |

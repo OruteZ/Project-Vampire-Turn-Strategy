@@ -207,6 +207,13 @@ namespace VampireSpawn.Game
                 for (var c = 0; c < board.Cols; c++)
                 {
                     var h = new Hex(c, r);
+                    if (board.At(h) == Terrain.Gap && Look(stage, theme, h) == GapLook.LowWall)
+                    {
+                        var low = theme != null && theme.lowWalls != null && theme.lowWalls.Length > 0 ? theme.lowWalls : art.lowWallProps;
+                        // Kept under unit height so the cell reads as something a shot clears.
+                        if (low != null && low.Length > 0) Place(low[(c * 7 + r * 13) % low.Length], props, Local(h, s) + Vector3.up * art.tileHeight, 1.6f * s, (c + r) % 2 * 180f, 0.6f * s, true);
+                        continue;
+                    }
                     if (board.At(h) != Terrain.Rock || blockers == null || blockers.Length == 0 || IsDoor(stage, h)) continue;
                     var yaw = themed && theme.alignBlockers ? (c + r) % 2 * 180f : (c * 53 + r * 97) % 360;
                     Place(blockers[(c * 7 + r * 13) % blockers.Length], props, Local(h, s) + Vector3.up * art.tileHeight, (themed ? theme.blockerWidth : 1.5f) * s, yaw, (themed ? 1.3f : 99f) * s, themed && theme.alignBlockers);
@@ -233,6 +240,12 @@ namespace VampireSpawn.Game
                         Place(theme.scatter[h / 100 % theme.scatter.Length], props, at, (0.35f + h % 4 * 0.07f) * s, h % 360, 0.5f * s);
                 }
             return root;
+        }
+
+        public static GapLook Look(Stage stage, BoardTheme theme, Hex h)
+        {
+            var ch = stage.Looks.Length > h.Row && stage.Looks[h.Row].Length > h.Col ? stage.Looks[h.Row][h.Col] : '.';
+            return ch == '~' ? GapLook.Water : ch == '_' ? GapLook.Pit : ch == '=' ? GapLook.LowWall : theme != null ? theme.gap : GapLook.Pit;
         }
 
         public void Clear()

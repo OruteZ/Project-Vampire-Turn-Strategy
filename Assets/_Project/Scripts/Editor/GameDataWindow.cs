@@ -10,11 +10,13 @@ namespace VampireSpawn.Editor
     // Designer-facing editor for the data assets (docs/guides/data-editor.md).
     public sealed class GameDataWindow : EditorWindow
     {
-        public enum Brush { Tile, Enemy, Unit, Erase }
+        public enum Brush { Tile, Look, Enemy, Unit, Erase }
 
         const float R = 20f;
         static readonly float Sqrt3 = Mathf.Sqrt(3f);
-        static readonly (char ch, string label)[] Tiles = { ('.', "평지"), ('#', "바위"), ('T', "화톳불"), ('~', "물"), ('S', "햇빛"), ('d', "배치 구역"), (',', "거친 땅"), ('_', "빈 칸") };
+        static readonly (char ch, string label)[] Tiles = { ('.', "평지"), ('#', "벽 (사격 막음)"), ('_', "틈 (사격 통과)"), ('T', "화톳불"), ('S', "햇빛"), ('d', "배치 구역"), (',', "거친 땅") };
+        // docs/art/stage-dressing.md 8: art-only layer, painted on gap cells.
+        static readonly (char ch, string label)[] Looks = { ('.', "테마 기본"), ('~', "물"), ('_', "낭떠러지"), ('=', "낮은 담") };
 
         GameDataAsset root;
         Object selected;
@@ -24,6 +26,7 @@ namespace VampireSpawn.Editor
 
         public Brush brush = Brush.Tile;
         public char tile = '#';
+        public char look = '~';
         public string enemy = "skeleton";
         public string unit = "pspear";
 
@@ -140,6 +143,11 @@ namespace VampireSpawn.Editor
             }
             using (new EditorGUILayout.HorizontalScope())
             {
+                foreach (var (ch, label) in Looks)
+                    if (GUILayout.Toggle(brush == Brush.Look && look == ch, new GUIContent("모습: " + label, "틈(_) 칸이 무엇으로 보일지. 전투 규칙은 읽지 않는다"), EditorStyles.miniButton)) { brush = Brush.Look; look = ch; }
+            }
+            using (new EditorGUILayout.HorizontalScope())
+            {
                 if (GUILayout.Toggle(brush == Brush.Enemy && enemy == EnemyType.Vampire, "적: 뱀파이어", EditorStyles.miniButton)) { brush = Brush.Enemy; enemy = EnemyType.Vampire; }
                 foreach (var m in root.minions.Where(x => x != null))
                     if (GUILayout.Toggle(brush == Brush.Enemy && enemy == m.key, "적: " + SourceText.Get(m.key + ".name"), EditorStyles.miniButton)) { brush = Brush.Enemy; enemy = m.key; }
@@ -167,7 +175,7 @@ namespace VampireSpawn.Editor
                 for (var c = 0; c < cols; c++)
                 {
                     var center = Center(area, c, r);
-                    if (e.type == EventType.Repaint) DrawHex(center, TileColor(s.map[r][c]));
+                    if (e.type == EventType.Repaint) DrawHex(center, TileColor(s.map[r][c], LookAt(s, c, r)));
                     var label = SpotLabel(s, c, r, out var color);
                     if (label != null)
                         GUI.Label(new Rect(center.x - R, center.y - R * 0.5f, R * 2, R), label, new GUIStyle(EditorStyles.boldLabel) { alignment = TextAnchor.MiddleCenter, normal = { textColor = color } });
@@ -204,17 +212,21 @@ namespace VampireSpawn.Editor
             Handles.DrawAAPolyLine(1.5f, pts.Append(pts[0]).ToArray());
         }
 
-        // Board palette: plain, rock, candle, water, sun, steel for the deploy zone, mud for rough ground.
-        static Color TileColor(char ch) => ch switch
+        static char LookAt(StageData s, int c, int r) => r < s.looks.Count && c < s.looks[r].Length ? s.looks[r][c] : '.';
+
+        // Board palette: plain, rock, candle, sun, steel for the deploy zone, mud for rough ground; a gap shows its look.
+        static Color TileColor(char ch, char look) => ch switch
         {
             '#' => new Color(0.45f, 0.42f, 0.48f),
             'T' => new Color(0.89f, 0.66f, 0.29f),
-            '~' => new Color(0.24f, 0.34f, 0.44f),
+            '_' when look == '~' => new Color(0.24f, 0.34f, 0.44f),
+            '_' when look == '=' => new Color(0.42f, 0.36f, 0.30f),
+            '_' when look == '_' => Color.black,
+            '_' => new Color(0.08f, 0.08f, 0.10f),
             'S' => new Color(0.92f, 0.86f, 0.68f),
             'd' => new Color(0.36f, 0.46f, 0.55f),
             ',' => new Color(0.38f, 0.30f, 0.20f),
             '.' => new Color(0.16f, 0.15f, 0.19f),
-            '_' => Color.black,
             _ => Color.magenta,
         };
 
@@ -248,6 +260,10 @@ namespace VampireSpawn.Editor
                     var row = s.map[r].ToCharArray();
                     row[c] = tile;
                     s.map[r] = new string(row);
+                    if (tile != '_' && LookAt(s, c, r) != '.') SetLook(s, c, r, '.');
+                    break;
+                case Brush.Look:
+                    if (s.map[r][c] == '_') SetLook(s, c, r, look);
                     break;
                 case Brush.Enemy:
                     ClearSpot(s, c, r);
@@ -266,6 +282,14 @@ namespace VampireSpawn.Editor
             Refresh();
         }
 
+        static void SetLook(StageData s, int c, int r, char ch)
+        {
+            while (s.looks.Count < s.map.Count) s.looks.Add(new string('.', s.map[0].Length));
+            var row = s.looks[r].ToCharArray();
+            row[c] = ch;
+            s.looks[r] = new string(row);
+        }
+
         static void ClearSpot(StageData s, int c, int r)
         {
             s.enemies.RemoveAll(x => x.col == c && x.row == r);
@@ -280,6 +304,13 @@ namespace VampireSpawn.Editor
             while (s.map.Count > rows) s.map.RemoveAt(s.map.Count - 1);
             for (var r = 0; r < s.map.Count; r++)
                 s.map[r] = s.map[r].Length >= cols ? s.map[r].Substring(0, cols) : s.map[r] + new string('.', cols - s.map[r].Length);
+            if (s.looks.Count > 0)
+            {
+                while (s.looks.Count < rows) s.looks.Add(new string('.', cols));
+                while (s.looks.Count > rows) s.looks.RemoveAt(s.looks.Count - 1);
+                for (var r = 0; r < s.looks.Count; r++)
+                    s.looks[r] = s.looks[r].Length >= cols ? s.looks[r].Substring(0, cols) : s.looks[r] + new string('.', cols - s.looks[r].Length);
+            }
             s.enemies.RemoveAll(x => x.col >= cols || x.row >= rows);
             s.sample.RemoveAll(x => x.col >= cols || x.row >= rows);
             EditorUtility.SetDirty(s);

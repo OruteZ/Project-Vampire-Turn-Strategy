@@ -47,7 +47,9 @@ namespace VampireSpawn.Tests
                     var t = board.At(h);
                     var door = stage.Doors.Any(d => d.Hexes.Contains(h));
                     if (t == Terrain.Rock && !door) Assert.Less(near, 0.5f * s, stage.Id + " prop on rock " + h);
-                    if (t == Terrain.Void)
+                    var look = t == Terrain.Gap ? BoardView.Look(stage, art.DressingTheme(stage.Id), h) : (GapLook?)null;
+                    if (look == GapLook.LowWall) Assert.Less(near, 0.5f * s, stage.Id + " low wall on gap " + h + " (stage-dressing.md 8)");
+                    if (look == GapLook.Pit)
                     {
                         Assert.Greater(near, 0.9f * s, stage.Id + " prop on void " + h);
                         Assert.Less(Height(at), -1f, stage.Id + " void " + h + " is a pit");
