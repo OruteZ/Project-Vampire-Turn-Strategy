@@ -105,6 +105,27 @@ namespace VampireSpawn.Tests
         }
 
         [Test]
+        public void WalksPlayBeforeTheAttacksTheyCanSkip()
+        {
+            static Hex H(int c, int r) => new Hex(c, r);
+            static BattleEvent W(int id, Hex from, params Hex[] path) => BattleEvent.Walk(id, path, from);
+            static string Order(System.Collections.Generic.IEnumerable<BattleEvent> evs) => string.Join(" ", evs.Select(e => e.Kind == BattleEventKind.Walk ? "w" + e.UnitId : e.Kind == BattleEventKind.Hit ? "h" + e.OtherId : e.Kind.ToString()[0].ToString()));
+            var banner = BattleEvent.Banner(BannerKind.EnemyTurn, default);
+
+            var simple = new[] { banner, W(1, H(0, 0), H(0, 1)), BattleEvent.Hit(9, 1), W(2, H(5, 5), H(5, 6)), BattleEvent.Hit(8, 2) };
+            Assert.AreEqual("B w1 w2 h1 h2", Order(BattleEvent.MovesFirst(simple)), "both walk, then both strike");
+
+            var intoTheDead = new[] { W(1, H(0, 0), H(0, 1)), BattleEvent.Hit(9, 1), BattleEvent.Died(9, H(3, 3)), W(2, H(4, 4), H(3, 3)), W(3, H(7, 7), H(7, 6)) };
+            Assert.AreEqual("w1 h1 D w2 w3", Order(BattleEvent.MovesFirst(intoTheDead)), "a walk into a fresh death stays and walls the next walk");
+
+            var trapped = new[] { W(1, H(0, 0), H(0, 1)), BattleEvent.Hit(9, 1), W(2, H(4, 4), H(4, 5)), BattleEvent.Hit(2, 0, 2), W(3, H(7, 7), H(7, 6)) };
+            Assert.AreEqual("w1 h1 w2 h0 w3", Order(BattleEvent.MovesFirst(trapped)), "a walk with a trap reaction stays with it");
+
+            var barrier = new[] { W(1, H(0, 0), H(0, 1)), BattleEvent.Hit(9, 1), BattleEvent.Rose(5, 4, H(9, 9)), W(2, H(4, 4), H(4, 5)) };
+            Assert.AreEqual("w1 h1 R w2", Order(BattleEvent.MovesFirst(barrier)), "never past a rise");
+        }
+
+        [Test]
         public void EnemyWalkStartsWhereTheUnitStood()
         {
             var b = Demo();
