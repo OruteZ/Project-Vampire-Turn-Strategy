@@ -47,8 +47,14 @@ namespace VampireSpawn.Tests
                     var t = board.At(h);
                     var door = stage.Doors.Any(d => d.Hexes.Contains(h));
                     if (t == Terrain.Rock && !door) Assert.Less(near, 0.5f * s, stage.Id + " prop on rock " + h);
-                    // A void may be a pit or filled ground, per stage (art-assets.md decisions, #143).
-                    if (t == Terrain.Void) Assert.Greater(near, 0.9f * s, stage.Id + " prop on void " + h);
+                    var look = t == Terrain.Gap ? BoardView.Look(stage, art.DressingTheme(stage.Id), h) : (GapLook?)null;
+                    if (look == GapLook.LowWall) Assert.Less(near, 0.5f * s, stage.Id + " low wall on gap " + h + " (stage-dressing.md 8)");
+                    if (look == GapLook.Flat) Assert.Greater(near, 0.9f * s, stage.Id + " prop on flat gap " + h);
+                    if (look == GapLook.Pit)
+                    {
+                        Assert.Greater(near, 0.9f * s, stage.Id + " prop on void " + h);
+                        Assert.Less(Height(at), -1f, stage.Id + " void " + h + " is a pit");
+                    }
                     else if (door) Assert.Greater(near, 0.9f * s, stage.Id + " door " + h + " is a live prop, not baked (triggers.md 1-4)");
                     else if (board.Walkable(h))
                     {

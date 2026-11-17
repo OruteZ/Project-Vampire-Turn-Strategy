@@ -13,6 +13,7 @@ namespace VampireSpawn.Game
         public Material plain, water;
         [Tooltip("칸 격자·칸 표시의 정점색 재질 (docs/art/battle-terrain.md 3)")] public Material overlay;
         public GameObject[] rockProps;
+        [Tooltip("낮은 담 모습의 틈 칸 기본 소품 (docs/art/stage-dressing.md 8)")] public GameObject[] lowWallProps;
         public GameObject brazier, fire;
         [Tooltip("화톳불 강조 불티, 햇빛 칸 먼지 (docs/art/battle-terrain.md 3-1)")] public GameObject embers, dust;
         [Tooltip("햇빛 칸 빛기둥 (docs/art/battle-terrain.md 3-1)")] public Shader lightBeam;

@@ -33,7 +33,7 @@ namespace VampireSpawn.Core
         // Branch order is list order (docs/systems/progression.md 7).
         public Upgrade[] Branches(string unit) => Upgrades.Where(u => u.Unit == unit).ToArray();
 
-        const string Tiles = ".#T~Sd,_";
+        const string Tiles = ".#TSd,_", Looks = ".~_=-";
 
         public List<string> Validate()
         {
@@ -102,8 +102,17 @@ namespace VampireSpawn.Core
             for (var r = 0; r < s.Map.Length; r++)
             {
                 if (s.Map[r].Length != cols) p.Add($"{at}: 지도 {r}행 길이 {s.Map[r].Length}, 0행은 {cols}");
-                foreach (var ch in s.Map[r]) if (Tiles.IndexOf(ch) < 0) p.Add($"{at}: 지도 {r}행에 모르는 칸 '{ch}' (쓸 수 있는 칸 {Tiles})");
+                foreach (var ch in s.Map[r]) if (Tiles.IndexOf(ch) < 0) p.Add($"{at}: 지도 {r}행에 모르는 칸 '{ch}' (쓸 수 있는 칸 {Tiles}{(ch == '~' ? ", 옛 물 ~ 는 칸 _ + 모습 ~" : "")})");
             }
+            if (s.Looks.Length > 0 && (s.Looks.Length != s.Map.Length || s.Looks.Any(l => l.Length != cols))) p.Add($"{at}: 모습 칸 크기가 지도와 다르다");
+            else
+                for (var r = 0; r < s.Looks.Length; r++)
+                    for (var c = 0; c < cols; c++)
+                    {
+                        var l = s.Looks[r][c];
+                        if (Looks.IndexOf(l) < 0) p.Add($"{at}: 모습 칸 {c},{r} 에 모르는 모습 '{l}' (쓸 수 있는 모습 {Looks})");
+                        else if (l != '.' && s.Map[r][c] != '_') p.Add($"{at}: 모습 칸 {c},{r} '{l}' 은(는) 틈(_) 칸에만");
+                    }
             char Tile(int c, int r) => r >= 0 && r < s.Map.Length && c >= 0 && c < s.Map[r].Length ? s.Map[r][c] : '\0';
             foreach (var k in s.Units) if (Types.All(t => t.Key != k)) p.Add($"{at}: 없는 병종 {k}");
             var vampires = s.Enemies.Count(e => e.Kind == EnemyType.Vampire);
@@ -114,7 +123,7 @@ namespace VampireSpawn.Core
                 if (e.Kind == EnemyType.Corpse) { if (e.Reinforcement || Tile(e.Col, e.Row) == 'd') p.Add($"{at}: 시신 {e.Col},{e.Row} 은(는) 처음부터, 배치 구역 밖에만 둘 수 있다"); }
                 else if (e.Kind != EnemyType.Vampire && Minions.All(m => m.Key != e.Kind)) p.Add($"{at}: 없는 적 {e.Kind}");
                 var t = Tile(e.Col, e.Row);
-                if (t == '\0' || t == '#' || t == '~' || t == '_') p.Add($"{at}: 적 {e.Kind} 이(가) 설 수 없는 칸 {e.Col},{e.Row}");
+                if (t == '\0' || t == '#' || t == '_') p.Add($"{at}: 적 {e.Kind} 이(가) 설 수 없는 칸 {e.Col},{e.Row}");
                 if (!e.Reinforcement && !taken.Add((e.Col, e.Row))) p.Add($"{at}: {e.Col},{e.Row} 에 유닛이 겹친다");
                 if (e.Arrive < 0 || (e.Reinforcement && e.Kind == EnemyType.Vampire)) p.Add($"{at}: 증원 턴 {e.Arrive} 은(는) 하수인만, 1 이상");
                 if (e.Arrive > 0 && e.Wave != null) p.Add($"{at}: {e.Kind} {e.Col},{e.Row} 은(는) 증원 턴과 트리거 중 하나만");
@@ -127,7 +136,8 @@ namespace VampireSpawn.Core
                 if (!taken.Add((a.Col, a.Row))) p.Add($"{at}: {a.Col},{a.Row} 에 유닛이 겹친다");
                 if (!s.Units.Contains(a.Kind)) p.Add($"{at}: 예시 편성의 {a.Kind} 은(는) 이 장에서 쓸 수 없는 병종");
             }
-            ValidateLayout(s, p, Tile);
+            // Board throws on an unknown tile; that tile is already reported above.
+            if (s.Map.All(row => row.All(ch => Tiles.IndexOf(ch) >= 0))) ValidateLayout(s, p, Tile);
             if (s.Units.Length == 0) p.Add(at + ": 쓸 수 있는 병종이 없다");
             if (s.Pop < 1) p.Add(at + ": 인구는 1 이상");
         }

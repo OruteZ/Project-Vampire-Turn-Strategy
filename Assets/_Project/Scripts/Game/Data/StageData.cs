@@ -31,8 +31,9 @@ namespace VampireSpawn.Game.Data
         public int bonusGold;
         [Header("보스")]
         public int bossHp, bossAtk, bossDef, bossMov, bossHeal;
-        [Header("지도 (. 평지, # 바위, T 화톳불, ~ 물, S 햇빛, d 배치 구역, , 거친 땅)")]
+        [Header("지도 (. 평지, # 벽, _ 틈, T 화톳불, S 햇빛, d 배치 구역, , 거친 땅)")]
         public List<string> map = new List<string>();
+        [Tooltip("꾸미기용 모습 칸, 비우면 모두 테마 기본 (. 기본, ~ 물, _ 낭떠러지, = 낮은 담, - 평지). docs/art/stage-dressing.md 8")] public List<string> looks = new List<string>();
         [Tooltip("목록 순서가 하수인 행동 순서")] public List<EnemySpot> enemies = new List<EnemySpot>();
         [Header("트리거·문 (docs/systems/triggers.md)")]
         public List<TriggerSpot> triggers = new List<TriggerSpot>();
@@ -48,7 +49,7 @@ namespace VampireSpawn.Game.Data
             goal == Goal.Escort ? new EscortStats(escortHp, escortDef, escortMov, new Hex(escortAt.x, escortAt.y)) : null,
             triggers.Select(t => new Trigger(t.id, t.kind, t.value, Hexes(t.hexes))).ToArray(),
             doors.Select(d => new Door(Hexes(d.hexes), d.trigger)).ToArray(),
-            reinforcements.Select(r => new Reinforcement(r.trigger, r.pop, r.silver, Hexes(r.hexes))).ToArray());
+            reinforcements.Select(r => new Reinforcement(r.trigger, r.pop, r.silver, Hexes(r.hexes))).ToArray(), looks.ToArray());
 
         static Hex[] Hexes(List<Vector2Int> list) => list == null ? Array.Empty<Hex>() : list.Select(p => new Hex(p.x, p.y)).ToArray();
     }

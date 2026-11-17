@@ -31,19 +31,21 @@ namespace VampireSpawn.Tests
                 var look = view.art.Dressing(stage.Id).GetComponent<StageDressing>();
                 Assert.AreEqual(look.fog, RenderSettings.fogColor, stage.Id + " fog from the stage prefab (stage-dressing.md 4-10)");
                 Assert.AreEqual(look.ambient, RenderSettings.ambientLight, stage.Id + " ambient from the stage prefab");
-                Assert.AreEqual(!bare && stage.Map.Any(line => line.Contains("~")), view.art.Dressing(stage.Id).transform.Find("Water") != null, stage.Id + " water plane only where the stage has water (battle-terrain.md 2-2)");
+                var board = new Board(stage.Map);
+                bool Wet(Hex h) => board.At(h) == Terrain.Gap && BoardView.Look(stage, view.art.DressingTheme(stage.Id), h) == GapLook.Water;
+                var every = Enumerable.Range(0, board.Rows).SelectMany(r => Enumerable.Range(0, board.Cols).Select(c => new Hex(c, r)));
+                Assert.AreEqual(!bare && every.Any(Wet), view.art.Dressing(stage.Id).transform.Find("Water") != null, stage.Id + " water plane only where the stage has water (battle-terrain.md 2-2)");
                 var tiles = children.Where(c => c.name.StartsWith("Tile ")).ToList();
                 var theme = view.art.Theme(stage.Id);
                 CollectionAssert.Contains(theme.stages, stage.Id, stage.Id + " has its own theme (stage-dressing.md 2)");
                 Assert.AreEqual(stage.Map.Sum(line => line.Length), tiles.Count, stage.Id + " tile count");
-                var board = new Board(stage.Map);
                 foreach (var t in tiles)
                 {
                     var parts = t.name.Split(' ');
                     var h = new Hex(int.Parse(parts[1].Split(',')[0]), int.Parse(parts[1].Split(',')[1]));
                     var terrain = board.At(h);
                     Assert.AreEqual(terrain.ToString(), parts[2], stage.Id + " " + t.name);
-                    if (terrain != Terrain.Water) Assert.AreEqual(view.Stand(h).y, t.position.y, 0.001f, stage.Id + " " + t.name + " stands on the terrain");
+                    if (!Wet(h)) Assert.AreEqual(view.Stand(h).y, t.position.y, 0.001f, stage.Id + " " + t.name + " stands on the terrain");
                     Assert.AreEqual(terrain == Terrain.Torch, t.Cast<Transform>().Any(c => c.name == view.art.brazier.name), stage.Id + " brazier on " + t.name + " only on torch");
                     Assert.AreEqual(terrain == Terrain.Torch || terrain == Terrain.Sun, t.GetComponentInChildren<Light>() != null, stage.Id + " light on " + t.name);
                 }

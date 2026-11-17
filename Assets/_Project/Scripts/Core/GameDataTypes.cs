@@ -209,6 +209,8 @@ namespace VampireSpawn.Core
         public readonly Bonus Bonus;
         public readonly Boss Boss;
         public readonly string[] Map;
+        // Art only, never read by the rules (docs/art/stage-dressing.md 8). Empty = every cell takes its theme's look.
+        public readonly string[] Looks;
         public readonly Placement[] Enemies;
         public readonly Placement[] Sample;
         // Defended hexes on a defence stage, destinations on an escort stage.
@@ -221,13 +223,14 @@ namespace VampireSpawn.Core
 
         public Stage(string id, string[] units, int pop, int silver, int reward, Goal goal,
             Bonus bonus, Boss boss, string[] map, Placement[] enemies, Placement[] sample,
-            Hex[] spots = null, int hold = 0, EscortStats escort = null, Trigger[] triggers = null, Door[] doors = null, Reinforcement[] reinforcements = null)
+            Hex[] spots = null, int hold = 0, EscortStats escort = null, Trigger[] triggers = null, Door[] doors = null, Reinforcement[] reinforcements = null, string[] looks = null)
         {
             Id = id; Units = units; Pop = pop; Silver = silver; Reward = reward; Goal = goal;
             Bonus = bonus; Boss = boss; Map = map; Enemies = enemies; Sample = sample;
             Spots = spots ?? Array.Empty<Hex>(); Hold = hold; Escort = escort;
             Triggers = triggers ?? Array.Empty<Trigger>(); Doors = doors ?? Array.Empty<Door>();
             Reinforcements = reinforcements ?? Array.Empty<Reinforcement>();
+            Looks = looks ?? Array.Empty<string>();
         }
 
         public Placement[] Minions => Enemies.Where(e => e.Kind != EnemyType.Vampire && e.Kind != EnemyType.Corpse).ToArray();
