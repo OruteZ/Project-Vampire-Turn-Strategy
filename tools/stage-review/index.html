@@ -56,7 +56,7 @@
 <div id="main"><p class="muted">왼쪽에서 장을 고르세요. 스크린샷이 없으면 "전체 다시 찍기" 를 누르세요 (Unity 에디터가 열립니다, 장당 몇 초).</p></div>
 
 <script>
-let state = null, cur = null, view = 'top', color = '#ff3b3b', size = 6, erase = false, strokes = [], compare = '';
+let state = null, cur = null, view = 'top', color = '#ff3b3b', size = 6, erase = false, strokes = [], compare = '', draft = '';
 const COLORS = ['#ff3b3b', '#ffd23b', '#3bff6a', '#3bb4ff', '#ffffff', '#000000'];
 let showAttr = true, editCells = false, target = '#', changes = [], kind = '꾸밈';
 // Rule cells (docs/systems/hex-grid.md 1-0): what the battle rules read, not how the cell looks.
@@ -84,7 +84,7 @@ async function refresh(keepDrawing) {
     d.className = 'stage' + (cur === s.meta.id ? ' sel' : '');
     const wait = s.feedback.filter(f => f.status === '대기').length;
     d.innerHTML = `<span>${s.meta.id.replace('s', '')}. ${s.meta.title}</span>` + (wait ? `<span class="badge">${wait}</span>` : '');
-    d.onclick = () => { if ((strokes.length || changes.length) && !confirm('그린 것을 버리고 옮길까요?')) return; cur = s.meta.id; strokes = []; changes = []; compare = ''; refresh(); };
+    d.onclick = () => { if ((strokes.length || changes.length) && !confirm('그린 것을 버리고 옮길까요?')) return; cur = s.meta.id; strokes = []; changes = []; compare = ''; draft = ''; refresh(); };
     list.appendChild(d);
   }
   if (!keepDrawing) render();
@@ -145,6 +145,7 @@ function render() {
   document.getElementById('cmp').onchange = e => { compare = e.target.value; render(); };
   document.getElementById('capOne').onclick = () => capture(s.meta.id);
   document.getElementById('save').onclick = save;
+  const ta = document.getElementById('text'); ta.value = draft; ta.oninput = () => draft = ta.value;
   document.getElementById('kind').onchange = e => kind = e.target.value;
   if (view === 'top') {
     document.getElementById('attrBtn').onclick = () => { showAttr = !showAttr; render(); };
@@ -271,7 +272,7 @@ async function save() {
   const out = document.createElement('canvas'); out.width = cv.width; out.height = cv.height;
   const g = out.getContext('2d'); g.drawImage(img, 0, 0); if (view === 'top') g.drawImage(document.getElementById('attr'), 0, 0); g.drawImage(cv, 0, 0);
   await api('/api/feedback', { stage: cur, view, text, kind, cells: changes, drawing: out.toDataURL('image/png') });
-  strokes = []; changes = []; kind = '꾸밈';
+  strokes = []; changes = []; kind = '꾸밈'; draft = '';
   refresh();
 }
 
