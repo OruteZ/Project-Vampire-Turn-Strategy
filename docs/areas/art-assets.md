@@ -20,14 +20,14 @@
 | 메뉴 UI | Assets/Synty/InterfaceDarkFantasyMenus | INTERFACE_Dark_Fantasy_Menus | uGUI 프리팹 228 |
 | 메인 메뉴 바탕 | Assets/Synty/PolygonDarkFantasy/Scenes/Demo_Cathedral_01.unity | POLYGON_Dark_Fantasy | 백작성·큰 달 데모 씬. Build Settings 에 있고 `MenuFlow` 가 겹쳐 불러 그 씬 카메라로 그린다 (#116) |
 | UI 공용 스프라이트·셰이더 | Assets/Synty/InterfaceCore | INTERFACE 둘 다 | |
-| 블록아웃 (회색 블록·격자) | Assets/Synty/PolygonPrototype | POLYGON_Prototype | 1~20장 전투 맵 블록아웃 바닥 재질 `PolygonPrototype_Grid_06`, 테마 `Themes/Prototype` (#138, docs/art/stage-dressing.md 6) |
+| 블록아웃 (회색 블록·격자) | Assets/Synty/PolygonPrototype | POLYGON_Prototype | 1~20장 전투 맵 블록아웃 바닥 재질 `PolygonPrototype_Grid_06` (2026-11-17 부터 안 씀), 테마 `Themes/Prototype` (#138, docs/art/stage-dressing.md 6) |
 
 ## 결정
 | 결정 | 상태 | 날짜 | 출처 |
 |---|---|---|---|
 | 보드 둘레를 장별 Synty 소품으로 꾸미고, 카메라가 화면 전체를 그린다 | 시험 중 | 2026-11-07 | #34 "synty 에셋을 사용해서 게임 스테이지처럼 보이도록 꾸며줘" |
 | 전투 보드 꾸미기는 장별 프리팹(`Assets/_Project/Art/Stages/<장 id>.prefab`)으로 굽고, 구운 뒤엔 프리팹이 기준(사람·에이전트가 직접 고침). 장별 조명도 프리팹 안에 두고, 베이크 조명이 필요한 장만 나중에 씬으로 | 시험 중 | 2026-11-09 | #101 "그래 뭐 그럼 그렇게 하자" |
-| 지도가 굳기 전까지 1~20장 전투 맵은 완전한 프로토타입: 회색 격자 납작한 판 하나(`BoardTheme.bareFloor`) 위에 규칙이 짓는 것(화톳불·햇빛, 문, 관·유닛)만. 지형·막힌 칸 소품·둘레 장식 없음, 막힌 칸·물은 칸 격자 선이 없는 것으로만 구분 (`ArtCatalog.blockout`). 장별 테마는 지우지 않고 두고, 원정 지도는 장별 테마 그대로 | 시험 중 | 2026-11-16 | #138 "바꿔 줘", "장식 싹 밀고 바닥이랑 중요 오브젝트 (횃불, 관 등) 만", "타일 사이사이 장애물도 지우고, 바닥도 평평한 큐브로" + 통짜 판 하나 |
+| 1~20장 전투 맵을 블록아웃에서 장별 테마 에셋 배치로 되돌린다 (`ArtCatalog.blockout` 비움, 프리팹 다시 굽기. 블록아웃 장치·`Prototype` 테마는 남김) | 시험 중 | 2026-11-17 | #143 "전체를 다시 블록아웃에서 에셋배치로 변경하자" |
 | 전투 맵 꾸밈 피드백은 exe 툴(`tools/stage-review`)로 모으고, 반영은 세션에서 에이전트가 "피드백 반영해" 로 한다. 블록아웃을 넘어 실제 꾸미기까지 (docs/art/stage-dressing.md 7) | 시험 중 | 2026-11-17 | #143 "B로, 실제로 꾸미기까지 가는거야" |
 | 무기는 쥐는 법(`Hold`: 칼날·창·자루·그대로)으로 붙이고, 루트 모션은 모델만 움직인다(칸 자리·걷기는 코드) | 시험 중 | 2026-11-07 | #42 요청 2 "모든 유닛이 도구를 정상적으로", "Loot Motion을 키는쪽으로" |
 | 배치 때 아군은 북쪽, 적은 남쪽을 본다. 잠든 뱀파이어는 관만 보인다 | 시험 중 | 2026-11-07 | #42 요청 2 "적방향 (북쪽)", "관만 보여줄 것" |
