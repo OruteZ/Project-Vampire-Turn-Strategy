@@ -47,3 +47,4 @@ verify-artifacts/
 /Assets/_Generated.meta
 docs/.obsidian
 docs/_temp
+*.slnx
