@@ -21,6 +21,19 @@ namespace VampireSpawn.Tests
         }
 
         [Test]
+        public void ProgressRestartsWithClearRewardsAndEmptyBarracks()
+        {
+            var s = Campaign.Stages;
+            var c = DebugCheats.Progress(2, withBonus: true);
+            Assert.AreEqual(s[0].Reward + s[1].Reward + s[0].Bonus.Gold + s[1].Bonus.Gold, c.Gold);
+            Assert.AreEqual(0, c.Upgrades.Count);
+            Assert.AreEqual(2, c.BonusDone.Count);
+            Assert.IsTrue(c.StageOpen(2));
+            Assert.IsFalse(c.StageOpen(3));
+            Assert.AreEqual(s[0].Reward, DebugCheats.Progress(1, withBonus: false).Gold);
+        }
+
+        [Test]
         public void BranchGivesEveryTypeThatBranch()
         {
             for (var n = 1; n <= 3; n++)
