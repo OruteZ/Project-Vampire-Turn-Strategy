@@ -50,7 +50,7 @@
 .rules-title { font-size: 29px; -unity-font-style: bold; color: var(--bone); margin-bottom: 8px; }
 .rules-line { font-size: 26px; color: var(--muted); white-space: normal; margin-bottom: 8px; }
 .rules-close { flex-direction: row; justify-content: flex-end; }
-.rules-close > .btn { width: 100px; height: 36px; }
+.rules-close > .btn { width: 100px; height: 44px; }
 
 /* ---------- deploy (battle-hud.md 2) ---------- */
 .deploy-title { position: absolute; left: 24px; top: 24px; width: 340px; height: 48px; }
@@ -89,7 +89,7 @@
 .brief { right: 24px; top: 24px; }
 .def { margin-top: 10px; align-items: flex-start; }
 .def-icon { width: 24px; height: 24px; margin-right: 10px; flex-shrink: 0; }
-.def-text { width: 274px; font-size: 26px; color: var(--bone); white-space: normal; }
+.def-text { flex-grow: 1; flex-shrink: 1; width: 0; font-size: 26px; color: var(--bone); white-space: normal; }
 
 /* ---------- fight (battle-hud.md 3, 4) ---------- */
 .fight-stats { position: absolute; left: 24px; top: 24px; height: 48px; }

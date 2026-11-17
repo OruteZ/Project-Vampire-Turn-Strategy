@@ -72,6 +72,7 @@ namespace VampireSpawn.Editor
                     else if (Frames.Any(p.ClassListContains))
                     {
                         if (Spill(p.worldBound, e.worldBound) is var f && f != "") found.Add("out-of-frame\t" + path + "\t" + f + " frame=" + (string.IsNullOrEmpty(p.name) ? p.GetClasses().FirstOrDefault() : p.name));
+                        else if (label != null && Spill(p.LocalToWorld(p.contentRect), e.worldBound) is var g && g != "") found.Add("in-padding\t" + path + "\t" + g + " frame=" + (string.IsNullOrEmpty(p.name) ? p.GetClasses().FirstOrDefault() : p.name));
                         break;
                     }
             }

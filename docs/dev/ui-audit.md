@@ -15,6 +15,7 @@ VU_RUN=<id> bash tools/ui-audit/sweep.sh
   - text-hidden: "…" 로 자르는 라벨이 글자 두 개 폭도 안 남았다 (긴 꼬리표가 이름을 밀어낸 경우, #129)
   - no-card: 호버 단계(8b 증원, 8c 적)가 카드를 띄우지 못했다
   - out-of-frame: "Frame" 이미지를 가진 가장 가까운 조상(패널·버튼) 밖
+  - in-padding: 글이 틀(card·panel·unit·box·window)의 안쪽 여백까지 들어왔다 (docs/art/ui-style.md 5-5, #129)
   - 여유: 그림 2px, 글자는 옆 4px·위아래 글자 크기의 40% (OS 글꼴 정점이 줄 상자보다 크다. 영어 g·p·y 꼬리가 가장 길다. 눈에 보이는 튀어나감은 옆 넘침이라 옆은 엄격하게 둔다)
 - 글 예산은 `UiTextParityTests.AssertNoSentences` 가 지킨다: 경고 줄(이름 `Warn`)·버튼 낱말·모드 안내·강화 효과 말고는 문장이 없어야 한다
 
