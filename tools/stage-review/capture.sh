@@ -22,6 +22,9 @@ done
 
 echo "editor..."
 launch=$(VU_WAIT="${VU_WAIT:-1800}" bash "$V" launch); echo "$launch"
+# An editor already open does not see pulled scripts until it recompiles.
+unity --no-banner command --project-path "$VU_PROJECT" script recompile >/dev/null 2>&1 || true
+bash "$V" doctor
 echo "capturing ${1:-all}..."
 unity --no-banner command --project-path "$VU_PROJECT" script eval --timeout 1200 --json \
   --code "VampireSpawn.Editor.StageShots.Capture(@\"$SHOTS\", \"$1\")"
