@@ -48,3 +48,4 @@ verify-artifacts/
 docs/.obsidian
 docs/_temp
 *.slnx
+tools/stage-review/StageReview.exe

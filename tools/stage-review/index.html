@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>스테이지 꾸밈 피드백</title>
+<style>
+  * { box-sizing: border-box; }
+  body { margin: 0; font: 14px "Malgun Gothic", sans-serif; background: #1d1d22; color: #ddd; display: flex; height: 100vh; }
+  button, select, input, textarea { font: inherit; }
+  button { background: #3a3a44; color: #eee; border: 1px solid #555; border-radius: 4px; padding: 4px 10px; cursor: pointer; }
+  button:hover { background: #4a4a56; }
+  button.on { background: #7a2a2a; border-color: #b44; }
+  button:disabled { opacity: .5; cursor: default; }
+  #side { width: 220px; border-right: 1px solid #333; overflow-y: auto; flex: none; }
+  #side h1 { font-size: 15px; margin: 12px; }
+  .stage { padding: 6px 12px; cursor: pointer; display: flex; justify-content: space-between; }
+  .stage:hover { background: #2a2a32; }
+  .stage.sel { background: #3a2a30; }
+  .badge { background: #b44; color: #fff; border-radius: 8px; padding: 0 6px; font-size: 12px; }
+  #main { flex: 1; overflow-y: auto; padding: 12px 16px; }
+  .row { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; margin: 6px 0; }
+  .swatch { width: 22px; height: 22px; border-radius: 50%; border: 2px solid #222; cursor: pointer; }
+  .swatch.sel { border-color: #fff; }
+  #views { display: flex; gap: 12px; align-items: flex-start; }
+  #stack { position: relative; display: inline-block; line-height: 0; }
+  #stack img, #before img { max-width: 100%; max-height: 72vh; }
+  #stack canvas { position: absolute; left: 0; top: 0; width: 100%; height: 100%; cursor: crosshair; touch-action: none; }
+  #before { flex: 1; min-width: 0; }
+  #before:empty { display: none; }
+  #pane { flex: 1; min-width: 0; }
+  #cell { font-size: 12px; color: #aaa; min-height: 18px; }
+  textarea { width: 100%; height: 80px; background: #26262c; color: #eee; border: 1px solid #555; border-radius: 4px; padding: 6px; }
+  .fb { display: flex; gap: 10px; border-top: 1px solid #333; padding: 8px 0; }
+  .fb img { width: 200px; cursor: zoom-in; flex: none; }
+  .fb .st { font-size: 12px; padding: 1px 6px; border-radius: 6px; background: #555; }
+  .fb .st.wait { background: #a63; }
+  .fb .st.done { background: #363; }
+  .reply { color: #9c9; white-space: pre-wrap; }
+  .text { white-space: pre-wrap; }
+  #log { white-space: pre-wrap; font: 11px monospace; color: #999; max-height: 120px; overflow-y: auto; margin: 0 12px; }
+  .muted { color: #888; font-size: 12px; }
+</style>
+</head>
+<body>
+<div id="side">
+  <h1>스테이지 꾸밈 피드백</h1>
+  <div class="row" style="margin: 0 12px 8px"><button id="capAll">전체 다시 찍기</button></div>
+  <div id="capState" class="muted" style="margin: 0 12px"></div>
+  <pre id="log"></pre>
+  <div id="list"></div>
+</div>
+<div id="main"><p class="muted">왼쪽에서 장을 고르세요. 스크린샷이 없으면 "전체 다시 찍기" 를 누르세요 (Unity 에디터가 열립니다, 장당 몇 초).</p></div>
+
+<script>
+let state = null, cur = null, view = 'top', color = '#ff3b3b', size = 6, erase = false, strokes = [], compare = '';
+const COLORS = ['#ff3b3b', '#ffd23b', '#3bff6a', '#3bb4ff', '#ffffff', '#000000'];
+const TERRAIN = { '.': '평지', '#': '막힌 칸', '~': '물', 'T': '화톳불', 'S': '햇빛', 'd': '배치 칸', ',': '거친 땅', '_': '빈 칸' };
+
+async function api(path, body) {
+  const r = await fetch(path, body ? { method: 'POST', body: JSON.stringify(body) } : {});
+  const j = await r.json();
+  if (j.error) { alert(j.error); throw j.error; }
+  return j;
+}
+
+async function refresh(keepDrawing) {
+  state = await api('/api/state');
+  const c = state.capture;
+  document.getElementById('capState').textContent = c.running ? '찍는 중...' : '';
+  document.getElementById('capAll').disabled = c.running;
+  const log = document.getElementById('log'); log.textContent = c.log.trim().split('\n').slice(-12).join('\n');
+  const list = document.getElementById('list'); list.innerHTML = '';
+  for (const s of state.stages) {
+    const d = document.createElement('div');
+    d.className = 'stage' + (cur === s.meta.id ? ' sel' : '');
+    const wait = s.feedback.filter(f => f.status === '대기').length;
+    d.innerHTML = `<span>${s.meta.id.replace('s', '')}. ${s.meta.title}</span>` + (wait ? `<span class="badge">${wait}</span>` : '');
+    d.onclick = () => { if (strokes.length && !confirm('그린 것을 버리고 옮길까요?')) return; cur = s.meta.id; strokes = []; compare = ''; refresh(); };
+    list.appendChild(d);
+  }
+  if (!keepDrawing) render();
+}
+
+function stage() { return state.stages.find(s => s.meta.id === cur); }
+
+function render() {
+  const s = cur && stage();
+  const main = document.getElementById('main');
+  if (!s) return;
+  const src = v => `/data/shots/${s.meta.id}.${v}.png?t=${s.stamp}`;
+  main.innerHTML = `
+    <div class="row"><b style="font-size:17px">${s.meta.id.replace('s', '')}장 ${s.meta.title}</b>
+      <span class="muted">찍은 때 ${s.stamp}</span>
+      <button id="capOne">이 장 다시 찍기</button></div>
+    <div class="row">
+      <button data-v="top" class="${view === 'top' ? 'on' : ''}">위에서 본 전경</button>
+      <button data-v="battle" class="${view === 'battle' ? 'on' : ''}">전투 시점</button>
+      <span style="width:16px"></span>
+      ${COLORS.map(c => `<span class="swatch ${c === color && !erase ? 'sel' : ''}" data-c="${c}" style="background:${c}"></span>`).join('')}
+      <select id="size">${[3, 6, 12, 24].map(n => `<option ${n === size ? 'selected' : ''}>${n}</option>`).join('')}</select>
+      <button id="erase" class="${erase ? 'on' : ''}">지우개</button>
+      <button id="undo">되돌리기</button>
+      <button id="clear">모두 지우기</button>
+      <span style="width:16px"></span>
+      <span class="muted">비교</span>
+      <select id="cmp"><option value="">없음</option>${s.history.map(h => `<option ${h === compare ? 'selected' : ''}>${h}</option>`).join('')}</select>
+    </div>
+    <div id="views">
+      <div id="pane">
+        <div id="stack"><img id="shot" src="${src(view)}"><canvas id="draw"></canvas></div>
+        <div id="cell"></div>
+      </div>
+      <div id="before">${compare ? `<div class="muted">이전 (${compare})</div><img src="/data/history/${s.meta.id}/${compare}/${s.meta.id}.${view}.png">` : ''}</div>
+    </div>
+    <textarea id="text" placeholder="피드백 (예: 북쪽 길 끝에 큰 성문을 랜드마크로. 빨강 동그라미 친 곳은 비워 줘)"></textarea>
+    <div class="row"><button id="save">피드백 저장</button><span class="muted">저장한 피드백은 Claude 세션에서 "피드백 반영해" 라고 하면 반영됩니다</span></div>
+    <h3>피드백</h3>
+    <div id="fbs">${s.feedback.length ? '' : '<p class="muted">아직 없음</p>'}</div>`;
+
+  main.querySelectorAll('[data-v]').forEach(b => b.onclick = () => { if (strokes.length && !confirm('그린 것을 버리고 바꿀까요?')) return; view = b.dataset.v; strokes = []; render(); });
+  main.querySelectorAll('[data-c]').forEach(b => b.onclick = () => { color = b.dataset.c; erase = false; render(); });
+  document.getElementById('size').onchange = e => size = +e.target.value;
+  document.getElementById('erase').onclick = () => { erase = !erase; render(); };
+  document.getElementById('undo').onclick = () => { strokes.pop(); redraw(); };
+  document.getElementById('clear').onclick = () => { strokes = []; redraw(); };
+  document.getElementById('cmp').onchange = e => { compare = e.target.value; render(); };
+  document.getElementById('capOne').onclick = () => capture(s.meta.id);
+  document.getElementById('save').onclick = save;
+
+  const fbs = document.getElementById('fbs');
+  for (const f of [...s.feedback].reverse()) {
+    const d = document.createElement('div'); d.className = 'fb';
+    const st = f.status === '대기' ? 'wait' : 'done';
+    d.innerHTML = `<a href="/data/${f.image}" target="_blank"><img src="/data/${f.image}"></a>
+      <div><div class="row"><span class="st ${st}">${f.status}</span><span class="muted">${f.created} · ${f.view === 'top' ? '전경' : '전투 시점'}</span>
+      ${f.status === '대기' ? '<button class="del">지우기</button>' : ''}</div>
+      <div class="text"></div>${f.reply ? '<div class="reply"></div>' : ''}</div>`;
+    d.querySelector('.text').textContent = f.text;
+    if (f.reply) d.querySelector('.reply').textContent = 'Claude: ' + f.reply;
+    const del = d.querySelector('.del');
+    if (del) del.onclick = async () => { if (confirm('이 피드백을 지울까요?')) { await api('/api/feedback/delete', { stage: s.meta.id, id: f.id }); refresh(); } };
+    fbs.appendChild(d);
+  }
+
+  const img = document.getElementById('shot'), cv = document.getElementById('draw');
+  img.onload = () => { cv.width = img.naturalWidth; cv.height = img.naturalHeight; redraw(); };
+  img.onerror = () => { document.getElementById('stack').innerHTML = '<p class="muted">스크린샷이 없습니다. "이 장 다시 찍기" 를 누르세요.</p>'; };
+  let stroke = null;
+  const pt = e => { const r = cv.getBoundingClientRect(); return [(e.clientX - r.left) * cv.width / r.width, (e.clientY - r.top) * cv.height / r.height]; };
+  cv.onpointerdown = e => { cv.setPointerCapture(e.pointerId); stroke = { color, size: size * cv.width / 1280, erase, pts: [pt(e)] }; strokes.push(stroke); redraw(); };
+  cv.onpointermove = e => { if (stroke) { stroke.pts.push(pt(e)); redraw(); } showCell(pt(e), s.meta); };
+  cv.onpointerup = () => stroke = null;
+  cv.onpointerleave = () => document.getElementById('cell').textContent = '';
+}
+
+function redraw() {
+  const cv = document.getElementById('draw'); if (!cv) return;
+  const g = cv.getContext('2d');
+  g.clearRect(0, 0, cv.width, cv.height);
+  for (const s of strokes) {
+    g.globalCompositeOperation = s.erase ? 'destination-out' : 'source-over';
+    g.strokeStyle = s.color; g.fillStyle = s.color; g.lineWidth = s.erase ? s.size * 3 : s.size; g.lineCap = g.lineJoin = 'round';
+    g.beginPath(); g.moveTo(...s.pts[0]);
+    if (s.pts.length === 1) { g.arc(...s.pts[0], g.lineWidth / 2, 0, 7); g.fill(); continue; }
+    for (const p of s.pts) g.lineTo(...p);
+    g.stroke();
+  }
+  g.globalCompositeOperation = 'source-over';
+}
+
+// Top shot only: pixel → board-local x,z → nearest cell (BoardView.Local, stage-dressing.md 4-4).
+function showCell([u, v], m) {
+  const el = document.getElementById('cell');
+  if (view !== 'top') { el.textContent = ''; return; }
+  const cv = document.getElementById('draw');
+  const x = m.minX + u / cv.width * (m.maxX - m.minX), z = m.maxZ - v / cv.height * (m.maxZ - m.minZ);
+  const col = Math.round(x / (1.5 * m.hexSize));
+  let best = null, bd = 1e9;
+  for (let c = col - 1; c <= col + 1; c++) {
+    const row = Math.round(-z / (Math.sqrt(3) * m.hexSize) - 0.5 * (c & 1));
+    for (let r = row - 1; r <= row + 1; r++) {
+      const cx = 1.5 * m.hexSize * c, cz = -Math.sqrt(3) * m.hexSize * (r + 0.5 * (c & 1));
+      const d = (cx - x) ** 2 + (cz - z) ** 2;
+      if (d < bd) { bd = d; best = [c, r]; }
+    }
+  }
+  const [c, r] = best;
+  const inside = c >= 0 && c < m.cols && r >= 0 && r < m.rows;
+  const ch = inside ? (m.map[r] || '')[c] : null;
+  el.textContent = inside ? `칸 (${c}, ${r}) ${TERRAIN[ch] ?? ch ?? ''}` : `보드 밖 (${c}, ${r})`;
+}
+
+async function save() {
+  const text = document.getElementById('text').value.trim();
+  if (!text && !strokes.length) { alert('그림이나 글을 남겨 주세요'); return; }
+  const img = document.getElementById('shot'), cv = document.getElementById('draw');
+  const out = document.createElement('canvas'); out.width = cv.width; out.height = cv.height;
+  const g = out.getContext('2d'); g.drawImage(img, 0, 0); g.drawImage(cv, 0, 0);
+  await api('/api/feedback', { stage: cur, view, text, drawing: out.toDataURL('image/png') });
+  strokes = [];
+  refresh();
+}
+
+async function capture(ids) {
+  if (!confirm((ids ? ids + ' 을' : '모든 장을') + ' 다시 찍을까요? Unity 에디터가 열려 있지 않으면 엽니다.')) return;
+  await api('/api/capture', { ids: ids || '' });
+  poll();
+}
+
+async function poll() {
+  await refresh(true);
+  if (state.capture.running) setTimeout(poll, 2000); else render();
+}
+
+document.getElementById('capAll').onclick = () => capture('');
+refresh().then(() => { if (!cur && state.stages.length) { cur = state.stages[0].meta.id; refresh(); } if (state.capture.running) poll(); });
+</script>
+</body>
+</html>
