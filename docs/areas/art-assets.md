@@ -12,6 +12,8 @@
 | 마을 사람 캐릭터 | Assets/Synty/SidekickCharacters/Characters/FantasyVillagers | SIDEKICK_Fantasy_Villagers | `FantasyVillagers_01`~`05` 완성 프리팹 |
 | 사람 몸 바탕 | Assets/Synty/SidekickCharacters/Characters/HumanSpecies | SIDEKICK 둘 다 | `HumanSpecies_01`~`04` |
 | 웨어울프 캐릭터 | Assets/Synty/PolygonWerewolf | POLYGON_Werewolf | `SM_Chr_Werewolf_01`·`SM_Chr_Werewolf_Undead_01`, 꼬리 부착물. 사람 모습 캐릭터는 없다. 웨어울프(#111)의 늑대 모습 `Units/WerewolfWolf` (`ArtCatalog.wolfLook`). 사람 모습은 `Units/Werewolf` = `SM_Chr_Hunter_Male_01` |
+| 어두운 성 소품 | Assets/Synty/PolygonDarkFortress | POLYGON_Dark_Fortress | 왕좌 `SM_Prop_Throne_01`(20장, 높이 8), 깃발 `SM_Prop_Banner_0*`, 석상 `SM_Prop_Statue_0*`, 샹들리에. `SM_Prop_Rug_0*`·`SM_Prop_Chandelier_01` 은 PolygonDarkFantasy 와 이름이 같아 경로로 고른다 |
+| 왕국 성 건물 | Assets/Synty/PolygonFantasyKingdom | POLYGON_Fantasy_Kingdom | 성 벽 `SM_Bld_Castle_Wall_*`, 스테인드글라스 창 `SM_Bld_Castle_Wall_Window_Fancy_Tall_01`, 둥근 기둥 `SM_Bld_Castle_Pillar_Stone_Round_01`, 돌바닥 5m `SM_Bld_Castle_Floor_Stone_01` (20장 왕궁 실내) |
 | 활·석궁 무기 | Assets/Synty/PolygonBowCrossbow | POLYGON_Bow_Crossbow | 리깅된 활 `SM_Wep_Rigged_Bow_01`·`_NativeAmerican_01`(시위 뼈 `bowString`), 화살 `SM_Prop_Arrow_01`, 리깅된 석궁 `SM_Wep_Rigged_CrossBow_01`, 석궁 화살 |
 | 기본 이동 애니메이션 | Assets/Synty/AnimationBaseLocomotion | ANIMATION_Base_Locomotion | |
 | 활 전투 애니메이션 | Assets/Synty/AnimationBowCombat | ANIMATION_Bow_Combat | |
