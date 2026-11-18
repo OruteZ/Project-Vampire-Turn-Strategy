@@ -93,5 +93,20 @@ namespace VampireSpawn.Tests
             Assert.IsFalse(BattleCamera.Blocks(new Bounds(new Vector3(0f, 0f, 3f), Vector3.one * 2f), eye, unit));
             Assert.IsFalse(BattleCamera.Blocks(new Bounds(new Vector3(5f, 5f, -5f), Vector3.one * 2f), eye, unit));
         }
+
+        [Test]
+        public void AngleShotKeepsTargetCentered()
+        {
+            var eye = new Vector3(2f, 10f, -5f);
+            var dir = new Vector3(0f, -1f, 1f).normalized;
+            var (same, sameTurn) = BattleCamera.Angled(eye, dir, 0f, 0f, 0f);
+            Assert.Less((same - eye).magnitude, 1e-4f);
+            Assert.Less(Vector3.Angle(sameTurn * Vector3.forward, dir), 0.01f);
+            var (moved, turn) = BattleCamera.Angled(eye, dir, 0f, 30f, 20f);
+            var pivot = new Vector3(2f, 0f, 5f);
+            Assert.AreEqual((eye - pivot).magnitude, (moved - pivot).magnitude, 1e-3f);
+            Assert.Less(Vector3.Angle(turn * Vector3.forward, pivot - moved), 0.01f);
+            Assert.AreEqual(25f, Vector3.Angle(moved - pivot, Vector3.ProjectOnPlane(moved - pivot, Vector3.up)), 0.01f);
+        }
     }
 }

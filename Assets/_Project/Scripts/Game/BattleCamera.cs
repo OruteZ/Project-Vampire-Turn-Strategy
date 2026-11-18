@@ -16,13 +16,15 @@ namespace VampireSpawn.Game
 
         struct Shot
         {
-            public float Pan, Zoom, Saturation, Vignette;
-            public Shot(float pan, float zoom, float saturation = 0f, float vignette = 0f) { Pan = pan; Zoom = zoom; Saturation = saturation; Vignette = vignette; }
+            public float Pan, Zoom, Saturation, Vignette, Orbit, Low;
+            public Shot(float pan, float zoom, float saturation = 0f, float vignette = 0f, float orbit = 0f, float low = 0f)
+            { Pan = pan; Zoom = zoom; Saturation = saturation; Vignette = vignette; Orbit = orbit; Low = low; }
         }
 
-        static readonly Shot Rise = new Shot(0.6f, 0.35f, -60f), RiseChain = new Shot(0.6f, 0.25f, -60f),
-            Follow = new Shot(0.3f, 0.1f), Moon = new Shot(0.5f, 0.25f), MoonPreview = new Shot(0.4f, 0.15f), Drain = new Shot(0.6f, 0.35f, 0f, 0.6f),
-            Kill = new Shot(0.5f, 0.3f), Opening = new Shot(0.7f, 0.35f), Final = new Shot(0.8f, 0.45f), Execute = new Shot(0.4f, 0.25f);
+        static readonly Shot Rise = new Shot(0.6f, 0.35f, -60f, 0f, 20f, 15f), RiseChain = new Shot(0.6f, 0.25f, -60f), Arrive = new Shot(0.6f, 0.35f),
+            Follow = new Shot(0.3f, 0.1f), Moon = new Shot(0.5f, 0.25f, 0f, 0f, 0f, 8f), MoonPreview = new Shot(0.4f, 0.15f),
+            Drain = new Shot(0.6f, 0.35f, 0f, 0.6f, -25f, 20f), Kill = new Shot(0.5f, 0.3f, 0f, 0f, 15f, 12f),
+            Opening = new Shot(0.7f, 0.35f, 0f, 0f, 30f, 15f), Final = new Shot(0.8f, 0.45f, 0f, 0f, 35f, 25f), Execute = new Shot(0.4f, 0.25f, 0f, 0f, -15f, 10f);
 
         // Shake amplitude is a fraction of the base camera distance; shake, stops and slow motion run in real seconds over speed, so a stop never freezes its own timer (battle-camera.md 6).
         const float Shake = 0.006f, ShakeSeconds = 0.4f, BigStop = 0.09f, ExecuteStop = 0.12f;
@@ -48,7 +50,7 @@ namespace VampireSpawn.Game
         readonly HashSet<int> allies = new HashSet<int>(), notable = new HashSet<int>();
         int rises;
         bool moonOn, riseOn, drainOn, drainNext, finished, turning;
-        float previewUntil, openingUntil, saturation, saturationVelocity, vignetteAmount, vignetteVelocity;
+        float previewUntil, openingUntil, saturation, saturationVelocity, vignetteAmount, vignetteVelocity, orbit, orbitVelocity, low, lowVelocity;
         float shakeUntil, shakeStart = -1f, stopUntil, slowUntil;
 
         Battle Battle => view.Battle;
@@ -98,7 +100,7 @@ namespace VampireSpawn.Game
             Time.timeScale = 1f;
             at = Vector3.zero;
             atVelocity = Vector3.zero;
-            saturation = vignetteAmount = 0f;
+            saturation = vignetteAmount = orbit = low = orbitVelocity = lowVelocity = 0f;
             Learn();
             if (Speed > 0f && GameSettings.CameraFx && vampireId.HasValue && cam != null)
             {
@@ -106,6 +108,8 @@ namespace VampireSpawn.Game
                 focus = Where(vampireId);
                 shot = Opening;
                 at = Offset();
+                orbit = shot.Orbit;
+                low = shot.Low;
             }
         }
 
@@ -156,7 +160,7 @@ namespace VampireSpawn.Game
                 case BattleEventKind.Arrived:
                     followId = null;
                     focus = Board.HexToWorld(e.At);
-                    shot = Rise;
+                    shot = Arrive;
                     break;
                 case BattleEventKind.Banner when e.BannerKind == BannerKind.FullMoon:
                     riseOn = false;
@@ -210,7 +214,7 @@ namespace VampireSpawn.Game
                 finished = true;
                 followId = null;
                 focus = Where(e.UnitId);
-                shot = drainOn ? new Shot(Final.Pan, Final.Zoom, 0f, Drain.Vignette) : Final;
+                shot = drainOn ? new Shot(Final.Pan, Final.Zoom, 0f, Drain.Vignette, Final.Orbit, Final.Low) : Final;
                 slowUntil = Now + SlowSeconds / Speed;
                 return;
             }
@@ -353,6 +357,8 @@ namespace VampireSpawn.Game
             var tinted = fx && (riseOn || drainOn);
             saturation = Mathf.SmoothDamp(saturation, tinted ? shot.Saturation : 0f, ref saturationVelocity, smooth);
             vignetteAmount = Mathf.SmoothDamp(vignetteAmount, tinted ? shot.Vignette : 0f, ref vignetteVelocity, smooth);
+            orbit = Mathf.SmoothDamp(orbit, shot.Orbit, ref orbitVelocity, smooth);
+            low = Mathf.SmoothDamp(low, shot.Low, ref lowVelocity, smooth);
             Apply(ShakeOffset());
         }
 
@@ -398,11 +404,20 @@ namespace VampireSpawn.Game
 
         void Apply(Vector3 shake)
         {
-            var eye = Eye;
-            cam.transform.SetPositionAndRotation(eye + at + shake, Quaternion.LookRotation(Look - eye));
+            var (eye, turn) = Angled(Eye + at, (Look - Eye).normalized, Look.y, orbit, low);
+            cam.transform.SetPositionAndRotation(eye + shake, turn);
             color.saturation.Override(saturation);
             vignette.intensity.Override(vignetteAmount);
             Unblock();
+        }
+
+        // battle-camera.md 14: angle shots turn about the ground point at screen center, so the shot's target stays framed.
+        public static (Vector3 eye, Quaternion turn) Angled(Vector3 eye, Vector3 dir, float groundY, float orbit, float low)
+        {
+            var pivot = eye + dir * ((groundY - eye.y) / dir.y);
+            var arm = Quaternion.Euler(0f, orbit, 0f) * (eye - pivot);
+            arm = Quaternion.AngleAxis(low, Vector3.Cross(Vector3.up, arm)) * arm;
+            return (pivot + arm, Quaternion.LookRotation(-arm));
         }
 
         const float UnitChest = 0.8f;
