@@ -247,11 +247,14 @@ namespace VampireSpawn.Tests
 
         // docs/systems/hex-grid.md 4-2, docs/content/enemies.md 5
         [Test]
-        public void ArchersCannotShootTheNextHexAndAPlacedSpawnIsARealSpawn()
+        public void ArchersShootTheNextHexForHalfAndAPlacedSpawnIsARealSpawn()
         {
             var b = new Battle(Field(new[] { new Placement(EnemyType.Vampire, 6, 6), new Placement("skeleton", 3, 4), new Placement(EnemyType.Spawn, 0, 0) }), null, new[] { new Placement("archer", 3, 5) });
             b.Start();
-            Assert.IsFalse(b.Attack(b.Allies.Single().Id, b.Enemies.Single(e => e.Kind == "skeleton").Id).Ok, "the enemy is next to the archer");
+            var archer = b.Allies.Single();
+            var s = b.Enemies.Single(e => e.Kind == "skeleton");
+            Assert.AreEqual(System.Math.Max(1, System.Math.Max(1, archer.Atk - s.Def) / 2), b.Damage(archer, s), "next to the archer: half, at least 1");
+            Assert.IsTrue(b.Attack(archer.Id, s.Id).Ok, "the enemy next to the archer can be shot");
             Assert.AreEqual(Role.Spawn, b.UnitAt(new Hex(0, 0)).Role, "data key spawn makes a spawn, not a minion");
         }
 

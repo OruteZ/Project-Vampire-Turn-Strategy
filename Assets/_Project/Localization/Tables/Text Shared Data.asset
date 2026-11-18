@@ -2127,6 +2127,10 @@ MonoBehaviour:
     m_Key: spawn.glyph
     m_Metadata:
       m_Items: []
+  - m_Id: 4457937338429440
+    m_Key: tag.pointBlank
+    m_Metadata:
+      m_Items: []
   m_Metadata:
     m_Items: []
   m_KeyGenerator:

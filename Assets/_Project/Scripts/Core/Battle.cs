@@ -217,8 +217,8 @@ namespace VampireSpawn.Core
         public Unit Escort => units.FirstOrDefault(u => u.Role == Role.Escort);
         public IEnumerable<Unit> Enemies => units.Where(u => u.Side == Side.Enemy);
         public Unit Vampire => units.FirstOrDefault(u => u.Role == Role.Vampire);
-        // Ranged attacks (range 2 or more) need a clear line (rock blocks it) and cannot hit the hex next to the shooter (hex-grid.md 4-1, 4-2).
-        public bool InRange(Unit u, Hex from, Hex to) => Hex.Distance(from, to) <= u.Rng && (u.Rng <= 1 || Hex.Distance(from, to) >= 2 && Board.Sees(from, to));
+        // Ranged attacks (range 2 or more) need a clear line; a wall blocks it (hex-grid.md 4-1).
+        public bool InRange(Unit u, Hex from, Hex to) => Hex.Distance(from, to) <= u.Rng && (u.Rng <= 1 || Board.Sees(from, to));
         public Unit UnitAt(Hex h) => units.FirstOrDefault(u => u.Pos == h);
         public Corpse CorpseAt(Hex h) => corpses.FirstOrDefault(c => c.Pos == h);
         public Unit Find(int id) => units.FirstOrDefault(u => u.Id == id);
@@ -600,7 +600,9 @@ namespace VampireSpawn.Core
             if (att.Has(Ability.Charge) && att.MovedDist >= 2) { d += 2; tags.Add(new Message("tag.charge")); }
             var armor = def.Def;
             if (InFormation(def)) { armor += 1; tags.Add(new Message("tag.formation")); }
-            return (Math.Max(1, d - armor), tags);
+            var dealt = Math.Max(1, d - armor);
+            if (att.Rng >= 2 && Hex.Distance(att.Pos, def.Pos) == 1) { dealt = Math.Max(1, dealt / 2); tags.Add(new Message("tag.pointBlank")); }
+            return (dealt, tags);
         }
 
         bool InFormation(Unit u) => u.Has(Ability.Formation)

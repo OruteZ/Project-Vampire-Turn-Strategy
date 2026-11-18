@@ -2554,6 +2554,10 @@ MonoBehaviour:
     m_Localized: Taunt
     m_Metadata:
       m_Items: []
+  - m_Id: 4457937338429440
+    m_Localized: Point-blank
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds:
