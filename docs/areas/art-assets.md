@@ -12,15 +12,15 @@
 | 마을 사람 캐릭터 | Assets/Synty/SidekickCharacters/Characters/FantasyVillagers | SIDEKICK_Fantasy_Villagers | `FantasyVillagers_01`~`05` 완성 프리팹 |
 | 사람 몸 바탕 | Assets/Synty/SidekickCharacters/Characters/HumanSpecies | SIDEKICK 둘 다 | `HumanSpecies_01`~`04` |
 | 웨어울프 캐릭터 | Assets/Synty/PolygonWerewolf | POLYGON_Werewolf | `SM_Chr_Werewolf_01`·`SM_Chr_Werewolf_Undead_01`, 꼬리 부착물. 사람 모습 캐릭터는 없다. 웨어울프(#111)의 늑대 모습 `Units/WerewolfWolf` (`ArtCatalog.wolfLook`). 사람 모습은 `Units/Werewolf` = `SM_Chr_Hunter_Male_01` |
-| 어두운 성 소품 | Assets/Synty/PolygonDarkFortress | POLYGON_Dark_Fortress | 왕좌 `SM_Prop_Throne_01`(20장, 높이 8), 깃발 `SM_Prop_Banner_0*`, 석상 `SM_Prop_Statue_0*`, 샹들리에. `SM_Prop_Rug_0*`·`SM_Prop_Chandelier_01` 은 PolygonDarkFantasy 와 이름이 같아 경로로 고른다 |
-| 왕국 성 건물 | Assets/Synty/PolygonFantasyKingdom | POLYGON_Fantasy_Kingdom | 성 벽 `SM_Bld_Castle_Wall_*`, 스테인드글라스 창 `SM_Bld_Castle_Wall_Window_Fancy_Tall_01`, 둥근 기둥 `SM_Bld_Castle_Pillar_Stone_Round_01`, 돌바닥 5m `SM_Bld_Castle_Floor_Stone_01` (20장 왕궁 실내) |
+| 어두운 성 소품 | Assets/Synty/PolygonDarkFortress | POLYGON_Dark_Fortress | 데모 씬 `Scenes/Demo_Buildings` 의 `Keep/Keep_Throne`(20장)·`Keep/Keep_Library`(18장)를 방째로 옮겨 쓴다(stage-dressing.md 7-6 데모 방). 왕좌 `SM_Prop_Throne_01`, 깃발 `SM_Prop_Banner_0*`, 석상 `SM_Prop_Statue_0*`, 샹들리에. `SM_Prop_Rug_0*`·`SM_Prop_Chandelier_01` 은 PolygonDarkFantasy 와 이름이 같아 경로로 고른다 |
+| 왕국 성 건물 | Assets/Synty/PolygonFantasyKingdom | POLYGON_Fantasy_Kingdom | 성 벽 `SM_Bld_Castle_Wall_*`, 스테인드글라스 창 `SM_Bld_Castle_Wall_Window_Fancy_Tall_01`, 둥근 기둥 `SM_Bld_Castle_Pillar_Stone_Round_01`, 돌바닥 5m `SM_Bld_Castle_Floor_Stone_01` (지금 장에 놓인 것은 없다) |
 | 활·석궁 무기 | Assets/Synty/PolygonBowCrossbow | POLYGON_Bow_Crossbow | 리깅된 활 `SM_Wep_Rigged_Bow_01`·`_NativeAmerican_01`(시위 뼈 `bowString`), 화살 `SM_Prop_Arrow_01`, 리깅된 석궁 `SM_Wep_Rigged_CrossBow_01`, 석궁 화살 |
 | 기본 이동 애니메이션 | Assets/Synty/AnimationBaseLocomotion | ANIMATION_Base_Locomotion | |
 | 활 전투 애니메이션 | Assets/Synty/AnimationBowCombat | ANIMATION_Bow_Combat | |
 | 검 전투 애니메이션 | Assets/Synty/AnimationSwordCombat | ANIMATION_Sword_Combat | |
 | HUD | Assets/Synty/InterfaceDarkFantasyHUD | INTERFACE_Dark_Fantasy_HUD | uGUI 프리팹 327 |
 | 메뉴 UI | Assets/Synty/InterfaceDarkFantasyMenus | INTERFACE_Dark_Fantasy_Menus | uGUI 프리팹 228 |
-| 메인 메뉴 바탕 | Assets/Synty/PolygonDarkFantasy/Scenes/Demo_Cathedral_01.unity | POLYGON_Dark_Fantasy | 백작성·큰 달 데모 씬. Build Settings 에 있고 `MenuFlow` 가 겹쳐 불러 그 씬 카메라로 그린다 (#116) |
+| 메인 메뉴 바탕 | Assets/Synty/PolygonDarkFantasy/Scenes/Demo_Cathedral_01.unity | POLYGON_Dark_Fantasy | 백작성·큰 달 데모 씬. Build Settings 에 있고 `MenuFlow` 가 겹쳐 불러 그 씬 카메라로 그린다 (#116). 16장 대회랑은 이 씬 `Cathedral` 본당을 방째로 옮겨 쓴다(stage-dressing.md 7-6 데모 방) |
 | UI 공용 스프라이트·셰이더 | Assets/Synty/InterfaceCore | INTERFACE 둘 다 | |
 | 블록아웃 (회색 블록·격자) | Assets/Synty/PolygonPrototype | POLYGON_Prototype | 1~20장 전투 맵 블록아웃 바닥 재질 `PolygonPrototype_Grid_06` (2026-11-17 부터 안 씀), 테마 `Themes/Prototype` (#138, docs/art/stage-dressing.md 6) |
 
