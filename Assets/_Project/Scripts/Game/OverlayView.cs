@@ -147,10 +147,10 @@ namespace VampireSpawn.Game
 
         Material aimMaterial;
         LineRenderer arc, head, x1, x2;
-        Vector3? cross;
+        bool crossed;
 
         public bool AimShown => arc.enabled;
-        public bool AimCrossed => cross != null;
+        public bool AimCrossed => crossed;
 
         LineRenderer AimLine(string name)
         {
@@ -179,7 +179,7 @@ namespace VampireSpawn.Game
         {
             arc.enabled = head.enabled = x1.enabled = x2.enabled = false;
             aimEnds = null;
-            cross = null;
+            crossed = false;
             if (aim == null) return;
             var (from, to, clear) = aim.Value;
             var s = board.art.hexSize;
@@ -194,7 +194,7 @@ namespace VampireSpawn.Game
             Set(head, new[] { a, b }, 0.45f * s, color);
             if (!clear)
             {
-                cross = Vector3.zero;
+                crossed = true;
                 Set(x1, new[] { a, b }, 0.14f * s, A(Enemy, 1f));
                 Set(x2, new[] { a, b }, 0.14f * s, A(Enemy, 1f));
             }
@@ -227,9 +227,8 @@ namespace VampireSpawn.Game
             for (var i = 0; i < n; i++) arc.SetPosition(i, arcPoints[i]);
             head.SetPosition(0, neck);
             head.SetPosition(1, b);
-            if (cross == null) return;
+            if (!crossed) return;
             var x = Bezier(a, c, b, 0.5f);
-            cross = x;
             // Half of a 0.6-long stroke along the screen diagonal.
             var k = 0.3f / Mathf.Sqrt(2f) * s;
             var r = cam.transform.right * k;
