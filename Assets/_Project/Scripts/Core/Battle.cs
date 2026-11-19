@@ -668,6 +668,12 @@ namespace VampireSpawn.Core
 
         void Kill(Unit u, Unit killer, DeathCause cause)
         {
+            Fall(u, killer, cause);
+            FixEatTarget();
+        }
+
+        void Fall(Unit u, Unit killer, DeathCause cause)
+        {
             units.Remove(u);
             if (u.Wolf) SetWolf(u, false);
             Moon = Math.Min(Rules.MoonMax, Moon + 1);

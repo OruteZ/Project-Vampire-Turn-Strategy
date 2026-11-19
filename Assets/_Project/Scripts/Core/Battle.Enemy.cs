@@ -11,7 +11,7 @@ namespace VampireSpawn.Core
         public bool MoonNext()
         {
             var v = Vampire;
-            return v != null && !v.Asleep && Moon + 1 >= Rules.MoonMax;
+            return v != null && !v.Asleep && Moon >= Rules.MoonMax;
         }
 
         // docs/systems/waves.md 2-3: due reinforcements appear before anyone acts and wait one phase.
@@ -57,11 +57,9 @@ namespace VampireSpawn.Core
             foreach (var c in corpses.ToList()) Rise(c);
 
             var v = Vampire;
-            var wasAwake = v != null && !v.Asleep;
-            Moon = Math.Min(Rules.MoonMax, Moon + 1);
-            var full = wasAwake && Moon >= Rules.MoonMax && EatTarget.HasValue;
+            var full = MoonNext() && EatTarget.HasValue;
             if (full) Say(new Message("log.fullMoon"), "k");
-            if (v != null && v.Asleep && Moon >= Rules.MoonWake)
+            if (v != null && v.Asleep && (Moon >= Rules.MoonWake || units.All(u => u == v || u.Side != Side.Enemy)))
             {
                 v.Asleep = false;
                 v.JustWoke = true;
@@ -129,6 +127,7 @@ namespace VampireSpawn.Core
             return best;
         }
 
+        // docs/systems/full-moon.md 5: also right after a kill fills the moon mid-turn.
         void FixEatTarget()
         {
             if (Phase != Phase.Player || EatTarget.HasValue || !MoonNext()) return;

@@ -1140,7 +1140,7 @@ MonoBehaviour:
       m_Items:
       - rid: 7201578077006332005
   - m_Id: 9846568841270
-    m_Localized: Moon {0}/{1}. Fills every enemy turn and every time a unit dies.
+    m_Localized: Moon {0}/{1}. Fills every time a unit dies.
     m_Metadata:
       m_Items:
       - rid: 7201578077006332005
@@ -1213,8 +1213,8 @@ MonoBehaviour:
       m_Items:
       - rid: 7201578077006332005
   - m_Id: 9846568841283
-    m_Localized: '<b>Moon</b>: Fills by 1 at the start of each enemy turn and by
-      1 for each unit that dies (ally or enemy). At {0} the moon is full.'
+    m_Localized: '<b>Moon</b>: Fills by 1 for each unit that dies (ally or enemy).
+      At {0} the moon is full.'
     m_Metadata:
       m_Items:
       - rid: 7201578077006332005

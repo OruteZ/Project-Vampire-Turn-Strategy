@@ -100,8 +100,10 @@ namespace VampireSpawn.Core
             var reach = b.Reach(u);
             var ok = reach.Keys.Where(h => u.Role == Role.Escort || Allowed(b, h)).ToList();
             if (ok.Count == 0) return;
-            var best = ok.OrderBy(h => Hex.Distance(h, goal)).ThenBy(h => reach[h]).First();
-            if (best != u.Pos && Hex.Distance(best, goal) < Hex.Distance(u.Pos, goal)) b.Move(u.Id, best);
+            var field = b.Board.DistField(new[] { goal }, Side.Ally, b.OccupantAt);
+            int Left(Hex h) => field.TryGetValue(h, out var d) ? d : 1000 + Hex.Distance(h, goal);
+            var best = ok.OrderBy(Left).ThenBy(h => reach[h]).First();
+            if (best != u.Pos && Left(best) < Left(u.Pos)) b.Move(u.Id, best);
         }
     }
 }

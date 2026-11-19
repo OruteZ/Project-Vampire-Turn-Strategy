@@ -1201,8 +1201,8 @@ MonoBehaviour:
       m_Items:
       - rid: 7201578077006332004
   - m_Id: 9846568841270
-    m_Localized: "\uB2EC {0}/{1}. \uC801 \uD134\uB9C8\uB2E4, \uC720\uB2DB\uC774 \uC8FD\uC744
-      \uB54C\uB9C8\uB2E4 \uCC2C\uB2E4."
+    m_Localized: "\uB2EC {0}/{1}. \uC720\uB2DB\uC774 \uC8FD\uC744 \uB54C\uB9C8\uB2E4
+      \uCC2C\uB2E4."
     m_Metadata:
       m_Items:
       - rid: 7201578077006332004
@@ -1286,8 +1286,7 @@ MonoBehaviour:
       m_Items:
       - rid: 7201578077006332004
   - m_Id: 9846568841283
-    m_Localized: "<b>\uB2EC</b>: \uC801 \uD134\uC774 \uC2DC\uC791\uB420 \uB54C\uB9C8\uB2E4
-      1, \uC720\uB2DB\uC774 \uD558\uB098 \uC8FD\uC744 \uB54C\uB9C8\uB2E4(\uC544\uAD70\xB7\uC801
+    m_Localized: "<b>\uB2EC</b>: \uC720\uB2DB\uC774 \uD558\uB098 \uC8FD\uC744 \uB54C\uB9C8\uB2E4(\uC544\uAD70\xB7\uC801
       \uBAA8\uB450) 1\uC529 \uCC39\uB2C8\uB2E4. {0}\uC774 \uB418\uBA74 \uBCF4\uB984\uB2EC\uC785\uB2C8\uB2E4."
     m_Metadata:
       m_Items:

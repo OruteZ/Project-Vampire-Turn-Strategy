@@ -37,7 +37,7 @@ namespace VampireSpawn.Tests
         {
             var stage = new Stage("demo", GameData.Types.Select(t => t.Key).ToArray(), 99, 99, 0, Goal.Defense, new Bonus(BonusType.NoEat, 0, 0), new Boss(1, 1, 0, 0, 0), Open,
                 new[] { new Placement(EnemyType.Vampire, 3, 2) }, new Placement[0], spots: new[] { new Hex(3, 6) }, hold: 9);
-            GameData.Use(new DataSet(new RuleSet(GameData.Current.Rules.DrainHeal, 6, 2, 1, 2), GameData.Types, GameData.Upgrades, GameData.Minions, GameData.Stages));
+            GameData.Use(new DataSet(new RuleSet(GameData.Current.Rules.DrainHeal, 6, 2, 0, 2), GameData.Types, GameData.Upgrades, GameData.Minions, GameData.Stages));
             var b = new Battle(stage, null, new[] { new Placement("knight", 3, 3), new Placement("pspear", 3, 6) });
             b.Start();
             b.EndTurn();

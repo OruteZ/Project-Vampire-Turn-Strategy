@@ -68,7 +68,7 @@ namespace VampireSpawn.Tests
         [Test]
         public void HolyWaterIsNeverTheFullMoonsPrey()
         {
-            Rules(moonMax: 2, eatRange: 9, moonWake: 1);
+            Rules(moonMax: 0, eatRange: 9, moonWake: 0);
             var b = new Battle(Field(new[] { P(EnemyType.Vampire, 3, 0) }), new[] { "hunter_ward" }, new[] { P("hunter", 3, 2), P("pspear", 3, 6) });
             b.Start();
             b.EndTurn();
@@ -76,10 +76,37 @@ namespace VampireSpawn.Tests
             Assert.AreEqual(Ally(b, 3, 6).Id, b.EatTarget, "the far spearman, not the warded hunter next to the vampire");
         }
 
+        // docs/systems/full-moon.md 2, 5
+        [Test]
+        public void OnlyDeathsFillTheMoonAndTheKillThatFillsItPicksThePreyAtOnce()
+        {
+            Rules(moonMax: 1, eatRange: 9, moonWake: 0);
+            var knightAt = At(3, 3);
+            var skeletonAt = new Board(Open).Neighbors(knightAt).First();
+            var b = new Battle(Field(new[] { P(EnemyType.Vampire, 6, 0), new Placement("skeleton", skeletonAt.Col, skeletonAt.Row, stance: Stance.Hold) }),
+                null, new[] { P("knight", knightAt.Col, knightAt.Row) });
+            b.Start();
+            b.EndTurn();
+            b.EndTurn();
+            Assert.AreEqual(0, b.Moon, "turns alone never fill it");
+            Assert.IsFalse(b.Vampire.Asleep);
+            Assert.IsNull(b.EatTarget);
+            var knight = b.Allies.Single();
+            for (var t = 0; b.Enemies.Any(e => e.Kind == "skeleton") && t < 20; t++)
+            {
+                Assert.IsTrue(b.Attack(knight.Id, b.Enemies.Single(e => e.Kind == "skeleton").Id).Ok);
+                if (b.Enemies.Any(e => e.Kind == "skeleton")) b.EndTurn();
+            }
+            Assert.AreEqual(Phase.Player, b.Phase);
+            Assert.AreEqual(1, b.Moon, "an enemy death fills it");
+            Assert.AreEqual(knight.Id, b.EatTarget, "picked in the same ally turn");
+            Assert.IsTrue(b.MoonNext());
+        }
+
         [Test]
         public void BuryingRemovesTheBodyAndHolyBurialWanesTheMoon()
         {
-            Rules(moonMax: 6, eatRange: 2, moonWake: 1);
+            Rules(moonMax: 6, eatRange: 2, moonWake: 0);
             var victim = At(3, 3);
             var board = new Board(Open);
             var vampireAt = board.Neighbors(victim).First();
