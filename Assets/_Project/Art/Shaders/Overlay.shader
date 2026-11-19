@@ -1,11 +1,15 @@
 Shader "VampireSpawn/Overlay"
 {
+    Properties
+    {
+        [Enum(UnityEngine.Rendering.CompareFunction)] _ZTest ("ZTest", Float) = 4
+    }
     SubShader
     {
         Tags { "Queue" = "Transparent+10" "RenderType" = "Transparent" "IgnoreProjector" = "True" }
         Blend SrcAlpha OneMinusSrcAlpha
         ZWrite Off
-        ZTest LEqual
+        ZTest [_ZTest]
         Cull Off
         Pass
         {

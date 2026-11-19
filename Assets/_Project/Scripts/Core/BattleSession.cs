@@ -243,7 +243,14 @@ namespace VampireSpawn.Core
         }
 
         // docs/art/ui-style.md 8-6: Clear is false when the shot cannot be taken from where the unit stands.
-        public (Hex From, Hex To, bool Clear)? AimAt(Hex? hover) => null;
+        public (Hex From, Hex To, bool Clear)? AimAt(Hex? hover)
+        {
+            var sel = SelectedUnit;
+            if (!(hover is Hex h) || sel == null || sel.Rng < 2 || sel.Acted || Mode != SelectMode.Act || Battle.Phase != Phase.Player) return null;
+            var t = Battle.UnitAt(h);
+            if (t == null || t.Side != Side.Enemy) return null;
+            return (sel.Pos, h, !t.Asleep && Battle.InRange(sel, sel.Pos, h));
+        }
 
         public MoonMark Moon()
         {

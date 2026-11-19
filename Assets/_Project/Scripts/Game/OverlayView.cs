@@ -81,7 +81,18 @@ namespace VampireSpawn.Game
             GetComponent<MeshRenderer>().sharedMaterial = material;
             GetComponent<MeshRenderer>().shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
             lines = new HexLines(p => transform.InverseTransformPoint(board.OnHologram(transform.TransformPoint(p), Lift)));
+            // Drawn over walls and units so the arc is never cut by the scenery it flies over.
+            aimMaterial = new Material(material);
+            aimMaterial.SetFloat("_ZTest", (float)UnityEngine.Rendering.CompareFunction.Always);
+            arc = AimLine("AimArc");
+            arc.numCapVertices = 2;
+            head = AimLine("AimHead");
+            head.widthCurve = AnimationCurve.Linear(0f, 1f, 1f, 0f);
+            x1 = AimLine("AimX");
+            x2 = AimLine("AimX");
         }
+
+        void OnDestroy() => Destroy(aimMaterial);
 
         public void SetHover(Hex? h)
         {
@@ -121,6 +132,7 @@ namespace VampireSpawn.Game
             if (hover is Hex hv && session.Battle.Board.InBounds(hv)) Hexagon(Center(hv), HoverCell);
             if (drop is Hex d && session.Battle.Board.InBounds(d)) Hexagon(Center(d), session.Battle.InDeploy(d) ? DropIn : DropOut);
             lines.Apply(mesh);
+            Aim(session.AimAt(hover));
         }
 
         public void Clear()
@@ -130,6 +142,102 @@ namespace VampireSpawn.Game
             mesh.Clear();
             foreach (var ic in icons) ic.enabled = false;
             MarkCount = 0;
+            Aim(null);
+        }
+
+        Material aimMaterial;
+        LineRenderer arc, head, x1, x2;
+        Vector3? cross;
+
+        public bool AimShown => arc.enabled;
+        public bool AimCrossed => cross != null;
+
+        LineRenderer AimLine(string name)
+        {
+            var l = new GameObject(name).AddComponent<LineRenderer>();
+            l.transform.SetParent(transform, false);
+            l.sharedMaterial = aimMaterial;
+            l.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
+            l.receiveShadows = false;
+            l.enabled = false;
+            return l;
+        }
+
+        static void Set(LineRenderer l, Vector3[] points, float width, Color color)
+        {
+            l.positionCount = points.Length;
+            l.SetPositions(points);
+            l.widthMultiplier = width;
+            l.startColor = l.endColor = color.linear;
+            l.enabled = true;
+        }
+
+        static Vector3 Bezier(Vector3 a, Vector3 c, Vector3 b, float t) => (1 - t) * (1 - t) * a + 2 * (1 - t) * t * c + t * t * b;
+
+        // ui-style.md 8-6. Lengths are in hex sizes.
+        void Aim((Hex From, Hex To, bool Clear)? aim)
+        {
+            arc.enabled = head.enabled = x1.enabled = x2.enabled = false;
+            aimEnds = null;
+            cross = null;
+            if (aim == null) return;
+            var (from, to, clear) = aim.Value;
+            var s = board.art.hexSize;
+            var a = board.Stand(from) + Vector3.up * (0.6f * s);
+            var b = board.Stand(to) + Vector3.up * (0.3f * s);
+            var flat = b - a;
+            flat.y = 0f;
+            b -= flat.normalized * (0.35f * s);
+            aimEnds = (a, b);
+            var color = clear ? A(Enemy, 0.95f) : A(Bone, 0.5f);
+            Set(arc, new[] { a, b }, 0.12f * s, color);
+            Set(head, new[] { a, b }, 0.45f * s, color);
+            if (!clear)
+            {
+                cross = Vector3.zero;
+                Set(x1, new[] { a, b }, 0.14f * s, A(Enemy, 1f));
+                Set(x2, new[] { a, b }, 0.14f * s, A(Enemy, 1f));
+            }
+            LateUpdate();
+        }
+
+        (Vector3 A, Vector3 B)? aimEnds;
+        readonly Vector3[] arcPoints = new Vector3[26];
+
+        // Rebuilt every frame so the arc and the X follow the camera as it turns.
+        void LateUpdate()
+        {
+            var cam = board.viewCamera != null ? board.viewCamera : Camera.main;
+            if (!(aimEnds is (Vector3 a, Vector3 b)) || cam == null) return;
+            var s = board.art.hexSize;
+            // Bulge across the chord as seen on screen, not along world up: under the 55° board camera a world-up arc falls almost along the view ray and the head folds into a hook.
+            var bulge = Vector3.Cross(cam.transform.forward, b - a).normalized;
+            if (Vector3.Dot(bulge, cam.transform.up) < 0f) bulge = -bulge;
+            var c = (a + b) * 0.5f + bulge * (2f * Mathf.Min(0.3f * Vector3.Distance(a, b), s));
+            var headLength = 0.5f * s;
+            var neck = b - (b - c).normalized * headLength;
+            var n = 0;
+            for (var i = 0; i <= 24; i++)
+            {
+                var p = Bezier(a, c, b, i / 24f);
+                if (Vector3.Distance(p, b) > headLength) arcPoints[n++] = p;
+            }
+            arcPoints[n++] = neck;
+            arc.positionCount = n;
+            for (var i = 0; i < n; i++) arc.SetPosition(i, arcPoints[i]);
+            head.SetPosition(0, neck);
+            head.SetPosition(1, b);
+            if (cross == null) return;
+            var x = Bezier(a, c, b, 0.5f);
+            cross = x;
+            // Half of a 0.6-long stroke along the screen diagonal.
+            var k = 0.3f / Mathf.Sqrt(2f) * s;
+            var r = cam.transform.right * k;
+            var u = cam.transform.up * k;
+            x1.SetPosition(0, x - r - u);
+            x1.SetPosition(1, x + r + u);
+            x2.SetPosition(0, x - r + u);
+            x2.SetPosition(1, x + r - u);
         }
 
         Vector3 Center(Hex h) => transform.InverseTransformPoint(board.HexToWorld(h));

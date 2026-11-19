@@ -33,3 +33,4 @@ Each feature file starts with an H1 title and one paragraph describing the playe
 - [Play the start scene](./play-start-scene.md) covers entering play mode in the background, the rendered frame, and a clean console.
 - [Background input](./background-input.md) covers keyboard and pointer input reaching the game while the Editor is unfocused.
 - [Editor tests](./editor-tests.md) covers running EditMode and PlayMode tests in the open Editor.
+- [Ranged aim arrow](./ranged-aim.md) covers the arrow and X shown when a selected ranged ally hovers an enemy.
