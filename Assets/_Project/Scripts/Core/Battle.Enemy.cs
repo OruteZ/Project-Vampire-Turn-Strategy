@@ -146,6 +146,7 @@ namespace VampireSpawn.Core
         void FullMoonAct(Unit v)
         {
             var t = EatTarget.HasValue ? Find(EatTarget.Value) : null;
+            void MoonSet() { Moon = 0; EatTarget = null; Say(new Message("log.moonSet"), "sys"); }
             Emit(BattleEvent.Banner(BannerKind.FullMoon, new Message("banner.fullMoon")));
             if (t != null && Hex.Distance(v.Pos, t.Pos) <= Rules.EatRange && !Board.Lit(t.Pos))
             {
@@ -157,9 +158,7 @@ namespace VampireSpawn.Core
                 v.Hp = Math.Min(v.MaxHp, v.Hp + v.Heal);
                 Emit(BattleEvent.HpChanged(v.Id, v.Hp));
                 Emit(BattleEvent.Popup(v.Id, PopupKind.Feed, new Message("popup.heal", v.Heal)));
-                Moon = 0;
-                EatTarget = null;
-                Say(new Message("log.moonSet"), "sys");
+                MoonSet();
                 return;
             }
             var why = t == null ? new Message("why.gone")
@@ -167,9 +166,7 @@ namespace VampireSpawn.Core
                 : new Message("why.far", t.Name);
             Say(new Message("log.drainFailed", why, v.Name), "h");
             Emit(BattleEvent.Popup(v.Id, PopupKind.DrainFailed, new Message("popup.drainFailed")));
-            Moon = 0;
-            EatTarget = null;
-            Say(new Message("log.moonSet"), "sys");
+            MoonSet();
             MeleeAct(v);
         }
 
@@ -267,9 +264,7 @@ namespace VampireSpawn.Core
             {
                 if (!units.Contains(e)) break;
                 if (!a.Has(Ability.Pike) || Hex.Distance(a.Pos, e.Pos) != 1) continue;
-                e.Hp -= 1;
-                Emit(BattleEvent.HpChanged(e.Id, e.Hp));
-                Emit(BattleEvent.Popup(e.Id, PopupKind.Damage, new Message("popup.damage", 1)));
+                Hurt(e, 1, null);
                 Say(new Message("log.pike", a.Name, e.Name), "h");
                 if (e.Hp <= 0) { Kill(e, a, DeathCause.Blow); break; }
             }

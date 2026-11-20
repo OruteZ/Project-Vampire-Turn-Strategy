@@ -462,13 +462,17 @@ namespace VampireSpawn.Core
             ApplyHit(u, t);
             u.Acted = u.Moved = true;
             if (CheckEnd()) return Done();
-            if (!units.Contains(t) && u.Has(Ability.Cleave) && !u.ActedAgain)
-            {
-                u.ActedAgain = true;
-                u.Acted = false;
-                Say(new Message("log.cleave", u.Name), "h");
-            }
+            if (!units.Contains(t)) ActAgain(u, Ability.Cleave, "log.cleave");
             return Done();
+        }
+
+        // The one extra action a turn: Cleave after a kill, Twice after a burial.
+        void ActAgain(Unit u, Ability with, string log)
+        {
+            if (!u.Has(with) || u.ActedAgain) return;
+            u.ActedAgain = true;
+            u.Acted = false;
+            Say(new Message(log, u.Name), "h");
         }
 
         public CommandResult Execute(int id, int targetId)
@@ -507,12 +511,7 @@ namespace VampireSpawn.Core
                 Say(new Message("log.rite", Moon, Rules.MoonMax), "h");
                 if (!MoonNext()) EatTarget = null;
             }
-            if (u.Has(Ability.Twice) && !u.ActedAgain)
-            {
-                u.ActedAgain = true;
-                u.Acted = false;
-                Say(new Message("log.buryAgain", u.Name), "h");
-            }
+            ActAgain(u, Ability.Twice, "log.buryAgain");
             return Done();
         }
 
@@ -560,10 +559,7 @@ namespace VampireSpawn.Core
         void Spring(Trap t, Unit e)
         {
             traps.Remove(t);
-            e.Hp -= t.Damage;
-            Emit(BattleEvent.Hit(e.Id, 0, t.Damage));
-            Emit(BattleEvent.HpChanged(e.Id, e.Hp));
-            Emit(BattleEvent.Popup(e.Id, PopupKind.Damage, new Message("popup.damage", t.Damage)));
+            Hurt(e, t.Damage);
             Say(new Message("log.trapSprung", e.Name, t.Damage), "h");
             if (e.Hp <= 0) Kill(e, Find(t.Owner), DeathCause.Blow);
         }
@@ -625,11 +621,8 @@ namespace VampireSpawn.Core
             }
             foreach (var o in Splashed(att, def).ToList())
             {
-                o.Hp -= 1;
+                Hurt(o, 1);
                 Provoke(att, o);
-                Emit(BattleEvent.Hit(o.Id, 0, 1));
-                Emit(BattleEvent.HpChanged(o.Id, o.Hp));
-                Emit(BattleEvent.Popup(o.Id, PopupKind.Damage, new Message("popup.damage", 1)));
                 Say(new Message("log.hitTags", att.Name, o.Name, 1, new Message("tags.1", new Message("tag.splash"))));
                 if (o.Hp <= 0) Kill(o, att, DeathCause.Blow);
             }
@@ -641,15 +634,21 @@ namespace VampireSpawn.Core
             if (def.Stance == Stance.Guard || def.Stance == Stance.Hold && att.Side != def.Side && Hex.Distance(att.Pos, def.Pos) > def.Rng) def.Stance = Stance.Charge;
         }
 
+        // Takes the damage and shows it. by: the attacker's id, 0 when nobody swings (trap, splash), null for no Hit event at all (a pike's jab).
+        void Hurt(Unit u, int d, int? by = 0)
+        {
+            u.Hp -= d;
+            if (by is int id) Emit(BattleEvent.Hit(u.Id, id, d));
+            Emit(BattleEvent.HpChanged(u.Id, u.Hp));
+            Emit(BattleEvent.Popup(u.Id, PopupKind.Damage, new Message("popup.damage", d)));
+        }
+
         // The damage half of an attack, shared with attacking an ally (docs/systems/spawn.md 2). True when def died.
         bool Strike(Unit att, Unit def, DeathCause cause)
         {
             var (d, tags) = DamageParts(att, def);
-            def.Hp -= d;
+            Hurt(def, d, att.Id);
             Provoke(att, def);
-            Emit(BattleEvent.Hit(def.Id, att.Id, d));
-            Emit(BattleEvent.HpChanged(def.Id, def.Hp));
-            Emit(BattleEvent.Popup(def.Id, PopupKind.Damage, new Message("popup.damage", d)));
             var line = tags.Count == 0
                 ? new Message("log.hit", att.Name, def.Name, d)
                 : new Message("log.hitTags", att.Name, def.Name, d, new Message("tags." + tags.Count, tags.Cast<object>().ToArray()));
