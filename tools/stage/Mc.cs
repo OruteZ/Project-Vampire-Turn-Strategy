@@ -127,7 +127,7 @@ namespace StagePlay
                 }
                 else
                 {
-                    s -= u.Role == Role.Vampire ? (u.Asleep ? 0 : 1.6 * u.Hp) : u.Role == Role.Spawn ? 6 + 1.2 * u.Hp : 3 + 1.0 * u.Hp;
+                    s -= u.Role == Role.Vampire ? 1.6 * u.Hp : u.Role == Role.Spawn ? 6 + 1.2 * u.Hp : 3 + 1.0 * u.Hp;
                 }
             }
             s -= 12 * b.Corpses.Count;
