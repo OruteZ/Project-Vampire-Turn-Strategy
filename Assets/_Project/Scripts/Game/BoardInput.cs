@@ -35,13 +35,6 @@ namespace VampireSpawn.Game
             Redraw();
         }
 
-        public void End()
-        {
-            Session = null;
-            drag = null;
-            overlay.Clear();
-        }
-
         public CommandResult Run(Func<BattleSession, CommandResult> command)
         {
             var selected = Session.Selected;
@@ -149,22 +142,14 @@ namespace VampireSpawn.Game
             if (!(GroundAt(screen) is Vector3 p) || Board.Board == null) return null;
             Hex? best = null;
             var bd = float.MaxValue;
-            for (var r = 0; r < Board.Board.Rows; r++)
-                for (var c = 0; c < Board.Board.Cols; c++)
-                {
-                    var h = new Hex(c, r);
-                    var w = Board.HexToWorld(h);
-                    var d = (w.x - p.x) * (w.x - p.x) + (w.z - p.z) * (w.z - p.z);
-                    if (d < bd) { bd = d; best = h; }
-                }
+            foreach (var h in Board.Board.Cells)
+            {
+                var w = Board.HexToWorld(h);
+                var d = (w.x - p.x) * (w.x - p.x) + (w.z - p.z) * (w.z - p.z);
+                if (d < bd) { bd = d; best = h; }
+            }
             var size = Board.art.hexSize;
             return bd <= size * size ? best : null;
-        }
-
-        public Vector2 ScreenOf(Hex h)
-        {
-            var cam = viewCamera != null ? viewCamera : Camera.main;
-            return cam.WorldToScreenPoint(Board.Stand(h));
         }
     }
 }

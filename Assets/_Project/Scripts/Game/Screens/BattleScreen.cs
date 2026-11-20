@@ -38,7 +38,7 @@ namespace VampireSpawn.Game.Screens
         public string Icon, Label;
         public UnityEngine.Color Color;
         public Action Act;
-        public bool Ready, On, Right;
+        public bool Ready, On;
     }
 
     public static class BattleScreen
@@ -52,17 +52,17 @@ namespace VampireSpawn.Game.Screens
             var exec = s.Mode == SelectMode.Execute;
             var mend = s.Mode == SelectMode.Mend;
             var trap = s.Mode == SelectMode.Trap;
-            void Add(int key, string icon, UnityEngine.Color c, string label, Action act, bool ready, bool on = false, bool right = false) =>
-                list.Add(new ActionSlot { Key = key, Icon = icon, Color = c, Label = label, Act = act, Ready = ready, On = on, Right = right });
+            void Add(int key, string icon, UnityEngine.Color c, string label, Action act, bool ready, bool on = false) =>
+                list.Add(new ActionSlot { Key = key, Icon = icon, Color = c, Label = label, Act = act, Ready = ready, On = on });
             Add(1, Kit.Icon.Mov, Ui.Steel, Loc.T("hud.act.move"), a.Aim, !u.Moved);
             Add(2, Kit.Icon.Atk, Ui.Steel, Loc.T("hud.act.attack"), a.Aim, marks.Any(m => m.Mark == Mark.Atk));
             Add(3, Kit.Icon.Wait, Ui.Steel, Loc.T("unit.card.wait"), a.Wait, true);
-            if (u.Role != Role.Escort) Add(4, Kit.Icon.Dead, Ui.Blood, Loc.T(exec ? "unit.card.cancelExec" : "unit.card.exec"), a.Exec, true, exec, true);
-            if (u.Has(Ability.Mend)) Add(5, Kit.Icon.Heal, Ui.Steel, Loc.T(mend ? "hud.cancelMend" : "hud.mend"), a.Mend, true, mend, true);
-            else if (u.Has(Ability.Trap)) Add(5, Kit.Icon.Target, Ui.Steel, Loc.T(trap ? "hud.cancelTrap" : "hud.trap"), a.Trap, true, trap, true);
-            else if (u.Has(Ability.Bury)) Add(5, Kit.Icon.Fang, Ui.Spawn, SkillName(Ability.Bury), a.Aim, marks.Any(m => m.Mark == Mark.Bury), false, true);
+            if (u.Role != Role.Escort) Add(4, Kit.Icon.Dead, Ui.Blood, Loc.T(exec ? "unit.card.cancelExec" : "unit.card.exec"), a.Exec, true, exec);
+            if (u.Has(Ability.Mend)) Add(5, Kit.Icon.Heal, Ui.Steel, Loc.T(mend ? "hud.cancelMend" : "hud.mend"), a.Mend, true, mend);
+            else if (u.Has(Ability.Trap)) Add(5, Kit.Icon.Target, Ui.Steel, Loc.T(trap ? "hud.cancelTrap" : "hud.trap"), a.Trap, true, trap);
+            else if (u.Has(Ability.Bury)) Add(5, Kit.Icon.Fang, Ui.Spawn, SkillName(Ability.Bury), a.Aim, marks.Any(m => m.Mark == Mark.Bury));
             foreach (var k in u.Abil.Where(k => k != Ability.Mend && k != Ability.Bury && k != Ability.Trap && k != Ability.None).Distinct())
-                Add(0, Kit.Icon.Up, Ui.Muted, SkillName(k), null, false, false, true);
+                Add(0, Kit.Icon.Up, Ui.Muted, SkillName(k), null, false);
             return list;
         }
 

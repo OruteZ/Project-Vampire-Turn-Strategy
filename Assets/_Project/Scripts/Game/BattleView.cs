@@ -54,19 +54,6 @@ namespace VampireSpawn.Game
             else director.Snap();
         }
 
-        public void Clear()
-        {
-            StopAllCoroutines();
-            pending.Clear();
-            playing = false;
-            Battle = null;
-            if (layer != null) Destroy(layer.gameObject);
-            layer = null;
-            units.Clear();
-            corpses.Clear();
-            board.Clear();
-        }
-
         public CommandResult Run(Func<Battle, CommandResult> command)
         {
             var result = command(Battle);

@@ -72,12 +72,6 @@ namespace VampireSpawn.Game
             return brain;
         }
 
-        public void Hide()
-        {
-            if (terrain != null) terrain.gameObject.SetActive(false);
-            RenderSettings.fog = false;
-        }
-
         // empty and margin are normalized viewport units (stage-select.md 2-3, campaign-map.md 9: markers stay 48 px inside).
         // Only the chosen shot is enabled; it aims at its subject and a lens shift slides the picture so the subject sits at the empty
         // area's centre. The composer's screen offset is angular and lands about 35% short sideways, so it is not used for this.

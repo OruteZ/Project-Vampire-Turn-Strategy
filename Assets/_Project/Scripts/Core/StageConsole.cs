@@ -128,13 +128,9 @@ namespace VampireSpawn.Core
                 var from = e.Stance == Stance.Hold ? new[] { e.Pos } : B.Reach(e).Keys.Where(h => h == e.Pos || B.OccupantAt(h) == Occupant.Empty).ToArray();
                 var seen = new HashSet<Hex>();
                 foreach (var f in from)
-                    for (var r = 0; r < B.Board.Rows; r++)
-                        for (var c = 0; c < B.Board.Cols; c++)
-                        {
-                            var h = new Hex(c, r);
-                            if (B.InRange(e, f, h) && B.Board.Walkable(h) && seen.Add(h))
-                                hits[h] = hits.TryGetValue(h, out var x) ? (x.n + 1, x.atk + e.Atk) : (1, e.Atk);
-                        }
+                    foreach (var h in B.Board.Cells)
+                        if (B.InRange(e, f, h) && B.Board.Walkable(h) && seen.Add(h))
+                            hits[h] = hits.TryGetValue(h, out var x) ? (x.n + 1, x.atk + e.Atk) : (1, e.Atk);
             }
             var sb = new StringBuilder("threat (count of enemies that could hit each hex next phase; guards asleep not counted)\n    ");
             for (var c = 0; c < B.Board.Cols; c++) sb.Append(c % 10);

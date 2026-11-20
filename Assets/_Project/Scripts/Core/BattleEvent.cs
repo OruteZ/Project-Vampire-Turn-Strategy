@@ -103,16 +103,14 @@ namespace VampireSpawn.Core
             return true;
         }
 
-        public override string ToString() => Format(m => m.ToString());
-
-        public string Format(System.Func<Message, string> text) => Kind switch
+        public override string ToString() => Kind switch
         {
-            BattleEventKind.Log => "log|" + text(Text) + "|" + Style,
-            BattleEventKind.Banner => "banner|" + text(Text) + "|" + Style,
+            BattleEventKind.Log => "log|" + Text + "|" + Style,
+            BattleEventKind.Banner => "banner|" + Text + "|" + Style,
             BattleEventKind.Walk => "walk|" + UnitId + "|" + string.Join(" ", Path),
-            BattleEventKind.Popup => "popup|" + UnitId + "|" + text(Text) + "|" + Style,
+            BattleEventKind.Popup => "popup|" + UnitId + "|" + Text + "|" + Style,
             BattleEventKind.Hit => "hit|" + UnitId,
-            BattleEventKind.Hint => "hint|" + text(Text),
+            BattleEventKind.Hint => "hint|" + Text,
             BattleEventKind.Died => "died|" + UnitId + "|" + At,
             BattleEventKind.CorpseLeft => "corpse|" + UnitId + "|" + At,
             BattleEventKind.Rose => "rose|" + UnitId + "|" + OtherId + "|" + At,

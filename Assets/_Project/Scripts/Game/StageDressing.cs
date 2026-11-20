@@ -24,20 +24,18 @@ namespace VampireSpawn.Game
             var board = new Board(stage.Map);
             var ground = GetComponentInChildren<UnityEngine.Terrain>();
             var corners = new Vector3[6];
-            for (var r = 0; r < board.Rows; r++)
-                for (var c = 0; c < board.Cols; c++)
+            foreach (var h in board.Cells)
+            {
+                var t = board.At(h);
+                Gizmos.color = t == Terrain.Rock ? Color.red : t == Terrain.Gap ? (BoardView.Look(stage, art.DressingTheme(stage.Id), h) == GapLook.Water ? Color.cyan : Color.yellow) : Color.white;
+                for (var i = 0; i < 6; i++)
                 {
-                    var h = new Hex(c, r);
-                    var t = board.At(h);
-                    Gizmos.color = t == Terrain.Rock ? Color.red : t == Terrain.Gap ? (BoardView.Look(stage, art.DressingTheme(stage.Id), h) == GapLook.Water ? Color.cyan : Color.yellow) : Color.white;
-                    for (var i = 0; i < 6; i++)
-                    {
-                        var p = transform.TransformPoint(HexLines.Corner(BoardView.Local(h, art.hexSize), art.hexSize * 0.95f, i));
-                        p.y = (ground != null ? Mathf.Max(transform.position.y + BoardView.HologramRise, ground.SampleHeight(p) + ground.transform.position.y) : transform.position.y + art.tileHeight) + 0.05f;
-                        corners[i] = p;
-                    }
-                    Gizmos.DrawLineStrip(corners, true);
+                    var p = transform.TransformPoint(HexLines.Corner(BoardView.Local(h, art.hexSize), art.hexSize * 0.95f, i));
+                    p.y = (ground != null ? Mathf.Max(transform.position.y + BoardView.HologramRise, ground.SampleHeight(p) + ground.transform.position.y) : transform.position.y + art.tileHeight) + 0.05f;
+                    corners[i] = p;
                 }
+                Gizmos.DrawLineStrip(corners, true);
+            }
         }
 #endif
     }

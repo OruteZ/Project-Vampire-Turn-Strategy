@@ -63,24 +63,15 @@ namespace VampireSpawn.Game
             Stage = stage;
             Board = new Board(stage.Map);
             Dress(stage.Id);
-            for (var r = 0; r < Board.Rows; r++)
-                for (var c = 0; c < Board.Cols; c++)
-                    BuildTile(new Hex(c, r));
+            foreach (var h in Board.Cells) BuildTile(h);
             BuildGrid();
             if (art.overlay != null) RegionOutline.Create(this, "TorchRange", TorchRange());
             FitCamera();
         }
 
         // battle-terrain.md 3-2: walkable cells a brazier lights; touching ranges merge into one border.
-        IEnumerable<Hex> TorchRange()
-        {
-            for (var r = 0; r < Board.Rows; r++)
-                for (var c = 0; c < Board.Cols; c++)
-                {
-                    var h = new Hex(c, r);
-                    if (Board.Walkable(h) && (Board.At(h) == Terrain.Torch || Board.Neighbors(h).Any(n => Board.At(n) == Terrain.Torch))) yield return h;
-                }
-        }
+        IEnumerable<Hex> TorchRange() =>
+            Board.Cells.Where(h => Board.Walkable(h) && (Board.At(h) == Terrain.Torch || Board.Neighbors(h).Any(n => Board.At(n) == Terrain.Torch)));
 
         void LateUpdate()
         {
@@ -131,23 +122,20 @@ namespace VampireSpawn.Game
             var lines = new HexLines(p => transform.InverseTransformPoint(OnHologram(transform.TransformPoint(p), 0.04f)));
             var r = art.hexSize;
             var drawn = new HashSet<Vector2Int>();
-            for (var row = 0; row < Board.Rows; row++)
-                for (var col = 0; col < Board.Cols; col++)
+            foreach (var h in Board.Cells.Where(Board.Walkable))
+            {
+                var c = Local(h, art.hexSize);
+                if (Board.At(h) == Terrain.Rough) lines.Fill(c, r, new Color(0.38f, 0.30f, 0.20f, 0.22f));
+                for (var i = 0; i < 6; i++)
                 {
-                    var h = new Hex(col, row);
-                    if (!Board.Walkable(h)) continue;
-                    var c = Local(h, art.hexSize);
-                    if (Board.At(h) == Terrain.Rough) lines.Fill(c, r, new Color(0.38f, 0.30f, 0.20f, 0.22f));
-                    for (var i = 0; i < 6; i++)
-                    {
-                        var a = HexLines.Corner(c, r, i);
-                        var b = HexLines.Corner(c, r, i + 1);
-                        // A shared edge drawn twice doubles its alpha.
-                        var mid = (a + b) * 50f;
-                        if (drawn.Add(new Vector2Int(Mathf.RoundToInt(mid.x), Mathf.RoundToInt(mid.z))))
-                            lines.Segment(a, b, 0.05f * art.hexSize, Tint(Screens.Ui.Steel, 0.35f));
-                    }
+                    var a = HexLines.Corner(c, r, i);
+                    var b = HexLines.Corner(c, r, i + 1);
+                    // A shared edge drawn twice doubles its alpha.
+                    var mid = (a + b) * 50f;
+                    if (drawn.Add(new Vector2Int(Mathf.RoundToInt(mid.x), Mathf.RoundToInt(mid.z))))
+                        lines.Segment(a, b, 0.05f * art.hexSize, Tint(Screens.Ui.Steel, 0.35f));
                 }
+            }
             var mesh = new Mesh { name = "Grid" };
             lines.Apply(mesh);
             go.AddComponent<MeshFilter>().sharedMesh = mesh;

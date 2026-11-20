@@ -39,6 +39,16 @@ namespace VampireSpawn.Core
         // docs/systems/triggers.md 1-4: a door becomes plain ground when its trigger takes effect.
         public void Open(Hex h) => terrain[h.Col, h.Row] = Terrain.Plain;
 
+        // Row by row; callers that break ties by order (nearest cell, first free deploy cell) rely on it.
+        public IEnumerable<Hex> Cells
+        {
+            get
+            {
+                for (var r = 0; r < Rows; r++)
+                    for (var c = 0; c < Cols; c++) yield return new Hex(c, r);
+            }
+        }
+
         public bool InBounds(Hex h) => h.Col >= 0 && h.Col < Cols && h.Row >= 0 && h.Row < Rows;
         public Terrain At(Hex h) => terrain[h.Col, h.Row];
         public bool Walkable(Hex h) => At(h) != Terrain.Rock && At(h) != Terrain.Gap;

@@ -55,8 +55,7 @@ namespace VampireSpawn.Core
         // docs/systems/reinforce.md: fill the open hexes with the dearest type that still fits, then carry on.
         static void Reinforce(Battle b)
         {
-            var cells = Enumerable.Range(0, b.Board.Rows).SelectMany(r => Enumerable.Range(0, b.Board.Cols).Select(c => new Hex(c, r))).Where(b.InDeploy);
-            foreach (var h in cells)
+            foreach (var h in b.Board.Cells.Where(b.InDeploy))
             {
                 var kind = b.Stage.Units.Select(GameData.Type).OrderByDescending(t => t.Pop).Select(t => t.Key).FirstOrDefault(k => b.UnitAt(h) == null && b.Place(k, h).Ok);
                 if (kind == null && b.UnitAt(h) == null) break;

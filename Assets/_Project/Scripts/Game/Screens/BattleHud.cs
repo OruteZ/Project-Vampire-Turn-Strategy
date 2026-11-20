@@ -51,8 +51,6 @@ namespace VampireSpawn.Game.Screens
             this.tip = tip;
         }
 
-        public bool HasHeads => heads.Count > 0;
-
         Sprite S(string name) => art.Ui(name);
 
         VisualElement Icon(VisualElement parent, string sprite, Color tint, string classes = "icon") => Pic(parent, art, sprite, tint, classes);
@@ -315,7 +313,7 @@ namespace VampireSpawn.Game.Screens
             var brief = E(root, "box brief col", true);
             Frame(brief, art, Ui.SteelDim);
             Tip(brief, Loc.Text(stg.Brief), 600);
-            Def(brief, Kit.Icon.Boss, Ui.Blood, Kit.Objective(stg), Loc.T("battle.objective"));
+            Def(brief, Kit.Icon.Boss, Ui.Blood, Loc.Text(stg.Objective), Loc.T("battle.objective"));
             Def(brief, Kit.Icon.Star, Ui.Candle, Loc.Text(stg.Bonus.Text), Loc.T("battle.bonus"));
             Def(brief, Kit.Icon.Skulls, Ui.Blood, Kit.EnemyList(stg), Loc.T("battle.enemy"));
         }

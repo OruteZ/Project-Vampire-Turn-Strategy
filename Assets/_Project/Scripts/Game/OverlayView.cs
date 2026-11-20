@@ -63,8 +63,6 @@ namespace VampireSpawn.Game
         HexLines lines;
         Mesh mesh;
 
-        public int MarkCount { get; private set; }
-
         BattleSession last;
         Hex? lastDrop, hover;
         static Color A(Color c, float a) { c.a = a; return c; }
@@ -119,7 +117,6 @@ namespace VampireSpawn.Game
             var session = last;
             var drop = lastDrop;
             lines.Clear();
-            MarkCount = marks.Count;
             var shown = 0;
             var iconed = new HashSet<Hex>();
             foreach (var m in marks)
@@ -133,16 +130,6 @@ namespace VampireSpawn.Game
             if (drop is Hex d && session.Battle.Board.InBounds(d)) Hexagon(Center(d), session.Battle.InDeploy(d) ? DropIn : DropOut);
             lines.Apply(mesh);
             Aim(session.AimAt(hover));
-        }
-
-        public void Clear()
-        {
-            last = null;
-            hover = null;
-            mesh.Clear();
-            foreach (var ic in icons) ic.enabled = false;
-            MarkCount = 0;
-            Aim(null);
         }
 
         Material aimMaterial;

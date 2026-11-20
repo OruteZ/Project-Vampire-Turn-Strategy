@@ -49,7 +49,7 @@ namespace StagePlay
 
         static IEnumerable<string> Reinforce(Battle b)
         {
-            var cells = Enumerable.Range(0, b.Board.Rows).SelectMany(r => Enumerable.Range(0, b.Board.Cols).Select(c => new Hex(c, r))).Where(b.InDeploy).ToList();
+            var cells = b.Board.Cells.Where(b.InDeploy).ToList();
             foreach (var h in cells)
             {
                 if (b.UnitAt(h) != null) continue;

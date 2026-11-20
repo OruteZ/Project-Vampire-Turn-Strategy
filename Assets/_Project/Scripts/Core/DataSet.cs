@@ -84,7 +84,7 @@ namespace VampireSpawn.Core
             }
             var board = new Board(s.Map);
             foreach (var h in s.Doors.SelectMany(d => d.Hexes)) if (board.InBounds(h)) board.Open(h);
-            var cells = Enumerable.Range(0, board.Rows).SelectMany(r => Enumerable.Range(0, board.Cols).Select(c => new Hex(c, r))).ToList();
+            var cells = board.Cells.ToList();
             var deploy = cells.Where(h => board.At(h) == Terrain.Deploy).ToList();
             if (deploy.Count < s.Pop) p.Add($"{at}: 배치 칸 {deploy.Count} 이(가) 인구 {s.Pop} 보다 적다");
             var field = board.DistField(deploy, Side.Ally, h => Occupant.Empty);

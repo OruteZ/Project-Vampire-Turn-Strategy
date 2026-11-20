@@ -194,12 +194,6 @@ namespace VampireSpawn.Core
             return new Message(sel.Moved ? "hint.attack" : "hint.moveAttack");
         }
 
-        IEnumerable<Hex> Cells()
-        {
-            for (var r = 0; r < Battle.Board.Rows; r++)
-                for (var c = 0; c < Battle.Board.Cols; c++) yield return new Hex(c, r);
-        }
-
         public List<MarkedHex> Overlay()
         {
             var o = new List<MarkedHex>();
@@ -210,7 +204,7 @@ namespace VampireSpawn.Core
             if (!b.Reinforcing && b.Phase != Phase.Deploy) o.AddRange(b.Upcoming.SelectMany(r => r.Hexes).Select(h => new MarkedHex(Mark.Reinforce, h)));
             o.AddRange(b.Stage.Triggers.Where(t => t.Kind == TriggerKind.Reach && !b.Fired(t.Id)).SelectMany(t => t.Hexes).Select(h => new MarkedHex(Mark.Trigger, h)));
             o.AddRange(b.Stage.Doors.SelectMany(d => d.Hexes).Where(h => b.Board.At(h) == Terrain.Rock).Select(h => new MarkedHex(Mark.Arrive, h)));
-            if (b.Phase == Phase.Deploy) o.AddRange(Cells().Where(b.InDeploy).Select(h => new MarkedHex(Mark.Deploy, h)));
+            if (b.Phase == Phase.Deploy) o.AddRange(b.Board.Cells.Where(b.InDeploy).Select(h => new MarkedHex(Mark.Deploy, h)));
             var sel = SelectedUnit;
             if (sel != null && b.Phase == Phase.Player)
             {
@@ -236,7 +230,7 @@ namespace VampireSpawn.Core
             if (moon != null)
             {
                 var v = b.Vampire;
-                o.AddRange(Cells().Where(h => b.Board.Walkable(h) && Hex.Distance(v.Pos, h) <= Rules.EatRange && h != v.Pos).Select(h => new MarkedHex(Mark.MarkZone, h)));
+                o.AddRange(b.Board.Cells.Where(h => b.Board.Walkable(h) && Hex.Distance(v.Pos, h) <= Rules.EatRange && h != v.Pos).Select(h => new MarkedHex(Mark.MarkZone, h)));
                 if (moon.Target is Hex t) o.Add(new MarkedHex(moon.TargetLabel.Key == "moon.target" ? Mark.Target : Mark.Exec, t));
             }
             return o;

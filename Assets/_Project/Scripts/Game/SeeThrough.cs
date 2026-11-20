@@ -99,12 +99,11 @@ namespace VampireSpawn.Game
         static Vector4 BoardBounds(BoardView board)
         {
             float x0 = float.MaxValue, z0 = float.MaxValue, x1 = float.MinValue, z1 = float.MinValue;
-            for (var r = 0; r < board.Board.Rows; r++)
-                for (var c = 0; c < board.Board.Cols; c++)
-                {
-                    var w = board.HexToWorld(new Core.Hex(c, r));
-                    x0 = Mathf.Min(x0, w.x); z0 = Mathf.Min(z0, w.z); x1 = Mathf.Max(x1, w.x); z1 = Mathf.Max(z1, w.z);
-                }
+            foreach (var h in board.Board.Cells)
+            {
+                var w = board.HexToWorld(h);
+                x0 = Mathf.Min(x0, w.x); z0 = Mathf.Min(z0, w.z); x1 = Mathf.Max(x1, w.x); z1 = Mathf.Max(z1, w.z);
+            }
             var pad = board.art.hexSize;
             return new Vector4(x0 - pad, z0 - pad, x1 + pad, z1 + pad);
         }

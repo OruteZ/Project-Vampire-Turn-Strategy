@@ -61,7 +61,7 @@ namespace StagePlay
                     {
                         var b = Open(f, out _);
                         var head = File.ReadLines(File.Exists(f) ? f : SessionPath(f)).First().Split('|');
-                        var team = string.Join("+", b.Units.Where(u => u.Side == Side.Ally).Select(u => u.Kind).Concat(Fallen(f)).GroupBy(k => k).Select(g => g.Key + g.Count()));
+                        var team = string.Join("+", b.Units.Where(u => u.Side == Side.Ally).Select(u => u.Kind).GroupBy(k => k).Select(g => g.Key + g.Count()));
                         Console.WriteLine($"{Path.GetFileNameWithoutExtension(f)}\t{head[0]}\t{(b.Ending?.ToString() ?? "unfinished")}\tturn {b.Turn}\tlost {b.Stats.Lost}\trisen {b.Stats.Risen}\tdrained {b.Stats.Drained}\tbonus {(b.Won == true && b.BonusMet ? "yes" : "no")}\tup [{head.ElementAtOrDefault(2)}]\tleft {team}");
                     }
                     return 0;
@@ -130,9 +130,6 @@ namespace StagePlay
             return 1;
         }
 
-        static IEnumerable<string> Fallen(string f) => Enumerable.Empty<string>();
-
-
         // "knight:2 archer:1 pspear:* parcher:*": fixed counts first, then the starred kinds in turn until the population cap.
         // Melee stands on the deploy hexes nearest the enemy, sturdiest first; ranged and support behind them.
         static Placement[] Comp(Stage s, string spec)
@@ -151,8 +148,7 @@ namespace StagePlay
             for (var any = true; any && fill.Count > 0;) { any = false; foreach (var k in fill) any |= Add(k); }
             var b = new Battle(s, null, new Placement[0]);
             var foes = s.Enemies.Where(e => e.Arrive == 0 && e.Wave == null).Select(e => new Hex(e.Col, e.Row)).ToList();
-            var cells = Enumerable.Range(0, b.Board.Rows).SelectMany(r => Enumerable.Range(0, b.Board.Cols).Select(c => new Hex(c, r)))
-                .Where(h => b.InDeploy(h) && b.UnitAt(h) == null).OrderBy(h => foes.Min(e => Hex.Distance(h, e))).ThenBy(h => Math.Abs(h.Col - b.Board.Cols / 2)).ToList();
+            var cells = b.Board.Cells.Where(h => b.InDeploy(h) && b.UnitAt(h) == null).OrderBy(h => foes.Min(e => Hex.Distance(h, e))).ThenBy(h => Math.Abs(h.Col - b.Board.Cols / 2)).ToList();
             var order = picks.OrderBy(t => t.Rng > 1 || t.Heal > 0 ? 1 : 0).ThenByDescending(t => t.Hp).ToList();
             return order.Take(cells.Count).Select((t, i) => new Placement(t.Key, cells[i].Col, cells[i].Row)).ToArray();
         }
