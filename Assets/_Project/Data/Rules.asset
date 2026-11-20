@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Rules
   m_EditorClassIdentifier: VampireSpawn.Game::VampireSpawn.Game.Data.RulesData
   drainHeal: 8
-  moonMax: 6
+  moonMax: 4
   eatRange: 3
-  moonWake: 6
+  moonWake: 4
   mendRange: 3
