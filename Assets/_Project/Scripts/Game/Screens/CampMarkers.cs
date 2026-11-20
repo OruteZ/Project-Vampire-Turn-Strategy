@@ -78,13 +78,9 @@ namespace VampireSpawn.Game.Screens
                 var m = markers[i];
                 var last = i == markers.Length - 1;
                 var s = Campaign.Stages[i];
-                var accent = last ? Ui.Blood : Ui.Steel;
                 m.Pulse?.Pause();
                 m.Pulse = null;
-                Color ring, fill, ink;
-                if (c.IsCleared(s)) (ring, fill, ink) = (accent, accent, Ui.Ink);
-                else if (c.StageOpen(i)) (ring, fill, ink) = (last ? Ui.Blood : Ui.Sun, Ui.Deep, Ui.Bone);
-                else (ring, fill, ink) = (last ? Ui.BloodDim : Ui.Line, Ui.Deep, Ui.Dim);
+                var (ring, fill, ink) = CampToolkit.BadgeColors(c, i);
                 m.Ring.style.unityBackgroundImageTintColor = ring;
                 m.Fill.style.unityBackgroundImageTintColor = fill;
                 m.Number.style.color = ink;

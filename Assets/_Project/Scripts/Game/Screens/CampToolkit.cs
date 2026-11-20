@@ -119,8 +119,7 @@ namespace VampireSpawn.Game.Screens
             p.RemoveFromClassList("leave");
             p.SetEnabled(true);
             p.AddToClassList("enter");
-            // Two scheduler ticks: the first frame must resolve the hidden style, or there is nothing to transition from.
-            p.schedule.Execute(() => p.schedule.Execute(() => p.RemoveFromClassList("enter")));
+            Fx.Later(p, () => p.RemoveFromClassList("enter"));
         }
 
         static void Leave(VisualElement p)
@@ -198,6 +197,7 @@ namespace VampireSpawn.Game.Screens
             var tabs = panel.Q("bk-tabs");
             tabs.Clear();
             var types = GameData.Types;
+            string LockedBy(UnitType t) => Loc.T("camp.lockedBy", Loc.Text(Campaign.Stages[Mathf.Clamp(t.UnlockAt - 1, 0, Campaign.Stages.Length - 1)].Title));
             for (var i = 0; i < types.Length; i++)
             {
                 var t = types[i];
@@ -205,10 +205,9 @@ namespace VampireSpawn.Game.Screens
                 var chip = ToolkitKit.Chip(tabs, art, nav.Tab == i ? Ui.Steel : state == TabState.Open ? Ui.SteelDim : Ui.Line,
                     art.Ui(state == TabState.Hidden ? Kit.Icon.Lock : art.Icon(t.Key)), state == TabState.Open ? Ui.Steel : Ui.Dim, state == TabState.Hidden ? 28f : 36f);
                 chip.EnableInClassList("on", nav.Tab == i);
-                var unlockAt = Mathf.Clamp(t.UnlockAt - 1, 0, Campaign.Stages.Length - 1);
-                if (state == TabState.Locked) chip.Add(Small("tab-lock", Kit.Icon.Lock, Ui.Dim));
-                if (CampNav.Affordable(c, t.Key) > 0) { var dot = new VisualElement { pickingMode = PickingMode.Ignore }; dot.AddToClassList("tab-dot"); chip.Add(dot); }
-                SetTip(chip, state == TabState.Open ? Loc.Text(t.Name) : Loc.T("camp.lockedBy", Loc.Text(Campaign.Stages[unlockAt].Title)));
+                if (state == TabState.Locked) ToolkitKit.Pic(chip, art, Kit.Icon.Lock, Ui.Dim, "tab-lock");
+                if (CampNav.Affordable(c, t.Key) > 0) ToolkitKit.E(chip, "tab-dot");
+                SetTip(chip, state == TabState.Open ? Loc.Text(t.Name) : LockedBy(t));
                 var index = i;
                 UiSound.Add(chip);
                 chip.RegisterCallback<ClickEvent>(_ => send(CampInput.Tab(index, Time.unscaledTime)));
@@ -229,45 +228,31 @@ namespace VampireSpawn.Game.Screens
             Stats(stats, now, null);
 
             panel.Q<Label>("bk-rule").text = Loc.T("camp.branchRule");
-            var lockedBy = Loc.T("camp.lockedBy", Loc.Text(Campaign.Stages[Mathf.Clamp(types[sel].UnlockAt - 1, 0, Campaign.Stages.Length - 1)].Title));
+            var lockedBy = LockedBy(types[sel]);
 
             var ups = panel.Q<ScrollView>("bk-ups");
             ups.Clear();
             foreach (var up in GameData.Branches(kind))
             {
                 var own = c.Owns(up);
-                var row = new VisualElement();
-                row.AddToClassList("up");
+                var row = ToolkitKit.E(ups, "up", true);
                 row.EnableInClassList("owned", own);
                 ToolkitKit.Frame(row, art, Ui.Steel);
                 if (own) ToolkitKit.Picture(row.Q(className: "panel-frame"), art.Ui(ToolkitKit.FrameBox), Color.Lerp(Color.white, Ui.Candle, 0.6f));
                 SetTip(row, Loc.T(up.Inherit ? "camp.inherit" : "camp.noInherit"));
-                var head = new VisualElement { pickingMode = PickingMode.Ignore };
-                head.AddToClassList("up-name");
-                if (up.Inherit) head.Add(Small("up-fang", Kit.Icon.Fang, Ui.Spawn));
-                head.Add(new Label(Loc.Text(up.Name)) { pickingMode = PickingMode.Ignore });
-                row.Add(head);
-                if (own) { var check = new Label("✓") { pickingMode = PickingMode.Ignore }; check.AddToClassList("up-owned"); row.Add(check); }
-                var desc = new Label(Loc.Text(up.Desc)) { pickingMode = PickingMode.Ignore };
-                desc.AddToClassList("up-desc");
-                row.Add(desc);
-                ups.Add(row);
+                var head = ToolkitKit.E(row, "up-name");
+                if (up.Inherit) ToolkitKit.Pic(head, art, Kit.Icon.Fang, Ui.Spawn, "up-fang");
+                ToolkitKit.L(head, Loc.Text(up.Name));
+                if (own) ToolkitKit.L(row, "✓", "up-owned");
+                ToolkitKit.L(row, Loc.Text(up.Desc), "up-desc");
                 if (own) continue;
-                var act = new VisualElement { pickingMode = PickingMode.Ignore };
-                act.AddToClassList("up-act");
-                row.Add(act);
+                var act = ToolkitKit.E(row, "up-act");
                 if (tabState != TabState.Open)
                 {
-                    var lk = Small("up-lock", Kit.Icon.Lock, Ui.Dim);
-                    lk.pickingMode = PickingMode.Position;
-                    act.Add(lk);
-                    SetTip(lk, lockedBy);
+                    SetTip(ToolkitKit.Pic(act, art, Kit.Icon.Lock, Ui.Dim, "up-lock"), lockedBy);
                     continue;
                 }
-                var price = new VisualElement { pickingMode = PickingMode.Ignore };
-                price.AddToClassList("up-price");
-                ToolkitKit.Value(price, art, Kit.Icon.Gold, up.Cost.ToString(), Ui.Candle, Ui.Candle);
-                row.Add(price);
+                ToolkitKit.Value(ToolkitKit.E(row, "up-price"), art, Kit.Icon.Gold, up.Cost.ToString(), Ui.Candle, Ui.Candle);
                 var id = up.Id;
                 var b = ToolkitKit.Btn(act, art, Loc.T("camp.upgrade"), BtnKind.Normal, null, () => send(CampInput.Buy(id, Time.unscaledTime)), c.CanBuy(up));
                 if (!c.CanBuy(up)) SetTip(b, Loc.T("camp.needGold", c.Gold, up.Cost));
@@ -297,7 +282,7 @@ namespace VampireSpawn.Game.Screens
             if (u.Heal > 0 || next?.Heal > 0) Cell(Kit.Icon.Heal, u.Heal.ToString(), next?.Heal.ToString(), Loc.T("skill.mend"));
         }
 
-        static (Color ring, Color fill, Color ink) BadgeColors(Campaign c, int i)
+        internal static (Color ring, Color fill, Color ink) BadgeColors(Campaign c, int i)
         {
             var last = i == Campaign.Stages.Length - 1;
             var accent = last ? Ui.Blood : Ui.Steel;
@@ -313,14 +298,6 @@ namespace VampireSpawn.Game.Screens
             t.text = text;
             t.style.color = color;
             SetTip(line, tipText);
-        }
-
-        VisualElement Small(string cls, string icon, Color color)
-        {
-            var e = new VisualElement { pickingMode = PickingMode.Ignore };
-            e.AddToClassList(cls);
-            ToolkitKit.Picture(e, art.Ui(icon), color);
-            return e;
         }
 
         void Wire(VisualElement b, BtnKind kind, Action click)
