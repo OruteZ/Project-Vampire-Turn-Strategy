@@ -30,7 +30,7 @@ namespace StagePlay
             var b = Rebuild(s, up, f, log);
             while (b.Phase != Phase.Over && b.Turn <= cap)
             {
-                if (b.Reinforcing) { log.AddRange(Reinforce(b)); log.Add("go"); b = Rebuild(s, up, f, log); continue; }
+                if (b.Reinforcing) { log.AddRange(StageSim.Reinforce(b).Select(p => $"p {p.Kind} {p.Col},{p.Row}")); log.Add("go"); b = Rebuild(s, up, f, log); continue; }
                 if (b.Phase != Phase.Player) break;
                 List<string> best = null; var bestScore = double.MinValue;
                 for (var i = 0; i < samples; i++)
@@ -45,18 +45,6 @@ namespace StagePlay
                 b = Rebuild(s, up, f, log);
             }
             return new Result { End = b.Ending, Won = b.Won == true, Turns = b.Turn, Lost = b.Stats.Lost, Risen = b.Stats.Risen, Drained = b.Stats.Drained, Bonus = b.Won == true && b.BonusMet, Log = log };
-        }
-
-        static IEnumerable<string> Reinforce(Battle b)
-        {
-            var cells = b.Board.Cells.Where(b.InDeploy).ToList();
-            foreach (var h in cells)
-            {
-                if (b.UnitAt(h) != null) continue;
-                var kind = b.Stage.Units.Select(GameData.Type).OrderByDescending(t => t.Pop).Select(t => t.Key).FirstOrDefault(k => b.Place(k, h).Ok);
-                if (kind == null) break;
-                yield return $"p {kind} {h.Col},{h.Row}";
-            }
         }
 
         // One random turn, applied to b as it is built so every order is legal.

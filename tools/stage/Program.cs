@@ -117,7 +117,7 @@ namespace StagePlay
                 case "bot":
                     {
                         Console.WriteLine("stage\tend\tturns\tlost\trisen\tkilled");
-                        var f = a.Length > 2 && a[2].Length > 0 ? Formation(a[2]) : null;
+                        var f = a.Length > 2 && a[2].Length > 0 ? StageConsole.Formation(a[2]) : null;
                         var up = a.Length > 3 && a[3].Length > 0 ? a[3].Split(',') : null;
                         foreach (var s in GameData.Stages.Where(s => a.Length < 2 || a[1] == "all" || s.Id == a[1]))
                         {
@@ -153,15 +153,9 @@ namespace StagePlay
             return order.Take(cells.Count).Select((t, i) => new Placement(t.Key, cells[i].Col, cells[i].Row)).ToArray();
         }
 
-        static Placement[] FormationFor(Stage s, string f) => string.IsNullOrEmpty(f) ? null : f.StartsWith("comp:") ? Comp(s, f.Substring(5)) : Formation(f);
+        static Placement[] FormationFor(Stage s, string f) => string.IsNullOrEmpty(f) ? null : f.StartsWith("comp:") ? Comp(s, f.Substring(5)) : StageConsole.Formation(f);
 
         static string SessionPath(string name) => File.Exists(name) ? name : Path.Combine(Directory.CreateDirectory(Path.Combine(Root, "plays")).FullName, name + ".play");
-
-        static Placement[] Formation(string s) => s.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries).Select(p =>
-        {
-            var x = p.Split('@'); var h = x[1].Split(',');
-            return new Placement(x[0], int.Parse(h[0]), int.Parse(h[1]));
-        }).ToArray();
 
         static Battle Open(string session, out string path)
         {
@@ -170,7 +164,7 @@ namespace StagePlay
             var head = lines[0].Split('|');
             var stage = GameData.Stages.First(x => x.Id == head[0]);
             var up = head.Length > 2 && head[2].Length > 0 ? head[2].Split(',') : null;
-            StageConsole.B = new Battle(stage, up, head.Length > 1 && head[1].Length > 0 ? Formation(head[1]) : null);
+            StageConsole.B = new Battle(stage, up, head.Length > 1 && head[1].Length > 0 ? StageConsole.Formation(head[1]) : null);
             foreach (var l in lines.Skip(1)) foreach (var c in l.Split(';')) if (c.Trim().Length > 0) StageConsole.Do(c.Trim());
             return StageConsole.B;
         }

@@ -14,14 +14,16 @@ namespace VampireSpawn.Core
         public static string New(string stage, string formation = null)
         {
             var s = GameData.Stages.First(x => x.Id == stage);
-            var f = formation?.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries).Select(p =>
-            {
-                var a = p.Split('@'); var h = ParseHex(a[1]);
-                return new Placement(a[0], h.Col, h.Row);
-            }).ToArray();
-            B = new Battle(s, null, f);
+            B = new Battle(s, null, formation == null ? null : Formation(formation));
             return State();
         }
+
+        // "kind@c,r kind@c,r"
+        public static Placement[] Formation(string s) => s.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries).Select(p =>
+        {
+            var a = p.Split('@'); var h = ParseHex(a[1]);
+            return new Placement(a[0], h.Col, h.Row);
+        }).ToArray();
 
         static Hex ParseHex(string s) { var a = s.Split(','); return new Hex(int.Parse(a[0]), int.Parse(a[1])); }
 

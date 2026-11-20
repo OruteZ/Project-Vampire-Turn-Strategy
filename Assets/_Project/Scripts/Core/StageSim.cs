@@ -41,7 +41,7 @@ namespace VampireSpawn.Core
             var peak = b.Enemies.Count();
             while ((b.Phase == Phase.Player || b.Reinforcing) && b.Turn <= TurnCap)
             {
-                if (b.Reinforcing) Reinforce(b);
+                if (b.Reinforcing) { Reinforce(b); b.Start(); }
                 foreach (var u in b.Units.Where(x => x.Side == Side.Ally).ToList())
                     if (b.Phase == Phase.Player && b.Units.Contains(u)) Act(b, u);
                 if (b.Phase != Phase.Player) break;
@@ -52,15 +52,18 @@ namespace VampireSpawn.Core
             return new Run(stage.Id, won, b.Ending, b.Turn, b.Stats.Lost, b.Stats.Risen, b.MinionsKilled, peak);
         }
 
-        // docs/systems/reinforce.md: fill the open hexes with the dearest type that still fits, then carry on.
-        static void Reinforce(Battle b)
+        // docs/systems/reinforce.md: fill the open hexes with the dearest type that still fits. Returns what it placed.
+        public static List<Placement> Reinforce(Battle b)
         {
+            var placed = new List<Placement>();
             foreach (var h in b.Board.Cells.Where(b.InDeploy))
             {
-                var kind = b.Stage.Units.Select(GameData.Type).OrderByDescending(t => t.Pop).Select(t => t.Key).FirstOrDefault(k => b.UnitAt(h) == null && b.Place(k, h).Ok);
-                if (kind == null && b.UnitAt(h) == null) break;
+                if (b.UnitAt(h) != null) continue;
+                var kind = b.Stage.Units.Select(GameData.Type).OrderByDescending(t => t.Pop).Select(t => t.Key).FirstOrDefault(k => b.Place(k, h).Ok);
+                if (kind == null) break;
+                placed.Add(new Placement(kind, h.Col, h.Row));
             }
-            b.Start();
+            return placed;
         }
 
         // Attack what it can reach, else walk toward the nearest awake enemy (the escort walks to its nearest destination), then attack again if now in reach.
