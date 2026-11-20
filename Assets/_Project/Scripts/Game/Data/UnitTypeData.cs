@@ -24,7 +24,7 @@ namespace VampireSpawn.Game.Data
         [Tooltip("치료 기술이 되돌리는 체력")] public int heal;
         [Tooltip("강화 없이 처음부터 가진 기술")] public List<Ability> skills = new List<Ability>();
         [Tooltip("몇 장에서 처음 쓸 수 있는지. 이 장을 클리어하면 병영 강화가 열린다")] public int unlockAt = 1;
-        [Tooltip("갈래 순서 = 목록 순서. 셋 중 하나만 산다 (docs/systems/progression.md)")] public List<UpgradeEntry> upgrades = new List<UpgradeEntry>();
+        [Tooltip("갈래 순서 = 목록 순서. 셋 다 살 수 있다 (docs/systems/progression.md)")] public List<UpgradeEntry> upgrades = new List<UpgradeEntry>();
 
         public UnitType ToCore() => new UnitType(key, tier, pop, silver, hp, atk, def, mov, rng, bane, heal, unlockAt, skills.ToArray());
 
