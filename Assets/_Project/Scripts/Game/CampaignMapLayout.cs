@@ -81,8 +81,8 @@ namespace VampireSpawn.Game
         public static readonly Vector3 Origin = new Vector3(0f, 0f, 500f);
         public static readonly Vector2 Start = new Vector2(-30f, -6f);
         public const float RoadWidth = 2.2f, CastleRadius = 9f;
-        public static readonly Color Floor = Hex(0x1f211c), RoadLit = Hex(0x5b4a3a), RoadDark = Hex(0x2f2a28), Ambient = Hex(0x262938), Fog = Hex(0x0d0f16),
-            Moon = Hex(0xeadcae), Blood = Hex(0xc8304a), SideRoad = Hex(0x2a2624);
+        public static readonly Color Floor = Screens.Ui.Rgb(0x1f211c), RoadLit = Screens.Ui.Rgb(0x5b4a3a), RoadDark = Screens.Ui.Rgb(0x2f2a28), Ambient = Screens.Ui.Rgb(0x262938), Fog = Screens.Ui.Rgb(0x0d0f16),
+            Moon = Screens.Ui.Rgb(0xeadcae), Blood = Screens.Ui.Rgb(0xc8304a), SideRoad = Screens.Ui.Rgb(0x2a2624);
 
         public const string Brazier = "SM_Prop_Brazier_01", Fire = "FX_Fire_01";
 
@@ -223,7 +223,5 @@ namespace VampireSpawn.Game
                 .Concat(CampProps.Select(p => p.Prefab))
                 .Concat(new[] { Brazier, Fire })
                 .Distinct().OrderBy(n => n);
-
-        static Color Hex(int rgb) => new Color(((rgb >> 16) & 255) / 255f, ((rgb >> 8) & 255) / 255f, (rgb & 255) / 255f);
     }
 }

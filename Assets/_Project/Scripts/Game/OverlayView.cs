@@ -22,7 +22,7 @@ namespace VampireSpawn.Game
         }
 
         static Style S(Color fill, float fa, Color stroke, float sa, float radius, float width, float dash = 0f, float gap = 0f) =>
-            new Style { Fill = A(fill, fa), Stroke = A(stroke, sa), Radius = radius, Width = width, Dash = dash, Gap = gap };
+            new Style { Fill = Screens.Ui.Alpha(fill, fa), Stroke = Screens.Ui.Alpha(stroke, sa), Radius = radius, Width = width, Dash = dash, Gap = gap };
 
         // docs/art/ui-style.md 8-2. Widths are in R units; one unit is about 1 px at 1080p.
         static readonly Dictionary<Mark, Style> Styles = new Dictionary<Mark, Style>
@@ -65,7 +65,6 @@ namespace VampireSpawn.Game
 
         BattleSession last;
         Hex? lastDrop, hover;
-        static Color A(Color c, float a) { c.a = a; return c; }
 
         float Scale => board.art.hexSize / R;
         // Above the board's grid lines (battle-terrain.md 3).
@@ -176,14 +175,14 @@ namespace VampireSpawn.Game
             flat.y = 0f;
             b -= flat.normalized * (0.35f * s);
             aimEnds = (a, b);
-            var color = clear ? A(Enemy, 0.95f) : A(Bone, 0.5f);
+            var color = clear ? Screens.Ui.Alpha(Enemy, 0.95f) : Screens.Ui.Alpha(Bone, 0.5f);
             Set(arc, new[] { a, b }, 0.12f * s, color);
             Set(head, new[] { a, b }, 0.45f * s, color);
             if (!clear)
             {
                 crossed = true;
-                Set(x1, new[] { a, b }, 0.14f * s, A(Enemy, 1f));
-                Set(x2, new[] { a, b }, 0.14f * s, A(Enemy, 1f));
+                Set(x1, new[] { a, b }, 0.14f * s, Enemy);
+                Set(x2, new[] { a, b }, 0.14f * s, Enemy);
             }
             LateUpdate();
         }
@@ -238,7 +237,7 @@ namespace VampireSpawn.Game
             }
             var sr = icons[i];
             sr.sprite = board.art.Ui(name);
-            sr.color = A(tint, 0.85f);
+            sr.color = Screens.Ui.Alpha(tint, 0.85f);
             sr.enabled = sr.sprite != null;
             if (!sr.enabled) return;
             var size = 0.9f * board.art.hexSize;

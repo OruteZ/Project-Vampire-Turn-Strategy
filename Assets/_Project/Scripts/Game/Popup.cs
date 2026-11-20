@@ -27,13 +27,12 @@ namespace VampireSpawn.Game
             p.text.color = ColorOf(style);
         }
 
-        // Prototype CSS: .pop.dmg bone, .blood blood, .heal sun, .spawn violet.
         static Color ColorOf(string style) => style switch
         {
-            "blood" => new Color(0.78f, 0.19f, 0.29f),
-            "heal" => new Color(0.92f, 0.86f, 0.68f),
-            "spawn" => new Color(0.65f, 0.31f, 0.77f),
-            _ => new Color(0.92f, 0.89f, 0.82f),
+            "blood" => Screens.Ui.Blood,
+            "heal" => Screens.Ui.Sun,
+            "spawn" => Screens.Ui.Spawn,
+            _ => Screens.Ui.Bone,
         };
 
         void Update()

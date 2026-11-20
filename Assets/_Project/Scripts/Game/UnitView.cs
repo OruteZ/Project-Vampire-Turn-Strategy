@@ -50,7 +50,7 @@ namespace VampireSpawn.Game
             look = to != null ? to : own;
             if (model == null) return;
             yaw = model.localEulerAngles.y;
-            if (Application.isPlaying) Destroy(model.gameObject); else DestroyImmediate(model.gameObject);
+            BoardView.Kill(model.gameObject);
             BuildModel();
         }
 
@@ -86,7 +86,7 @@ namespace VampireSpawn.Game
                 var rotation = UnitLook.Socket(look.rig, g.hand, g.hold) * Quaternion.Euler(g.rotation);
                 w.localRotation = rotation;
                 w.localPosition = Palm(look.rig, bone) + g.position - rotation * GripPoint(w, g.hold);
-                foreach (var c in w.GetComponentsInChildren<Collider>(true)) { if (Application.isPlaying) Destroy(c); else DestroyImmediate(c); }
+                foreach (var c in w.GetComponentsInChildren<Collider>(true)) BoardView.Kill(c);
             }
         }
 
@@ -124,11 +124,8 @@ namespace VampireSpawn.Game
         {
             var c = Instantiate(art.coffin, parent, false);
             c.name = "Coffin";
-            foreach (var col in c.GetComponentsInChildren<Collider>(true)) { if (Application.isPlaying) Destroy(col); else DestroyImmediate(col); }
-            var rs = c.GetComponentsInChildren<Renderer>();
-            if (rs.Length == 0) return c;
-            var b = rs[0].bounds;
-            foreach (var r in rs) b.Encapsulate(r.bounds);
+            foreach (var col in c.GetComponentsInChildren<Collider>(true)) BoardView.Kill(col);
+            if (!BoardView.Drawn(c.transform, out var b)) return c;
             if (b.size.x > b.size.z) c.transform.localRotation = Quaternion.Euler(0f, 90f, 0f);
             var length = Mathf.Max(b.size.x, b.size.z);
             if (length > 0.01f) c.transform.localScale *= art.unitHeight * art.hexSize / length;
@@ -137,11 +134,7 @@ namespace VampireSpawn.Game
 
         static void FitHeight(Transform t, float height)
         {
-            var rs = t.GetComponentsInChildren<Renderer>();
-            if (rs.Length == 0) return;
-            var b = rs[0].bounds;
-            foreach (var r in rs) b.Encapsulate(r.bounds);
-            if (b.size.y > 0.01f) t.localScale *= height / b.size.y;
+            if (BoardView.Drawn(t, out var b) && b.size.y > 0.01f) t.localScale *= height / b.size.y;
         }
 
         public void SetHp(int hp, int max)
@@ -179,7 +172,7 @@ namespace VampireSpawn.Game
         public void StandUp()
         {
             Lying = false;
-            if (coffin != null) { if (Application.isPlaying) Destroy(coffin); else DestroyImmediate(coffin); coffin = null; }
+            if (coffin != null) { BoardView.Kill(coffin); coffin = null; }
             if (model == null) { BuildModel(); return; }
             model.localRotation = Quaternion.Euler(0f, model.localEulerAngles.y, 0f);
             model.localPosition = Vector3.zero;

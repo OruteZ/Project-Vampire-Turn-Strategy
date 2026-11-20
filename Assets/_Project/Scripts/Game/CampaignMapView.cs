@@ -41,7 +41,7 @@ namespace VampireSpawn.Game
             terrain.gameObject.SetActive(true);
             fogDistance = 0f;
             pan = Vector2.zero;
-            if (progress != null) Kill(progress.gameObject);
+            if (progress != null) BoardView.Kill(progress.gameObject);
             progress = new GameObject("Progress").transform;
             progress.SetParent(terrain, false);
             BuildProgress();
@@ -218,7 +218,7 @@ namespace VampireSpawn.Game
         public void ShowUnit(int type)
         {
             if (type == campType) return;
-            if (campUnit != null) Kill(campUnit.gameObject);
+            if (campUnit != null) BoardView.Kill(campUnit.gameObject);
             campUnit = null;
             campType = type;
             var camp = CampSpot();
@@ -278,7 +278,7 @@ namespace VampireSpawn.Game
             terrain.SetParent(parent, false);
             terrain.position = CampaignMapLayout.Origin;
             var floor = GameObject.CreatePrimitive(PrimitiveType.Quad);
-            Kill(floor.GetComponent<Collider>());
+            BoardView.Kill(floor.GetComponent<Collider>());
             floor.name = "Floor";
             floor.transform.SetParent(terrain, false);
             floor.transform.localPosition = new Vector3(0f, 0f, 50f);
@@ -294,7 +294,7 @@ namespace VampireSpawn.Game
                 region.position = World(r.Anchor);
                 // A flattened built-in cylinder, not a generated mesh: a mesh made at bake time would not survive saving the scene.
                 var ground = GameObject.CreatePrimitive(PrimitiveType.Cylinder);
-                Kill(ground.GetComponent<Collider>());
+                BoardView.Kill(ground.GetComponent<Collider>());
                 ground.name = "Ground";
                 ground.transform.SetParent(region, false);
                 ground.transform.localPosition = Vector3.up * 0.01f;
@@ -440,14 +440,7 @@ namespace VampireSpawn.Game
             return prefab;
         }
 
-        static float Top(GameObject go)
-        {
-            var rs = go.GetComponentsInChildren<Renderer>();
-            if (rs.Length == 0) return go.transform.position.y;
-            var b = rs[0].bounds;
-            foreach (var r in rs) b.Encapsulate(r.bounds);
-            return b.max.y;
-        }
+        static float Top(GameObject go) => BoardView.Drawn(go.transform, out var b) ? b.max.y : go.transform.position.y;
 
         static bool Near(IEnumerable<Vector2> points, Vector2 p, float d) => points.Any(q => (q - p).sqrMagnitude < d * d);
 
@@ -587,7 +580,5 @@ namespace VampireSpawn.Game
         }
 
         Material Tinted(Color c, string name) => new Material(art.plain) { color = c, name = name };
-
-        static void Kill(Object o) { if (Application.isPlaying) Destroy(o); else DestroyImmediate(o); }
     }
 }

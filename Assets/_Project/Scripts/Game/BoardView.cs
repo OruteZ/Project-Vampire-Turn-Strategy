@@ -133,7 +133,7 @@ namespace VampireSpawn.Game
                     // A shared edge drawn twice doubles its alpha.
                     var mid = (a + b) * 50f;
                     if (drawn.Add(new Vector2Int(Mathf.RoundToInt(mid.x), Mathf.RoundToInt(mid.z))))
-                        lines.Segment(a, b, 0.05f * art.hexSize, Tint(Screens.Ui.Steel, 0.35f));
+                        lines.Segment(a, b, 0.05f * art.hexSize, Screens.Ui.Alpha(Screens.Ui.Steel, 0.35f));
                 }
             }
             var mesh = new Mesh { name = "Grid" };
@@ -143,8 +143,6 @@ namespace VampireSpawn.Game
             mr.sharedMaterial = art.overlay;
             mr.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
         }
-
-        static Color Tint(Color c, float a) { c.a = a; return c; }
 
         // stage-dressing.md 1-2, 1-3, 1-5, 3: a prop on every rock cell, and a ring of props up to Ring cells past the board; tall ones never on the camera (south) side.
         static bool IsDoor(Stage stage, Hex h) => stage.Doors.Any(d => d.Hexes.Contains(h));
@@ -253,7 +251,7 @@ namespace VampireSpawn.Game
             RenderSettings.fog = false;
         }
 
-        static void Kill(Object o) { if (Application.isPlaying) Destroy(o); else DestroyImmediate(o); }
+        internal static void Kill(Object o) { if (Application.isPlaying) Destroy(o); else DestroyImmediate(o); }
 
         void BuildTile(Hex h)
         {
@@ -360,11 +358,7 @@ namespace VampireSpawn.Game
             go.name = prefab.name;
             go.transform.position = at;
             go.transform.rotation = Quaternion.Euler(0f, yaw, 0f);
-            if (fitWidth <= 0f) return go;
-            var renderers = go.GetComponentsInChildren<Renderer>();
-            if (renderers.Length == 0) return go;
-            var b = renderers[0].bounds;
-            foreach (var r in renderers) b.Encapsulate(r.bounds);
+            if (fitWidth <= 0f || !Drawn(go.transform, out var b)) return go;
             var size = Mathf.Max(b.size.x, b.size.z);
             if (size <= 0.001f) return go;
             var byWidth = fitWidth / size;
@@ -372,6 +366,15 @@ namespace VampireSpawn.Game
             var k = Mathf.Min(byWidth, byHeight);
             go.transform.localScale = Vector3.Scale(go.transform.localScale, stretch && b.size.x > 0.001f ? new Vector3(fitWidth / b.size.x, k, k) : Vector3.one * k);
             return go;
+        }
+
+        // World bounds of every renderer under root; false when it draws nothing.
+        internal static bool Drawn(Transform root, out Bounds b)
+        {
+            var rs = root.GetComponentsInChildren<Renderer>();
+            b = rs.Length > 0 ? rs[0].bounds : default;
+            foreach (var r in rs) b.Encapsulate(r.bounds);
+            return rs.Length > 0;
         }
 
         // Out of play mode (baking) keep the prefab link, so a baked stage or map can swap or update a prop later.
