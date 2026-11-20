@@ -273,9 +273,8 @@ namespace VampireSpawn.Game.Screens
                 var changed = nextValue != null && nextValue != value;
                 ToolkitKit.Value(stats, art, icon, changed ? nextValue : value, Ui.Steel, changed ? Ui.Candle : Ui.Bone, label, tip);
             }
-            string Atk(Unit x) => x.Atk + (x.Bane > 0 ? "+" + x.Bane : "");
             Cell(Kit.Icon.Hp, u.Hp.ToString(), next?.Hp.ToString(), Loc.T("unit.card.hp"));
-            Cell(Kit.Icon.Atk, Atk(u), next != null ? Atk(next) : null, Loc.T("unit.card.atk"));
+            Cell(Kit.Icon.Atk, BattleScreen.Atk(u), next != null ? BattleScreen.Atk(next) : null, Loc.T("unit.card.atk"));
             Cell(Kit.Icon.Def, u.Def.ToString(), next?.Def.ToString(), Loc.T("unit.card.def"));
             Cell(Kit.Icon.Mov, u.Mov.ToString(), next?.Mov.ToString(), Loc.T("unit.card.mov"));
             Cell(Kit.Icon.Rng, u.Rng.ToString(), next?.Rng.ToString(), Loc.T("unit.card.rng"));

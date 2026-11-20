@@ -355,7 +355,7 @@ namespace VampireSpawn.Game.Screens
         {
             var row = E(parent, "unit-stats row");
             Value(row, Kit.Icon.Hp, u.Hp.ToString(), Ui.SteelDim, Ui.Muted, Loc.T("unit.card.hp"));
-            Value(row, Kit.Icon.Atk, u.Atk + (u.Bane > 0 ? "+" + u.Bane : ""), Ui.SteelDim, Ui.Muted, Loc.T("unit.card.atk"));
+            Value(row, Kit.Icon.Atk, BattleScreen.Atk(u), Ui.SteelDim, Ui.Muted, Loc.T("unit.card.atk"));
             Value(row, Kit.Icon.Def, u.Def.ToString(), Ui.SteelDim, Ui.Muted, Loc.T("unit.card.def"));
             Value(row, Kit.Icon.Mov, u.Mov.ToString(), Ui.SteelDim, Ui.Muted, Loc.T("unit.card.mov"));
             Value(row, Kit.Icon.Rng, u.Rng.ToString(), Ui.SteelDim, Ui.Muted, Loc.T("unit.card.rng"));
@@ -420,8 +420,7 @@ namespace VampireSpawn.Game.Screens
 
         static readonly Dictionary<string, (string icon, Color color)> LogIcon = new Dictionary<string, (string, Color)>
         {
-            ["k"] = ("ICON_DarkFantasy_Status_Dead_01_Clean", Ui.Blood), ["s"] = ("ICON_DarkFantasy_Status_Vampiric_01_Clean", Ui.Spawn),
-            ["h"] = ("ICON_DarkFantasy_Status_Targeted_01_Stroke", Ui.MoonBlood),
+            ["k"] = (Kit.Icon.Dead, Ui.Blood), ["s"] = (Kit.Icon.Fang, Ui.Spawn), ["h"] = (Kit.Icon.Target, Ui.MoonBlood),
         };
 
         void Log(VisualElement root, Battle b, HudState st, BattleActions a)
@@ -458,6 +457,19 @@ namespace VampireSpawn.Game.Screens
             return cell;
         }
 
+        // The five numbers every unit panel shows; watch is the unit id when changes should flash. Returns the hp cell.
+        VisualElement StatRows(VisualElement col, Color color, string hp, int mov, string atk, int def, int rng, Color? hpColor = null, string watch = null)
+        {
+            var big = E(col, "big row");
+            var cell = StatCell(big, Kit.Icon.Hp, hp, Loc.T("unit.card.hp"), color, hpColor ?? Ui.Bone, watch == null ? null : "hp" + watch);
+            StatCell(big, Kit.Icon.Mov, mov.ToString(), Loc.T("unit.card.mov"), color, Ui.Bone, watch == null ? null : "mov" + watch);
+            var small = E(col, "small row");
+            StatCell(small, Kit.Icon.Atk, atk, Loc.T("unit.card.atk"), color, Ui.Muted);
+            StatCell(small, Kit.Icon.Def, def.ToString(), Loc.T("unit.card.def"), color, Ui.Muted);
+            StatCell(small, Kit.Icon.Rng, rng.ToString(), Loc.T("unit.card.rng"), color, Ui.Muted);
+            return cell;
+        }
+
         VisualElement PanelFrame(VisualElement root, string name, string side, Color edge)
         {
             var p = E(root, "unit " + side, true);
@@ -475,20 +487,14 @@ namespace VampireSpawn.Game.Screens
             var dim = o.Side == Side.Ally ? Ui.SteelDim : spawn ? Ui.Alpha(Ui.Spawn, 0.6f) : Ui.BloodDim;
             var p = PanelFrame(root, "Panel " + o.Id, side, lit ? color : dim);
             if (o.Side == Side.Enemy && !spawn) Spikes(p, color);
-            if (spawn) CornerBadge(p, "ICON_DarkFantasy_Status_Vampiric_01_Clean", Ui.Spawn);
+            if (spawn) CornerBadge(p, Kit.Icon.Fang, Ui.Spawn);
             var col = E(p, "unit-body col");
             var head = E(col, "unit-head row");
             if (o.Type != null && art.Icon(o.Type) is string wi) Icon(head, wi, color, "icon unit-weapon");
             L(head, spawn ? Loc.T("hud.spawnOf", o.Origin) : Loc.Text(o.Name), "unit-name display");
             if (o.Role == Role.Escort) L(head, Loc.T("unit.card.escort"), "unit-tag");
-            var big = E(col, "big row");
-            var hp = StatCell(big, Kit.Icon.Hp, o.Hp + "/" + o.MaxHp, Loc.T("unit.card.hp"), color, o.Side == Side.Ally && o.Hp * 3 <= o.MaxHp ? Ui.Blood : Ui.Bone, "hp" + o.Id);
+            var hp = StatRows(col, color, o.Hp + "/" + o.MaxHp, o.Mov, BattleScreen.Atk(o), o.Def, o.Rng, o.Side == Side.Ally && o.Hp * 3 <= o.MaxHp ? Ui.Blood : Ui.Bone, o.Id.ToString());
             if (heal > 0) L(hp, "+" + heal, "stat-value stat-heal");
-            StatCell(big, Kit.Icon.Mov, o.Mov.ToString(), Loc.T("unit.card.mov"), color, Ui.Bone, "mov" + o.Id);
-            var small = E(col, "small row");
-            StatCell(small, Kit.Icon.Atk, o.Atk + (o.Bane > 0 ? "+" + o.Bane : ""), Loc.T("unit.card.atk"), color, Ui.Muted);
-            StatCell(small, Kit.Icon.Def, o.Def.ToString(), Loc.T("unit.card.def"), color, Ui.Muted);
-            StatCell(small, Kit.Icon.Rng, o.Rng.ToString(), Loc.T("unit.card.rng"), color, Ui.Muted);
             var (warn, wc) = Warning(b, o);
             if (warn != null) L(col, warn, "warn", wc);
             if (o.Side == Side.Ally && BattleScreen.Skills(o) is string sk) L(col, sk, "skills");
@@ -541,31 +547,19 @@ namespace VampireSpawn.Game.Screens
             var head = E(col, "unit-head row");
             L(head, Loc.Text(m.Name), "unit-name display");
             L(head, ArrivalWhen(b, a), "unit-tag");
-            var big = E(col, "big row");
-            StatCell(big, Kit.Icon.Hp, m.Hp.ToString(), Loc.T("unit.card.hp"), Ui.Blood, Ui.Bone);
-            StatCell(big, Kit.Icon.Mov, m.Mov.ToString(), Loc.T("unit.card.mov"), Ui.Blood, Ui.Bone);
-            var small = E(col, "small row");
-            StatCell(small, Kit.Icon.Atk, m.Atk.ToString(), Loc.T("unit.card.atk"), Ui.Blood, Ui.Muted);
-            StatCell(small, Kit.Icon.Def, m.Def.ToString(), Loc.T("unit.card.def"), Ui.Blood, Ui.Muted);
-            StatCell(small, Kit.Icon.Rng, m.Rng.ToString(), Loc.T("unit.card.rng"), Ui.Blood, Ui.Muted);
+            StatRows(col, Ui.Blood, m.Hp.ToString(), m.Mov, m.Atk.ToString(), m.Def, m.Rng);
             L(col, Loc.Text(m.Note), "warn", Ui.Blood);
         }
 
         void CorpsePanel(VisualElement root, Corpse c)
         {
             var p = PanelFrame(root, "Corpse " + c.Id, "other-side", Ui.Spawn);
-            CornerBadge(p, "ICON_DarkFantasy_Status_Vampiric_01_Clean", Ui.Spawn);
+            CornerBadge(p, Kit.Icon.Fang, Ui.Spawn);
             var col = E(p, "unit-body col");
             var head = E(col, "unit-head row");
             L(head, Loc.T("unit.card.corpseOf", c.Name), "unit-name display");
             L(head, Loc.T("unit.card.corpse"), "unit-tag");
-            var big = E(col, "big row");
-            StatCell(big, Kit.Icon.Hp, c.MaxHp.ToString(), Loc.T("unit.card.hp"), Ui.Spawn, Ui.Bone);
-            StatCell(big, Kit.Icon.Mov, c.Mov.ToString(), Loc.T("unit.card.mov"), Ui.Spawn, Ui.Bone);
-            var small = E(col, "small row");
-            StatCell(small, Kit.Icon.Atk, c.Atk.ToString(), Loc.T("unit.card.atk"), Ui.Spawn, Ui.Muted);
-            StatCell(small, Kit.Icon.Def, "0", Loc.T("unit.card.def"), Ui.Spawn, Ui.Muted);
-            StatCell(small, Kit.Icon.Rng, "1", Loc.T("unit.card.rng"), Ui.Spawn, Ui.Muted);
+            StatRows(col, Ui.Spawn, c.MaxHp.ToString(), c.Mov, c.Atk.ToString(), 0, 1);
             L(col, Loc.T("hud.warn.corpse"), "warn", Ui.Spawn);
         }
 

@@ -90,6 +90,8 @@ namespace VampireSpawn.Game.Screens
 
         public static string SkillName(Ability a) => Loc.T("skill." + char.ToLowerInvariant(a.ToString()[0]) + a.ToString().Substring(1));
 
+        public static string Atk(Unit u) => u.Atk + (u.Bane > 0 ? "+" + u.Bane : "");
+
         public static string Skills(Unit o) => o.Abil.Count == 0 ? null : Loc.T("unit.card.skills", string.Join(", ", o.Abil.Select(SkillName)));
 
         public static string Note(Unit o)
