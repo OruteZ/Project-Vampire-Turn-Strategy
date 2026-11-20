@@ -34,7 +34,7 @@ namespace VampireSpawn.Tests
             Assert.IsFalse(doc[1].Ready, "no enemy in range");
             Assert.AreEqual(Loc.T("hud.mend"), doc[4].Label);
 
-            s.ToggleMend();
+            s.Toggle(SelectMode.Mend);
             Assert.IsTrue(BattleScreen.Slots(s, a)[4].On);
             s.ClearMode();
             Assert.AreEqual(SelectMode.Act, s.Mode);

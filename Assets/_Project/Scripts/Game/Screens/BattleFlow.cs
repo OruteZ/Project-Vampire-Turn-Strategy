@@ -70,9 +70,9 @@ namespace VampireSpawn.Game.Screens
                 Pick = k => input.Act(s => s.Pick(k)),
                 Recall = id => input.Run(s => s.Recall(id)),
                 RecallKind = k => input.Run(s => s.ClearAllies(k)),
-                Exec = () => input.Act(s => s.ToggleExecute()),
-                Mend = () => input.Act(s => s.ToggleMend()),
-                Trap = () => input.Act(s => s.ToggleTrap()),
+                Exec = () => input.Act(s => s.Toggle(SelectMode.Execute)),
+                Mend = () => input.Act(s => s.Toggle(SelectMode.Mend)),
+                Trap = () => input.Act(s => s.Toggle(SelectMode.Trap)),
                 Wait = () => input.Run(s => s.Wait()),
                 Aim = () => input.Act(s => s.ClearMode()),
                 ToggleRules = () => { rulesOpen = !rulesOpen; RenderBattle(); },
@@ -159,10 +159,8 @@ namespace VampireSpawn.Game.Screens
                 RenderBattle();
                 return true;
             }
-            if (Session.Mode == SelectMode.Execute) input.Act(x => x.ToggleExecute());
-            else if (Session.Mode == SelectMode.Mend) input.Act(x => x.ToggleMend());
-            else if (Session.Mode == SelectMode.Trap) input.Act(x => x.ToggleTrap());
-            else return false;
+            if (Session.Mode == SelectMode.Act) return false;
+            input.Act(x => x.ClearMode());
             return true;
         }
 

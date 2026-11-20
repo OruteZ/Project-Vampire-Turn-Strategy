@@ -49,7 +49,7 @@ namespace VampireSpawn.Tests
 
             var s = Field("archer");
             s.Click(Shooter);
-            s.ToggleExecute();
+            s.Toggle(SelectMode.Execute);
             Assert.IsNull(s.AimAt(Near), "execute mode aims at allies");
             s.ClearMode();
             s.Click(Near);

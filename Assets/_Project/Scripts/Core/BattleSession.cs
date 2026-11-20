@@ -49,6 +49,8 @@ namespace VampireSpawn.Core
 
         void Inspect(Unit u) { InspectUnit = u?.Id; InspectCorpse = null; }
 
+        void Deselect() { Selected = null; Inspect(null); Mode = SelectMode.Act; }
+
         CommandResult After(CommandResult r)
         {
             if (Selected is int id && Battle.Find(id) == null) Selected = null;
@@ -97,7 +99,7 @@ namespace VampireSpawn.Core
             if (u != null && u.Side == Side.Ally) { Selected = u.Acted ? (int?)null : u.Id; Inspect(u); Mode = SelectMode.Act; }
             else if (u != null) Inspect(u);
             else if (co != null) { InspectUnit = null; InspectCorpse = co.Id; }
-            else { Selected = null; Inspect(null); Mode = SelectMode.Act; }
+            else Deselect();
             return Nothing;
         }
 
@@ -105,17 +107,17 @@ namespace VampireSpawn.Core
         {
             if (Battle.Phase != Phase.Player) return;
             Flash = default;
-            Selected = null;
-            Inspect(null);
-            Mode = SelectMode.Act;
+            Deselect();
         }
 
         public void Pick(string kind) { Flash = default; DeployType = kind; }
 
-        public void ToggleExecute() { if (SelectedUnit?.Role == Role.Escort) return; Flash = default; Mode = Mode == SelectMode.Execute ? SelectMode.Act : SelectMode.Execute; }
-
-        public void ToggleTrap() { Flash = default; Mode = Mode == SelectMode.Trap ? SelectMode.Act : SelectMode.Trap; }
-        public void ToggleMend() { Flash = default; Mode = Mode == SelectMode.Mend ? SelectMode.Act : SelectMode.Mend; }
+        public void Toggle(SelectMode mode)
+        {
+            if (mode == SelectMode.Execute && SelectedUnit?.Role == Role.Escort) return;
+            Flash = default;
+            Mode = Mode == mode ? SelectMode.Act : mode;
+        }
 
         public void ClearMode() { Flash = default; Mode = SelectMode.Act; }
 
@@ -142,9 +144,7 @@ namespace VampireSpawn.Core
         {
             Flash = default;
             if (Battle.Phase != Phase.Player) return Nothing;
-            Selected = null;
-            Inspect(null);
-            Mode = SelectMode.Act;
+            Deselect();
             return After(Battle.EndTurn());
         }
 
