@@ -509,7 +509,7 @@ namespace VampireSpawn.Game.Screens
             if (o.Side == Side.Ally && BattleScreen.Skills(o) is string sk) L(col, sk, "skills");
             Tip(p, BattleScreen.Note(o), 500);
             var id = o.Id;
-            InfoBtn(p, art, tip, () => acts?.Detail?.Invoke(id), infoOn);
+            InfoBtn(hp.parent, art, tip, () => acts?.Detail?.Invoke(id), infoOn);
             return p;
         }
 

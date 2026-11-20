@@ -67,7 +67,7 @@
 .detail-up { flex-direction: row; align-items: center; min-height: 34px; flex-shrink: 0; }
 .detail .detail-up-mark { width: 20px; height: 20px; margin-right: 8px; font-size: 16px; color: var(--candle); -unity-text-align: middle-center; }
 .detail-up-ring { width: 14px; height: 14px; margin: 0 11px 0 3px; border-width: 1px; border-color: var(--line); border-radius: 7px; }
-.detail-up-name { width: 130px; font-size: 16px; -unity-font-style: bold; color: var(--bone); }
+.detail-up-name { width: 176px; font-size: 16px; -unity-font-style: bold; color: var(--bone); }
 .detail-up-effect { flex-grow: 1; width: 0; font-size: 14px; color: var(--muted); white-space: normal; }
 .detail-up-fang { width: 18px; height: 18px; margin-left: 8px; }
 .detail-up.off .detail-up-name { color: var(--dim); -unity-font-style: normal; }

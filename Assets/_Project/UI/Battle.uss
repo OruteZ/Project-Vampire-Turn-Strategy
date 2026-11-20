@@ -116,12 +116,13 @@
 .unit-body > * { flex-shrink: 0; }
 .unit.deploy-side > .unit-body { padding-bottom: 56px; }
 .unit-body > * { margin-bottom: 6px; }
-.unit-head { align-items: flex-end; flex-wrap: wrap; padding-right: 60px; }
+.unit-head { align-items: flex-end; flex-wrap: wrap; }
 /* unit-detail.md 2-1: the HUD draws at 0.55, so the 40 px button is 64 here and its key keeps the 26 px floor. */
 .battle .info-btn { position: absolute; width: 64px; height: 64px; }
 .battle .info-btn > .icon { left: 14px; top: 6px; right: 14px; bottom: 22px; }
 .battle .info-btn > .key { right: 2px; bottom: 2px; height: 28px; padding: 0 5px; font-size: 26px; }
-.unit > .info-btn { right: 12px; top: 10px; }
+/* At the right end of the hp and move row: the head can wrap to two lines (long names), that row is always there and empty on the right. */
+.big > .info-btn { right: 0; top: -10px; }
 .roster-row > .info-btn { right: 8px; bottom: 8px; }
 .unit-weapon { width: 26px; height: 26px; margin-right: 10px; flex-shrink: 0; }
 .unit-name { font-size: 26px; -unity-font-style: bold; color: var(--bone); flex-shrink: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; margin-right: 10px; }
