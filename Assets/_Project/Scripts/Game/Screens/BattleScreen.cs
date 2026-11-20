@@ -9,7 +9,8 @@ namespace VampireSpawn.Game.Screens
     {
         public Action Primary, Leave, Clear, Sample, Exec, Mend, Trap, Wait, Aim, Retry, Redeploy, ToCamp, CloseOver, ToggleRules, ToggleLog;
         public Action<string> Pick, RecallKind;
-        public Action<int> Recall;
+        public Action<int> Recall, Detail;
+        public Action<string> DetailKind;
     }
 
     public sealed class OverInfo

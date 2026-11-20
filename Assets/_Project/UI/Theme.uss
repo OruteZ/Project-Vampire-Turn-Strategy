@@ -93,3 +93,10 @@ Label {
 .appear { transition-property: opacity, translate; transition-duration: 0.15s; transition-timing-function: ease-out-cubic; }
 .appear.enter { opacity: 0; translate: 0 8px; }
 .outline { -unity-text-outline-width: 1px; -unity-text-outline-color: var(--ink); }
+
+/* unit-detail.md 2-1: the button that opens the window, with its key inside. */
+.info-btn { width: 40px; height: 40px; }
+.info-btn > .icon { position: absolute; left: 9px; top: 6px; right: 9px; bottom: 12px; -unity-background-image-tint-color: var(--muted); }
+.info-btn:hover > .icon { -unity-background-image-tint-color: var(--bone); }
+.info-btn > .key { right: 1px; bottom: 1px; height: 15px; padding: 0 3px; font-size: 11px; }
+.info-btn.disabled { opacity: 0.35; }

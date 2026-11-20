@@ -2131,6 +2131,290 @@ MonoBehaviour:
     m_Key: tag.pointBlank
     m_Metadata:
       m_Items: []
+  - m_Id: 5253301431758848
+    m_Key: detail.open
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5253301473701888
+    m_Key: detail.closeHint
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5253301473701889
+    m_Key: detail.browse
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5253301473701890
+    m_Key: detail.sec.stats
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5253301473701891
+    m_Key: detail.sec.state
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5253301473701892
+    m_Key: detail.sec.spawn
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5253301473701893
+    m_Key: detail.sec.skills
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5253301473701894
+    m_Key: detail.sec.upgrades
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5253301473701895
+    m_Key: detail.sec.traits
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5253301473701896
+    m_Key: detail.base
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5253301473701897
+    m_Key: detail.bane
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5253301473701898
+    m_Key: detail.ifSpawn
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5253301473701899
+    m_Key: detail.noSkill
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5253301473701900
+    m_Key: detail.kind.action
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5253301473701901
+    m_Key: detail.kind.passive
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5253301473701902
+    m_Key: detail.src.base
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5253301473701903
+    m_Key: detail.src.upgrade
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5253301473701904
+    m_Key: role.pspear
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5253301473701905
+    m_Key: role.parcher
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5253301473701906
+    m_Key: role.sword
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5253301473701907
+    m_Key: role.archer
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5253301473701908
+    m_Key: role.knight
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5253301473701909
+    m_Key: role.hunter
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5253301473701910
+    m_Key: role.gravedigger
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5253301473701911
+    m_Key: role.doctor
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5253301473701912
+    m_Key: role.scout
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5253301473701913
+    m_Key: skill.taunt
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5253301473701914
+    m_Key: skill.taunt.desc
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5253301473701915
+    m_Key: skill.pike.desc
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5253301473701916
+    m_Key: skill.formation.desc
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5253301473701917
+    m_Key: skill.ambush.desc
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5253301473701918
+    m_Key: skill.cleave.desc
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5253301473701919
+    m_Key: skill.charge.desc
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5253301473701920
+    m_Key: skill.ward.desc
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5253301473701921
+    m_Key: skill.bury.desc
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5253301473701922
+    m_Key: skill.rite.desc
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5253301473701923
+    m_Key: skill.twice.desc
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5253301473701924
+    m_Key: skill.mend.desc
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5253301473701925
+    m_Key: skill.splash.desc
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5253301473701926
+    m_Key: skill.trap.desc
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5253301473701927
+    m_Key: skill.barbs.desc
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5253301473701928
+    m_Key: skill.satchel.desc
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5253301473701929
+    m_Key: skill.moonblood.desc
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5253301473701930
+    m_Key: skill.feast.desc
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5253301473701931
+    m_Key: skill.crescent.desc
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5253301473701932
+    m_Key: state.target
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5253301473701933
+    m_Key: state.target.desc
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5253301473701934
+    m_Key: state.safe
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5253301473701935
+    m_Key: state.safe.desc
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5253301473701936
+    m_Key: state.lit
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5253301477896192
+    m_Key: state.lit.desc
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5253301477896193
+    m_Key: state.risen
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5253301477896194
+    m_Key: state.risen.desc
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5253301477896195
+    m_Key: state.coffin
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5253301477896196
+    m_Key: state.coffin.desc
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5253301477896197
+    m_Key: state.guard
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5253301477896198
+    m_Key: state.hold
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5253301477896199
+    m_Key: state.traps
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5253301477896200
+    m_Key: state.traps.desc
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5253301477896201
+    m_Key: detail.trait.minion
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5253301477896202
+    m_Key: detail.trait.minion.desc
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5253301477896203
+    m_Key: detail.trait.turn
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5253301477896204
+    m_Key: detail.trait.turn.desc
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5253301477896205
+    m_Key: detail.trait.ranged
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5253301477896206
+    m_Key: detail.trait.ranged.desc
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5253301477896207
+    m_Key: detail.trait.coffin
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5253301477896208
+    m_Key: detail.trait.coffin.desc
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5253301477896209
+    m_Key: detail.trait.feed
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5253301477896210
+    m_Key: detail.trait.feed.desc
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5253301477896211
+    m_Key: detail.trait.origin
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5253301477896212
+    m_Key: detail.trait.origin.desc
+    m_Metadata:
+      m_Items: []
   m_Metadata:
     m_Items: []
   m_KeyGenerator:

@@ -156,6 +156,7 @@ MonoBehaviour:
   menuDocument: {fileID: 9197481963319205126, guid: 46e03175423c83e4bba6477d946c72a4, type: 3}
   campDocument: {fileID: 9197481963319205126, guid: d3a9163a77c4a264288e1098ae44e471, type: 3}
   battleDocument: {fileID: 9197481963319205126, guid: c45eb353b19d79241a02c707de870971, type: 3}
+  detailDocument: {fileID: 9197481963319205126, guid: 12d461af0a30a3e42b8d686f08902e45, type: 3}
   mapProps:
   - {fileID: 2688454215405826849, guid: 1ac625c3b27c0f348a524cdd539fd4dd, type: 3}
   - {fileID: 5879195395630746260, guid: 66935891f0cc76c46869337a4d1b7fd5, type: 3}

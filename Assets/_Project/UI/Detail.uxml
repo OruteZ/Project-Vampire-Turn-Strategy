@@ -1,0 +1,10 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements">
+    <Style src="Theme.uss" />
+    <Style src="Detail.uss" />
+    <ui:VisualElement name="detail" class="detail" picking-mode="Ignore">
+        <ui:VisualElement name="veil" class="detail-veil">
+            <ui:VisualElement name="window" class="window detail-window" />
+        </ui:VisualElement>
+        <ui:Label name="tip" class="tip" picking-mode="Ignore" />
+    </ui:VisualElement>
+</ui:UXML>

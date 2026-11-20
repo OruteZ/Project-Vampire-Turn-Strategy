@@ -3,7 +3,7 @@
 ## 경로
 - 기획: docs/design/ui.md, docs/design/art.md
 - 기획서: docs/ui/ (화면별. 장 선택 3 레이어 docs/ui/stage-select.md, 병영 docs/ui/upgrade.md, 설정 창 docs/ui/settings.md, 유닛 상세 창 docs/ui/unit-detail.md), docs/art/ui-style.md (UI 스타일: 색·글꼴·틀·버튼·배치 토큰, 15 고정 크기, 16 화면 배치 원칙), docs/art/ui-references.md (화면별 레이아웃 조사·요소별 레퍼런스), docs/art/campaign-map.md (장 선택 바탕 3D 원정 지도)
-- 코드: Assets/_Project/Scripts/Game/Screens/ (`ToolkitKit.cs` 문서 만들기·버튼·틀·칩·값·툴팁·Synty 프리팹 다시 쌓기·그늘, `Ui.cs` 색 토큰, `Kit.cs` 아이콘 이름, `BattleHud.cs` 전투 화면, `CampFlow.cs`·`CampToolkit.cs`·`CampMarkers.cs` 장 선택·병영, `MenuToolkit.cs`·`MenuFlow.cs` 메인 메뉴, `SettingsToolkit.cs` 설정 창(값은 `Game/GameSettings.cs`), `Fx.cs` 나타남·맥박·번쩍임·검은 화면, `App.cs` 씬 전환). 배치·크기는 Assets/_Project/UI/ 의 UXML·USS (`Theme.uss` 공용, `Menu`·`Camp`·`Battle` 화면별, `Panel.asset` 패널 비율). 원정 지도는 `Game/CampaignMapView.cs` + 배치 표 `Game/CampaignMapLayout.cs`, Camp 씬에 구움 (campaign-map.md 10). 구현 기록 docs/dev/unity-port.md "전투 화면 달과 피"
+- 코드: Assets/_Project/Scripts/Game/Screens/ (`ToolkitKit.cs` 문서 만들기·버튼·틀·칩·값·툴팁·Synty 프리팹 다시 쌓기·그늘, `Ui.cs` 색 토큰, `Kit.cs` 아이콘 이름, `BattleHud.cs` 전투 화면, `CampFlow.cs`·`CampToolkit.cs`·`CampMarkers.cs` 장 선택·병영, `MenuToolkit.cs`·`MenuFlow.cs` 메인 메뉴, `SettingsToolkit.cs` 설정 창(값은 `Game/GameSettings.cs`), `UnitDetail.cs`·`UnitDetailModel.cs` 유닛 상세 창, `Fx.cs` 나타남·맥박·번쩍임·검은 화면, `App.cs` 씬 전환). 배치·크기는 Assets/_Project/UI/ 의 UXML·USS (`Theme.uss` 공용, `Menu`·`Camp`·`Battle`·`Detail` 화면별, `Panel.asset` 패널 비율). 원정 지도는 `Game/CampaignMapView.cs` + 배치 표 `Game/CampaignMapLayout.cs`, Camp 씬에 구움 (campaign-map.md 10). 구현 기록 docs/dev/unity-port.md "전투 화면 달과 피"
 - UI 스프라이트: `ArtCatalog.ui`, 장식 프리팹: `ArtCatalog.uiPrefabs` (이름으로 찾는다). 새 스프라이트는 이 배열에 더하고 `node tools/assets/scan.mjs`
 - 아트: Assets/Synty/InterfaceDarkFantasyMenus, Assets/Synty/InterfaceDarkFantasyHUD, Assets/Synty/InterfaceCore (분류는 art-assets.md)
 - 화면 검사: `tools/ui-audit/sweep.sh`, `Scripts/Editor/UiAudit.cs`, 기록 docs/dev/ui-audit.md
@@ -75,4 +75,6 @@
 - 함정: `BoardView.LateUpdate` 는 `Board` 가 남아 있으면 카메라를 보드에 다시 맞춘다(`Clear()` 뒤에도 남는다). 원정 지도가 카메라를 쓰는 동안 막아야 한다 (campaign-map.md 구현 메모)
 - 함정: UI Toolkit 기본 테마는 Label 을 한 줄(nowrap)로 그린다. 상자 폭보다 긴 글은 줄을 바꾸지 않고 상자 밖으로 나가고, 상자(라벨) 자체는 틀 안에 있어 "틀 밖" 검사에 안 걸린다. 그래서 `white-space: normal` 을 깜빡한 라벨마다 새 문구(조건·설명·경고)가 들어올 때 다시 깨졌다(#129, 정예 증원 카드). `Theme.uss` 의 `Label { white-space: normal }` 이 기본을 줄바꿈으로 바꾼다. "…" 로 자르는 라벨만 `white-space: nowrap` 을 같이 쓴다. 한 줄(row)에 이름과 꼬리표를 같이 두면 긴 꼬리표가 이름을 0 폭까지 밀어낸다. 그런 줄은 `flex-wrap: wrap` (`.unit-head`)
 - 함정: 호버 카드(유닛·증원·시체)는 포인터 밑에서만 생긴다. sweep 은 `8b-arrival`·`8c-enemy` 에서 포인터를 옮겨 띄우고, 카드가 안 뜨면 `no-card` 로 실패한다(검사 안 한 것을 통과로 보이지 않게). 새 호버 카드를 만들면 sweep 단계도 더한다 (docs/dev/ui-audit.md)
+- 함정: 전투 유닛 패널은 호버 층(`Hover`)에 있어 포인터가 보드 칸을 떠나면 사라진다. 호버한 유닛의 패널에 둔 버튼은 마우스로 누를 수 없다(선택한 아군·배치 중 살펴본 유닛의 패널만 남는다). 호버 대상에 거는 기능은 키로도 열리게 한다 (유닛 상세 창의 `I`, #127)
+- 함정: 화면 위에 따로 뜨는 창(유닛 상세 창)은 자기 UIDocument·PanelSettings 사본을 쓴다. 전투 문서의 `PointerOverUi` 는 그 창을 모르므로, 뒤 화면 입력(보드 클릭, 단축키, `BattleCamera` 키)은 `UnitDetail.IsOpen` 을 따로 본다
 - 함정: `FX_*`, `SM_Bld_Base_*` 프리팹은 PolygonDarkFantasy 와 PolygonGeneric 에 같은 이름이 있다. 이름으로 찾을 때 PolygonDarkFantasy 쪽을 쓴다

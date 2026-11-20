@@ -40,7 +40,11 @@ namespace VampireSpawn.Game.Screens
         readonly Dictionary<int, HeadMark> heads = new Dictionary<int, HeadMark>();
         readonly HashSet<VisualElement> blink = new HashSet<VisualElement>();
         VisualElement headLayer, hoverLayer, moonDisk;
-        bool moonPulse;
+        bool moonPulse, infoOn;
+        BattleActions acts;
+
+        // The roster row under the pointer, for the I key (unit-detail.md 2).
+        public string HoverKind { get; private set; }
         // Values and panels of the previous build, so only real changes flash and only new panels slide in (ui-style.md 12).
         Dictionary<string, string> lastValues = new Dictionary<string, string>(), values = new Dictionary<string, string>();
         HashSet<string> lastPanels = new HashSet<string>(), panels = new HashSet<string>();
@@ -118,6 +122,8 @@ namespace VampireSpawn.Game.Screens
         {
             blink.Clear();
             heads.Clear();
+            acts = a;
+            infoOn = !st.EnemyPlaying;
             (lastPanels, panels) = (panels, lastPanels);
             panels.Clear();
             if (st.Deploying(s.Battle)) DeployHover(hoverLayer, s, st, a);
@@ -305,6 +311,9 @@ namespace VampireSpawn.Game.Screens
                 var row = RosterRow(roster, t, k, s.DeployType == k, can, st.Upgrades, () => a.Pick?.Invoke(k));
                 if (i < 9) L(row, (i + 1).ToString(), "key roster-key");
                 row.RegisterCallback<PointerDownEvent>(e => { if (e.button == 1) a.RecallKind?.Invoke(k); });
+                row.RegisterCallback<PointerEnterEvent>(_ => HoverKind = k);
+                row.RegisterCallback<PointerLeaveEvent>(_ => { if (HoverKind == k) HoverKind = null; });
+                InfoBtn(row, art, tip, () => a.DetailKind?.Invoke(k));
             }
             var acts = E(roster, "acts row");
             Btn(acts, Loc.T("battle.recallAll"), a.Clear, BtnKind.Normal);
@@ -499,6 +508,8 @@ namespace VampireSpawn.Game.Screens
             if (warn != null) L(col, warn, "warn", wc);
             if (o.Side == Side.Ally && BattleScreen.Skills(o) is string sk) L(col, sk, "skills");
             Tip(p, BattleScreen.Note(o), 500);
+            var id = o.Id;
+            InfoBtn(p, art, tip, () => acts?.Detail?.Invoke(id), infoOn);
             return p;
         }
 

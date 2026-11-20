@@ -1,3 +1,4 @@
+using System.Linq;
 using UnityEngine;
 using UnityEngine.UIElements;
 using VampireSpawn.Core;
@@ -14,6 +15,7 @@ namespace VampireSpawn.Game.Screens
         CampNav nav;
         CampToolkit ui;
         CampMarkers markers;
+        UnitDetail detail;
         readonly KeyEdges keys = new KeyEdges();
 
         public CampNav Nav => nav;
@@ -31,6 +33,8 @@ namespace VampireSpawn.Game.Screens
             map.Show(Campaign);
             ui = CampToolkit.Build(transform, map.art, In, Send);
             ToolkitKit.Shade(ui.Root.Q("shade"));
+            detail = new UnitDetail(transform, map.art);
+            ui.Detail = ShowDetail;
             markers = CampMarkers.Build(transform, ui.Root.Q("markers"), map.art, map, i => Send(CampInput.Pick(i, Time.unscaledTime)));
             Redraw(true);
             Fx.FadeIn(ui.Root);
@@ -83,12 +87,40 @@ namespace VampireSpawn.Game.Screens
 
         bool PointerOverUi() => ToolkitKit.PointerOverUi(ui?.Doc);
 
+        // unit-detail.md 2, 12: from the stage roster the arrows walk that stage's units; from the barracks they walk the shown tabs and move the tab along.
+        public void ShowDetail(string kind)
+        {
+            if (kind == null || nav.BuyArmed != null) return;
+            var owned = Campaign.Upgrades;
+            if (nav.Layer == CampLayer.Info)
+            {
+                var units = Campaign.Stages[nav.Stage].Units;
+                var at = System.Array.IndexOf(units, kind);
+                if (at >= 0) detail.Browse(units, at, k => DetailModel.OfType(k, owned));
+            }
+            else if (nav.Layer == CampLayer.Barracks)
+            {
+                var tabs = Enumerable.Range(0, GameData.Types.Length).Where(i => CampNav.TabOf(Campaign, GameData.Types[i].Key) != TabState.Hidden).ToList();
+                var at = tabs.FindIndex(i => GameData.Types[i].Key == kind);
+                if (at >= 0) detail.Browse(tabs.Select(i => GameData.Types[i].Key).ToList(), at, k => DetailModel.OfType(k, owned), n => Send(CampInput.Tab(tabs[n], Time.unscaledTime)));
+            }
+        }
+
         // stage-select.md 5-2 keys, the 2.5 s confirm expiry, and a click on bare map (5-1) all go through CampNav.
         void Update()
         {
             if (ui == null) return;
-            if (nav.Armed != CampConfirm.None) Send(In(CampKey.Tick));
             var kb = UnityEngine.InputSystem.Keyboard.current;
+            var info = kb != null && keys.Pressed("i", kb.iKey.isPressed);
+            if (UnitDetail.IsOpen)
+            {
+                if (kb == null) return;
+                if (info || keys.Pressed("esc", kb.escapeKey.isPressed)) detail.Close();
+                else detail.Step((keys.Pressed("right", kb.rightArrowKey.isPressed) ? 1 : 0) - (keys.Pressed("left", kb.leftArrowKey.isPressed) ? 1 : 0));
+                return;
+            }
+            if (info) ShowDetail(nav.Layer == CampLayer.Barracks ? GameData.Types[Mathf.Clamp(nav.Tab, 0, GameData.Types.Length - 1)].Key : PointerOverUi() ? ui.HoverKind : null);
+            if (nav.Armed != CampConfirm.None) Send(In(CampKey.Tick));
             var mouse = UnityEngine.InputSystem.Mouse.current;
             if (mouse != null && keys.Pressed("click", mouse.leftButton.isPressed) && !PointerOverUi()) Send(In(CampKey.EmptyMap));
             if (kb == null) return;

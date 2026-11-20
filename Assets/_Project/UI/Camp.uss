@@ -68,7 +68,7 @@
 .chip.on .chip-frame { border-width: 2px; border-color: rgba(143, 176, 204, 0.4); }
 .bk-unit { position: absolute; left: 32px; top: 188px; width: 496px; height: 40px; flex-direction: row; align-items: center; }
 .bk-unit-icon { width: 40px; height: 40px; margin-right: 12px; }
-.bk-unit-name { font-size: 20px; color: var(--bone); width: 300px; }
+.bk-unit-name { font-size: 20px; color: var(--bone); max-width: 256px; margin-right: 8px; }
 .bk-cost { flex-grow: 1; flex-direction: row; justify-content: flex-end; align-items: center; }
 .bk-cost > .value { margin-left: 14px; }
 .bk-cost .value-text { font-size: 18px; }

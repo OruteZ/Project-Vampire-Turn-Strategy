@@ -70,6 +70,7 @@ namespace VampireSpawn.Game
         public UnityEngine.UIElements.VisualTreeAsset menuDocument;
         [Tooltip("장 선택 (docs/ui/stage-select.md 10)")] public UnityEngine.UIElements.VisualTreeAsset campDocument;
         [Tooltip("전투 화면 (docs/ui/battle-hud.md)")] public UnityEngine.UIElements.VisualTreeAsset battleDocument;
+        [Tooltip("유닛 상세 창 (docs/ui/unit-detail.md)")] public UnityEngine.UIElements.VisualTreeAsset detailDocument;
 
         public Sprite Ui(string name) => System.Array.Find(ui ?? System.Array.Empty<Sprite>(), s => s != null && s.name == name);
 

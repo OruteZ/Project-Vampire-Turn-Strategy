@@ -167,6 +167,19 @@ namespace VampireSpawn.Game.Screens
             return b;
         }
 
+        // unit-detail.md 2-1: opens the unit detail window. The click stops here, so the row or panel under it is not pressed too.
+        public static VisualElement InfoBtn(VisualElement parent, ArtCatalog art, Label tip, Action open, bool enabled = true)
+        {
+            var b = E(parent, "info-btn", true);
+            Picture(E(b, "icon"), art.Ui(Kit.Icon.Rules));
+            L(b, "I", "key");
+            b.EnableInClassList("disabled", !enabled);
+            UiSound.Add(b);
+            b.RegisterCallback<ClickEvent>(e => { e.StopPropagation(); if (enabled) open?.Invoke(); });
+            Tip(b, Loc.T("detail.open"), tip, 300);
+            return b;
+        }
+
         public static void Click(VisualElement b, Action click, bool enabled = true)
         {
             b.EnableInClassList("disabled", !enabled);
@@ -201,13 +214,13 @@ namespace VampireSpawn.Game.Screens
         }
 
         // frame.tip: shown above the owner after the pointer rests; kept on screen.
-        public static void Tip(VisualElement owner, string text, Label tip, long delayMs = 600)
+        public static void Tip(VisualElement owner, string text, Label tip, long delayMs = 600, bool below = false)
         {
-            if (!string.IsNullOrEmpty(text)) Tip(owner, () => text, tip, delayMs);
+            if (!string.IsNullOrEmpty(text)) Tip(owner, () => text, tip, delayMs, below);
         }
 
         // text is read when the tip opens, so a screen that refills in place can change it without binding again.
-        public static void Tip(VisualElement owner, Func<string> text, Label tip, long delayMs = 600)
+        public static void Tip(VisualElement owner, Func<string> text, Label tip, long delayMs = 600, bool below = false)
         {
             if (tip == null) return;
             if (owner.pickingMode == PickingMode.Ignore) owner.pickingMode = PickingMode.Position;
@@ -225,7 +238,7 @@ namespace VampireSpawn.Game.Screens
                     var local = tip.parent.WorldToLocal(new Vector2(b.xMin, b.yMin));
                     var room = tip.parent.contentRect;
                     tip.style.left = Mathf.Clamp(local.x, 8f, Mathf.Max(8f, room.width - 440f));
-                    tip.style.top = local.y > 60f ? local.y - 44f : local.y + b.height + 8f;
+                    tip.style.top = !below && local.y > 60f ? local.y - 44f : local.y + b.height + 8f;
                 }).StartingIn(delayMs);
             });
             owner.RegisterCallback<PointerLeaveEvent>(_ => { pending?.Pause(); tip.style.display = DisplayStyle.None; });

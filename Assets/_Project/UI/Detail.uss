@@ -1,0 +1,77 @@
+/* docs/ui/unit-detail.md: one fixed 960x680 window on the shared 1920x1080 panel, the same in every screen. */
+.detail { flex-grow: 1; }
+.detail-veil { position: absolute; left: 0; top: 0; right: 0; bottom: 0; background-color: rgba(18, 19, 26, 0.6); display: none; }
+.detail.open .detail-veil { display: flex; }
+.detail-window {
+    position: absolute; left: 50%; top: 50%; width: 960px; height: 680px; margin-left: -480px; margin-top: -340px; -unity-slice-scale: 0.111px;
+    /* The frame background sprite is see-through on its own; text this long needs a solid sheet under it. */
+    background-color: rgba(18, 19, 26, 0.88);
+    transition-property: opacity, translate; transition-duration: 0.15s; transition-timing-function: ease-out-cubic;
+}
+.detail-window.enter { opacity: 0; translate: 0 8px; }
+/* Two classes beat this reset; a rule that sets a label's own padding or margin below says .detail first (docs/areas/ui.md). */
+.detail Label { padding: 0; margin: 0; }
+.detail .tip { max-width: 320px; font-size: 14px; padding: 8px 10px; }
+
+.overhang { position: absolute; left: 0; top: 0; right: 0; bottom: 0; }
+.spike { position: absolute; top: -10px; width: 32px; height: 32px; }
+.spike.left { left: -10px; }
+.spike.right { right: -10px; }
+
+/* ---------- head (unit-detail.md 4) ---------- */
+.detail-portrait { position: absolute; left: 32px; top: 32px; width: 72px; height: 72px; background-color: rgba(15, 16, 22, 0.92); border-width: 1px; justify-content: center; align-items: center; }
+.detail-portrait > .icon { width: 52px; height: 52px; }
+.detail-name { position: absolute; left: 120px; top: 48px; width: 440px; height: 40px; font-size: 32px; color: var(--bone); -unity-text-align: middle-left; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.detail-role { position: absolute; right: 92px; top: 52px; height: 32px; flex-direction: row; align-items: center; }
+.detail-role-text { font-size: 14px; }
+.detail-role > .value { margin-left: 18px; }
+.detail-role .value-icon { width: 22px; height: 22px; }
+.detail-close { position: absolute; left: 888px; top: 16px; width: 40px; height: 40px; }
+.detail-close > .icon { left: 10px; top: 10px; right: 10px; bottom: 10px; }
+.detail-close > .key { right: -2px; bottom: -14px; }
+.detail-break { position: absolute; left: 32px; top: 112px; width: 896px; height: 24px; }
+
+/* ---------- columns ---------- */
+.detail-col { position: absolute; top: 148px; height: 468px; }
+.detail-left { left: 32px; width: 336px; }
+.detail-right { left: 396px; width: 532px; }
+.detail-sec { margin-bottom: 20px; flex-shrink: 0; }
+.detail .detail-sec-title { font-size: 14px; -unity-font-style: bold; color: var(--dim); border-bottom-width: 1px; border-color: var(--line); padding-bottom: 5px; margin-bottom: 8px; }
+
+.detail-stat { flex-direction: row; align-items: center; height: 34px; }
+.detail-stat > .icon { width: 24px; height: 24px; margin-right: 8px; }
+.detail-stat-label { width: 118px; font-size: 16px; color: var(--muted); }
+.detail-stat-value { font-size: 20px; -unity-font-style: bold; color: var(--bone); }
+
+/* unit-detail.md 7: a state is a term chip; its description is the tooltip. */
+.detail-chips { flex-direction: row; flex-wrap: wrap; }
+.detail-chip { flex-direction: row; align-items: center; height: 28px; padding: 0 10px; margin: 0 8px 8px 0; background-color: rgba(15, 16, 22, 0.92); border-width: 1px; }
+.detail-chip-dot { width: 8px; height: 8px; border-radius: 4px; margin-right: 7px; }
+.detail-chip-text { font-size: 14px; -unity-font-style: bold; }
+
+.detail-spawn { flex-direction: row; align-items: center; height: 48px; padding: 0 12px; background-color: rgba(15, 16, 22, 0.92); border-left-width: 3px; border-left-color: #a650c4; }
+.detail-spawn > .value { margin-right: 14px; }
+.detail-spawn .value-icon { width: 18px; height: 18px; }
+
+.detail-skill { flex-direction: row; margin-bottom: 14px; flex-shrink: 0; }
+.detail-skill-icon { width: 40px; height: 40px; margin-right: 12px; flex-shrink: 0; background-color: rgba(15, 16, 22, 0.92); justify-content: center; align-items: center; }
+.detail-skill-icon > .icon { width: 28px; height: 28px; }
+.detail-skill-body { flex-grow: 1; width: 0; }
+.detail-skill-head { flex-direction: row; align-items: center; height: 24px; margin-bottom: 2px; }
+.detail-skill-name { flex-grow: 1; font-size: 17px; -unity-font-style: bold; color: var(--bone); }
+.detail-skill-tag { font-size: 14px; color: var(--dim); }
+.detail .detail-skill-key { height: 20px; padding: 0 6px; margin-right: 8px; font-size: 12px; color: var(--muted); background-color: rgba(15, 16, 22, 0.85); border-width: 1px; border-color: var(--line); -unity-text-align: middle-center; }
+.detail-skill-desc { font-size: 16px; color: var(--muted); white-space: normal; }
+.detail-none { font-size: 14px; color: var(--dim); }
+
+.detail-up { flex-direction: row; align-items: center; min-height: 34px; flex-shrink: 0; }
+.detail .detail-up-mark { width: 20px; height: 20px; margin-right: 8px; font-size: 16px; color: var(--candle); -unity-text-align: middle-center; }
+.detail-up-ring { width: 14px; height: 14px; margin: 0 11px 0 3px; border-width: 1px; border-color: var(--line); border-radius: 7px; }
+.detail-up-name { width: 130px; font-size: 16px; -unity-font-style: bold; color: var(--bone); }
+.detail-up-effect { flex-grow: 1; width: 0; font-size: 14px; color: var(--muted); white-space: normal; }
+.detail-up-fang { width: 18px; height: 18px; margin-left: 8px; }
+.detail-up.off .detail-up-name { color: var(--dim); -unity-font-style: normal; }
+.detail-up.off .detail-up-effect { color: var(--dim); }
+
+.detail-foot { position: absolute; left: 32px; top: 634px; width: 896px; height: 24px; flex-direction: row; justify-content: space-between; align-items: center; }
+.detail-foot > Label { font-size: 14px; color: var(--dim); }

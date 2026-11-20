@@ -2558,6 +2558,326 @@ MonoBehaviour:
     m_Localized: Point-blank
     m_Metadata:
       m_Items: []
+  - m_Id: 5253301431758848
+    m_Localized: Details (I)
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5253301473701888
+    m_Localized: "I \xB7 Esc to close"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5253301473701889
+    m_Localized: "\u2190 \u2192 Other units"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5253301473701890
+    m_Localized: Stats
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5253301473701891
+    m_Localized: Right Now
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5253301473701892
+    m_Localized: If It Rises
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5253301473701893
+    m_Localized: Skills
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5253301473701894
+    m_Localized: Upgrades
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5253301473701895
+    m_Localized: Traits
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5253301473701896
+    m_Localized: Base {0}
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 5253301473701897
+    m_Localized: vs Vampires & Spawn
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5253301473701898
+    m_Localized: Killed by a vampire or spawn, it rises with these stats. Skills
+      are lost.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5253301473701899
+    m_Localized: No skills
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5253301473701900
+    m_Localized: Action
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5253301473701901
+    m_Localized: Passive
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5253301473701902
+    m_Localized: Innate
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5253301473701903
+    m_Localized: Upgrade
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5253301473701904
+    m_Localized: Fodder
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5253301473701905
+    m_Localized: Cheap Ranged
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5253301473701906
+    m_Localized: Striker
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5253301473701907
+    m_Localized: Ranged
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5253301473701908
+    m_Localized: Tank
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5253301473701909
+    m_Localized: Vampire Slayer
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5253301473701910
+    m_Localized: Corpse Warden
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5253301473701911
+    m_Localized: Healer
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5253301473701912
+    m_Localized: Scout
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5253301473701913
+    m_Localized: Taunt
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5253301473701914
+    m_Localized: Any enemy able to attack this unit attacks <b>only this unit</b>,
+      melee or ranged. Does not change the full moon's prey.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5253301473701915
+    m_Localized: When an enemy ends its move <b>next to</b> this unit, it takes <b>1</b>
+      damage (ignores DEF). Each unit with Pike Wall triggers separately.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5253301473701916
+    m_Localized: DEF <b>+1</b> when attacked while <b>next to another Peasant Spearman</b>.
+      Does not stack. No effect against the full moon's bite.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5253301473701917
+    m_Localized: <b>+1</b> damage when attacking <b>without moving</b> this turn.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5253301473701918
+    m_Localized: After killing an enemy with an attack, <b>act once more</b> (no
+      movement). Once per turn.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5253301473701919
+    m_Localized: <b>+2</b> damage when attacking after moving <b>2 or more hexes</b>
+      this turn.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5253301473701920
+    m_Localized: <b>Never chosen as the full moon's prey.</b> Other attacks hit as
+      usual.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5253301473701921
+    m_Localized: Remove one <b>body within {0} hexes</b>. It will not rise. Uses
+      the action.
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 5253301473701922
+    m_Localized: Each burial <b>lowers the Moon by 1</b>. If that breaks the full
+      moon, its prey is released.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5253301473701923
+    m_Localized: After burying, <b>act once more</b> (attack or bury, no movement).
+      Once per turn.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5253301473701924
+    m_Localized: Restore <b>{1}</b> HP to one <b>other wounded ally within {0} hexes</b>.
+      Cannot target self. Uses the action.
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 5253301473701925
+    m_Localized: On hit, <b>every other enemy next to the target</b> takes <b>1</b>
+      damage (ignores DEF). Allies and bodies are not hit.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5253301473701926
+    m_Localized: Lay a trap on an <b>adjacent empty hex</b>. An enemy stepping on
+      it stops, takes <b>{0}</b> damage, and cannot move or attack for that phase.
+      <b>{1}</b> per battle, never refilled. Enemies cannot see traps. Uses the action.
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 5253301473701927
+    m_Localized: Trap damage <b>+{0}</b>.
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 5253301473701928
+    m_Localized: Lay up to <b>{0}</b> traps per battle.
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 5253301473701929
+    m_Localized: 'While the Moon is high it turns wolf: more ATK and MOV.'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5253301473701930
+    m_Localized: Regains HP on a kill.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5253301473701931
+    m_Localized: Turns wolf at a lower Moon.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5253301473701932
+    m_Localized: Moon's Prey
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5253301473701933
+    m_Localized: Next enemy phase the vampire drains and kills it. It escapes by
+      standing on a lit hex or more than {0} hexes from the vampire.
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 5253301473701934
+    m_Localized: Safe for Now
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5253301473701935
+    m_Localized: Staying where it is, it escapes this bite.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5253301473701936
+    m_Localized: In the Light
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5253301477896192
+    m_Localized: Cannot be chosen as prey. If it falls here it leaves no body and
+      does not rise.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5253301477896193
+    m_Localized: Just Risen
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5253301477896194
+    m_Localized: A spawn that rose from a body this enemy phase.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5253301477896195
+    m_Localized: In the Coffin
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5253301477896196
+    m_Localized: Asleep and cannot be attacked. Wakes on an enemy phase that begins
+      with the Moon at {0}.
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 5253301477896197
+    m_Localized: On Guard {0}
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 5253301477896198
+    m_Localized: Holding
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5253301477896199
+    m_Localized: Traps {0}/{1}
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 5253301477896200
+    m_Localized: Traps it can still lay this battle. Never refilled.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5253301477896201
+    m_Localized: Minion
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5253301477896202
+    m_Localized: Allies it kills <b>do not rise.</b> Takes no extra damage from silver.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5253301477896203
+    m_Localized: Turning
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5253301477896204
+    m_Localized: Allies it kills leave a body that <b>rises as spawn next enemy phase</b>,
+      unless they fall on a lit hex. Takes extra damage from silver.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5253301477896205
+    m_Localized: Ranged
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5253301477896206
+    m_Localized: Shoots within <b>{0} hexes</b>. Half damage at point-blank. Cannot
+      shoot past rocks.
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 5253301477896207
+    m_Localized: Coffin
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5253301477896208
+    m_Localized: Wakes on an enemy phase that begins with the Moon at <b>{0}</b>,
+      or once no other enemy remains. Cannot be attacked while asleep; does not act
+      on the phase it wakes.
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 5253301477896209
+    m_Localized: Full Moon Feeding
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5253301477896210
+    m_Localized: At Moon <b>{0}</b> it marks one unlit ally within <b>{1} hexes</b>
+      and drains it next enemy phase, restoring <b>{2}</b> HP.
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 5253301477896211
+    m_Localized: Inherited Body
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5253301477896212
+    m_Localized: Inherited HP, ATK and MOV from <b>{0}</b>. DEF 0, melee only.
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
   references:
     version: 2
     RefIds:
@@ -2884,3 +3204,17 @@ MonoBehaviour:
         - id: 1604117986078732
         - id: 1604117986078733
         - id: 1604117986078734
+        - id: 5253301473701896
+        - id: 5253301473701921
+        - id: 5253301473701924
+        - id: 5253301473701926
+        - id: 5253301473701927
+        - id: 5253301473701928
+        - id: 5253301473701933
+        - id: 5253301477896196
+        - id: 5253301477896197
+        - id: 5253301477896199
+        - id: 5253301477896206
+        - id: 5253301477896208
+        - id: 5253301477896210
+        - id: 5253301477896212

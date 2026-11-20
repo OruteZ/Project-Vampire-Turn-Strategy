@@ -21,6 +21,11 @@ namespace VampireSpawn.Game.Screens
 
         public VisualElement Root => root;
 
+        // unit-detail.md 2: a unit type asked for from the stage roster or the barracks; HoverKind is the roster chip under the pointer.
+        public Action<string> Detail;
+        public string HoverKind { get; private set; }
+        string barracksKind;
+
         CampToolkit(UIDocument doc, ArtCatalog art, Action<CampInput> send)
         {
             Doc = doc;
@@ -51,6 +56,11 @@ namespace VampireSpawn.Game.Screens
             ToolkitKit.Prefab(r.Q("info-break"), art.UiPrefab(Break), Ui.Line);
             ToolkitKit.Prefab(r.Q("bk-break"), art.UiPrefab(Break), Ui.Line);
             ToolkitKit.Picture(r.Q(className: "bk-icon"), art.Ui(Kit.Icon.Up), Ui.Steel);
+            var info = r.Q("bk-info");
+            ToolkitKit.Picture(info.Q(className: "icon"), art.Ui(Kit.Icon.Rules));
+            UiSound.Add(info);
+            info.RegisterCallback<ClickEvent>(_ => { if (!info.ClassListContains("disabled")) ui.Detail?.Invoke(ui.barracksKind); });
+            ToolkitKit.Tip(info, Loc.T("detail.open"), ui.tip, 300);
             ToolkitKit.Frame(r.Q("buy-box"), art, Ui.Steel);
             ui.Wire(r.Q("buy-cancel"), BtnKind.Normal, () => send(input(CampKey.Close)));
             ui.Wire(r.Q("buy-ok"), BtnKind.Primary, () => send(input(CampKey.Enter)));
@@ -169,12 +179,17 @@ namespace VampireSpawn.Game.Screens
 
             var roster = panel.Q("info-roster");
             roster.Clear();
+            HoverKind = null;
             foreach (var k in s.Units)
             {
                 var t = GameData.Type(k);
                 var isNew = t.UnlockAt == i + 1;
                 var chip = ToolkitKit.Chip(roster, art, isNew ? Ui.Candle : Ui.SteelDim, art.Ui(art.Icon(k)), isNew ? Ui.Candle : Ui.Steel);
                 SetTip(chip, isNew ? Loc.T("camp.new", t.Name) : Loc.Text(t.Name));
+                UiSound.Add(chip);
+                chip.RegisterCallback<ClickEvent>(_ => Detail?.Invoke(k));
+                chip.RegisterCallback<PointerEnterEvent>(_ => HoverKind = k);
+                chip.RegisterCallback<PointerLeaveEvent>(_ => { if (HoverKind == k) HoverKind = null; });
             }
 
             var march = panel.Q("info-march");
@@ -216,6 +231,8 @@ namespace VampireSpawn.Game.Screens
             var sel = Mathf.Clamp(nav.Tab, 0, types.Length - 1);
             var kind = types[sel].Key;
             var tabState = CampNav.TabOf(c, kind);
+            barracksKind = tabState == TabState.Hidden ? null : kind;
+            panel.Q("bk-info").EnableInClassList("disabled", barracksKind == null);
             var unit = panel.Q("bk-unit");
             ToolkitKit.Picture(unit.Q(className: "bk-unit-icon"), art.Ui(art.Icon(kind)), Ui.Steel);
             unit.Q<Label>().text = Loc.Text(types[sel].Name);

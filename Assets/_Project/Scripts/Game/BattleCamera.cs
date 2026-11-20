@@ -293,7 +293,7 @@ namespace VampireSpawn.Game
         {
             var dt = Time.unscaledDeltaTime;
             var kb = Keyboard.current;
-            if (kb != null)
+            if (kb != null && !Screens.UnitDetail.IsOpen)
             {
                 if (kb.rKey.isPressed)
                 {

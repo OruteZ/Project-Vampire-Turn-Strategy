@@ -25,19 +25,23 @@ declare -A SCREENS=(
   [2c-camp-l2-s8]="$APP VampireSpawn.Game.Screens.App.GoCamp(camp(new[]{ $PICK(7, 0f) })); return 1;"
   [2d-camp-l2-s10]="$APP VampireSpawn.Game.Screens.App.GoCamp(camp(new[]{ $PICK(9, 0f) })); return 1;"
   [2e-camp-l3]="$APP VampireSpawn.Game.Screens.App.GoCamp(camp(new[]{ $PICK(0, 0f), VampireSpawn.Core.CampInput.Of(VampireSpawn.Core.CampKey.Barracks, 0f) })); return 1;"
+  [2e2-detail-kind]="UnityEngine.Object.FindFirstObjectByType<VampireSpawn.Game.Screens.CampFlow>().ShowDetail(VampireSpawn.Core.GameData.Types[0].Key); return 1;"
   [2f-camp-l3-buy]="$APP VampireSpawn.Game.Screens.App.GoCamp(camp(new[]{ $PICK(0, 0f), VampireSpawn.Core.CampInput.Of(VampireSpawn.Core.CampKey.Barracks, 0f), VampireSpawn.Core.CampInput.Buy(VampireSpawn.Core.GameData.Upgrades[0].Id, 0f) })); return 1;"
   [3-deploy]="VampireSpawn.Game.Screens.App.GoBattle(VampireSpawn.Core.Campaign.Stages[0], false); return 1;"
   [4-turn]="$BF bf.input.Run(s=>s.UseSample()); bf.input.Run(s=>s.Start()); var u=System.Linq.Enumerable.First(bf.input.Session.Battle.Allies); bf.input.Run(s=>s.Click(u.Pos)); return 1;"
-  [5-rules]="$BF T.GetField(\"rulesOpen\",F).SetValue(bf,true); T.GetMethod(\"RenderBattle\",F).Invoke(bf,null); return 1;"
+  [4b-detail-ally]="$BF bf.ShowDetail(bf.input.Session.SelectedUnit.Id); return 1;"
+  [5-rules]="$BF ((VampireSpawn.Game.Screens.UnitDetail)T.GetField(\"detail\",F).GetValue(bf)).Close(); T.GetField(\"rulesOpen\",F).SetValue(bf,true); T.GetMethod(\"RenderBattle\",F).Invoke(bf,null); return 1;"
   [6-log]="$BF T.GetField(\"rulesOpen\",F).SetValue(bf,false); T.GetField(\"logOpen\",F).SetValue(bf,true); T.GetMethod(\"RenderBattle\",F).Invoke(bf,null); return 1;"
   [8a-wave]="$WAVE var best = System.Linq.Enumerable.First(System.Linq.Enumerable.OrderByDescending(VampireSpawn.Core.Campaign.Stages, st => System.Linq.Enumerable.Max(System.Linq.Enumerable.Append(System.Linq.Enumerable.Select(st.Enemies, p => W(st, p)), -1)))); VampireSpawn.Game.Screens.App.GoBattle(best, false); return 1;"
   [8b-arrival]="$BF $WAVE var b = bf.input.Session.Battle; if (b.Phase == VampireSpawn.Core.Phase.Deploy) { bf.input.Run(s=>s.UseSample()); bf.input.Run(s=>s.Start()); } var p = System.Linq.Enumerable.First(System.Linq.Enumerable.OrderByDescending(b.Pending, x => W(b.Stage, x))); return VampireSpawn.Editor.UiAudit.HexOnScreen(p.Col, p.Row);"
   [8c-enemy]="$BF var u = System.Linq.Enumerable.First(System.Linq.Enumerable.OrderByDescending(System.Linq.Enumerable.Where(bf.input.Session.Battle.Units, x => x.Side == VampireSpawn.Core.Side.Enemy), x => x.Stance == VampireSpawn.Core.Stance.Guard ? 1 : 0)); return VampireSpawn.Editor.UiAudit.HexOnScreen(u.Pos.Col, u.Pos.Row);"
+  [8d-detail-enemy]="$BF var b = bf.input.Session.Battle; bf.ShowDetail((b.Vampire ?? System.Linq.Enumerable.First(b.Enemies)).Id); return 1;"
   [7-over]="$BF T.GetField(\"logOpen\",F).SetValue(bf,false); T.GetMethod(\"Finish\",F).Invoke(bf,null); return 1;"
 )
 # Hover cards exist only under the pointer: these steps return "move x y", the sweep moves the pointer there and checks the card appeared.
 # A resize lands a frame or more late, so a hover can miss; these steps are safe to rerun and get 3 tries.
-declare -A EXPECT=([8b-arrival]="Arrival " [8c-enemy]="Panel ")
+# The detail window steps (docs/ui/unit-detail.md) must show the window, or they checked the screen behind it.
+declare -A EXPECT=([8b-arrival]="Arrival " [8c-enemy]="Panel " [2e2-detail-kind]="Detail " [4b-detail-ally]="Detail " [8d-detail-enemy]="Detail ")
 SIZES="${SIZES:-1920x1080 1280x720 1920x1200 1440x1080 1280x1024 2560x1080}"
 
 bash "$V" play >/dev/null || exit 1

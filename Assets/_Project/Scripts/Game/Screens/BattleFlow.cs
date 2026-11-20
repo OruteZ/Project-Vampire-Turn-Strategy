@@ -29,6 +29,7 @@ namespace VampireSpawn.Game.Screens
         UIDocument doc;
         VisualElement overRoot, hudRoot;
         BattleHud hud;
+        UnitDetail detail;
         int? hoverId, hoverCorpse;
         Hex? hoverArrival;
         Label banner;
@@ -52,6 +53,7 @@ namespace VampireSpawn.Game.Screens
             hudRoot = root.Q("hud");
             overRoot = root.Q("over");
             hud = new BattleHud(View.board.art, root.Q<Label>("tip"));
+            detail = new UnitDetail(transform, View.board.art);
             if (viewCamera != null)
             {
                 viewCamera.clearFlags = CameraClearFlags.SolidColor;
@@ -59,7 +61,7 @@ namespace VampireSpawn.Game.Screens
             }
             input.Changed += OnBattleChanged;
             View.Played += OnPlayed;
-            input.PointerBlocked = () => ToolkitKit.PointerOverUi(doc);
+            input.PointerBlocked = () => UnitDetail.IsOpen || ToolkitKit.PointerOverUi(doc);
             input.EscapeFirst = CloseBattlePopup;
             actions = new BattleActions
             {
@@ -81,6 +83,8 @@ namespace VampireSpawn.Game.Screens
                 Redeploy = () => StartBattle(stage, Session.Battle.StartFormation, false),
                 ToCamp = () => App.GoCamp(Back()),
                 CloseOver = () => overRoot.RemoveFromClassList("shown"),
+                Detail = ShowDetail,
+                DetailKind = ShowDetailOf,
             };
             demo = App.BattleStage == null || App.Demo;
             StartBattle(App.BattleStage ?? GameData.Stages[0], App.Formation, App.StartNow);
@@ -146,13 +150,42 @@ namespace VampireSpawn.Game.Screens
                 Alt = altDown, EnemyPlaying = enemyPlaying, LeaveArmed = leaveArm, RulesOpen = rulesOpen, LogOpen = logOpen, Demo = demo,
                 FullMoon = fullMoon, MoonFading = moonFading,
                 EatTarget = enemyPlaying ? eatBefore : b.EatTarget,
-                Upgrades = (demo ? App.DemoUpgrades : Campaign.Upgrades) ?? Enumerable.Empty<string>(),
+                Upgrades = Upgrades,
             };
+        }
+
+        IEnumerable<string> Upgrades => (demo ? App.DemoUpgrades : Campaign.Upgrades) ?? Enumerable.Empty<string>();
+
+        // unit-detail.md 2-3: only while the player can act, and not over another window.
+        bool DetailAllowed => !View.IsBusy && !enemyPlaying && !OverShown && !rulesOpen && (Session.Battle.Phase == Phase.Deploy || Session.Battle.Phase == Phase.Player);
+
+        public void ShowDetail(int unitId)
+        {
+            var u = Session.Battle.Find(unitId);
+            if (u != null && DetailAllowed) detail.Show(DetailModel.Of(Session.Battle, u, Upgrades));
+        }
+
+        public void ShowDetailOf(string kind)
+        {
+            var kinds = Session.Battle.Stage.Units;
+            var at = System.Array.IndexOf(kinds, kind);
+            if (at >= 0 && DetailAllowed) detail.Browse(kinds, at, k => DetailModel.OfType(k, Upgrades));
+        }
+
+        // The I key: the roster row or unit under the pointer, else the selected or inspected unit, else the picked unit type.
+        void DetailAtPointer()
+        {
+            var deploying = Session.Battle.Phase == Phase.Deploy;
+            if (deploying && hud.HoverKind != null && ToolkitKit.PointerOverUi(doc)) { ShowDetailOf(hud.HoverKind); return; }
+            var id = hoverId ?? Session.SelectedUnit?.Id ?? Session.InspectUnit;
+            if (id is int unit) ShowDetail(unit);
+            else if (deploying && Session.DeployType != null) ShowDetailOf(Session.DeployType);
         }
 
         // battle-hud.md 6: Esc closes a window, then leaves execute or mend mode, and only then drops the selection.
         bool CloseBattlePopup()
         {
+            if (UnitDetail.IsOpen) { detail.Close(); return true; }
             if (rulesOpen || logOpen)
             {
                 rulesOpen = logOpen = false;
@@ -202,6 +235,9 @@ namespace VampireSpawn.Game.Screens
         {
             var kb = UnityEngine.InputSystem.Keyboard.current;
             if (kb == null) return;
+            if (keys.Pressed("i", kb.iKey.isPressed)) { if (UnitDetail.IsOpen) detail.Close(); else DetailAtPointer(); }
+            var step = (keys.Pressed("right", kb.rightArrowKey.isPressed) ? 1 : 0) - (keys.Pressed("left", kb.leftArrowKey.isPressed) ? 1 : 0);
+            if (UnitDetail.IsOpen) { detail.Step(step); return; }
             var digits = new[] { kb.digit1Key, kb.digit2Key, kb.digit3Key, kb.digit4Key, kb.digit5Key, kb.digit6Key, kb.digit7Key, kb.digit8Key, kb.digit9Key };
             var digit = 0;
             for (var i = 0; i < digits.Length; i++) if (keys.Pressed((i + 1).ToString(), digits[i].isPressed)) digit = i + 1;
