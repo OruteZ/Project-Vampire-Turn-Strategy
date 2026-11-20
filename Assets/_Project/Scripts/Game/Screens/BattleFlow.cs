@@ -11,7 +11,7 @@ namespace VampireSpawn.Game.Screens
     public sealed class BattleFlow : MonoBehaviour
     {
         public BoardInput input;
-        [Tooltip("게임이 쓰는 데이터. 비었거나 문제가 있으면 HTML 기본값으로 돈다")] public GameDataAsset data;
+        [Tooltip("게임이 쓰는 데이터. 비었거나 문제가 있으면 콘솔에 오류가 뜬다")] public GameDataAsset data;
         public Camera viewCamera;
 
         // Prototype timers: leave confirmation 2500 ms, phase banner 1300 ms.

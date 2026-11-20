@@ -14,7 +14,7 @@ namespace VampireSpawn.Game.Screens
         // Turns the demo shot so the castle and moon sit right of the menu column (main-menu.md 8).
         const float BackdropYaw = -14f;
 
-        [Tooltip("게임이 쓰는 데이터. 비었거나 문제가 있으면 HTML 기본값으로 돈다")] public GameDataAsset data;
+        [Tooltip("게임이 쓰는 데이터. 비었거나 문제가 있으면 콘솔에 오류가 뜬다")] public GameDataAsset data;
         public BoardView board;
         public Camera viewCamera;
 

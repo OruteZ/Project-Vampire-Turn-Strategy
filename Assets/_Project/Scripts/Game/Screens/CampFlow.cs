@@ -8,7 +8,7 @@ namespace VampireSpawn.Game.Screens
     // The Camp scene: docs/ui/stage-select.md, three layers over the baked expedition map (docs/art/campaign-map.md).
     public sealed class CampFlow : MonoBehaviour
     {
-        [Tooltip("게임이 쓰는 데이터. 비었거나 문제가 있으면 HTML 기본값으로 돈다")] public GameDataAsset data;
+        [Tooltip("게임이 쓰는 데이터. 비었거나 문제가 있으면 콘솔에 오류가 뜬다")] public GameDataAsset data;
         public CampaignMapView map;
 
         CampNav nav;
