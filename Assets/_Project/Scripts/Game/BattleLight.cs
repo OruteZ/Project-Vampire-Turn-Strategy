@@ -13,10 +13,40 @@ namespace VampireSpawn.Game
         // From behind and above the camera so unit fronts catch it; the rim comes from across the board.
         static readonly Quaternion MoonAngle = Quaternion.Euler(40f, 20f, 0f), RimAngle = Quaternion.Euler(25f, 200f, 0f);
 
+        // ui-style.md 7-2 "보드 조명": moon.blood scaled to full red so a tint can keep the light's brightness.
+        static readonly Color Blood = Screens.Ui.MoonBlood / Screens.Ui.MoonBlood.maxColorComponent;
+        const float BloodAtFull = 0.6f, BlendSeconds = 0.6f;
+
         BattleView view;
         Light moon, rim, pool;
+        (int Moon, bool Full) played;
+        float blood, from, to, since;
 
         public static Color Night(Color stage) => Color.Lerp(stage, NightBlue, NightShare);
+
+        public static float BloodShare(int moon, int max, bool full)
+        {
+            if (full) return 1f;
+            if (max <= 0) return 0f;
+            var t = Mathf.Clamp01((float)moon / max);
+            return t * t * BloodAtFull;
+        }
+
+        // The model is ahead of the screen during playback (docs/areas/ui.md), so the light counts what has played.
+        public static (int Moon, bool Full) Played((int Moon, bool Full) s, BattleEvent e, int max) => e.Kind switch
+        {
+            BattleEventKind.Died => (System.Math.Min(max, s.Moon + 1), s.Full),
+            BattleEventKind.MoonChanged => (e.Value, s.Full),
+            BattleEventKind.Banner when e.BannerKind == BannerKind.FullMoon => (s.Moon, true),
+            _ => s,
+        };
+
+        public static Color Toward(Color light, float share)
+        {
+            var red = Blood * (light.grayscale / Blood.grayscale);
+            red.a = light.a;
+            return Color.Lerp(light, red, share);
+        }
 
         public void Attach(BattleView battleView)
         {
@@ -32,6 +62,7 @@ namespace VampireSpawn.Game
                 moon.shadows = LightShadows.Soft;
                 moon.transform.rotation = MoonAngle;
             }
+            view.Played += OnPlayed;
             rim = Add("Rim Light", LightType.Directional, RimAngle);
             rim.intensity = RimIntensity;
             pool = Add("Moon Pool", LightType.Spot, MoonAngle);
@@ -62,8 +93,33 @@ namespace VampireSpawn.Game
             pool.spotAngle = 2f * Mathf.Atan(radius / distance) * Mathf.Rad2Deg;
             pool.innerSpotAngle = pool.spotAngle * 0.7f;
             pool.intensity = PoolIntensity * distance * distance / (s * s);
-            if (moon != null) moon.color = pool.color = MoonBlue;
-            rim.color = RimBlue;
+            played = (view.Battle.Moon, false);
+            blood = from = to = Target();
+            Apply();
+        }
+
+        void OnDestroy() { if (view != null) view.Played -= OnPlayed; }
+
+        void OnPlayed(BattleEvent e) => played = Played(played, e, Rules.MoonMax);
+
+        float Target() => view.Battle.Stage.HasBoss ? BloodShare(played.Moon, Rules.MoonMax, played.Full) : 0f;
+
+        void Update()
+        {
+            if (view == null || view.Battle == null || pool == null) return;
+            if (!view.IsBusy) played = (view.Battle.Moon, false);
+            var target = Target();
+            if (!Mathf.Approximately(target, to)) { from = blood; to = target; since = Time.unscaledTime; }
+            blood = Mathf.Lerp(from, to, Mathf.SmoothStep(0f, 1f, (Time.unscaledTime - since) / BlendSeconds));
+            Apply();
+        }
+
+        void Apply()
+        {
+            RenderSettings.ambientLight = Toward(view.board.Ambient, blood);
+            pool.color = Toward(MoonBlue, blood);
+            if (moon != null) moon.color = pool.color;
+            rim.color = Toward(RimBlue, blood);
         }
     }
 }
