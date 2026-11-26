@@ -31,3 +31,7 @@ VU_RUN=<id> bash tools/ui-audit/sweep.sh
 못 하는 것: 툴팁(`.tip`, 호버 지연 뒤 생긴다). 호버 카드는 8b·8c 가 포인터를 옮겨 본다.
 
 #129 (2026-11-16): 증원 카드 설명이 한 줄로 511px 넘치고 이름이 0 폭이 됐는데 sweep 은 통과였다. 호버 카드가 한 번도 화면에 없었고, 이름은 "…" 예외에 가려졌다.
+
+## 밝기 재기 (`tools/ui-audit/luma.py`, #150)
+
+`py -3 -I tools/ui-audit/luma.py <png>... [--box x0,y0,x1,y1]` 은 PNG 마다 회색조 밝기(0~255)의 평균·p50·p90·p99 와 평균 R·G·B 를 탭으로 한 줄씩 낸다. `--box` 는 그림 픽셀 좌표(왼쪽 위가 0,0)로 그 영역만 잰다. 전투 조명(docs/art/battle-terrain.md "전투 조명")의 목표는 sweep 이 찍은 `4-turn-1920x1080.png` 같은 HUD 포함 전체 프레임 값이고, 바닥·화톳불 옆 같은 색 비교는 `--box` 로 그 칸 둘레만 잰다. `--selftest` 는 스스로를 확인한다(Pillow 필요).
