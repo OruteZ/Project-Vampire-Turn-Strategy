@@ -2635,6 +2635,10 @@ MonoBehaviour:
     m_Key: card.next
     m_Metadata:
       m_Items: []
+  - m_Id: 7559172950126592
+    m_Key: camp.inheritTag
+    m_Metadata:
+      m_Items: []
   m_Metadata:
     m_Items: []
   m_KeyGenerator:

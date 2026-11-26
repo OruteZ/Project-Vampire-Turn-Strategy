@@ -93,6 +93,10 @@
 .up-name { position: absolute; left: 16px; top: 16px; width: 400px; height: 24px; flex-direction: row; align-items: center; }
 .up-name > Label { font-size: 15px; -unity-font-style: bold; color: var(--bone); padding: 0; margin: 0; }
 .up-fang { width: 18px; height: 18px; margin-right: 6px; }
+/* upgrade.md 5-1 (#150 E3): the spawn strip on the card's left edge and the tag after the name. */
+.up-strip { position: absolute; left: 6px; top: 10px; bottom: 10px; width: 5px; border-radius: 2px; }
+.up-name > .up-tag { font-size: 13px; -unity-font-style: normal; margin-left: 10px; }
+.up-desc.up-change { color: var(--bone); font-size: 15px; }
 .up-owned { position: absolute; left: 456px; top: 16px; width: 24px; height: 24px; font-size: 18px; color: #e3a84b; -unity-text-align: middle-center; padding: 0; margin: 0; }
 .up-desc { position: absolute; left: 16px; top: 48px; width: 464px; height: 40px; font-size: 13px; color: var(--muted); white-space: normal; padding: 0; margin: 0; }
 .up-price { position: absolute; left: 16px; top: 96px; width: 120px; height: 40px; flex-direction: row; align-items: center; }

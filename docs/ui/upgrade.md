@@ -82,10 +82,11 @@ y 는 칸 위 끝에서, x 는 칸 왼쪽 끝에서 잰 px. 안쪽 여백 32.
 
 | 부분 | x | y | 크기 | 내용 |
 |---|---|---|---|---|
-| 이름 | 16 | 16 | 400×24 | 스폰이 물려받는 갈래면 앞에 `Status_Vampiric_01` 18px `spawn`. 이름 `body` Bold `text.1` |
+| 이름 | 16 | 16 | 400×24 | 스폰이 물려받는 갈래면 앞에 `Status_Vampiric_01` 18px `spawn`. 이름 `body` Bold `text.1`. 물려받는 갈래는 이름 뒤에 꼬리표 `camp.inheritTag` "스폰도 강해짐" / "Spawn inherits" `small` `spawn` (#150 보고서 E3) |
+| 스폰 띠 | 6 | 10 | 5×(높이−20) | 물려받는 갈래만. `spawn` 색 세로 띠 (#150 보고서 E3) |
 | 보유 | 456 | 16 | 24×24 | 고른 갈래만: ✓ `light`. 툴팁 `camp.owned` |
-| 효과 | 16 | 48 | 464×40 | 효과 설명 `small` `text.2`, 두 줄까지 줄바꿈 (사기 전에 꼭 봐야 해서 남긴다, ui-style.md 14-1 의 8) |
-| 가격 | 16 | 96 | 120×40 | 고를 수 있거나 금화가 모자란 갈래만. 금화 아이콘 22 `light` + 가격 `num.2` `light` |
+| 효과 | 16 | 48 | 464×40 | 능력치 갈래는 바뀌는 능력치마다 "이름 전 → 후" 를 " · " 로 이어 `body` `text.1` (예: "체력 6 → 9", "방어 1 → 2 · 체력 8 → 10"). 전은 이 갈래를 뺀 지금 강화, 후는 이 갈래를 더한 값. 기술 갈래는 효과 설명 `small` `text.2` 그대로, 두 줄까지 줄바꿈 (사기 전에 꼭 봐야 해서 남긴다, ui-style.md 14-1 의 8. #150 보고서 E3) |
+| 가격 | 16 | 96 | 120×40 | 고를 수 있거나 금화가 모자란 갈래만. 금화 아이콘 22 `light` + 가격 `num.2` `light`, 금화가 모자라면 숫자 `enemy` + 툴팁 `camp.needGold` |
 | 버튼 | 280 | 96 | 200×40 | 아래 4번 |
 
 3. 줄 전체 툴팁: `camp.inherit` / `camp.noInherit` (progression.md 15번 규칙). 잠긴 갈래는 그 뒤에 " · " + `camp.branchLocked`.
@@ -94,8 +95,8 @@ y 는 칸 위 끝에서, x 는 칸 왼쪽 끝에서 잰 px. 안쪽 여백 32.
 | 상태 | 줄 모양 | 버튼 자리 |
 |---|---|---|
 | 잠긴 병종 (탭 "잠김") | 기본 | 버튼 없음. 자물쇠 24px `text.3`, 툴팁 `camp.lockedBy` |
-| 고를 수 있음 (아직 안 고름, 금화 충분) | 기본 | `btn.normal` "강화" (`camp.upgrade`) |
-| 금화가 모자람 (아직 안 고름) | 기본 | `btn.normal` "강화" 비활성. 툴팁 `camp.needGold` ({가진}/{가격}) |
+| 살 수 있음 (아직 안 삼, 금화 충분) | 기본 | `btn.primary` "강화" (`camp.upgrade`), 밝게 (#150 보고서 E3) |
+| 금화가 모자람 (아직 안 삼) | 가격 숫자 `enemy` | `btn.normal` "강화" 비활성. 툴팁 `camp.needGold` ({가진}/{가격}) |
 | **고른 갈래** | 틀에 `light` 60%, 보유 ✓ | 비움 |
 | **잠긴 갈래** (같은 병종의 다른 갈래를 고름) | 이름·효과·송곳니 아이콘을 `text.3` 로, 가격 숨김 | 자물쇠 24px `text.3`. 툴팁 `camp.branchLocked` (고른 갈래 이름) |
 
@@ -128,7 +129,7 @@ y 는 칸 위 끝에서, x 는 칸 왼쪽 끝에서 잰 px. 안쪽 여백 32.
 
 ### 8. 문장
 
-1. 쓰는 키: `camp.barracksName`, `camp.affordable`, `camp.toMap` (stage-select.md 8절), `camp.barracksHelp`, `camp.noUpgrades`, `camp.gold`, `camp.upgrade`, `camp.buyAsk`, `camp.buy`, `camp.cancel`, `camp.owned`, `camp.inherit`, `camp.noInherit`, `camp.needGold`, `camp.lockedBy`, 강화 이름·효과(`upgrade.<id>.*`), 병종 이름(`unit.<key>.*`). `camp.barracks`("병영 · 유닛 강화")와 `camp.statLine`·`camp.cost` 는 이 화면에서 더 쓰지 않는다.
+1. 쓰는 키: `camp.inheritTag` (#150, "스폰도 강해짐" / "Spawn inherits"), `camp.barracksName`, `camp.affordable`, `camp.toMap` (stage-select.md 8절), `camp.barracksHelp`, `camp.noUpgrades`, `camp.gold`, `camp.upgrade`, `camp.buyAsk`, `camp.buy`, `camp.cancel`, `camp.owned`, `camp.inherit`, `camp.noInherit`, `camp.needGold`, `camp.lockedBy`, 강화 이름·효과(`upgrade.<id>.*`), 병종 이름(`unit.<key>.*`). `camp.barracks`("병영 · 유닛 강화")와 `camp.statLine`·`camp.cost` 는 이 화면에서 더 쓰지 않는다.
 2. #99 에서 새로 넣거나 바꾸는 키:
 
 | 키 | 한국어 | English |
@@ -155,7 +156,9 @@ y 는 칸 위 끝에서, x 는 칸 왼쪽 끝에서 잰 px. 안쪽 여백 32.
 - **병종을 하나씩 본다(탭).** 근거: 병종 8 × 갈래 3 을 한 칸에 펼치면 칸이 화면 높이를 넘는다. 강화는 병종 단위 결정이다 (progression.md "성장은 병종 단위").
 - **카메라는 야영지.** 근거: 병영 레이어에도 가운데 게임 화면이 있어야 한다 (ui-style.md 16-1).
 - **가격·보유·고른 갈래는 `light`.** 근거: ui-style.md 2-2 의 4 "`light` 는 광원·재화에만" — 고른 갈래 표시는 산 것(재화를 쓴 것) 표시다.
-- **스폰 계승은 이름 앞 송곳니 + 툴팁.** 근거: ui-style.md 14-4.
+- **스폰 계승은 이름 앞 송곳니 + 왼쪽 `spawn` 띠 + 꼬리표 "스폰도 강해짐" + 툴팁 (#150 보고서 E3).** 근거: "스폰이 물려받는 강화" 는 progression.md·vampire.md 의 핵심 고민인데 아이콘 하나로는 가장 작게 보였다. 두 낱말 꼬리표는 이름표라 글 예산(ui-style.md 14-1) 안이다.
+- **능력치 효과는 전 → 후 숫자 (#150 보고서 E3).** 근거: 초기화가 없는 영구 선택이라 바뀌는 값을 사기 전에 그대로 읽게 한다(Blizzard 자유의 날개 무기고 회고). "+3" 은 지금 값을 따로 찾아 더해야 한다.
+- **살 수 있는 강화의 버튼은 `btn.primary`, 금화가 모자라면 가격 숫자 `enemy` (#150 보고서 E3).** 근거: 산 것(✓)·살 수 있는 것·금화 부족·잠김 네 상태가 버튼 활성 여부 하나로만 갈렸다.
 
 ## 후속 (이번 구현 밖)
 

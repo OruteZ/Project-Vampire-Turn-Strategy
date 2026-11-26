@@ -276,11 +276,15 @@ namespace VampireSpawn.Game.Screens
                 ToolkitKit.Frame(row, art, Ui.Steel);
                 if (own) ToolkitKit.Picture(row.Q(className: "panel-frame"), art.Ui(ToolkitKit.FrameBox), Color.Lerp(Color.white, Ui.Candle, 0.6f));
                 SetTip(row, Loc.T(up.Inherit ? "camp.inherit" : "camp.noInherit"));
+                // upgrade.md 5-1 (#150 E3): an upgrade a spawn inherits carries a spawn strip and tag, not only the fang.
+                if (up.Inherit) ToolkitKit.E(row, "up-strip").style.backgroundColor = Ui.Spawn;
                 var head = ToolkitKit.E(row, "up-name");
                 if (up.Inherit) ToolkitKit.Pic(head, art, Kit.Icon.Fang, Ui.Spawn, "up-fang");
                 ToolkitKit.L(head, Loc.Text(up.Name));
+                if (up.Inherit) ToolkitKit.L(head, Loc.T("camp.inheritTag"), "up-tag", Ui.Spawn);
                 if (own) ToolkitKit.L(row, "✓", "up-owned");
-                ToolkitKit.L(row, Loc.Text(up.Desc), "up-desc");
+                var effect = Effect(kind, up, c.Upgrades);
+                ToolkitKit.L(row, effect ?? Loc.Text(up.Desc), effect != null ? "up-desc up-change" : "up-desc");
                 if (own) continue;
                 var act = ToolkitKit.E(row, "up-act");
                 if (tabState != TabState.Open)
@@ -288,16 +292,37 @@ namespace VampireSpawn.Game.Screens
                     SetTip(ToolkitKit.Pic(act, art, Kit.Icon.Lock, Ui.Dim, "up-lock"), lockedBy);
                     continue;
                 }
-                ToolkitKit.Value(ToolkitKit.E(row, "up-price"), art, Kit.Icon.Gold, up.Cost.ToString(), Ui.Candle, Ui.Candle);
+                var can = c.CanBuy(up);
+                SetTip(ToolkitKit.Value(ToolkitKit.E(row, "up-price"), art, Kit.Icon.Gold, up.Cost.ToString(), Ui.Candle, can ? Ui.Candle : Ui.Blood),
+                    can ? null : Loc.T("camp.needGold", c.Gold, up.Cost));
                 var id = up.Id;
-                var b = ToolkitKit.Btn(act, art, Loc.T("camp.upgrade"), BtnKind.Normal, null, () => send(CampInput.Buy(id, Time.unscaledTime)), c.CanBuy(up));
-                if (!c.CanBuy(up)) SetTip(b, Loc.T("camp.needGold", c.Gold, up.Cost));
+                var b = ToolkitKit.Btn(act, art, Loc.T("camp.upgrade"), can ? BtnKind.Primary : BtnKind.Normal, null, () => send(CampInput.Buy(id, Time.unscaledTime)), can);
+                if (!can) SetTip(b, Loc.T("camp.needGold", c.Gold, up.Cost));
                 var next = Battle.Preview(kind, c.Upgrades.Append(up.Id));
                 row.RegisterCallback<PointerEnterEvent>(_ => Stats(stats, now, next));
                 row.RegisterCallback<PointerLeaveEvent>(_ => Stats(stats, now, null));
             }
             // USS has no :last-child; the gap belongs only between rows, or three rows overflow the 480 viewport by 12.
             if (ups.contentContainer.childCount > 0) ups.contentContainer[ups.contentContainer.childCount - 1].style.marginBottom = 0;
+        }
+
+        // upgrade.md 5-2 (#150 E3): a stat upgrade reads as before → after; a skill upgrade (null here) keeps its sentence.
+        public static string Effect(string kind, Upgrade up, System.Collections.Generic.IEnumerable<string> owned)
+        {
+            if (up.Ability != Ability.None) return null;
+            var others = owned.Where(id => id != up.Id).ToList();
+            var a = Battle.Preview(kind, others);
+            var b = Battle.Preview(kind, others.Append(up.Id));
+            var parts = new System.Collections.Generic.List<string>();
+            void Part(string key, int from, int to) { if (from != to) parts.Add(Loc.T(key) + " " + from + " → " + to); }
+            Part("unit.card.hp", a.MaxHp, b.MaxHp);
+            Part("unit.card.atk", a.Atk, b.Atk);
+            Part("detail.bane", a.Bane, b.Bane);
+            Part("unit.card.def", a.Def, b.Def);
+            Part("unit.card.mov", a.Mov, b.Mov);
+            Part("unit.card.rng", a.Rng, b.Rng);
+            Part("skill.mend", a.Heal, b.Heal);
+            return parts.Count == 0 ? null : string.Join(" · ", parts);
         }
 
         // upgrade.md 3 stat row; with a hovered branch (5-5) the numbers it would change turn light.
