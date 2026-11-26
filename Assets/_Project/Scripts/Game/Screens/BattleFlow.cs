@@ -127,8 +127,8 @@ namespace VampireSpawn.Game.Screens
             // (.board-area in Battle.uss: 360/150/360/190 px, ui-style.md 1-3), in viewport units with y up.
             var size = ToolkitKit.PanelSize(HudZoom);
             viewCamera.rect = new Rect(0f, 0f, 1f, 1f);
-            // The top edge sits under the moon gauge and its two lines (250, not .board-area's 150), or a tight fit puts the top row behind them (battle-camera.md 1).
-            View.board.FrameInto(new Rect(360f / size.x, 190f / size.y, (size.x - 720f) / size.x, (size.y - 440f) / size.y));
+            // Tighter than .board-area (150/190): the top edge clears the moon gauge and its two lines, the bottom the deploy count and hint, or a tight fit puts rows behind them (battle-camera.md 1).
+            View.board.FrameInto(new Rect(360f / size.x, 380f / size.y, (size.x - 720f) / size.x, (size.y - 630f) / size.y));
         }
 
         void RenderBattle()
