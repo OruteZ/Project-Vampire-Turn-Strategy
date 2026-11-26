@@ -12,7 +12,7 @@ namespace StagePlay
     {
         public sealed class Result
         {
-            public Ending? End; public bool Won; public int Turns, Lost, Risen, Drained; public bool Bonus; public List<string> Log;
+            public Ending? End; public bool Won; public int Turns, Lost, Risen, Drained, Idle, FirstSpawn; public bool Bonus; public List<string> Log;
         }
 
         static Battle Rebuild(Stage s, string[] up, Placement[] f, List<string> log)
@@ -28,6 +28,7 @@ namespace StagePlay
             var rng = new Random(seed);
             var log = new List<string> { "go" };
             var b = Rebuild(s, up, f, log);
+            int idle = 0, firstSpawn = 0;
             while (b.Phase != Phase.Over && b.Turn <= cap)
             {
                 if (b.Reinforcing) { log.AddRange(StageSim.Reinforce(b).Select(p => $"p {p.Kind} {p.Col},{p.Row}")); log.Add("go"); b = Rebuild(s, up, f, log); continue; }
@@ -41,10 +42,15 @@ namespace StagePlay
                     var sc = Score(t) + rng.NextDouble() * 0.01;
                     if (sc > bestScore) { bestScore = sc; best = plan; }
                 }
+                var before = b.Units.Select(u => u.Id).ToList();
+                var turn = b.Turn;
                 log.AddRange(best);
                 b = Rebuild(s, up, f, log);
+                // Idle: no one died over this ally turn and the enemy turn after it, and no ally attacked.
+                if (!best.Any(c => c.StartsWith("a ")) && before.All(id => b.Find(id) != null)) idle++;
+                if (firstSpawn == 0 && b.Stats.Risen > 0) firstSpawn = turn;
             }
-            return new Result { End = b.Ending, Won = b.Won == true, Turns = b.Turn, Lost = b.Stats.Lost, Risen = b.Stats.Risen, Drained = b.Stats.Drained, Bonus = b.Won == true && b.BonusMet, Log = log };
+            return new Result { End = b.Ending, Won = b.Won == true, Turns = b.Turn, Lost = b.Stats.Lost, Risen = b.Stats.Risen, Drained = b.Stats.Drained, Bonus = b.Won == true && b.BonusMet, Idle = idle, FirstSpawn = firstSpawn, Log = log };
         }
 
         // One random turn, applied to b as it is built so every order is legal.
