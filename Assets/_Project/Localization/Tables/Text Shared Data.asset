@@ -2447,6 +2447,22 @@ MonoBehaviour:
     m_Key: camp.groupFoes
     m_Metadata:
       m_Items: []
+  - m_Id: 7534181273628672
+    m_Key: settings.hud
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7534181315571712
+    m_Key: settings.hudTip
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7534181315571713
+    m_Key: settings.hudSmall
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7534181315571714
+    m_Key: settings.hudLarge
+    m_Metadata:
+      m_Items: []
   m_Metadata:
     m_Items: []
   m_KeyGenerator:

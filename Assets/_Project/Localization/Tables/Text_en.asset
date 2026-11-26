@@ -2915,6 +2915,22 @@ MonoBehaviour:
     m_Localized: Enemies
     m_Metadata:
       m_Items: []
+  - m_Id: 7534181273628672
+    m_Localized: Battle HUD size
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7534181315571712
+    m_Localized: Size of battle panels, buttons and text. Applies from the next battle
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7534181315571713
+    m_Localized: Small
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7534181315571714
+    m_Localized: Large
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds:

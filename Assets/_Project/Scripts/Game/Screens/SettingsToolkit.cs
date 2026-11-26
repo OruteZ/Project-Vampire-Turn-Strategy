@@ -21,6 +21,8 @@ namespace VampireSpawn.Game.Screens
                 Array.IndexOf(GameSettings.Shakes, GameSettings.Shake), i => GameSettings.Shake = GameSettings.Shakes[i], changed);
             Row(box, art, tip, "settings.speed", Array.ConvertAll(GameSettings.Speeds, s => "×" + s),
                 Array.IndexOf(GameSettings.Speeds, GameSettings.Speed), i => GameSettings.Speed = GameSettings.Speeds[i], changed);
+            Row(box, art, tip, "settings.hud", new[] { Loc.T("settings.hudSmall"), Loc.T("settings.normal"), Loc.T("settings.hudLarge") },
+                Array.IndexOf(GameSettings.HudZooms, GameSettings.HudZoom), i => GameSettings.HudZoom = GameSettings.HudZooms[i], changed);
 
             var done = ToolkitKit.Btn(box, art, Loc.T("settings.close"), BtnKind.Normal, "Esc", close);
             done.AddToClassList("settings-close");

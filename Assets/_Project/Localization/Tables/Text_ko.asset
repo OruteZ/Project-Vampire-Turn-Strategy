@@ -3105,6 +3105,23 @@ MonoBehaviour:
     m_Localized: "\uB098\uC624\uB294 \uC801"
     m_Metadata:
       m_Items: []
+  - m_Id: 7534181273628672
+    m_Localized: "\uC804\uD22C HUD \uD06C\uAE30"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7534181315571712
+    m_Localized: "\uC804\uD22C \uD654\uBA74\uC758 \uD328\uB110\xB7\uBC84\uD2BC\xB7\uAE00\uC790
+      \uD06C\uAE30. \uB2E4\uC74C \uC804\uD22C\uBD80\uD130 \uB4E3\uB294\uB2E4"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7534181315571713
+    m_Localized: "\uC791\uAC8C"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7534181315571714
+    m_Localized: "\uD06C\uAC8C"
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds:

@@ -26,13 +26,14 @@
 .moon-state.hot { -unity-font-style: bold; }
 
 /* ---------- corners ---------- */
-/* battle-hud.md 3-4, 3-6: the wide action bar along the bottom, the round primary button inside its right end. */
-.action-bar, .action-row { position: absolute; left: 28%; right: 28%; bottom: 12px; height: 204px; }
+/* battle-hud.md 3-4, 3-6: the wide action bar along the bottom, the round primary button inside its right end.
+   Fixed 1640x236 (#150 C2·C4): a percentage shrank it with the larger HUD sizes, and the unit block needs three rows inside the frame's ~45 px rims. */
+.action-bar, .action-row { position: absolute; left: 50%; width: 1640px; margin-left: -820px; bottom: 12px; height: 236px; }
 .action-bar, .bar-frame { -unity-slice-scale: 0.4px; }
 .bar-frame, .slot-frame { position: absolute; left: 0; top: 0; right: 0; bottom: 0; }
-.action-row { padding: 0 300px 0 200px; flex-direction: row; justify-content: center; align-items: center; }
-.end-turn { position: absolute; right: 28%; bottom: 46px; width: 136px; height: 136px; margin-right: 150px; justify-content: center; align-items: center; }
-.end-turn.deploy { right: auto; left: 50%; bottom: 40px; width: 176px; height: 176px; margin-right: 0; margin-left: -88px; }
+.action-row { padding: 0 300px 0 560px; flex-direction: row; justify-content: center; align-items: center; }
+.end-turn { position: absolute; left: 50%; bottom: 62px; width: 136px; height: 136px; margin-left: 534px; justify-content: center; align-items: center; }
+.end-turn.deploy { bottom: 40px; width: 176px; height: 176px; margin-left: -88px; }
 .end-turn.deploy > .end-turn-text { width: 144px; font-size: 26px; }
 .end-turn-text { width: 112px; font-size: 26px; -unity-font-style: bold; white-space: normal; -unity-text-align: middle-center; padding: 0; margin: 0; }
 .end-turn > .key { right: auto; left: 50%; bottom: 18px; translate: -50% 0; }
@@ -43,7 +44,7 @@
 .corner > * { margin-right: 4px; }
 .corner > .btn { width: 220px; height: 40px; }
 /* #150 C3: the hint sits on a bg.panelDeep pill so the grid lines do not strike through it. */
-.hint { position: absolute; left: 50%; bottom: 228px; max-width: 1400px; min-height: 34px; translate: -50% 0; padding: 10px 24px; border-radius: 27px; background-color: rgba(15, 16, 22, 0.75); font-size: 26px; color: var(--muted); -unity-text-align: middle-center; }
+.hint { position: absolute; left: 50%; bottom: 260px; max-width: 1400px; min-height: 34px; translate: -50% 0; padding: 10px 24px; border-radius: 27px; background-color: rgba(15, 16, 22, 0.75); font-size: 26px; color: var(--muted); -unity-text-align: middle-center; }
 
 /* ---------- rules window (battle-hud.md 6) ---------- */
 .veil { position: absolute; left: 0; top: 0; right: 0; bottom: 0; background-color: rgba(18, 19, 26, 0.85); }
@@ -64,8 +65,8 @@
 .res .value-icon { width: 64px; height: 64px; margin-right: 10px; }
 .res .value-text { font-size: 64px; -unity-font-style: bold; }
 .hint.deploy { bottom: 340px; }
-.fight-stats .value-icon { width: 28px; height: 28px; }
-.fight-stats .value-text { font-size: 26px; }
+.fight-stats .value-icon { width: 34px; height: 34px; }
+.fight-stats .value-text { font-size: 33px; }
 
 .box { position: absolute; width: 340px; padding: 16px; -unity-slice-scale: 0.111px; }
 .roster { left: 24px; bottom: 76px; width: 572px; padding: 20px; }
@@ -111,8 +112,8 @@
 
 /* ---------- unit panels (ui-style.md 8-2) ---------- */
 .unit { position: absolute; width: 340px; min-height: 190px; -unity-slice-scale: 0.111px; }
-.unit.ally-side { left: 24px; bottom: 228px; }
-.unit.other-side { right: 24px; bottom: 228px; }
+.unit.ally-side { left: 24px; bottom: 260px; }
+.unit.other-side { right: 24px; bottom: 260px; }
 .unit.deploy-side { right: 24px; bottom: 228px; }
 .unit-body { flex-grow: 1; padding: 16px 20px 14px 20px; }
 .unit-body > * { flex-shrink: 0; }
@@ -126,15 +127,16 @@
 /* At the right end of the hp and move row: the head can wrap to two lines (long names), that row is always there and empty on the right. */
 .big > .info-btn { right: 0; top: -10px; }
 .roster-row > .info-btn { right: 8px; bottom: 8px; }
-.unit-weapon { width: 26px; height: 26px; margin-right: 10px; flex-shrink: 0; }
-.unit-name { font-size: 26px; -unity-font-style: bold; color: var(--bone); flex-shrink: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; margin-right: 10px; }
+.unit-weapon { width: 32px; height: 32px; margin-right: 10px; flex-shrink: 0; }
+/* #150 C2: on screen (x0.55) names and the small numbers reach 18 px, hp and move 24 px. */
+.unit-name { font-size: 33px; -unity-font-style: bold; color: var(--bone); flex-shrink: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; margin-right: 10px; }
 .unit-tag { font-size: 26px; color: #a650c4; }
 .stat { flex-direction: row; align-items: flex-end; }
-.stat-icon { width: 24px; height: 24px; margin-right: 6px; }
+.stat-icon { width: 28px; height: 28px; margin-right: 6px; }
 .big > .stat { margin-right: 22px; }
-.big .stat-value { font-size: 31px; -unity-font-style: bold; }
+.big .stat-value { font-size: 44px; -unity-font-style: bold; }
 .small > .stat { margin-right: 18px; }
-.small .stat-value { font-size: 26px; -unity-font-style: bold; }
+.small .stat-value { font-size: 33px; -unity-font-style: bold; }
 .stat-heal { margin-left: 6px; color: var(--steel); }
 .warn { font-size: 26px; -unity-font-style: bold; }
 .skills { font-size: 26px; color: var(--muted); }
@@ -143,6 +145,15 @@
 .spike.left { left: -10px; }
 .spike.right { right: -10px; }
 .corner-badge { position: absolute; left: -6px; top: -6px; width: 24px; height: 24px; }
+/* battle-hud.md 3-4 8 (#150 C4): the picked ally in the bar's left part, clear of its pointed end, 460 of its 1640 (28%): name and info button, the five numbers in one row, one warning line. */
+.bar-unit { position: absolute; left: 50%; margin-left: -760px; bottom: 60px; width: 460px; height: 140px; justify-content: center; }
+.bar-unit > * { flex-shrink: 0; }
+.bar-unit > .unit-head { height: 44px; align-items: center; flex-wrap: nowrap; }
+.bar-unit .unit-name { max-width: 360px; }
+.bar-unit .unit-head > .info-btn { right: 0; top: -12px; }
+.bar-stats { height: 54px; align-items: flex-end; }
+.bar-stats > .big { margin-right: 4px; }
+.bar-unit > .warn { height: 34px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .recall { position: absolute; right: 16px; bottom: 12px; width: 90px; height: 32px; }
 
 .slot, .slot-frame { -unity-slice-scale: 0.25px; }

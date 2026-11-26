@@ -40,8 +40,8 @@ namespace VampireSpawn.Game.Screens
         BattleView View => input.battle;
         Campaign Campaign => App.Campaign;
 
-        // battle-hud.md 1: the battle HUD draws at this fraction of the shared 1920x1080 panel.
-        public const float HudZoom = 0.55f;
+        // battle-hud.md 1: the battle HUD draws at this fraction of the shared 1920x1080 panel, picked in the settings window.
+        public static float HudZoom => GameSettings.HudZoom;
 
         void Start()
         {

@@ -406,7 +406,7 @@ namespace VampireSpawn.Game.Screens
             if (!st.EnemyPlaying)
             {
                 var ally = sel ?? (st.Hover != null && st.Hover.Side == Side.Ally ? st.Hover : null);
-                if (ally != null) Panel(root, b, ally, "ally-side", sel == ally);
+                if (ally != null) BarUnit(root, b, ally);
                 if (sel != null && b.Phase == Phase.Player && !sel.Acted) Actions(root, s, a);
             }
             var mendTarget = sel != null && s.Mode == SelectMode.Mend && b.CanMend(sel, st.Hover) ? st.Hover : null;
@@ -511,6 +511,28 @@ namespace VampireSpawn.Game.Screens
             var id = o.Id;
             InfoBtn(hp.parent, art, tip, () => acts?.Detail?.Invoke(id), infoOn);
             return p;
+        }
+
+        // battle-hud.md 3-4 8 (#150 C4): the picked (else hovered) ally in the left of the action bar, in place of the ally panel.
+        void BarUnit(VisualElement root, Battle b, Unit o)
+        {
+            var p = E(root, "bar-unit col", true);
+            p.name = "Panel " + o.Id;
+            var head = E(p, "unit-head row");
+            if (art.Icon(o.Type) is string wi) Icon(head, wi, Ui.Steel, "icon unit-weapon");
+            L(head, Loc.Text(o.Name), "unit-name display");
+            var id = o.Id;
+            InfoBtn(head, art, tip, () => acts?.Detail?.Invoke(id), infoOn);
+            StatRows(E(p, "bar-stats row"), Ui.Steel, o.Hp + "/" + o.MaxHp, o.Mov, BattleScreen.Atk(o), o.Def, o.Rng, o.Hp * 3 <= o.MaxHp ? Ui.Blood : Ui.Bone, o.Id.ToString());
+            var (warn, wc) = Warning(b, o);
+            if (warn != null)
+            {
+                // One line in the bar; a long warning ends in "…" and reads whole in its tooltip.
+                var w = L(p, warn, "warn", wc);
+                w.pickingMode = PickingMode.Position;
+                Tip(w, warn, 300);
+            }
+            Tip(p, BattleScreen.Note(o), 500);
         }
 
         static (string, Color) Warning(Battle b, Unit o)
