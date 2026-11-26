@@ -117,7 +117,7 @@ namespace VampireSpawn.Editor
                 ground.transform.localPosition = Vector3.up * 0.01f;
                 ground.transform.localScale = new Vector3(r.Radius * 2f, 0.005f, r.Radius * 2f);
                 var theme = art.Theme(r.Stage);
-                ground.GetComponent<MeshRenderer>().sharedMaterial = material((theme != null ? theme.ground : CampaignMapLayout.Floor) * 1.25f, "Region " + r.Stage);
+                ground.GetComponent<MeshRenderer>().sharedMaterial = material((theme != null ? theme.ground : CampaignMapLayout.Floor) * 2.5f, "Region " + r.Stage);
                 GameObject last = null;
                 foreach (var p in r.Props)
                 {

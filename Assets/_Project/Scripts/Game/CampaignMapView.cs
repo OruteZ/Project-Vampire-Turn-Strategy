@@ -47,8 +47,10 @@ namespace VampireSpawn.Game
             progress.SetParent(terrain, false);
             BuildProgress();
             if (terrain.Find("Water") == null) BuildWater();
-            RenderSettings.ambientMode = UnityEngine.Rendering.AmbientMode.Flat;
-            RenderSettings.ambientLight = CampaignMapLayout.Ambient;
+            RenderSettings.ambientMode = UnityEngine.Rendering.AmbientMode.Trilight;
+            RenderSettings.ambientSkyColor = CampaignMapLayout.AmbientSky;
+            RenderSettings.ambientEquatorColor = CampaignMapLayout.AmbientEquator;
+            RenderSettings.ambientGroundColor = CampaignMapLayout.AmbientGround;
             RenderSettings.fog = true;
             RenderSettings.fogMode = FogMode.Linear;
             RenderSettings.fogColor = CampaignMapLayout.Fog;
@@ -254,7 +256,7 @@ namespace VampireSpawn.Game
                 if (brazier != null) BoardView.Place(brazier, progress, at, 0.9f, 0f);
                 var fire = art.MapProp(CampaignMapLayout.Fire);
                 if (fire != null) BoardView.Place(fire, progress, at + Vector3.up * 0.55f, 0f, 0f);
-                BoardView.AddLight(progress, at + Vector3.up * 1.5f, LightType.Point, art.torchLight, 2.2f, 10f);
+                BoardView.AddLight(progress, at + Vector3.up * 3f, LightType.Point, art.torchLight, 60f, 20f);
             }
             campUnit = null;
             campType = -1;
@@ -266,7 +268,9 @@ namespace VampireSpawn.Game
         {
             var water = new GameObject("Water").transform;
             water.SetParent(terrain, false);
-            var mat = art.water != null ? art.water : Tinted(CampaignMapLayout.Fog, "Water");
+            // Battle's water, darker and glossier so the north moon light glints on it (campaign-map.md 8).
+            var mat = art.water != null ? new Material(art.water) { color = CampaignMapLayout.Water, name = "Map Water" } : Tinted(CampaignMapLayout.Water, "Water");
+            mat.SetFloat("_Smoothness", 0.92f);
             foreach (var p in Paths("River")) Ribbon(water, "River", PathPoints(p), CampaignMapLayout.RiverWidth, mat, 0.02f);
             foreach (var p in Paths("Moat")) Ribbon(water, "Moat", PathPoints(p), CampaignMapLayout.MoatWidth, mat, 0.02f);
             var side = Tinted(CampaignMapLayout.SideRoad, "Side Road");
