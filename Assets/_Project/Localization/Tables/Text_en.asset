@@ -3047,7 +3047,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 7556609676734468
-    m_Localized: Hurls silver flasks that sear vampires and spawn and hurt enemies
+    m_Localized: Throws silver flasks that burn vampires and spawn and splash enemies
       beside the target.
     m_Metadata:
       m_Items: []

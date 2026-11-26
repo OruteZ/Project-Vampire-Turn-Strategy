@@ -7,7 +7,7 @@ VU_RUN=<id> bash tools/ui-audit/sweep.sh
 ```
 
 - 에디터가 열려 있어야 한다 (`.claude/skills/verify-unity`). 재생을 켜고 화면(메뉴·장 선택(성 안 15장의 장 정보 포함)·규칙 카드·배치·아군 턴·규칙·기록·결과, 조건·설명이 가장 긴 증원 카드·적 카드 호버, 유닛 상세 창 셋: 병영 병종·아군 유닛·적 유닛) × 화면비 6개(1920x1080, 1280x720, 1920x1200, 1440x1080, 1280x1024, 2560x1080) 를 돈다
-- 규칙 카드 (docs/ui/rule-cards.md): `2z-cards` 가 1장 배치에 모든 카드를 문장이 긴 것부터 띄우고, `3-deploy` 가 저장에 남기지 않고 닫는다. 그래서 `3-deploy` 는 `2z-cards` 다음에 돈다
+- 규칙 카드 (docs/ui/rule-cards.md): `2z-cards` 가 1장 배치에 모든 카드를 문장이 긴 것부터 띄우고, `3-deploy` 가 저장에 남기지 않고 닫는다. 그래서 `3-deploy` 는 `2z-cards` 다음에 돈다. `8a-wave` 가 여는 장에도 카드가 뜰 수 있어 `8b-arrival` 이 먼저 닫는다 (카드의 막이 보드 호버를 막는다)
 - 결과: `verify-artifacts/<id>/audit.txt` 와 화면마다 스크린샷. 문제가 하나라도 있으면 exit 1
 - 화면비는 `UiAudit.Resize` (`PlayModeWindow.SetCustomRenderingResolution`) 로 바꾼다. `capture game_view` 의 크기 인자는 그림을 늘일 뿐 다시 배치하지 않는다
 - 검사 (`Assets/_Project/Scripts/Editor/UiAudit.cs`)
