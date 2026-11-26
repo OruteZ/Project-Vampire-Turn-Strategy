@@ -15,7 +15,9 @@ namespace VampireSpawn.Game
 
         // ui-style.md 7-2 "보드 조명": moon.blood scaled to full red so a tint can keep the light's brightness.
         static readonly Color Blood = Screens.Ui.MoonBlood / Screens.Ui.MoonBlood.maxColorComponent;
-        const float BloodAtFull = 0.6f, BlendSeconds = 0.6f;
+        const float BloodAtMax = 0.35f, BloodAtFull = 0.6f, BlendSeconds = 0.6f;
+        // The board pool takes half the red so the world reddens while units on the board stay readable (ui-style.md 7-2).
+        const float PoolBloodShare = 0.5f;
 
         BattleView view;
         Light moon, rim, pool;
@@ -26,10 +28,10 @@ namespace VampireSpawn.Game
 
         public static float BloodShare(int moon, int max, bool full)
         {
-            if (full) return 1f;
+            if (full) return BloodAtFull;
             if (max <= 0) return 0f;
             var t = Mathf.Clamp01((float)moon / max);
-            return t * t * BloodAtFull;
+            return t * t * BloodAtMax;
         }
 
         // The model is ahead of the screen during playback (docs/areas/ui.md), so the light counts what has played.
@@ -117,8 +119,8 @@ namespace VampireSpawn.Game
         void Apply()
         {
             RenderSettings.ambientLight = Toward(view.board.Ambient, blood);
-            pool.color = Toward(MoonBlue, blood);
-            if (moon != null) moon.color = pool.color;
+            pool.color = Toward(MoonBlue, blood * PoolBloodShare);
+            if (moon != null) moon.color = Toward(MoonBlue, blood);
             rim.color = Toward(RimBlue, blood);
         }
     }

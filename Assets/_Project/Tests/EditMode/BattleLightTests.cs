@@ -12,9 +12,9 @@ namespace VampireSpawn.Tests
         public void BloodGrowsWithTheSquareOfTheMoonAndIsWholeOnTheFullMoonTurn()
         {
             Assert.AreEqual(0f, BattleLight.BloodShare(0, 4, false));
-            Assert.AreEqual(0.6f * 9f / 16f, BattleLight.BloodShare(3, 4, false), 1e-5f);
-            Assert.AreEqual(0.6f, BattleLight.BloodShare(4, 4, false), 1e-5f);
-            Assert.AreEqual(1f, BattleLight.BloodShare(2, 4, true));
+            Assert.AreEqual(0.35f * 9f / 16f, BattleLight.BloodShare(3, 4, false), 1e-5f);
+            Assert.AreEqual(0.35f, BattleLight.BloodShare(4, 4, false), 1e-5f);
+            Assert.AreEqual(0.6f, BattleLight.BloodShare(2, 4, true), 1e-5f);
             Assert.AreEqual(0f, BattleLight.BloodShare(3, 0, false), "no moon gauge, always blue");
         }
 
