@@ -16,6 +16,10 @@ namespace VampireSpawn.Game.Screens
         public Reinforcement HoverReinforce;
         public float Speed = 1f;
         public bool Alt, EnemyPlaying, LeaveArmed, RulesOpen, LogOpen, Demo, FullMoon, MoonFading;
+        // docs/ui/rule-cards.md: the card on show and "n/total", or null.
+        public BattleScreen.RuleCard Card;
+        public string CardCount;
+        public bool CardLast;
         public IEnumerable<string> Upgrades = Enumerable.Empty<string>();
         // While the enemy turn plays back the model has already reached its end (a reinforcement deploy, the next target): #125, #126.
         public int? EatTarget;
@@ -102,6 +106,7 @@ namespace VampireSpawn.Game.Screens
             Corner(root, st, a);
             if (BattleScreen.ShowsHint(s, st.EnemyPlaying)) L(root, BattleScreen.Hint(s, st.EnemyPlaying), st.Deploying(b) ? "hint deploy" : "hint");
             if (st.RulesOpen) RulesPopup(root, a);
+            if (st.Card != null) CardPopup(root, st, a);
             UseFonts(root);
         }
 
@@ -276,8 +281,34 @@ namespace VampireSpawn.Game.Screens
             var p = E(veil, "window rules", true);
             Frame(p, art, Ui.Steel);
             L(p, Loc.T("battle.rules"), "rules-title display");
-            foreach (var line in BattleScreen.RuleLines) L(p, line, "rules-line");
+            foreach (var t in BattleScreen.RuleTerms)
+            {
+                var row = E(p, "rules-term row");
+                row.name = "Term " + t.Id;
+                Icon(row, t.Icon, t.Color, "icon rules-term-icon");
+                var text = E(row, "rules-term-text");
+                L(text, t.Name, "rules-term-name", t.Color);
+                L(text, t.Desc, "rules-term-desc");
+            }
             Btn(E(p, "rules-close"), Loc.T("hud.close"), a.ToggleRules, BtnKind.Ghost);
+        }
+
+        // rule-cards.md 4: any click on the veil or the card goes on, so the button only shows the key.
+        void CardPopup(VisualElement root, HudState st, BattleActions a)
+        {
+            var c = st.Card;
+            var veil = E(root, "veil", true);
+            veil.RegisterCallback<ClickEvent>(_ => a.NextCard?.Invoke());
+            var p = E(veil, "window rule-card", true);
+            p.name = "Card " + c.Name;
+            Frame(p, art, Ui.Steel);
+            L(p, st.CardCount, "card-count");
+            var look = art.Ui(c.Icon) != null ? c.Icon : art.Icon(c.Icon);
+            Icon(E(p, "card-icon"), string.IsNullOrEmpty(look) || art.Ui(look) == null ? Kit.Icon.Skulls : look, c.Color);
+            L(p, c.Name, "card-name display");
+            L(p, c.Line, "card-line");
+            var next = ToolkitKit.Btn(E(p, "card-next"), art, Loc.T(st.CardLast ? "hud.close" : "card.next"), BtnKind.Normal, "Space");
+            KeepClearOfKey(next, "Space");
         }
 
         // ---------- deploy (battle-hud.md 2) ----------

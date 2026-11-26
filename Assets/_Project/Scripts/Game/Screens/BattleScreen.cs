@@ -7,7 +7,7 @@ namespace VampireSpawn.Game.Screens
 {
     public sealed class BattleActions
     {
-        public Action Primary, Leave, Clear, Sample, Exec, Mend, Trap, Wait, Undo, Aim, Retry, Redeploy, ToCamp, CloseOver, ToggleRules, ToggleLog;
+        public Action Primary, Leave, Clear, Sample, Exec, Mend, Trap, Wait, Undo, Aim, Retry, Redeploy, ToCamp, CloseOver, ToggleRules, ToggleLog, NextCard;
         public Action<string> Pick, RecallKind;
         public Action<int> Recall, Detail;
         public Action<string> DetailKind;
@@ -110,17 +110,43 @@ namespace VampireSpawn.Game.Screens
             return Loc.T("unit.card.spawnNote", o.Origin);
         }
 
-        public static string[] RuleLines => new[]
+        // battle-hud.md 6-1: the rules window as terms, the same name·colour·description shape as the detail window's states.
+        public static List<DetailModel.State> RuleTerms => new List<DetailModel.State>
         {
-            Loc.T("battle.rule.corpse"),
-            Loc.T("battle.rule.coffin", Rules.MoonWake),
-            Loc.T("battle.rule.moon", Rules.MoonMax),
-            Loc.T("battle.rule.target", Rules.EatRange),
-            Loc.T("battle.rule.drain", Rules.EatRange),
-            Loc.T("battle.rule.exec"),
-            Loc.T("battle.rule.light"),
-            Loc.T("battle.rule.spawn"),
-            Loc.T("battle.rule.damage"),
+            Term("turn", Kit.Icon.Fang, Ui.Spawn),
+            Term("corpse", Kit.Icon.Skulls, Ui.Spawn),
+            Term("coffin", Kit.Icon.Boss, Ui.Candle, Rules.MoonWake),
+            Term("moon", Kit.Icon.Turn, Ui.Sun, Rules.MoonMax),
+            Term("target", Kit.Icon.Target, Ui.Blood, Rules.EatRange),
+            Term("drain", Kit.Icon.Hp, Ui.Blood, Rules.EatRange),
+            Term("exec", Kit.Icon.Dead, Ui.Blood),
+            Term("light", Kit.Icon.Star, Ui.Candle),
+            Term("spawn", Kit.Icon.Pop, Ui.Spawn),
+            Term("damage", Kit.Icon.Atk, Ui.Steel),
         };
+
+        public sealed class RuleCard { public string Icon, Name, Line; public UnityEngine.Color Color; }
+
+        // docs/ui/rule-cards.md 3: a card id is "<kind>:<key>" (Campaign.NewRules); rules reuse their term from the rules window.
+        public static RuleCard Card(string id)
+        {
+            var at = id.IndexOf(':');
+            var kind = id.Substring(0, at);
+            var key = id.Substring(at + 1);
+            switch (kind)
+            {
+                case "rule":
+                    var t = RuleTerms.First(x => x.Id == key);
+                    return new RuleCard { Icon = t.Icon, Color = t.Color, Name = t.Name, Line = t.Desc };
+                case "unit":
+                    return new RuleCard { Icon = key, Color = Ui.Steel, Name = Loc.Text(GameData.Type(key).Name), Line = Loc.T("card.unit." + key) };
+                case "foe":
+                    return new RuleCard { Icon = key, Color = Ui.Blood, Name = Loc.Text(GameData.Minion(key).Name), Line = Loc.T("card.foe." + key) };
+            }
+            return new RuleCard { Icon = Kit.Icon.Flag, Color = Ui.Steel, Name = Loc.T("card.goal." + key + ".name"), Line = Loc.T("card.goal." + key) };
+        }
+
+        public static DetailModel.State Term(string id, string icon, UnityEngine.Color c, params object[] args) =>
+            new DetailModel.State { Id = id, Icon = icon, Color = c, Name = Loc.T("rules.term." + id), Desc = Loc.T("rules.term." + id + ".desc", args) };
     }
 }

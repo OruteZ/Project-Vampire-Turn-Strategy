@@ -37,3 +37,4 @@ Each feature file starts with an H1 title and one paragraph describing the playe
 - [Unit detail window](./unit-detail.md) covers opening the detail window with the info button or I in battle and camp, its state chips, and closing it.
 - [Battle HUD size](./battle-hud-size.md) covers the settings row that scales the battle HUD and checking each size.
 - [Undo move](./undo-move.md) covers taking back the latest ally move with Z or the action bar slot.
+- [Rule cards](./rule-cards.md) covers the deploy-start rule cards, the seen record in the save, and the rules window terms.

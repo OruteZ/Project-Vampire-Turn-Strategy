@@ -200,8 +200,31 @@ ui-style.md 8 을 그대로 따른다. 덧붙여:
 | Alt (누르는 동안) | 적 이동력 보기 |
 | F | 적 턴 재생 배속 1 → 2 → 4 (4-5) |
 | I | 유닛 상세 창 열기·닫기 (docs/ui/unit-detail.md). 유닛 패널과 편성 줄의 정보 버튼도 같은 창을 연다 |
-| ? 버튼 | 규칙 요약 창 (`frame.popup` 720×자동, 제목 `h.1`, 규칙 줄 `body` `text.2`, 아래 `btn.ghost` "닫기") |
+| ? 버튼 | 규칙 요약 창 (6-1) |
 | 나가기 | 아군 턴이면 한 번 더 누르라는 확인 (버튼 글자 "전투를 포기할까요?", 2.5초), 배치 중이면 바로 나감 (지금 동작) |
+| (배치 시작) | 그 장에서 처음 만나는 것의 규칙 카드 (docs/ui/rule-cards.md). 떠 있는 동안 클릭·Space·Enter 는 다음 카드, Esc 는 모두 닫기 |
+
+### 6-1. 규칙 요약 창 (#150 보고서 B2)
+
+1. `frame.popup` 720×자동, 제목 `h.1` "규칙 요약", 아래 `btn.ghost` "닫기". 9문단 글을 용어 줄 목록으로 바꿨다.
+2. 용어 줄 = 아이콘 36 (용어 색) + 굵은 이름 (용어 색) + 그 아래 한 줄 설명 `body` `text.2`. 이름·색·설명은 유닛 상세 창의 상태 용어(unit-detail.md 7)와 같은 꼴(`DetailModel.State`)이다.
+3. 용어 (이 순서, 키 `rules.term.<id>` / `.desc`):
+
+| id | 이름 | 아이콘 · 색 |
+|---|---|---|
+| turn | 변이 | `Status_Vampiric_01` · `spawn` |
+| corpse | 시신 | `Map_Skull_01` · `spawn` |
+| coffin | 관 | `Map_Monster_01` · `light` |
+| moon | 달 | `Status_Time_01` · `moon` |
+| target | 보름달 표적 | `Status_Targeted_01` · `enemy` |
+| drain | 보름달 흡혈 | `Status_Health_01` · `enemy` |
+| exec | 아군 공격 | `Status_Dead_01` · `enemy` |
+| light | 빛 | `Map_Star_01` · `light` |
+| spawn | 스폰 | `Inventory_Helmets_01` · `spawn` |
+| damage | 피해 | `Status_Attack_01` · `ally` |
+
+4. 적의 표적 점수는 쓰지 않는다 (docs/areas/battle.md #113 결정).
+5. 1장 규칙 카드 셋(변이·빛·달)은 이 용어의 이름·설명을 그대로 쓴다 (rule-cards.md).
 
 ## 7. 문장
 

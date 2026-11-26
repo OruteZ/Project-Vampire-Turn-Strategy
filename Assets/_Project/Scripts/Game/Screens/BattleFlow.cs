@@ -35,6 +35,10 @@ namespace VampireSpawn.Game.Screens
         Label banner;
         BattleActions actions;
         readonly KeyEdges keys = new KeyEdges();
+        List<string> cards = new List<string>();
+        int cardAt;
+
+        public bool CardOpen => cardAt < cards.Count;
 
         BattleSession Session => input.Session;
         BattleView View => input.battle;
@@ -86,6 +90,7 @@ namespace VampireSpawn.Game.Screens
                 CloseOver = () => overRoot.RemoveFromClassList("shown"),
                 Detail = ShowDetail,
                 DetailKind = ShowDetailOf,
+                NextCard = () => NextCard(),
             };
             demo = App.BattleStage == null || App.Demo;
             StartBattle(App.BattleStage ?? GameData.Stages[0], App.Formation, App.StartNow);
@@ -110,7 +115,29 @@ namespace VampireSpawn.Game.Screens
             var battle = demo ? new Battle(s, App.DemoUpgrades, formation) : Campaign.NewBattle(s, formation);
             input.Begin(new BattleSession(battle));
             playLog = new PlayLog(s.Id);
+            // rule-cards.md 2: a campaign stage opens its deploy with the cards not seen before; demo and quick retries never do.
+            ShowCards(demo || startNow ? new string[0] : Campaign.UnseenRules(System.Array.FindIndex(Campaign.Stages, x => x.Id == s.Id)));
             if (startNow) { playLog.Started(); input.Run(x => x.Start()); }
+        }
+
+        public void ShowCards(IEnumerable<string> ids)
+        {
+            cards = ids.ToList();
+            cardAt = 0;
+            RenderBattle();
+        }
+
+        // Each card is remembered as it is passed, so leaving halfway still shows the rest next time.
+        void NextCard(bool all = false)
+        {
+            if (!CardOpen) return;
+            do
+            {
+                if (!demo) Campaign.SeeRule(cards[cardAt]);
+                cardAt++;
+            } while (all && CardOpen);
+            if (!demo) CampaignStore.Save(Campaign);
+            RenderBattle();
         }
 
         // stage-select.md 5-3 2: the stage just played; a first clear that opened the next one shows it on the map.
@@ -152,13 +179,16 @@ namespace VampireSpawn.Game.Screens
                 FullMoon = fullMoon, MoonFading = moonFading,
                 EatTarget = enemyPlaying ? eatBefore : b.EatTarget,
                 Upgrades = Upgrades,
+                Card = CardOpen ? BattleScreen.Card(cards[cardAt]) : null,
+                CardCount = cards.Count > 1 ? (cardAt + 1) + "/" + cards.Count : "",
+                CardLast = cardAt == cards.Count - 1,
             };
         }
 
         IEnumerable<string> Upgrades => (demo ? App.DemoUpgrades : Campaign.Upgrades) ?? Enumerable.Empty<string>();
 
         // unit-detail.md 2-3: only while the player can act, and not over another window.
-        bool DetailAllowed => !View.IsBusy && !enemyPlaying && !OverShown && !rulesOpen && (Session.Battle.Phase == Phase.Deploy || Session.Battle.Phase == Phase.Player);
+        bool DetailAllowed => !View.IsBusy && !enemyPlaying && !OverShown && !rulesOpen && !CardOpen && (Session.Battle.Phase == Phase.Deploy || Session.Battle.Phase == Phase.Player);
 
         public void ShowDetail(int unitId)
         {
@@ -187,6 +217,7 @@ namespace VampireSpawn.Game.Screens
         bool CloseBattlePopup()
         {
             if (UnitDetail.IsOpen) { detail.Close(); return true; }
+            if (CardOpen) { NextCard(true); return true; }
             if (rulesOpen || logOpen)
             {
                 rulesOpen = logOpen = false;
@@ -236,6 +267,11 @@ namespace VampireSpawn.Game.Screens
         {
             var kb = UnityEngine.InputSystem.Keyboard.current;
             if (kb == null) return;
+            if (CardOpen)
+            {
+                if (keys.Pressed("space", kb.spaceKey.isPressed) | keys.Pressed("enter", kb.enterKey.isPressed || kb.numpadEnterKey.isPressed)) NextCard();
+                return;
+            }
             if (keys.Pressed("i", kb.iKey.isPressed)) { if (UnitDetail.IsOpen) detail.Close(); else DetailAtPointer(); }
             var step = (keys.Pressed("right", kb.rightArrowKey.isPressed) ? 1 : 0) - (keys.Pressed("left", kb.leftArrowKey.isPressed) ? 1 : 0);
             if (UnitDetail.IsOpen) { detail.Step(step); return; }
