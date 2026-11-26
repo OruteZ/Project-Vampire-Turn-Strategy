@@ -2415,6 +2415,26 @@ MonoBehaviour:
     m_Key: detail.trait.origin.desc
     m_Metadata:
       m_Items: []
+  - m_Id: 7521873818349568
+    m_Key: hud.act.undo
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7524007754395648
+    m_Key: tag.taunt
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7524007808921600
+    m_Key: tag.lethal
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7524007808921601
+    m_Key: tag.highValue
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7524007808921602
+    m_Key: tag.wounded
+    m_Metadata:
+      m_Items: []
   m_Metadata:
     m_Items: []
   m_KeyGenerator:

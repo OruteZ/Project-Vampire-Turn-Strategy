@@ -599,7 +599,7 @@ namespace VampireSpawn.Game.Screens
                 Icon(slot, x.Icon, x.Color);
                 Tip(slot, x.Label, 200);
                 if (x.Key == 0) continue;
-                L(slot, x.Key.ToString(), "key");
+                L(slot, x.Hotkey ?? x.Key.ToString(), "key");
                 Click(slot, x.Act, x.Ready);
             }
         }

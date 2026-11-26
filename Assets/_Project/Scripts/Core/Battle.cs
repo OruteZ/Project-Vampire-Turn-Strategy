@@ -444,11 +444,35 @@ namespace VampireSpawn.Core
             var reach = Reach(u);
             if (to == u.Pos || OccupantAt(to) != Occupant.Empty || !reach.TryGetValue(to, out var steps))
                 return CommandResult.Rejected(new Message("reason.cannotReach"));
+            undo.Push((u.Id, u.Pos, u.MovedDist, fired.ToArray(), log.ToArray()));
             u.MovedDist = steps;
             u.Moved = true;
             Walk(u, to);
             Fire(t => t.Kind == TriggerKind.Reach && t.Hexes.Contains(to));
             CheckEnd();
+            return Done();
+        }
+
+        // docs/ui/battle-hud.md 3-8: what a move changed, newest last. Any other player action clears it.
+        readonly Stack<(int Id, Hex From, int Dist, string[] Fired, LogEntry[] Log)> undo = new Stack<(int, Hex, int, string[], LogEntry[])>();
+
+        public bool CanUndo => Phase == Phase.Player && undo.Count > 0;
+
+        public int? UndoUnit => CanUndo ? undo.Peek().Id : (int?)null;
+
+        public CommandResult UndoMove()
+        {
+            if (!Begin(Phase.Player, out var no)) return no;
+            if (undo.Count == 0) return CommandResult.Rejected(new Message("reason.cannotMove"));
+            var (id, from, dist, was, said) = undo.Pop();
+            var u = Find(id);
+            u.Pos = from;
+            u.MovedDist = dist;
+            u.Moved = false;
+            fired.Clear();
+            fired.UnionWith(was);
+            log.Clear();
+            log.AddRange(said);
             return Done();
         }
 
@@ -459,6 +483,7 @@ namespace VampireSpawn.Core
             var t = Find(targetId);
             if (u == null || t == null || t.Side != Side.Enemy || t.Asleep || !InRange(u, u.Pos, t.Pos))
                 return CommandResult.Rejected(new Message("reason.cannotAttack"));
+            undo.Clear();
             ApplyHit(u, t);
             u.Acted = u.Moved = true;
             if (CheckEnd()) return Done();
@@ -482,6 +507,7 @@ namespace VampireSpawn.Core
             var t = Find(targetId);
             if (u == null || t == null || t.Role != Role.Ally || t == u || !InRange(u, u.Pos, t.Pos))
                 return CommandResult.Rejected(new Message("reason.cannotExecute"));
+            undo.Clear();
             Strike(u, t, DeathCause.Execute);
             u.Acted = u.Moved = true;
             CheckEnd();
@@ -499,6 +525,7 @@ namespace VampireSpawn.Core
             var u = Ready(id);
             var c = corpses.FirstOrDefault(x => x.Id == corpseId);
             if (!CanBury(u, c)) return CommandResult.Rejected(new Message("reason.cannotBury"));
+            undo.Clear();
             corpses.Remove(c);
             Emit(BattleEvent.Buried(c.Id, c.Pos));
             Emit(BattleEvent.Popup(u.Id, PopupKind.Bury, new Message("popup.bury")));
@@ -526,6 +553,7 @@ namespace VampireSpawn.Core
             var u = Ready(id);
             var t = Find(targetId);
             if (!CanMend(u, t)) return CommandResult.Rejected(new Message("reason.cannotMend"));
+            undo.Clear();
             var heal = MendAmount(u, t);
             t.Hp += heal;
             Emit(BattleEvent.HpChanged(t.Id, t.Hp));
@@ -548,6 +576,7 @@ namespace VampireSpawn.Core
             if (!Begin(Phase.Player, out var no)) return no;
             var u = Ready(id);
             if (!CanTrap(u, at)) return CommandResult.Rejected(new Message("reason.cannotTrap"));
+            undo.Clear();
             u.TrapsLaid++;
             traps.Add(new Trap { Id = nextId++, Pos = at, Owner = u.Id, Damage = TrapDamage + (u.Has(Ability.Barbs) ? BarbsDamage : 0) });
             Say(new Message("log.trapSet", u.Name), "h");
@@ -569,6 +598,7 @@ namespace VampireSpawn.Core
             if (!Begin(Phase.Player, out var no)) return no;
             var u = Ready(id);
             if (u == null) return CommandResult.Rejected(new Message("reason.noWait"));
+            undo.Clear();
             u.Acted = u.Moved = true;
             return Done();
         }
@@ -576,6 +606,7 @@ namespace VampireSpawn.Core
         public CommandResult EndTurn()
         {
             if (!Begin(Phase.Player, out var no)) return no;
+            undo.Clear();
             EnemyPhase();
             return Done();
         }
@@ -606,9 +637,9 @@ namespace VampireSpawn.Core
 
         public int Damage(Unit att, Unit def) => DamageParts(att, def).damage;
 
-        void ApplyHit(Unit att, Unit def)
+        void ApplyHit(Unit att, Unit def, Message why = default)
         {
-            if (Strike(att, def, DeathCause.Blow))
+            if (Strike(att, def, DeathCause.Blow, why))
             {
                 var fed = Math.Min(FeastHeal, att.MaxHp - att.Hp);
                 if (att.Has(Ability.Feast) && fed > 0)
@@ -644,9 +675,10 @@ namespace VampireSpawn.Core
         }
 
         // The damage half of an attack, shared with attacking an ally (docs/systems/spawn.md 2). True when def died.
-        bool Strike(Unit att, Unit def, DeathCause cause)
+        bool Strike(Unit att, Unit def, DeathCause cause, Message why = default)
         {
             var (d, tags) = DamageParts(att, def);
+            if (!why.IsEmpty) tags.Add(why);
             Hurt(def, d, att.Id);
             Provoke(att, def);
             var line = tags.Count == 0

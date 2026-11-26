@@ -29,7 +29,9 @@ namespace VampireSpawn.Tests
 
             s.Click(new Hex(1, 1));
             var doc = BattleScreen.Slots(s, a);
-            CollectionAssert.AreEqual(new[] { 1, 2, 3, 4, 5 }, doc.Select(x => x.Key));
+            CollectionAssert.AreEqual(new[] { 1, 2, 3, 4, 5, -1 }, doc.Select(x => x.Key));
+            Assert.AreEqual("Z", doc[5].Hotkey);
+            Assert.IsFalse(doc[5].Ready, "nothing to undo");
             Assert.IsTrue(doc[0].Ready, "can still move");
             Assert.IsFalse(doc[1].Ready, "no enemy in range");
             Assert.AreEqual(Loc.T("hud.mend"), doc[4].Label);
@@ -42,6 +44,7 @@ namespace VampireSpawn.Tests
             var to = s.Battle.Reach(s.SelectedUnit).Keys.First(h => s.Battle.UnitAt(h) == null);
             s.Click(to);
             Assert.IsFalse(BattleScreen.Slots(s, a)[0].Ready, "moved already");
+            Assert.IsTrue(BattleScreen.Slots(s, a)[5].Ready, "the move can be undone");
 
             s.Click(new Hex(3, 1));
             var hunter = BattleScreen.Slots(s, a);
