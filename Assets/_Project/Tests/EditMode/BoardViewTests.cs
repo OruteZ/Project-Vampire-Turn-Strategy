@@ -30,7 +30,7 @@ namespace VampireSpawn.Tests
                 Assert.AreEqual(!bare, view.Ground != null, stage.Id + " terrain unless a bare blockout floor (battle-terrain.md 1-1, stage-dressing.md 6)");
                 var look = view.art.Dressing(stage.Id).GetComponent<StageDressing>();
                 Assert.AreEqual(look.fog, RenderSettings.fogColor, stage.Id + " fog from the stage prefab (stage-dressing.md 4-10)");
-                Assert.AreEqual(look.ambient, RenderSettings.ambientLight, stage.Id + " ambient from the stage prefab");
+                Assert.AreEqual(BattleLight.Night(look.ambient), RenderSettings.ambientLight, stage.Id + " night ambient from the stage prefab (battle-terrain.md 6)");
                 var board = new Board(stage.Map);
                 bool Wet(Hex h) => board.At(h) == Terrain.Gap && BoardView.Look(stage, view.art.DressingTheme(stage.Id), h) == GapLook.Water;
                 var every = Enumerable.Range(0, board.Rows).SelectMany(r => Enumerable.Range(0, board.Cols).Select(c => new Hex(c, r)));

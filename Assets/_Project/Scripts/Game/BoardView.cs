@@ -78,11 +78,14 @@ namespace VampireSpawn.Game
             if (Board != null && viewCamera != null && (!Mathf.Approximately(viewCamera.aspect, fittedAspect) || frame != fittedFrame)) FitCamera();
         }
 
+        // The stage's night ambient before the moon tints it (battle-terrain.md 6).
+        public Color Ambient { get; private set; }
+
         // Scene-wide settings a prefab cannot hold, read from the stage's prefab (stage-dressing.md 4-10).
         void Light(StageDressing d)
         {
             RenderSettings.ambientMode = UnityEngine.Rendering.AmbientMode.Flat;
-            RenderSettings.ambientLight = d.ambient;
+            RenderSettings.ambientLight = Ambient = BattleLight.Night(d.ambient);
             RenderSettings.fog = true;
             RenderSettings.fogMode = FogMode.Linear;
             RenderSettings.fogColor = d.fog;
@@ -274,7 +277,7 @@ namespace VampireSpawn.Game
                     if (art.embers != null) Prop(art.embers, tile.transform, top + Vector3.up * art.hexSize * 0.7f, 0f, 0f);
                     // ponytail: guessed distances (full volume within 6 hexes, silent past 25); retune once the battle camera's height is heard.
                     Sound.Loop(tile, s => s.brazier, art.hexSize * 6f, art.hexSize * 25f);
-                    AddLight(tile.transform, top + Vector3.up * art.hexSize * 1.2f, LightType.Point, art.torchLight, 2.5f, art.hexSize * 4f);
+                    AddLight(tile.transform, top + Vector3.up * art.hexSize * 1.2f, LightType.Point, art.torchLight, 5f, art.hexSize * 4f);
                     break;
                 case Terrain.Sun:
                     // battle-terrain.md 3-1: a narrow spot from high above whose hard-edged disc covers just this cell.

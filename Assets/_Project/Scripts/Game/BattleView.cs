@@ -29,6 +29,7 @@ namespace VampireSpawn.Game
         Transform layer;
         bool playing;
         BattleCamera director;
+        BattleLight lighting;
 
         ArtCatalog Art => board.art;
 
@@ -50,8 +51,11 @@ namespace VampireSpawn.Game
             {
                 director = gameObject.AddComponent<BattleCamera>();
                 director.Attach(this);
+                lighting = gameObject.AddComponent<BattleLight>();
+                lighting.Attach(this);
             }
             else director.Snap();
+            lighting.Fit();
         }
 
         public CommandResult Run(Func<Battle, CommandResult> command)
