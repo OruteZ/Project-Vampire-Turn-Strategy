@@ -76,6 +76,7 @@ namespace VampireSpawn.Game.Screens
                 Mend = () => input.Act(s => s.Toggle(SelectMode.Mend)),
                 Trap = () => input.Act(s => s.Toggle(SelectMode.Trap)),
                 Wait = () => input.Run(s => s.Wait()),
+                Undo = Undo,
                 Aim = () => input.Act(s => s.ClearMode()),
                 ToggleRules = () => { rulesOpen = !rulesOpen; RenderBattle(); },
                 ToggleLog = () => { logOpen = !logOpen; RenderBattle(); },
@@ -242,6 +243,7 @@ namespace VampireSpawn.Game.Screens
             var digit = 0;
             for (var i = 0; i < digits.Length; i++) if (keys.Pressed((i + 1).ToString(), digits[i].isPressed)) digit = i + 1;
             var space = keys.Pressed("space", kb.spaceKey.isPressed);
+            var z = keys.Pressed("z", kb.zKey.isPressed);
             // docs/ui/battle-hud.md 4-5: F cycles enemy playback 1x, 2x, 4x and is remembered.
             if (keys.Pressed("f", kb.fKey.isPressed))
             {
@@ -254,6 +256,7 @@ namespace VampireSpawn.Game.Screens
             var kinds = b.Stage.Units;
             if (digit > 0 && b.Phase == Phase.Deploy) { if (digit <= kinds.Length) actions.Pick(kinds[digit - 1]); }
             else if (digit > 0) BattleScreen.Slots(Session, actions).FirstOrDefault(x => x.Key == digit && x.Ready)?.Act?.Invoke();
+            if (z) Undo();
             if (space && (b.Phase == Phase.Deploy ? b.Reinforcing || b.Allies.Any() : b.Phase == Phase.Player)) Primary();
         }
 
@@ -290,6 +293,14 @@ namespace VampireSpawn.Game.Screens
             if (b.Phase == Phase.Deploy) { if (!b.Reinforcing) playLog.Started(); input.Run(s => s.Start()); }
             else if (b.Phase == Phase.Player) { eatBefore = b.EatTarget; enemyPlaying = true; playLog.EnemyBegins(); input.Run(s => s.EndTurn()); }
             else if (b.Phase == Phase.Over && over != null) overRoot.AddToClassList("shown");
+        }
+
+        // battle-hud.md 3-8: the unit is put back at once, no walk.
+        void Undo()
+        {
+            if (View.IsBusy || !Session.Battle.CanUndo) return;
+            input.Run(s => s.Undo());
+            View.SyncDeploy();
         }
 
         void Leave()

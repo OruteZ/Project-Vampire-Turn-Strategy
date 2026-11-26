@@ -132,6 +132,15 @@ namespace VampireSpawn.Core
             return r;
         }
 
+        public CommandResult Undo()
+        {
+            Flash = default;
+            var id = Battle.UndoUnit;
+            var r = Battle.UndoMove();
+            if (r.Ok) { Selected = id; Inspect(Battle.Find(id.Value)); Mode = SelectMode.Act; }
+            return r;
+        }
+
         public CommandResult Start()
         {
             Flash = default;

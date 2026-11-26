@@ -7,7 +7,7 @@ namespace VampireSpawn.Game.Screens
 {
     public sealed class BattleActions
     {
-        public Action Primary, Leave, Clear, Sample, Exec, Mend, Trap, Wait, Aim, Retry, Redeploy, ToCamp, CloseOver, ToggleRules, ToggleLog;
+        public Action Primary, Leave, Clear, Sample, Exec, Mend, Trap, Wait, Undo, Aim, Retry, Redeploy, ToCamp, CloseOver, ToggleRules, ToggleLog;
         public Action<string> Pick, RecallKind;
         public Action<int> Recall, Detail;
         public Action<string> DetailKind;
@@ -36,6 +36,8 @@ namespace VampireSpawn.Game.Screens
     public sealed class ActionSlot
     {
         public int Key;
+        // Shown instead of Key when the slot has a letter key (undo is Z).
+        public string Hotkey;
         public string Icon, Label;
         public UnityEngine.Color Color;
         public Action Act;
@@ -62,6 +64,7 @@ namespace VampireSpawn.Game.Screens
             if (u.Has(Ability.Mend)) Add(5, Kit.Icon.Heal, Ui.Steel, Loc.T(mend ? "hud.cancelMend" : "hud.mend"), a.Mend, true, mend);
             else if (u.Has(Ability.Trap)) Add(5, Kit.Icon.Target, Ui.Steel, Loc.T(trap ? "hud.cancelTrap" : "hud.trap"), a.Trap, true, trap);
             else if (u.Has(Ability.Bury)) Add(5, Kit.Icon.Fang, Ui.Spawn, SkillName(Ability.Bury), a.Aim, marks.Any(m => m.Mark == Mark.Bury));
+            list.Add(new ActionSlot { Key = -1, Hotkey = "Z", Icon = Kit.Icon.Undo, Color = Ui.Steel, Label = Loc.T("hud.act.undo"), Act = a.Undo, Ready = s.Battle.CanUndo });
             foreach (var k in u.Abil.Where(k => k != Ability.Mend && k != Ability.Bury && k != Ability.Trap && k != Ability.None).Distinct())
                 Add(0, Kit.Icon.Up, Ui.Muted, SkillName(k), null, false);
             return list;
