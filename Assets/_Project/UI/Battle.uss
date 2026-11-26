@@ -5,7 +5,8 @@
 
 /* ui-style.md 1-3: the HUD keeps off a 360/150/360/190 px margin around the board (BattleFlow frames the board into it). */
 .board-area { position: absolute; left: 360px; top: 150px; right: 360px; bottom: 190px; }
-.banner { position: absolute; left: 0; right: 0; top: 12px; height: 48px; font-size: 29px; -unity-font-style: bold; -unity-text-align: upper-center; -unity-text-outline-width: 2px; display: none; }
+/* #150 C3: below the moon count and its state line, which end near 240 on the panel (the board area starts at 150). */
+.banner { position: absolute; left: 0; right: 0; top: 108px; height: 48px; font-size: 29px; -unity-font-style: bold; -unity-text-align: upper-center; -unity-text-outline-width: 2px; display: none; }
 .banner.shown { display: flex; }
 
 .vignette { position: absolute; left: 0; top: 0; right: 0; bottom: 0; }
@@ -41,7 +42,8 @@
 .corner { position: absolute; left: 12px; bottom: 18px; height: 40px; flex-direction: row; align-items: flex-end; }
 .corner > * { margin-right: 4px; }
 .corner > .btn { width: 220px; height: 40px; }
-.hint { position: absolute; left: 50%; bottom: 228px; width: 1400px; min-height: 34px; margin-left: -700px; font-size: 26px; color: var(--muted); -unity-text-align: middle-center; }
+/* #150 C3: the hint sits on a bg.panelDeep pill so the grid lines do not strike through it. */
+.hint { position: absolute; left: 50%; bottom: 228px; max-width: 1400px; min-height: 34px; translate: -50% 0; padding: 10px 24px; border-radius: 27px; background-color: rgba(15, 16, 22, 0.75); font-size: 26px; color: var(--muted); -unity-text-align: middle-center; }
 
 /* ---------- rules window (battle-hud.md 6) ---------- */
 .veil { position: absolute; left: 0; top: 0; right: 0; bottom: 0; background-color: rgba(18, 19, 26, 0.85); }
@@ -161,11 +163,16 @@
 .damage > Label { font-size: 26px; -unity-font-style: bold; }
 .damage > .icon { width: 24px; height: 24px; }
 .head-name { position: absolute; left: -164px; width: 400px; white-space: nowrap; height: 18px; font-size: 26px; -unity-font-style: bold; color: var(--bone); -unity-text-align: lower-center; }
-.head-hp { position: absolute; left: -24px; right: -24px; white-space: nowrap; top: 50%; height: 20px; margin-top: -10px; padding: 0; font-size: 26px; -unity-font-style: bold; color: var(--bone); -unity-text-align: middle-center; }
+.head-hp { position: absolute; left: -24px; right: -24px; white-space: nowrap; top: 50%; height: 29px; margin-top: -14.5px; padding: 0; font-size: 26px; -unity-font-style: bold; color: var(--bone); -unity-text-align: middle-center; }
 .head-mov { position: absolute; left: -64px; width: 200px; height: 24px; flex-direction: row; justify-content: center; align-items: flex-end; }
 .head-mov > .icon { width: 20px; height: 20px; margin: 0 1px; }
 .head-mov > Label { font-size: 26px; -unity-font-style: bold; color: #c8304a; margin-right: 1px; }
 .head-target { position: absolute; left: 20px; width: 32px; height: 32px; }
+/* ui-style.md 8-1 3 (#150 C3): hovered or picked, the bar grows to 29 (16 on screen) so the hp number sits inside it; BattleHud.NamedGrow matches. */
+.head.named { height: 29px; margin-top: -29px; }
+.head.named > .head-back { height: 33px; }
+.head.named > .divider { height: 29px; }
+.head.named > .damage { top: 0; }
 
 /* ui-style.md 8-5: the vampire's bar */
 .boss-head { width: 120px; height: 16px; margin-left: -60px; margin-top: -16px; }
@@ -177,6 +184,11 @@
 .boss-skull { position: absolute; left: -18px; top: -6px; width: 28px; height: 28px; }
 .boss-head > .shields { left: 4px; top: -16px; }
 .boss-head > .damage { left: 124px; top: -6px; }
+.boss-head.named { height: 29px; margin-top: -29px; }
+.boss-head.named > .head-back, .boss-head.named > .boss-frame { height: 35px; }
+.boss-head.named > .boss-tick { height: 29px; }
+.boss-head.named > .boss-skull { top: 0; }
+.boss-head.named > .damage { top: 0; }
 
 /* ---------- result window (battle-hud.md 5) ---------- */
 .over { display: none; }

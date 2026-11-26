@@ -608,6 +608,9 @@ namespace VampireSpawn.Game.Screens
 
         const float HeadBarW = 72f;
 
+        // .head.named in Battle.uss: a hovered or picked bar grows from 12 (boss 16) to 29, so the 26 px hp fits inside it (ui-style.md 8-1 3).
+        static float NamedGrow(bool boss) => boss ? 13f : 17f;
+
         void Head(VisualElement layer, Battle b, Unit u, bool named, bool showMov, int damage, bool target)
         {
             var cells = Mathf.Max(1, u.MaxHp);
@@ -615,7 +618,7 @@ namespace VampireSpawn.Game.Screens
             var lost = damage > 0 ? full - Mathf.Max(0, u.Hp - damage) : 0;
             var color = u.Side == Side.Ally ? Ui.Steel : u.Role == Role.Spawn ? Ui.Spawn : Ui.Blood;
             var boss = u.Role == Role.Vampire;
-            var rt = E(layer, boss ? "head boss-head" : "head");
+            var rt = E(layer, (boss ? "head boss-head" : "head") + (named ? " named" : ""));
             rt.style.display = DisplayStyle.None;
             E(rt, "head-back");
             VisualElement[] imgs = null;
@@ -647,7 +650,7 @@ namespace VampireSpawn.Game.Screens
                 else L(at, "−" + damage, "outline", u.Side == Side.Ally ? Ui.Blood : Ui.Bone);
             }
             // Stacked above the bar: name, enemy move/range (Alt), the vampire's target mark.
-            var y = boss ? (u.Def > 0 ? 36f : 20f) : u.Def > 0 ? 24f : 16f;
+            var y = (boss ? (u.Def > 0 ? 36f : 20f) : u.Def > 0 ? 24f : 16f) + (named ? NamedGrow(boss) : 0f);
             if (named)
             {
                 L(rt, Loc.Text(u.Name), "head-name outline").style.bottom = y - 4f;

@@ -204,7 +204,7 @@ namespace VampireSpawn.Game.Screens
             var name = panel.Q<Label>("bk-name");
             name.text = Loc.T("camp.barracksName");
             var anyOpen = GameData.Types.Any(t => c.UpgradesOpen(t.Key));
-            SetTip(name, Loc.T(anyOpen ? "camp.barracksHelp" : "camp.noUpgrades"));
+            SetTip(name, Loc.T(anyOpen ? "camp.barracksHelp" : "camp.noUpgrades") + "\n" + Loc.T("camp.branchRule"));
             var gold = panel.Q("bk-gold");
             gold.Clear();
             ToolkitKit.Value(gold, art, Kit.Icon.Gold, c.Gold.ToString(), Ui.Candle, Ui.Candle, Loc.T("camp.gold"), tip);
@@ -244,7 +244,6 @@ namespace VampireSpawn.Game.Screens
             var now = Battle.Preview(kind, c.Upgrades);
             Stats(stats, now, null);
 
-            panel.Q<Label>("bk-rule").text = Loc.T("camp.branchRule");
             var lockedBy = LockedBy(types[sel]);
 
             var ups = panel.Q<ScrollView>("bk-ups");
