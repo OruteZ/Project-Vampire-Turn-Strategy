@@ -20,13 +20,19 @@ namespace VampireSpawn.Tests
                 Assert.That(map, Is.Not.Null, "CampaignMapView in Camp.unity");
                 var terrain = map.terrain;
                 Assert.That(terrain, Is.Not.Null, "baked terrain");
-                foreach (var s in Campaign.Stages.Where(s => CampaignMapLayout.Region(s.Id) != null))
+                Assert.That(map.castle, Is.Not.Null, "castle face");
+                // stage-select.md 5-4 (#150): every stage has its own region, marker and shot; none share.
+                var shots = map.GetComponentsInChildren<Transform>(true).Where(t => t.parent != null && t.parent.name == "Cameras").Select(t => t.name).ToList();
+                foreach (var s in Campaign.Stages)
                 {
-                    var region = terrain.Find("Region " + s.Id);
+                    var road = CampaignMapLayout.Region(s.Id) != null;
+                    var region = (road ? terrain : map.castle).Find("Region " + s.Id);
                     Assert.That(region, Is.Not.Null, "Region " + s.Id);
-                    foreach (var point in new[] { "Marker", "Brazier", "Camp" })
+                    foreach (var point in road ? new[] { "Marker", "Brazier", "Camp" } : new[] { "Marker", "Brazier" })
                         Assert.That(region.Find(point), Is.Not.Null, s.Id + " " + point);
+                    Assert.AreEqual(1, shots.Count(n => n == "Shot " + s.Id), "Shot " + s.Id);
                 }
+                Assert.AreEqual(1, shots.Count(n => n == "Shot Castle"), "Shot Castle");
                 Assert.That(terrain.Find(CampaignMapView.StartName), Is.Not.Null, "Start");
                 foreach (var path in new[] { "Road", "River", "Moat", "Side Road 0" })
                     Assert.That(terrain.Find(CampaignMapView.PathsName + "/" + path)?.childCount ?? 0, Is.GreaterThanOrEqualTo(2), path + " points");

@@ -4,7 +4,10 @@ namespace VampireSpawn.Core
 {
     public enum CampLayer { Map, Info, Barracks }
 
-    public enum CampKey { Up, Down, Left, Right, Enter, Esc, Barracks, PickStage, EmptyMap, Close, Reset, Buy, Tab, Tick }
+    public enum CampKey { Up, Down, Left, Right, Enter, Esc, Barracks, PickStage, EmptyMap, Close, Reset, Buy, Tab, Face, Tick }
+
+    // stage-select.md 5-4: the map's two faces, the road (1~10) and the castle (11~20).
+    public enum CampFace { Road, Castle }
 
     public enum CampDo { None, Redraw, Buy, Reset, March, Menu }
 
@@ -32,6 +35,7 @@ namespace VampireSpawn.Core
     public readonly struct CampNav
     {
         public const float ConfirmSeconds = 2.5f;
+        public const int CastleFrom = 10;
 
         public readonly int Stage, Tab;
         public readonly bool Info, Barracks;
@@ -43,6 +47,8 @@ namespace VampireSpawn.Core
         {
             Stage = stage; Info = info; Barracks = barracks; Tab = tab; Armed = armed; ArmedId = armedId; ArmedUntil = armedUntil;
         }
+
+        public CampFace Face => CampFace.Road;
 
         public CampLayer Layer => Barracks ? CampLayer.Barracks : Info ? CampLayer.Info : CampLayer.Map;
         public bool ResetArmed => Armed == CampConfirm.Reset;

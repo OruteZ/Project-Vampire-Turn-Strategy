@@ -17,6 +17,7 @@ namespace VampireSpawn.Game
         public ArtCatalog art;
         public Camera viewCamera;
         [Tooltip("씬에 구운 지형 (Campaign Map, 그 아래 Cameras 의 Cinemachine 시점들). 비면 지도가 뜨지 않는다")] public Transform terrain;
+        [Tooltip("성 면 (11~20장, docs/art/campaign-map.md 12). 다시 굽기는 이것을 건드리지 않는다")] public Transform castle;
         [Tooltip("지도 레이어 WASD 이동 속도 (초당 단위)")] public float panSpeed = 40f;
         [Tooltip("지도 레이어 WASD 이동 범위: 전경 시점에서 동서(x)·남북(y)으로 갈 수 있는 거리")] public Vector2 panRange = new Vector2(30f, 45f);
 

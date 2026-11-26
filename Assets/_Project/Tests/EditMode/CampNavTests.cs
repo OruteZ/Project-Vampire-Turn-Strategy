@@ -187,5 +187,57 @@ namespace VampireSpawn.Tests
             Assert.AreEqual(first, CampNav.DefaultTab(c, -1));
             Assert.AreEqual(kinds.Length - 1, CampNav.DefaultTab(c, kinds.Length - 1), "the tab picked last this run wins");
         }
+
+        // stage-select.md 5-4 (#150): the map has two faces, the road (1~10) and the castle (11~20).
+        [Test]
+        public void FaceSwitchesOnTheMapToTheOtherFacesNextStage()
+        {
+            var c = ClearedUpTo(3);
+            var road = CampNav.FromMenu(c, null);
+            Assert.AreEqual(CampFace.Road, road.Face);
+            var castle = Press(road, c, CampKey.Face);
+            Assert.AreEqual(CampFace.Castle, castle.Face, "the castle face shows before 10 is cleared");
+            Assert.AreEqual(CampNav.CastleFrom, castle.Stage, "nothing open there: its first stage");
+            var back = Press(castle, c, CampKey.Face);
+            Assert.AreEqual(CampFace.Road, back.Face);
+            Assert.AreEqual(3, back.Stage, "the road face's next stage");
+            var info = road.Step(c, CampInput.Pick(2, 0f)).next;
+            Assert.AreEqual(CampDo.None, info.Step(c, CampInput.Of(CampKey.Face, 0f)).act, "only the map layer switches faces");
+            Assert.AreEqual(CampDo.None, Press(road, c, CampKey.Barracks).Step(c, CampInput.Of(CampKey.Face, 0f)).act, "not the barracks");
+        }
+
+        [Test]
+        public void TheMapOpensOnTheFaceOfTheNextStage()
+        {
+            Assert.AreEqual(CampFace.Road, CampNav.FromMenu(ClearedUpTo(CampNav.CastleFrom - 1), null).Face, "10 not cleared yet");
+            Assert.AreEqual(CampFace.Castle, CampNav.FromMenu(ClearedUpTo(CampNav.CastleFrom), null).Face, "next is 11");
+            Assert.AreEqual(CampFace.Castle, CampNav.FromMenu(ClearedUpTo(14), null).Face);
+            var c = ClearedUpTo(14);
+            Assert.AreEqual(14, Press(Press(CampNav.FromMenu(c, null), c, CampKey.Face), c, CampKey.Face).Stage, "back on the castle face: its next stage");
+            Assert.AreEqual(CampNav.CastleFrom - 1, Press(CampNav.FromMenu(c, null), c, CampKey.Face).Stage, "a cleared road: its last stage");
+        }
+
+        [Test]
+        public void SteppingFrom10To11InInfoTurnsTheFace()
+        {
+            var c = ClearedUpTo(15);
+            var ten = CampNav.FromMenu(c, null).Step(c, CampInput.Pick(CampNav.CastleFrom - 1, 0f)).next;
+            Assert.AreEqual(CampFace.Road, ten.Face);
+            var eleven = Press(ten, c, CampKey.Up);
+            Assert.AreEqual(CampLayer.Info, eleven.Layer);
+            Assert.AreEqual(CampFace.Castle, eleven.Face);
+            Assert.AreEqual(CampFace.Road, Press(eleven, c, CampKey.Down).Face);
+            Assert.AreEqual(CampFace.Castle, Press(eleven, c, CampKey.Esc).Face, "back on the map: that stage's face");
+        }
+
+        [Test]
+        public void ALockedCastleStageNeverOpensInfo()
+        {
+            var c = ClearedUpTo(CampNav.CastleFrom + 1);
+            var castle = CampNav.FromMenu(c, null);
+            Assert.AreEqual(CampNav.CastleFrom + 1, castle.Stage);
+            Assert.AreEqual(CampDo.None, castle.Step(c, CampInput.Pick(CampNav.CastleFrom + 2, 0f)).act);
+            Assert.AreEqual(CampLayer.Map, Press(Press(castle, c, CampKey.Up), c, CampKey.Enter).Layer);
+        }
     }
 }
