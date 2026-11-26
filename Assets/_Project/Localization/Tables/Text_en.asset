@@ -2903,6 +2903,223 @@ MonoBehaviour:
     m_Metadata:
       m_Items:
       - rid: 7201578077006332005
+  - m_Id: 7533072597446656
+    m_Localized: Reward
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7533072647778304
+    m_Localized: Battle
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7533072647778305
+    m_Localized: Enemies
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7534181273628672
+    m_Localized: Battle HUD size
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7534181315571712
+    m_Localized: Size of battle panels, buttons and text. Applies from the next battle
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7534181315571713
+    m_Localized: Small
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7534181315571714
+    m_Localized: Large
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7556100475645952
+    m_Localized: Turning
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7556100534366208
+    m_Localized: An ally felled by the vampire or spawn rises as spawn at the start
+      of the next enemy phase.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7556100534366209
+    m_Localized: Body
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7556100534366210
+    m_Localized: An ally's body waiting to rise. Allies felled by minions never rise.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7556100534366211
+    m_Localized: Coffin
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7556100534366212
+    m_Localized: The vampire sleeps in its coffin, safe from attack, and wakes when
+      the Moon reaches {0}.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7556100534366213
+    m_Localized: Moon
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7556100534366214
+    m_Localized: Fills by 1 each time any unit falls, ally or enemy. At {0} the moon
+      is full.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7556100534366215
+    m_Localized: Moon's Prey
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7556100534366216
+    m_Localized: On the ally turn before the full moon, the nearest unlit ally within
+      {0} hexes of the vampire is marked, and the mark holds.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7556100534366217
+    m_Localized: Full-Moon Drain
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7556100534366218
+    m_Localized: On the full-moon turn the target is devoured if still unlit within
+      {0} hexes; either way the Moon returns to 0.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7556100534366219
+    m_Localized: Attack an Ally
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7556100534366220
+    m_Localized: An ally you fell yourself rests without rising; felling the prey
+      also foils the drain.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7556100534366221
+    m_Localized: Light
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7556100538560512
+    m_Localized: Bonfire hexes, their neighbours and sunlit hexes. Allies in light
+      are never marked and do not rise.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7556100538560513
+    m_Localized: Spawn
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7556100538560514
+    m_Localized: Inherits the original's HP, ATK and MOV; DEF 0, melee only. Skill
+      upgrades are not inherited.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7556100538560515
+    m_Localized: Damage
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7556100538560516
+    m_Localized: "ATK \u2212 DEF (min 1). No randomness, no counters. Ranged shots
+      are blocked by rock and cannot hit the adjacent hex."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7556100538560517
+    m_Localized: "Guard {0} \xB7 Pack: all move once one wakes"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7556609668345856
+    m_Localized: A cheap, plentiful villager who holds the front with a spear.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7556609676734464
+    m_Localized: Cheap but weak-armed; cannot shoot through walls or at an adjacent
+      enemy.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7556609676734465
+    m_Localized: Hits hardest of all, but is as frail as a peasant.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7556609676734466
+    m_Localized: Shoots from afar, but not through walls or at an adjacent enemy.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7556609676734467
+    m_Localized: Enemies that can reach the knight must strike it (taunt); high HP
+      and armour.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7556609676734468
+    m_Localized: Throws silver flasks that burn vampires and spawn and splash enemies
+      beside the target.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7556609676734469
+    m_Localized: Buries a nearby body so it cannot rise as spawn.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7556609676734470
+    m_Localized: Heals a nearby wounded ally by prayer.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7556609676734471
+    m_Localized: Turns wolf as the Moon fills, stronger and faster, but unarmoured.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7556609676734472
+    m_Localized: Lays traps beside it; an enemy that steps in is hurt and held for
+      the turn.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7556609676734473
+    m_Localized: A minion whose kills never rise.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7556609676734474
+    m_Localized: A minion that shoots from range, at half damage point-blank.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7556609676734475
+    m_Localized: A slow but sturdy minion.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7556609676734476
+    m_Localized: An elite, sturdy and hard-hitting.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7556609676734477
+    m_Localized: An elite that dives fast for the back line.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7556609676734478
+    m_Localized: A statue mid-boss guarding the way; weak blows barely scratch it.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7556609676734479
+    m_Localized: A fast, sturdy, hard-hitting mid-boss.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7556609676734480
+    m_Localized: Defense
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7556609676734481
+    m_Localized: Hold the marked hexes for the set number of turns to win.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7556609676734482
+    m_Localized: Escort
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7556609676734483
+    m_Localized: Bring the escort to the destination to win; if they fall, you lose.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7556609676734484
+    m_Localized: Next
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7559172950126592
+    m_Localized: Spawn inherits
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds:

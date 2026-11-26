@@ -13,10 +13,11 @@ MonoBehaviour:
   m_Name: Skeleton
   m_EditorClassIdentifier: VampireSpawn.Game::VampireSpawn.Game.UnitLook
   key: skeleton
-  icon: 
+  icon: ICON_DarkFantasy_Map_Skull_01_Clean
   recipe: 
   model: {fileID: 8146240625886029692, guid: 15f1b724e0139c5428bff76a4ad9bffe, type: 3}
   rig: 1
+  scale: 1
   weapons:
   - prefab: {fileID: 8011566013882336049, guid: 2d1b288c4815e28498d754a794475903, type: 3}
     hand: 0

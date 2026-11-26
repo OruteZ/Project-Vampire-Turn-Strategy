@@ -16,6 +16,10 @@ namespace VampireSpawn.Game.Screens
         public Reinforcement HoverReinforce;
         public float Speed = 1f;
         public bool Alt, EnemyPlaying, LeaveArmed, RulesOpen, LogOpen, Demo, FullMoon, MoonFading;
+        // docs/ui/rule-cards.md: the card on show and "n/total", or null.
+        public BattleScreen.RuleCard Card;
+        public string CardCount;
+        public bool CardLast;
         public IEnumerable<string> Upgrades = Enumerable.Empty<string>();
         // While the enemy turn plays back the model has already reached its end (a reinforcement deploy, the next target): #125, #126.
         public int? EatTarget;
@@ -102,6 +106,7 @@ namespace VampireSpawn.Game.Screens
             Corner(root, st, a);
             if (BattleScreen.ShowsHint(s, st.EnemyPlaying)) L(root, BattleScreen.Hint(s, st.EnemyPlaying), st.Deploying(b) ? "hint deploy" : "hint");
             if (st.RulesOpen) RulesPopup(root, a);
+            if (st.Card != null) CardPopup(root, st, a);
             UseFonts(root);
         }
 
@@ -276,8 +281,34 @@ namespace VampireSpawn.Game.Screens
             var p = E(veil, "window rules", true);
             Frame(p, art, Ui.Steel);
             L(p, Loc.T("battle.rules"), "rules-title display");
-            foreach (var line in BattleScreen.RuleLines) L(p, line, "rules-line");
+            foreach (var t in BattleScreen.RuleTerms)
+            {
+                var row = E(p, "rules-term row");
+                row.name = "Term " + t.Id;
+                Icon(row, t.Icon, t.Color, "icon rules-term-icon");
+                var text = E(row, "rules-term-text");
+                L(text, t.Name, "rules-term-name", t.Color);
+                L(text, t.Desc, "rules-term-desc");
+            }
             Btn(E(p, "rules-close"), Loc.T("hud.close"), a.ToggleRules, BtnKind.Ghost);
+        }
+
+        // rule-cards.md 4: any click on the veil or the card goes on, so the button only shows the key.
+        void CardPopup(VisualElement root, HudState st, BattleActions a)
+        {
+            var c = st.Card;
+            var veil = E(root, "veil", true);
+            veil.RegisterCallback<ClickEvent>(_ => a.NextCard?.Invoke());
+            var p = E(veil, "window rule-card", true);
+            p.name = "Card " + c.Name;
+            Frame(p, art, Ui.Steel);
+            L(p, st.CardCount, "card-count");
+            var look = art.Ui(c.Icon) != null ? c.Icon : art.Icon(c.Icon);
+            Icon(E(p, "card-icon"), string.IsNullOrEmpty(look) || art.Ui(look) == null ? Kit.Icon.Skulls : look, c.Color);
+            L(p, c.Name, "card-name display");
+            L(p, c.Line, "card-line");
+            var next = ToolkitKit.Btn(E(p, "card-next"), art, Loc.T(st.CardLast ? "hud.close" : "card.next"), BtnKind.Normal, "Space");
+            KeepClearOfKey(next, "Space");
         }
 
         // ---------- deploy (battle-hud.md 2) ----------
@@ -406,7 +437,7 @@ namespace VampireSpawn.Game.Screens
             if (!st.EnemyPlaying)
             {
                 var ally = sel ?? (st.Hover != null && st.Hover.Side == Side.Ally ? st.Hover : null);
-                if (ally != null) Panel(root, b, ally, "ally-side", sel == ally);
+                if (ally != null) BarUnit(root, b, ally);
                 if (sel != null && b.Phase == Phase.Player && !sel.Acted) Actions(root, s, a);
             }
             var mendTarget = sel != null && s.Mode == SelectMode.Mend && b.CanMend(sel, st.Hover) ? st.Hover : null;
@@ -513,6 +544,27 @@ namespace VampireSpawn.Game.Screens
             return p;
         }
 
+        // battle-hud.md 3-4 8 (#150 C4): the picked (else hovered) ally in the left of the action bar, in place of the ally panel.
+        void BarUnit(VisualElement root, Battle b, Unit o)
+        {
+            var p = E(root, "bar-unit col", true);
+            var head = E(p, "unit-head row");
+            if (art.Icon(o.Type) is string wi) Icon(head, wi, Ui.Steel, "icon unit-weapon");
+            L(head, Loc.Text(o.Name), "unit-name display");
+            var id = o.Id;
+            InfoBtn(head, art, tip, () => acts?.Detail?.Invoke(id), infoOn);
+            StatRows(E(p, "bar-stats row"), Ui.Steel, o.Hp + "/" + o.MaxHp, o.Mov, BattleScreen.Atk(o), o.Def, o.Rng, o.Hp * 3 <= o.MaxHp ? Ui.Blood : Ui.Bone, o.Id.ToString());
+            var (warn, wc) = Warning(b, o);
+            if (warn != null)
+            {
+                // One line in the bar; a long warning ends in "…" and reads whole in its tooltip.
+                var w = L(p, warn, "warn", wc);
+                w.pickingMode = PickingMode.Position;
+                Tip(w, warn, 300);
+            }
+            Tip(p, BattleScreen.Note(o), 500);
+        }
+
         static (string, Color) Warning(Battle b, Unit o)
         {
             if (o.Side == Side.Ally && b.EatTarget == o.Id)
@@ -608,6 +660,9 @@ namespace VampireSpawn.Game.Screens
 
         const float HeadBarW = 72f;
 
+        // .head.named in Battle.uss: a hovered or picked bar grows from 12 (boss 16) to 29, so the 26 px hp fits inside it (ui-style.md 8-1 3).
+        static float NamedGrow(bool boss) => boss ? 13f : 17f;
+
         void Head(VisualElement layer, Battle b, Unit u, bool named, bool showMov, int damage, bool target)
         {
             var cells = Mathf.Max(1, u.MaxHp);
@@ -615,7 +670,7 @@ namespace VampireSpawn.Game.Screens
             var lost = damage > 0 ? full - Mathf.Max(0, u.Hp - damage) : 0;
             var color = u.Side == Side.Ally ? Ui.Steel : u.Role == Role.Spawn ? Ui.Spawn : Ui.Blood;
             var boss = u.Role == Role.Vampire;
-            var rt = E(layer, boss ? "head boss-head" : "head");
+            var rt = E(layer, (boss ? "head boss-head" : "head") + (named ? " named" : ""));
             rt.style.display = DisplayStyle.None;
             E(rt, "head-back");
             VisualElement[] imgs = null;
@@ -634,6 +689,13 @@ namespace VampireSpawn.Game.Screens
                     if (i >= full - lost && i < full) blink.Add(c);
                 }
                 for (var i = 1; i < cells; i++) E(rt, "divider").style.left = HeadBarW * i / cells;
+                // ui-style.md 8-1 8 (#150 F): the side reads from the shape too, not only the colour.
+                if (u.Role == Role.Spawn) Icon(rt, Kit.Icon.Fang, Ui.Spawn, "icon head-fang");
+                else if (u.Side == Side.Enemy)
+                {
+                    E(rt, "head-spike left");
+                    E(rt, "head-spike right");
+                }
             }
             if (u.Def > 0)
             {
@@ -647,7 +709,7 @@ namespace VampireSpawn.Game.Screens
                 else L(at, "−" + damage, "outline", u.Side == Side.Ally ? Ui.Blood : Ui.Bone);
             }
             // Stacked above the bar: name, enemy move/range (Alt), the vampire's target mark.
-            var y = boss ? (u.Def > 0 ? 36f : 20f) : u.Def > 0 ? 24f : 16f;
+            var y = (boss ? (u.Def > 0 ? 36f : 20f) : u.Def > 0 ? 24f : 16f) + (named ? NamedGrow(boss) : 0f);
             if (named)
             {
                 L(rt, Loc.Text(u.Name), "head-name outline").style.bottom = y - 4f;
@@ -713,11 +775,18 @@ namespace VampireSpawn.Game.Screens
             var title = L(box, Loc.T(o.Won ? "over.won" : "over.lost"), "over-title display", o.Won ? Ui.Sun : Ui.Blood);
             var titleTip = Loc.Text(o.Line);
 
+            // battle-hud.md 5-2 (#150 C1): a result is read once, so each count carries its name under it.
             var tally = E(box, "tally row");
-            Value(tally, Kit.Icon.Dead, st.Lost.ToString(), Ui.Muted, Ui.Bone, Loc.T("over.fallen"));
-            Value(tally, Kit.Icon.Skulls, st.Executed.ToString(), Ui.Blood, Ui.Bone, Loc.T("over.execs"));
-            Value(tally, Kit.Icon.Fang, st.Risen.ToString(), Ui.Spawn, Ui.Bone, Loc.T("over.risen"));
-            Value(tally, Kit.Icon.Target, st.Drained.ToString(), Ui.MoonBlood, Ui.Bone, Loc.T("over.drained"));
+            void Count(string icon, int n, Color c, string name)
+            {
+                var cell = E(tally, "tally-cell col");
+                Value(cell, icon, n.ToString(), c, Ui.Bone);
+                L(cell, name, "tally-name", Ui.Muted);
+            }
+            Count(Kit.Icon.Dead, st.Lost, Ui.Muted, Loc.T("over.fallen"));
+            Count(Kit.Icon.Skulls, st.Executed, Ui.Blood, Loc.T("over.execs"));
+            Count(Kit.Icon.Fang, st.Risen, Ui.Spawn, Loc.T("over.risen"));
+            Count(Kit.Icon.Target, st.Drained, Ui.MoonBlood, Loc.T("over.drained"));
 
             var ok = o.Won && o.BonusOk;
             if (o.Won)

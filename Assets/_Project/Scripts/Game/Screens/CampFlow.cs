@@ -32,6 +32,7 @@ namespace VampireSpawn.Game.Screens
             App.CampStart = null;
             map.Show(Campaign);
             ui = CampToolkit.Build(transform, map.art, In, Send);
+            ui.RegionStage = map.RegionStage;
             ToolkitKit.Shade(ui.Root.Q("shade"));
             detail = new UnitDetail(transform, map.art);
             ui.Detail = ShowDetail;

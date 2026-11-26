@@ -13,10 +13,11 @@ MonoBehaviour:
   m_Name: SkeletonArcher
   m_EditorClassIdentifier: VampireSpawn.Game::VampireSpawn.Game.UnitLook
   key: skeletonArcher
-  icon: 
+  icon: ICON_DarkFantasy_Inventory_Bows_01_Clean
   recipe: 
   model: {fileID: 8712517466539974263, guid: 05a0515d31796fe49b7e662dc6ad6acb, type: 3}
   rig: 1
+  scale: 1
   weapons:
   - prefab: {fileID: 466318824962825654, guid: f661422815d8f204cb5f6dcf10f7e3d2, type: 3}
     hand: 1

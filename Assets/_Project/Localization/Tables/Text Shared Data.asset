@@ -2435,6 +2435,210 @@ MonoBehaviour:
     m_Key: tag.wounded
     m_Metadata:
       m_Items: []
+  - m_Id: 7533072597446656
+    m_Key: camp.groupReward
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7533072647778304
+    m_Key: camp.groupBattle
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7533072647778305
+    m_Key: camp.groupFoes
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7534181273628672
+    m_Key: settings.hud
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7534181315571712
+    m_Key: settings.hudTip
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7534181315571713
+    m_Key: settings.hudSmall
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7534181315571714
+    m_Key: settings.hudLarge
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7556100475645952
+    m_Key: rules.term.turn
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7556100534366208
+    m_Key: rules.term.turn.desc
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7556100534366209
+    m_Key: rules.term.corpse
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7556100534366210
+    m_Key: rules.term.corpse.desc
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7556100534366211
+    m_Key: rules.term.coffin
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7556100534366212
+    m_Key: rules.term.coffin.desc
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7556100534366213
+    m_Key: rules.term.moon
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7556100534366214
+    m_Key: rules.term.moon.desc
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7556100534366215
+    m_Key: rules.term.target
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7556100534366216
+    m_Key: rules.term.target.desc
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7556100534366217
+    m_Key: rules.term.drain
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7556100534366218
+    m_Key: rules.term.drain.desc
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7556100534366219
+    m_Key: rules.term.exec
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7556100534366220
+    m_Key: rules.term.exec.desc
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7556100534366221
+    m_Key: rules.term.light
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7556100538560512
+    m_Key: rules.term.light.desc
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7556100538560513
+    m_Key: rules.term.spawn
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7556100538560514
+    m_Key: rules.term.spawn.desc
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7556100538560515
+    m_Key: rules.term.damage
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7556100538560516
+    m_Key: rules.term.damage.desc
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7556100538560517
+    m_Key: unit.card.stance.guardGroup
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7556609668345856
+    m_Key: card.unit.pspear
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7556609676734464
+    m_Key: card.unit.parcher
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7556609676734465
+    m_Key: card.unit.sword
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7556609676734466
+    m_Key: card.unit.archer
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7556609676734467
+    m_Key: card.unit.knight
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7556609676734468
+    m_Key: card.unit.hunter
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7556609676734469
+    m_Key: card.unit.gravedigger
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7556609676734470
+    m_Key: card.unit.doctor
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7556609676734471
+    m_Key: card.unit.werewolf
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7556609676734472
+    m_Key: card.unit.scout
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7556609676734473
+    m_Key: card.foe.skeleton
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7556609676734474
+    m_Key: card.foe.skeletonArcher
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7556609676734475
+    m_Key: card.foe.skeletonHeavy
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7556609676734476
+    m_Key: card.foe.skeletonCaptain
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7556609676734477
+    m_Key: card.foe.ghoul
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7556609676734478
+    m_Key: card.foe.gargoyle
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7556609676734479
+    m_Key: card.foe.deathKnight
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7556609676734480
+    m_Key: card.goal.defense.name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7556609676734481
+    m_Key: card.goal.defense
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7556609676734482
+    m_Key: card.goal.escort.name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7556609676734483
+    m_Key: card.goal.escort
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7556609676734484
+    m_Key: card.next
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7559172950126592
+    m_Key: camp.inheritTag
+    m_Metadata:
+      m_Items: []
   m_Metadata:
     m_Items: []
   m_KeyGenerator:

@@ -28,6 +28,7 @@
         <ui:VisualElement name="info" class="panel info-panel">
             <ui:VisualElement class="panel-frame" picking-mode="Ignore" />
             <ui:VisualElement name="info-crest" class="info-crest decor" picking-mode="Ignore" />
+            <ui:VisualElement name="info-steps" class="steps" picking-mode="Ignore" />
             <ui:VisualElement name="info-badge" class="info-badge" picking-mode="Ignore">
                 <ui:VisualElement class="ring-fill" picking-mode="Ignore" />
                 <ui:VisualElement class="ring" picking-mode="Ignore" />
@@ -48,6 +49,7 @@
                 <ui:Label class="line-text wrap" picking-mode="Ignore" />
             </ui:VisualElement>
             <ui:VisualElement name="info-stats" class="stats" picking-mode="Ignore" />
+            <ui:VisualElement name="info-foes" class="foes" picking-mode="Ignore" />
             <ui:VisualElement name="info-roster" class="roster" picking-mode="Ignore" />
             <ui:VisualElement name="info-march" class="march" picking-mode="Ignore" />
         </ui:VisualElement>
@@ -73,7 +75,6 @@
             </ui:VisualElement>
             <ui:VisualElement name="bk-stats" class="bk-stats" picking-mode="Ignore" />
             <ui:VisualElement name="bk-break" class="break bk-break" picking-mode="Ignore" />
-            <ui:Label name="bk-rule" class="bk-rule" picking-mode="Ignore" />
             <ui:ScrollView name="bk-ups" class="bk-ups" vertical-scroller-visibility="Auto" horizontal-scroller-visibility="Hidden" />
         </ui:VisualElement>
 

@@ -160,6 +160,8 @@ namespace VampireSpawn.Game.Screens
             badge.Q<Label>().text = (i + 1).ToString();
             badge.Q<Label>().style.color = ink;
 
+            Steps(c, i, panel);
+
             var name = panel.Q<Label>("info-name");
             name.text = Loc.Text(s.Title);
             name.style.color = last ? Ui.Blood : Ui.Bone;
@@ -169,13 +171,33 @@ namespace VampireSpawn.Game.Screens
             Line(panel.Q("info-bonus"), Kit.Icon.Star, bonusGot ? Ui.Candle : Ui.Muted, Loc.Text(s.Bonus.Text), bonusGot ? Ui.Candle : Ui.Bone,
                 Loc.T("camp.bonusGoal") + (bonusGot ? " · " + Loc.T("camp.got") : ""));
 
+            // stage-select.md 3-1 (#150 C1): rewards and battle terms as two named groups, then each enemy kind with its count.
             var stats = panel.Q("info-stats");
             stats.Clear();
-            ToolkitKit.Value(stats, art, Kit.Icon.Gold, "+" + s.Reward, clear ? Ui.Dim : Ui.Candle, clear ? Ui.Dim : Ui.Bone, Loc.T("camp.rewardClear", s.Reward) + (clear ? " · " + Loc.T("camp.got") : ""), tip);
-            ToolkitKit.Value(stats, art, Kit.Icon.Star, "+" + s.Bonus.Gold, bonusGot ? Ui.Dim : Ui.Candle, bonusGot ? Ui.Dim : Ui.Bone, Loc.T("camp.rewardBonus", s.Bonus.Gold) + (bonusGot ? " · " + Loc.T("camp.got") : ""), tip);
-            ToolkitKit.Value(stats, art, Kit.Icon.Pop, s.Pop.ToString(), Ui.Candle, Ui.Candle, Loc.T("battle.pop"), tip);
-            if (s.Silver > 0) ToolkitKit.Value(stats, art, Kit.Icon.Silver, s.Silver.ToString(), Ui.Candle, Ui.Candle, Loc.T("battle.silver"), tip);
-            ToolkitKit.Value(stats, art, Kit.Icon.Skulls, s.Minions.Length.ToString(), Ui.Blood, Ui.Bone, Kit.EnemyList(s), tip);
+            VisualElement Group(string name)
+            {
+                var g = ToolkitKit.E(stats, "stat-group");
+                ToolkitKit.L(g, name, "stat-group-name");
+                return ToolkitKit.E(g, "stat-group-values");
+            }
+            var reward = Group(Loc.T("camp.groupReward"));
+            ToolkitKit.Value(reward, art, Kit.Icon.Gold, "+" + s.Reward, clear ? Ui.Dim : Ui.Candle, clear ? Ui.Dim : Ui.Bone, Loc.T("camp.rewardClear", s.Reward) + (clear ? " · " + Loc.T("camp.got") : ""), tip);
+            ToolkitKit.Value(reward, art, Kit.Icon.Star, "+" + s.Bonus.Gold, bonusGot ? Ui.Dim : Ui.Candle, bonusGot ? Ui.Dim : Ui.Bone, Loc.T("camp.rewardBonus", s.Bonus.Gold) + (bonusGot ? " · " + Loc.T("camp.got") : ""), tip);
+            var fight = Group(Loc.T("camp.groupBattle"));
+            ToolkitKit.Value(fight, art, Kit.Icon.Pop, s.Pop.ToString(), Ui.Candle, Ui.Candle, Loc.T("battle.pop"), tip);
+            if (s.Silver > 0) ToolkitKit.Value(fight, art, Kit.Icon.Silver, s.Silver.ToString(), Ui.Candle, Ui.Candle, Loc.T("battle.silver"), tip);
+            ToolkitKit.Value(fight, art, Kit.Icon.Skulls, s.Minions.Length.ToString(), Ui.Blood, Ui.Bone, Kit.EnemyList(s), tip);
+
+            var foes = panel.Q("info-foes");
+            foes.Clear();
+            ToolkitKit.L(foes, Loc.T("camp.groupFoes"), "stat-group-name");
+            foreach (var kind in s.Enemies.Where(e => e.Kind != EnemyType.Corpse).GroupBy(e => e.Kind))
+            {
+                var boss = kind.Key == EnemyType.Vampire;
+                var look = art.Icon(kind.Key);
+                var icon = boss ? Kit.Icon.Boss : string.IsNullOrEmpty(look) ? Kit.Icon.Skulls : look;
+                ToolkitKit.Value(foes, art, icon, "×" + kind.Count(), Ui.Blood, Ui.Bone, Loc.Text(boss ? s.BossName : GameData.Minion(kind.Key).Name), tip);
+            }
 
             var roster = panel.Q("info-roster");
             roster.Clear();
@@ -198,13 +220,50 @@ namespace VampireSpawn.Game.Screens
             if (clear) SetTip(btn, Loc.T(bonusGot ? "camp.allClaimed" : "camp.replayNote"));
         }
 
+        // stage-select.md 3-4 (#150 E2): stages that share one map region (the castle) get a row of small badges on top of the panel.
+        void Steps(Campaign c, int i, VisualElement panel)
+        {
+            var group = Group(i);
+            panel.EnableInClassList("grouped", group.Length > 1);
+            var row = panel.Q("info-steps");
+            row.Clear();
+            if (group.Length < 2) return;
+            foreach (var k in group)
+            {
+                var open = c.StageOpen(k);
+                var (ring, fill, ink) = BadgeColors(c, k);
+                var b = ToolkitKit.RingBadge(row, art, open ? (k + 1).ToString() : null, 32, ring, fill, ink);
+                b.name = "Step " + (k + 1);
+                b.AddToClassList("step");
+                b.EnableInClassList("on", k == i);
+                if (!open) ToolkitKit.Pic(b, art, Kit.Icon.Lock, Ui.Dim, "step-lock");
+                if (c.IsCleared(Campaign.Stages[k])) ToolkitKit.L(b, "✓", "step-done");
+                SetTip(b, Loc.Text(Campaign.Stages[k].Title));
+                if (!open) continue;
+                var index = k;
+                b.pickingMode = PickingMode.Position;
+                UiSound.Add(b);
+                b.RegisterCallback<ClickEvent>(_ => send(CampInput.Pick(index, Time.unscaledTime)));
+            }
+        }
+
+        // The stages drawn on stage i's map region (CampaignMapView.RegionStage); just i when nothing is baked.
+        public Func<int, int> RegionStage;
+
+        public int[] Group(int i)
+        {
+            if (RegionStage == null || RegionStage(i) < 0) return new[] { i };
+            var region = RegionStage(i);
+            return Enumerable.Range(0, Campaign.Stages.Length).Where(k => RegionStage(k) == region).ToArray();
+        }
+
         void Barracks(Campaign c, CampNav nav, Func<CampKey, CampInput> input)
         {
             var panel = root.Q("barracks-panel");
             var name = panel.Q<Label>("bk-name");
             name.text = Loc.T("camp.barracksName");
             var anyOpen = GameData.Types.Any(t => c.UpgradesOpen(t.Key));
-            SetTip(name, Loc.T(anyOpen ? "camp.barracksHelp" : "camp.noUpgrades"));
+            SetTip(name, Loc.T(anyOpen ? "camp.barracksHelp" : "camp.noUpgrades") + "\n" + Loc.T("camp.branchRule"));
             var gold = panel.Q("bk-gold");
             gold.Clear();
             ToolkitKit.Value(gold, art, Kit.Icon.Gold, c.Gold.ToString(), Ui.Candle, Ui.Candle, Loc.T("camp.gold"), tip);
@@ -244,7 +303,6 @@ namespace VampireSpawn.Game.Screens
             var now = Battle.Preview(kind, c.Upgrades);
             Stats(stats, now, null);
 
-            panel.Q<Label>("bk-rule").text = Loc.T("camp.branchRule");
             var lockedBy = LockedBy(types[sel]);
 
             var ups = panel.Q<ScrollView>("bk-ups");
@@ -257,11 +315,15 @@ namespace VampireSpawn.Game.Screens
                 ToolkitKit.Frame(row, art, Ui.Steel);
                 if (own) ToolkitKit.Picture(row.Q(className: "panel-frame"), art.Ui(ToolkitKit.FrameBox), Color.Lerp(Color.white, Ui.Candle, 0.6f));
                 SetTip(row, Loc.T(up.Inherit ? "camp.inherit" : "camp.noInherit"));
+                // upgrade.md 5-1 (#150 E3): an upgrade a spawn inherits carries a spawn strip and tag, not only the fang.
+                if (up.Inherit) ToolkitKit.E(row, "up-strip").style.backgroundColor = Ui.Spawn;
                 var head = ToolkitKit.E(row, "up-name");
                 if (up.Inherit) ToolkitKit.Pic(head, art, Kit.Icon.Fang, Ui.Spawn, "up-fang");
                 ToolkitKit.L(head, Loc.Text(up.Name));
+                if (up.Inherit) ToolkitKit.L(head, Loc.T("camp.inheritTag"), "up-tag", Ui.Spawn);
                 if (own) ToolkitKit.L(row, "✓", "up-owned");
-                ToolkitKit.L(row, Loc.Text(up.Desc), "up-desc");
+                var effect = Effect(kind, up, c.Upgrades);
+                ToolkitKit.L(row, effect ?? Loc.Text(up.Desc), effect != null ? "up-desc up-change" : "up-desc");
                 if (own) continue;
                 var act = ToolkitKit.E(row, "up-act");
                 if (tabState != TabState.Open)
@@ -269,16 +331,37 @@ namespace VampireSpawn.Game.Screens
                     SetTip(ToolkitKit.Pic(act, art, Kit.Icon.Lock, Ui.Dim, "up-lock"), lockedBy);
                     continue;
                 }
-                ToolkitKit.Value(ToolkitKit.E(row, "up-price"), art, Kit.Icon.Gold, up.Cost.ToString(), Ui.Candle, Ui.Candle);
+                var can = c.CanBuy(up);
+                SetTip(ToolkitKit.Value(ToolkitKit.E(row, "up-price"), art, Kit.Icon.Gold, up.Cost.ToString(), Ui.Candle, can ? Ui.Candle : Ui.Blood),
+                    can ? null : Loc.T("camp.needGold", c.Gold, up.Cost));
                 var id = up.Id;
-                var b = ToolkitKit.Btn(act, art, Loc.T("camp.upgrade"), BtnKind.Normal, null, () => send(CampInput.Buy(id, Time.unscaledTime)), c.CanBuy(up));
-                if (!c.CanBuy(up)) SetTip(b, Loc.T("camp.needGold", c.Gold, up.Cost));
+                var b = ToolkitKit.Btn(act, art, Loc.T("camp.upgrade"), can ? BtnKind.Primary : BtnKind.Normal, null, () => send(CampInput.Buy(id, Time.unscaledTime)), can);
+                if (!can) SetTip(b, Loc.T("camp.needGold", c.Gold, up.Cost));
                 var next = Battle.Preview(kind, c.Upgrades.Append(up.Id));
                 row.RegisterCallback<PointerEnterEvent>(_ => Stats(stats, now, next));
                 row.RegisterCallback<PointerLeaveEvent>(_ => Stats(stats, now, null));
             }
             // USS has no :last-child; the gap belongs only between rows, or three rows overflow the 480 viewport by 12.
             if (ups.contentContainer.childCount > 0) ups.contentContainer[ups.contentContainer.childCount - 1].style.marginBottom = 0;
+        }
+
+        // upgrade.md 5-2 (#150 E3): a stat upgrade reads as before → after; a skill upgrade (null here) keeps its sentence.
+        public static string Effect(string kind, Upgrade up, System.Collections.Generic.IEnumerable<string> owned)
+        {
+            if (up.Ability != Ability.None) return null;
+            var others = owned.Where(id => id != up.Id).ToList();
+            var a = Battle.Preview(kind, others);
+            var b = Battle.Preview(kind, others.Append(up.Id));
+            var parts = new System.Collections.Generic.List<string>();
+            void Part(string key, int from, int to) { if (from != to) parts.Add(Loc.T(key) + " " + from + " → " + to); }
+            Part("unit.card.hp", a.MaxHp, b.MaxHp);
+            Part("unit.card.atk", a.Atk, b.Atk);
+            Part("detail.bane", a.Bane, b.Bane);
+            Part("unit.card.def", a.Def, b.Def);
+            Part("unit.card.mov", a.Mov, b.Mov);
+            Part("unit.card.rng", a.Rng, b.Rng);
+            Part("skill.mend", a.Heal, b.Heal);
+            return parts.Count == 0 ? null : string.Join(" · ", parts);
         }
 
         // upgrade.md 3 stat row; with a hovered branch (5-5) the numbers it would change turn light.

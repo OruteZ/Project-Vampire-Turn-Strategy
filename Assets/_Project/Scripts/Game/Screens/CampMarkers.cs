@@ -16,7 +16,7 @@ namespace VampireSpawn.Game.Screens
         sealed class Marker
         {
             public VisualElement Root, Badge, Ring, Fill, Star;
-            public Label Number, Name;
+            public Label Number, Name, Progress;
             public IVisualElementScheduledItem Pulse;
             public bool Hover;
             public float Size = CampMarkers.Badge;
@@ -48,6 +48,7 @@ namespace VampireSpawn.Game.Screens
                 m.Ring = m.Badge.Q(className: "ring");
                 m.Number = m.Badge.Q<Label>();
                 m.Star = ToolkitKit.E(m.Root, "marker-star");
+                m.Progress = ToolkitKit.L(m.Root, "", "marker-progress");
                 m.Name = ToolkitKit.L(m.Root, Loc.Text(Campaign.Stages[i].Title), "marker-name");
                 ToolkitKit.Frame(m.Name, art, Ui.Steel);
                 var index = i;
@@ -72,6 +73,9 @@ namespace VampireSpawn.Game.Screens
                 var group = Enumerable.Range(0, markers.Length).Where(k => map.RegionStage(k) == map.RegionStage(i)).ToList();
                 var next = group.Where(k => c.StageOpen(k) && !c.IsCleared(Campaign.Stages[k])).DefaultIfEmpty(group.Any(k => c.StageOpen(k)) ? group.Last() : group.First()).First();
                 shared[i] = i != next;
+                // stage-select.md 4-1 (#150 E2): the one marker a shared region shows counts its cleared stages.
+                markers[i].Progress.text = group.Count > 1 ? group.Count(k => c.IsCleared(Campaign.Stages[k])) + "/" + group.Count : "";
+                markers[i].Progress.style.display = group.Count > 1 ? DisplayStyle.Flex : DisplayStyle.None;
             }
             for (var i = 0; i < markers.Length; i++)
             {

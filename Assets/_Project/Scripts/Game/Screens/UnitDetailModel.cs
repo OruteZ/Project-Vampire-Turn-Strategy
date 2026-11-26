@@ -10,7 +10,7 @@ namespace VampireSpawn.Game.Screens
     {
         public sealed class Stat { public string Icon, Label, Value, Tip; public bool Changed, Low; }
         // A state is a term: the window shows the name, the description opens on hover (unit-detail.md 7).
-        public sealed class State { public string Id, Name, Desc; public Color Color; }
+        public sealed class State { public string Id, Name, Desc, Icon; public Color Color; }
         public sealed class Skill { public string Icon, Name, Tag, Key, Desc; public Color Color; }
         public sealed class Up { public string Name, Effect; public bool Own, Inherit; }
 

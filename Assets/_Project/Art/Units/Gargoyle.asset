@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Gargoyle
   m_EditorClassIdentifier: VampireSpawn.Game::VampireSpawn.Game.UnitLook
   key: gargoyle
-  icon: 
+  icon: ICON_SM_Wep_Hammer_01_DarkFantasy
   recipe: 
   model: {fileID: 9020730524547166879, guid: 2e019375636fea1468f45103b4ad73b4, type: 3}
   rig: 1

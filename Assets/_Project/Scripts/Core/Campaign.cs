@@ -25,10 +25,33 @@ namespace VampireSpawn.Core
         readonly List<string> cleared = new List<string>();
         readonly List<string> bonus = new List<string>();
         readonly List<string> upgrades = new List<string>();
+        readonly List<string> seen = new List<string>();
 
         public IReadOnlyList<string> Cleared => cleared;
         public IReadOnlyList<string> BonusDone => bonus;
         public IReadOnlyList<string> Upgrades => upgrades;
+        public IReadOnlyList<string> SeenRules => seen;
+
+        // docs/ui/rule-cards.md 2: what a stage is the first to show. Stage 1 teaches the three rules everything else builds on.
+        public static string[] NewRules(int index)
+        {
+            if (index == 0) return new[] { "rule:turn", "rule:light", "rule:moon" };
+            if (index < 0 || index >= Stages.Length) return new string[0];
+            var s = Stages[index];
+            var before = Stages.Take(index).ToArray();
+            var units = GameData.Types.Where(t => t.UnlockAt == index + 1).Select(t => "unit:" + t.Key);
+            var foes = s.Enemies.Select(e => e.Kind).Where(k => k != EnemyType.Corpse && k != EnemyType.Spawn && k != EnemyType.Vampire).Distinct()
+                .Where(k => !before.Any(b => b.Enemies.Any(e => e.Kind == k))).Select(k => "foe:" + k);
+            var goal = s.Goal != Goal.Boss && !before.Any(b => b.Goal == s.Goal) ? new[] { "goal:" + s.Goal.ToString().ToLowerInvariant() } : new string[0];
+            return units.Concat(foes).Concat(goal).ToArray();
+        }
+
+        public string[] UnseenRules(int index) => NewRules(index).Where(id => !seen.Contains(id)).ToArray();
+
+        public void SeeRule(string id)
+        {
+            if (!seen.Contains(id)) seen.Add(id);
+        }
 
         public bool IsCleared(Stage s) => cleared.Contains(s.Id);
         public bool StageOpen(int index) => index == 0 || cleared.Contains(Stages[index - 1].Id);
@@ -84,7 +107,7 @@ namespace VampireSpawn.Core
         static string Set(List<string> ids) => "{" + string.Join(",", ids.Select(id => "\"" + id + "\":true")) + "}";
 
         public string ToJson() =>
-            "{\"gold\":" + Gold + ",\"cleared\":" + Set(cleared) + ",\"bonus\":" + Set(bonus) + ",\"ups\":" + Set(upgrades) + "}";
+            "{\"gold\":" + Gold + ",\"cleared\":" + Set(cleared) + ",\"bonus\":" + Set(bonus) + ",\"ups\":" + Set(upgrades) + ",\"seen\":" + Set(seen) + "}";
 
         // True when Parse had to fix the save (progression.md 17); the caller saves the fixed one.
         public bool Repaired { get; private set; }
@@ -100,6 +123,7 @@ namespace VampireSpawn.Core
             Read(raw, "cleared", c.cleared);
             Read(raw, "bonus", c.bonus);
             Read(raw, "ups", c.upgrades);
+            Read(raw, "seen", c.seen);
             c.DropUnknownUpgrades();
             return c;
         }
