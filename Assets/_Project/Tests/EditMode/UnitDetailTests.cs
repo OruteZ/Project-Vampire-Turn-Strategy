@@ -74,5 +74,19 @@ namespace VampireSpawn.Tests
             var minion = DetailModel.Of(b, b.Enemies.First(u => u.Role == Role.Minion), null);
             Assert.AreEqual(Loc.T("detail.trait.minion"), minion.Skills.Single().Name);
         }
+
+        [Test]
+        public void AGuardInAPackSaysThePackWakesTogether()
+        {
+            var stage = new Stage("demo", new[] { "knight" }, 99, 99, 0, Goal.Boss,
+                new Bonus(BonusType.NoEat, 0, 0), new Boss(30, 1, 0, 0, 9), Open,
+                new[] { new Placement(EnemyType.Vampire, 6, 6), new Placement("skeleton", 5, 5, stance: Stance.Guard, alert: 2, group: "a"),
+                    new Placement("skeleton", 4, 5, stance: Stance.Guard, alert: 2) }, new Placement[0]);
+            var b = new Battle(stage, null, new[] { new Placement("knight", 1, 1) });
+            b.Start();
+            var guards = b.Enemies.Where(u => u.Stance == Stance.Guard).ToArray();
+            Assert.AreEqual(Loc.T("unit.card.stance.guardGroup", 2), DetailModel.Of(b, guards.Single(u => u.Group != null), null).States.Single(s => s.Id == "guard").Desc);
+            Assert.AreEqual(Loc.T("unit.card.stance.guard", 2), DetailModel.Of(b, guards.Single(u => u.Group == null), null).States.Single(s => s.Id == "guard").Desc);
+        }
     }
 }

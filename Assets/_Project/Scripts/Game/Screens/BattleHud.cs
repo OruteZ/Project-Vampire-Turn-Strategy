@@ -576,7 +576,7 @@ namespace VampireSpawn.Game.Screens
             if (o.Side == Side.Ally && b.Board.Lit(o.Pos)) return (Loc.T("hud.warn.lit"), Ui.Candle);
             if (o.JustRisen) return (Loc.T("hud.warn.risen"), Ui.Spawn);
             if (o.Role == Role.Vampire && o.Asleep) return (Loc.T("hud.warn.coffin", Rules.MoonWake), Ui.Candle);
-            if (o.Stance == Stance.Guard) return (Loc.T("unit.card.stance.guard", o.Alert), Ui.Candle);
+            if (o.Stance == Stance.Guard) return (DetailModel.GuardText(o), Ui.Candle);
             if (o.Stance == Stance.Hold) return (Loc.T("unit.card.stance.hold"), Ui.Muted);
             return (null, default);
         }

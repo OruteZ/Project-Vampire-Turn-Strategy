@@ -63,4 +63,4 @@
 
 - 이슈 #113. 규칙 `Battle.Fire`·`Battle.Arrive`(`Battle.Enemy.cs`)·`MeleeAct` 의 성향, 데이터 `StageData.triggers`·`doors`·`EnemySpot.wave/stance/alert`, 문 모습 `BoardView.OpenDoor`(굽지 않고 바위 소품 하나), 시험 `WavesTerrainTests`. 위 요구사항과 구현이 다르면 구현을 고친다.
 - 경계 묶음(2-5)은 `Battle.Wake`(`Battle.cs`, 피해 `Provoke` 와 거리 `MeleeAct` 둘 다 이리로), 데이터 `EnemySpot.group`, 시험 `WavesTerrainTests` 의 Group 셋.
-- 아직 안 함: 장마다 트리거 문장 키(`stage.<id>.trigger.<id>`, 지금은 늘 `trigger.fired`), 문 전용 모습, 유닛 카드의 무리 문장(2-5, 글 표를 다른 작업이 고치는 중이라 뒤로 미룸).
+- 아직 안 함: 장마다 트리거 문장 키(`stage.<id>.trigger.<id>`, 지금은 늘 `trigger.fired`), 문 전용 모습.

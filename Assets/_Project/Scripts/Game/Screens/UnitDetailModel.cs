@@ -30,6 +30,8 @@ namespace VampireSpawn.Game.Screens
         // A unit on the board: its values right now.
         public static DetailModel Of(Battle b, Unit u, IEnumerable<string> upgrades) => Build(u, b, upgrades);
 
+        public static string GuardText(Unit u) => Loc.T(u.Group != null ? "unit.card.stance.guardGroup" : "unit.card.stance.guard", u.Alert);
+
         // A unit type from a list: its values with the owned upgrades.
         public static DetailModel OfType(string kind, IEnumerable<string> upgrades) => Build(Battle.Preview(kind, upgrades), null, upgrades);
 
@@ -110,7 +112,7 @@ namespace VampireSpawn.Game.Screens
             if (u.JustRisen) Add("risen", Ui.Spawn);
             if (u.Role == Role.Vampire && u.Asleep) Add("coffin", Ui.Candle, Rules.MoonWake);
             if (!ally && u.Stance == Stance.Guard)
-                m.States.Add(new State { Id = "guard", Name = Loc.T("state.guard", u.Alert), Desc = Loc.T("unit.card.stance.guard", u.Alert), Color = Ui.Candle });
+                m.States.Add(new State { Id = "guard", Name = Loc.T("state.guard", u.Alert), Desc = GuardText(u), Color = Ui.Candle });
             if (!ally && u.Stance == Stance.Hold)
                 m.States.Add(new State { Id = "hold", Name = Loc.T("state.hold"), Desc = Loc.T("unit.card.stance.hold"), Color = Ui.Muted });
             if (u.Has(Ability.Trap)) Add("traps", Ui.Steel, b.TrapsLeft(u), u.Has(Ability.Satchel) ? Battle.SatchelHeld : Battle.TrapsHeld);
