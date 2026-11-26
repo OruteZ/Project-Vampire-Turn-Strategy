@@ -19,10 +19,12 @@ WAVE='System.Func<VampireSpawn.Core.Stage, VampireSpawn.Core.Placement, int> W =
 # Rule cards (docs/ui/rule-cards.md): 2z shows them longest line first on stage 1's deploy, and 3-deploy closes them without marking them seen.
 CARDS='var LONGEST = System.Linq.Enumerable.OrderByDescending(System.Linq.Enumerable.SelectMany(System.Linq.Enumerable.Range(0, VampireSpawn.Core.Campaign.Stages.Length), VampireSpawn.Core.Campaign.NewRules), id => VampireSpawn.Game.Screens.BattleScreen.Card(id).Line.Length);'
 # Camp states are stepped on a fully cleared campaign so L2 opens on any stage (#48 keeps locked stages out of L2); the screen still draws the real save.
+# A fully cleared campaign opens on the castle face (next stage = 20), so 2a steps once to the road face.
 # Each screen is its own scene (docs/dev/scene-split.md); a step loads it and the next eval finds its flow. Battle steps run in order after 3-deploy.
 declare -A SCREENS=(
   [1-menu]="VampireSpawn.Game.Screens.App.GoMenu(); return 1;"
-  [2a-camp-l1]="$APP VampireSpawn.Game.Screens.App.GoCamp(camp(new VampireSpawn.Core.CampInput[0])); return 1;"
+  [2a-camp-l1]="$APP VampireSpawn.Game.Screens.App.GoCamp(camp(new[]{ VampireSpawn.Core.CampInput.Of(VampireSpawn.Core.CampKey.Face, 0f) })); return 1;"
+  [2g-camp-l1-castle]="$APP VampireSpawn.Game.Screens.App.GoCamp(camp(new VampireSpawn.Core.CampInput[0])); return 1;"
   [2b-camp-l2-s1]="$APP VampireSpawn.Game.Screens.App.GoCamp(camp(new[]{ $PICK(0, 0f) })); return 1;"
   [2c-camp-l2-s8]="$APP VampireSpawn.Game.Screens.App.GoCamp(camp(new[]{ $PICK(7, 0f) })); return 1;"
   [2d-camp-l2-s10]="$APP VampireSpawn.Game.Screens.App.GoCamp(camp(new[]{ $PICK(9, 0f) })); return 1;"

@@ -20,6 +20,7 @@ namespace VampireSpawn.Game
         [Tooltip("성 면 (11~20장, docs/art/campaign-map.md 12). 다시 굽기는 이것을 건드리지 않는다")] public Transform castle;
         [Tooltip("지도 레이어 WASD 이동 속도 (초당 단위)")] public float panSpeed = 40f;
         [Tooltip("지도 레이어 WASD 이동 범위: 전경 시점에서 동서(x)·남북(y)으로 갈 수 있는 거리")] public Vector2 panRange = new Vector2(30f, 45f);
+        [Tooltip("성 면 지도 레이어 WASD 이동 범위 (Shot Castle 에서 동서·남북)")] public Vector2 castlePanRange = new Vector2(20f, 20f);
 
         // campaign-map.md 9: pitch 50, the scene's FOV 40, camp distance 28, 0.3 s between shots.
         public const float Pitch = 50f, Fov = 40f, CampDistance = 28f, BlendSeconds = 0.3f, WideDistance = 80f;
@@ -41,6 +42,7 @@ namespace VampireSpawn.Game
                 spot.enabled = false;
             }
             terrain.gameObject.SetActive(true);
+            if (castle != null) castle.gameObject.SetActive(true);
             fogDistance = 0f;
             pan = Vector2.zero;
             if (progress != null) BoardView.Kill(progress.gameObject);
@@ -82,9 +84,12 @@ namespace VampireSpawn.Game
         public void Look(CampLayer layer, int stage, Rect empty, Vector2 margin, bool snap = false)
         {
             var r = RegionOf(stage);
-            var chosen = layer == CampLayer.Barracks ? Shot("Shot Camp") : layer == CampLayer.Info && r != null ? Shot("Shot " + Campaign.Stages[RegionStage(stage)].Id) : Shot("Shot Wide");
+            var chosen = layer == CampLayer.Barracks ? Shot("Shot Camp") : layer == CampLayer.Info && r != null ? Shot("Shot " + Campaign.Stages[stage].Id)
+                : Shot(CampNav.FaceOf(stage) == CampFace.Castle ? CastleShot : "Shot Wide");
             foreach (var cam in Shots()) cam.enabled = cam == chosen;
             this.empty = empty;
+            // Each face pans on its own; switching faces starts the other one centred.
+            if (layer == CampLayer.Map && chosen != mapShot) { pan = Vector2.zero; mapShot = chosen; }
             panning = layer == CampLayer.Map ? chosen : null;
             if (chosen != null)
             {
@@ -145,7 +150,7 @@ namespace VampireSpawn.Game
 
         float fogDistance;
 
-        CinemachineCamera panning;
+        CinemachineCamera panning, mapShot;
         Vector2 pan;
 
         // Arrows stay with marker focus (CampFlow). The offset is camera-local after Aim, so it slides the wide shot without re-aiming.
@@ -155,7 +160,8 @@ namespace VampireSpawn.Game
             if (!Showing || panning == null || kb == null) return;
             var move = new Vector2((kb.dKey.isPressed ? 1f : 0f) - (kb.aKey.isPressed ? 1f : 0f), (kb.wKey.isPressed ? 1f : 0f) - (kb.sKey.isPressed ? 1f : 0f));
             pan += move.normalized * panSpeed * Time.unscaledDeltaTime;
-            pan = new Vector2(Mathf.Clamp(pan.x, -panRange.x, panRange.x), Mathf.Clamp(pan.y, -panRange.y, panRange.y));
+            var range = panning.name == CastleShot ? castlePanRange : panRange;
+            pan = new Vector2(Mathf.Clamp(pan.x, -range.x, range.x), Mathf.Clamp(pan.y, -range.y, range.y));
             if (!panning.TryGetComponent<CinemachineCameraOffset>(out var offset)) offset = panning.gameObject.AddComponent<CinemachineCameraOffset>();
             var rad = Pitch * Mathf.Deg2Rad;
             offset.Offset = new Vector3(pan.x, pan.y * Mathf.Sin(rad), pan.y * Mathf.Cos(rad));
@@ -163,21 +169,14 @@ namespace VampireSpawn.Game
 
         // The running map reads only the scene: regions, their Marker/Brazier/Camp points, Paths and the Camp Template are baked
         // objects people may move by hand. CampaignMapLayout only feeds the bake (campaign-map.md 10).
-        public const string PathsName = "Paths", StartName = "Start", CampTemplateName = "Camp Template";
+        public const string PathsName = "Paths", StartName = "Start", CampTemplateName = "Camp Template", CastleShot = "Shot Castle";
 
-        // Stages past the last region on the map are inside the castle and share its region (docs/areas/battle.md, 20 stages).
-        // -1 when the stage is out of range or nothing is baked.
-        public int RegionStage(int stageIndex)
-        {
-            if (terrain == null || stageIndex < 0 || stageIndex >= Campaign.Stages.Length) return -1;
-            for (var i = stageIndex; i >= 0; i--) if (terrain.Find("Region " + Campaign.Stages[i].Id) != null) return i;
-            return -1;
-        }
-
+        // Every stage has its own region: 1~10 on the road (terrain), 11~20 on the castle face (campaign-map.md 12).
         Transform RegionOf(int stageIndex)
         {
-            var i = RegionStage(stageIndex);
-            return i < 0 ? null : terrain.Find("Region " + Campaign.Stages[i].Id);
+            if (terrain == null || stageIndex < 0 || stageIndex >= Campaign.Stages.Length) return null;
+            var name = "Region " + Campaign.Stages[stageIndex].Id;
+            return terrain.Find(name) ?? (castle != null ? castle.Find(name) : null);
         }
 
         static Vector3 PointOr(Transform parent, string name, Vector3 fallback)
@@ -207,8 +206,8 @@ namespace VampireSpawn.Game
         {
             if (shots != null && shotsOf == terrain) return shots;
             shotsOf = terrain;
-            var cams = terrain != null ? terrain.Find("Cameras") : null;
-            return shots = cams != null ? cams.GetComponentsInChildren<CinemachineCamera>(true) : System.Array.Empty<CinemachineCamera>();
+            return shots = new[] { terrain, castle }.Where(t => t != null).Select(t => t.Find("Cameras")).Where(t => t != null)
+                .SelectMany(t => t.GetComponentsInChildren<CinemachineCamera>(true)).ToArray();
         }
 
         CinemachineCamera Shot(string name) => Shots().FirstOrDefault(c => c.name == name);
@@ -251,7 +250,7 @@ namespace VampireSpawn.Game
             for (var i = 0; i < Campaign.Stages.Length; i++)
             {
                 var r = RegionOf(i);
-                if (!campaign.IsCleared(Campaign.Stages[i]) || r == null || RegionStage(i) != i) continue;
+                if (!campaign.IsCleared(Campaign.Stages[i]) || r == null) continue;
                 var at = PointOr(r, "Brazier", r.position);
                 var brazier = art.MapProp(CampaignMapLayout.Brazier);
                 if (brazier != null) BoardView.Place(brazier, progress, at, 0.9f, 0f);
@@ -279,11 +278,12 @@ namespace VampireSpawn.Game
         }
 
         // 7: the camp sits at the last cleared region's camp spot (the start if none), turned toward the next region.
+        // Castle regions have no camp spot, so past 10 it stays at 10's (campaign-map.md 12).
         void BuildCamp()
         {
             var last = -1;
             for (var i = 0; i < Campaign.Stages.Length; i++) if (campaign.IsCleared(Campaign.Stages[i])) last = i;
-            var done = RegionOf(last);
+            var done = Enumerable.Range(0, last + 1).Reverse().Select(RegionOf).FirstOrDefault(r => r != null && r.Find("Camp") != null);
             var start = terrain.Find(StartName);
             var at = done != null ? PointOr(done, "Camp", done.position) : start != null ? start.position : terrain.position;
             var next = RegionOf(last + 1);

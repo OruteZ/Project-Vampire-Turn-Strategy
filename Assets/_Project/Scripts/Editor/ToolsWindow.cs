@@ -38,6 +38,8 @@ namespace VampireSpawn.Editor
             if (GUILayout.Button(new GUIContent("Camp 씬에 지도 굽기", "CampaignMapLayout 을 Camp 씬의 Campaign Map 으로 다시 짓는다. 손으로 옮긴 소품은 사라진다 (docs/dev/scene-split.md 3)"))
                 && EditorUtility.DisplayDialog("지도 굽기", "Camp 씬의 Campaign Map 을 배치 표로 다시 짓습니다. 손으로 옮긴 소품은 사라집니다.", "굽기", "취소"))
                 Debug.Log(CampaignMapBaker.Bake());
+            if (GUILayout.Button(new GUIContent("성 면 채우기", "Camp 씬의 Castle Map 에 없는 것(성 프리팹, 바닥, 11~20장 지역·표식·화로 점, 시점)만 더한다. 손으로 옮긴 것은 그대로 (docs/art/campaign-map.md 12)")))
+                Debug.Log(CampaignMapBaker.BakeCastle());
 
             EditorGUILayout.LabelField("전투 보드", EditorStyles.boldLabel);
             using (new EditorGUILayout.HorizontalScope())

@@ -3120,6 +3120,14 @@ MonoBehaviour:
     m_Localized: Spawn inherits
     m_Metadata:
       m_Items: []
+  - m_Id: 7573754833858560
+    m_Localized: Castle
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7573754884190208
+    m_Localized: The Road
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds:

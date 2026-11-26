@@ -19,9 +19,12 @@
 
 .reset { right: 24px; top: 24px; width: 220px; height: 44px; }
 
-.barracks-btn { left: 24px; bottom: 24px; width: 240px; height: 56px; flex-direction: row; justify-content: flex-start; padding-left: 16px; }
-.barracks-btn .icon { width: 28px; height: 28px; margin-right: 10px; -unity-background-image-tint-color: var(--steel); }
-.barracks-btn .btn-text { -unity-text-align: middle-left; }
+.barracks-btn, .face-btn { bottom: 24px; height: 56px; flex-direction: row; justify-content: flex-start; padding-left: 16px; }
+.barracks-btn { left: 24px; width: 240px; }
+/* stage-select.md 5-4: the face switch sits right of the barracks button, map layer only. */
+.face-btn { left: 280px; width: 220px; }
+.barracks-btn .icon, .face-btn .icon { width: 28px; height: 28px; margin-right: 10px; -unity-background-image-tint-color: var(--steel); }
+.barracks-btn .btn-text, .face-btn .btn-text { -unity-text-align: middle-left; }
 .barracks-btn.on .btn-frame { -unity-background-image-tint-color: var(--steel); }
 .badge {
     width: 24px; height: 24px; margin-right: 8px; border-radius: 12px; background-color: #e3a84b;
@@ -63,21 +66,6 @@
 .foes .value-text { font-size: 18px; }
 .roster { position: absolute; left: 32px; top: 352px; width: 496px; height: 56px; flex-direction: row; }
 .march { position: absolute; left: 268px; top: 428px; width: 260px; height: 60px; }
-
-/* stage-select.md 3-4 (#150 E2): a stage sharing its region (the castle) gets a badge row on top; the rows above the roster move down into the spare gaps. */
-.steps { position: absolute; left: 32px; top: 14px; height: 36px; flex-direction: row; align-items: center; display: none; }
-.grouped .steps { display: flex; }
-.step { margin-right: 6px; }
-.step.on { scale: 1.15 1.15; border-width: 2px; border-radius: 18px; border-color: rgba(234, 220, 174, 0.6); }
-.step-lock { position: absolute; left: 8px; top: 8px; width: 16px; height: 16px; }
-.step-done { position: absolute; right: -4px; bottom: -6px; font-size: 13px; color: #e3a84b; padding: 0; margin: 0; }
-.grouped .info-badge { top: 60px; }
-.grouped .info-name { top: 56px; }
-.grouped .break { top: 112px; height: 16px; }
-.grouped .goal { top: 130px; }
-.grouped .bonus { top: 172px; }
-.grouped .stats { top: 224px; }
-.grouped .foes { top: 290px; }
 .march > .btn { left: 0; top: 0; width: 260px; height: 60px; }
 
 .bk-icon { position: absolute; left: 32px; top: 44px; width: 32px; height: 32px; }
@@ -151,7 +139,6 @@
     font-size: 15px; color: var(--bone); -unity-text-align: middle-center; padding: 0; margin: 0; display: none;
 }
 .marker-name.shown { display: flex; }
-.marker-progress { position: absolute; left: 18px; top: 2px; width: 60px; height: 20px; border-radius: 10px; background-color: rgba(15, 16, 22, 0.8); font-size: 13px; color: var(--bone); -unity-text-align: middle-center; padding: 0; margin: 0; }
 
 /* #118: the pack frame on upgrade cards and map labels, thin like the battle slots. */
 .up > .panel-frame, .marker-name > .panel-frame { -unity-slice-scale: 0.0714px; }

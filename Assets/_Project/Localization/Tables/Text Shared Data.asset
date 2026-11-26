@@ -2639,6 +2639,14 @@ MonoBehaviour:
     m_Key: camp.inheritTag
     m_Metadata:
       m_Items: []
+  - m_Id: 7573754833858560
+    m_Key: camp.toCastle
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7573754884190208
+    m_Key: camp.toRoad
+    m_Metadata:
+      m_Items: []
   m_Metadata:
     m_Items: []
   m_KeyGenerator:

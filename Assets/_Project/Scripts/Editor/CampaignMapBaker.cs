@@ -31,6 +31,64 @@ namespace VampireSpawn.Editor
             return "구움: " + map.terrain.childCount + " 묶음, " + map.terrain.GetComponentsInChildren<Renderer>().Length + " 렌더러";
         }
 
+        public const string CastlePrefab = MaterialFolder + "/Castle.prefab", CastleName = "Castle Map";
+
+        // campaign-map.md 12: the castle face is Castle Map beside Campaign Map, so baking the road never touches it.
+        // Only what is missing is added; points and shots people moved stay put.
+        public static string BakeCastle()
+        {
+            var scene = EditorSceneManager.GetActiveScene();
+            if (scene.path != ScenePath) scene = EditorSceneManager.OpenScene(ScenePath, OpenSceneMode.Single);
+            var map = Object.FindFirstObjectByType<CampaignMapView>();
+            if (map == null) return "Camp 씬에 CampaignMapView 가 없다";
+            var root = map.castle;
+            if (root == null)
+            {
+                root = Point(map.transform, CastleName, Vector3.zero);
+                root.position = CampaignMapLayout.CastleOrigin;
+                map.castle = root;
+            }
+            if (root.Find("Castle") == null)
+            {
+                var castle = (GameObject)PrefabUtility.InstantiatePrefab(AssetDatabase.LoadAssetAtPath<GameObject>(CastlePrefab), root);
+                castle.transform.localPosition = CampaignMapLayout.CastleAt;
+                castle.transform.localRotation = Quaternion.Euler(0f, CampaignMapLayout.CastleYaw, 0f);
+            }
+            if (root.Find("Floor") == null)
+            {
+                var floor = GameObject.CreatePrimitive(PrimitiveType.Quad);
+                BoardView.Kill(floor.GetComponent<Collider>());
+                floor.name = "Floor";
+                floor.transform.SetParent(root, false);
+                floor.transform.localPosition = Vector3.down * 0.02f;
+                floor.transform.localRotation = Quaternion.Euler(90f, 0f, 0f);
+                floor.transform.localScale = new Vector3(CampaignMapLayout.CastleFloor, CampaignMapLayout.CastleFloor, 1f);
+                floor.GetComponent<MeshRenderer>().sharedMaterial = Material(map.art)(CampaignMapLayout.Floor, "Map Floor");
+            }
+            var cams = Point(root, "Cameras", Vector3.zero);
+            foreach (var (stage, at) in CampaignMapLayout.CastleSpots)
+            {
+                var region = Point(root, "Region " + stage, at);
+                Point(region, "Marker", Vector3.up * CampaignMapLayout.CastleMarkerLift);
+                Point(region, "Brazier", Vector3.zero);
+                if (cams.Find("Shot " + stage) == null) NewShot(cams, "Shot " + stage, region, CampaignMapLayout.CastleViewDistance);
+            }
+            if (cams.Find(CastleShot) == null)
+            {
+                var group = new GameObject("Castle Regions").AddComponent<CinemachineTargetGroup>();
+                group.transform.SetParent(cams, false);
+                foreach (var (stage, _) in CampaignMapLayout.CastleSpots) group.AddMember(root.Find("Region " + stage), 1f, 3f);
+                var wide = NewShot(cams, CastleShot, group.transform, CampaignMapLayout.CastleWideDistance);
+                var framing = wide.gameObject.AddComponent<CinemachineGroupFraming>();
+                framing.SizeAdjustment = CinemachineGroupFraming.SizeAdjustmentModes.DollyOnly;
+                framing.FramingMode = CinemachineGroupFraming.FramingModes.HorizontalAndVertical;
+            }
+            EditorUtility.SetDirty(map);
+            EditorSceneManager.MarkSceneDirty(scene);
+            EditorSceneManager.SaveScene(scene);
+            return "성 면: 지역 " + CampaignMapLayout.CastleSpots.Count(s => root.Find("Region " + s.Stage) != null) + ", 시점 " + cams.childCount;
+        }
+
         // One saved material per tint, reused on the next bake so the scene keeps pointing at the same assets.
         static System.Func<Color, string, Material> Material(ArtCatalog art) => (color, name) =>
         {

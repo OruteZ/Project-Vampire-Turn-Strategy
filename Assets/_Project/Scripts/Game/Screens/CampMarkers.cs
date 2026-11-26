@@ -16,7 +16,7 @@ namespace VampireSpawn.Game.Screens
         sealed class Marker
         {
             public VisualElement Root, Badge, Ring, Fill, Star;
-            public Label Number, Name, Progress;
+            public Label Number, Name;
             public IVisualElementScheduledItem Pulse;
             public bool Hover;
             public float Size = CampMarkers.Badge;
@@ -29,7 +29,7 @@ namespace VampireSpawn.Game.Screens
         Rect empty;
         CampLayer shownLayer;
         int focus;
-        bool[] shared;
+        CampFace face;
 
         public static CampMarkers Build(Transform host, VisualElement layer, ArtCatalog art, CampaignMapView map, Action<int> pick)
         {
@@ -48,7 +48,6 @@ namespace VampireSpawn.Game.Screens
                 m.Ring = m.Badge.Q(className: "ring");
                 m.Number = m.Badge.Q<Label>();
                 m.Star = ToolkitKit.E(m.Root, "marker-star");
-                m.Progress = ToolkitKit.L(m.Root, "", "marker-progress");
                 m.Name = ToolkitKit.L(m.Root, Loc.Text(Campaign.Stages[i].Title), "marker-name");
                 ToolkitKit.Frame(m.Name, art, Ui.Steel);
                 var index = i;
@@ -66,17 +65,7 @@ namespace VampireSpawn.Game.Screens
             shownLayer = nav.Layer;
             focus = nav.Stage;
             this.empty = empty;
-            // Stages that share one region show a single marker: the one to play next, or the last once all are cleared.
-            shared = new bool[markers.Length];
-            for (var i = 0; i < markers.Length; i++)
-            {
-                var group = Enumerable.Range(0, markers.Length).Where(k => map.RegionStage(k) == map.RegionStage(i)).ToList();
-                var next = group.Where(k => c.StageOpen(k) && !c.IsCleared(Campaign.Stages[k])).DefaultIfEmpty(group.Any(k => c.StageOpen(k)) ? group.Last() : group.First()).First();
-                shared[i] = i != next;
-                // stage-select.md 4-1 (#150 E2): the one marker a shared region shows counts its cleared stages.
-                markers[i].Progress.text = group.Count > 1 ? group.Count(k => c.IsCleared(Campaign.Stages[k])) + "/" + group.Count : "";
-                markers[i].Progress.style.display = group.Count > 1 ? DisplayStyle.Flex : DisplayStyle.None;
-            }
+            face = nav.Face;
             for (var i = 0; i < markers.Length; i++)
             {
                 var m = markers[i];
@@ -122,7 +111,7 @@ namespace VampireSpawn.Game.Screens
             {
                 var m = markers[i];
                 var p = shownLayer == CampLayer.Barracks ? null : map.ScreenPoint(i);
-                var show = p.HasValue && empty.Contains(p.Value) && (shared == null || !shared[i]);
+                var show = p.HasValue && empty.Contains(p.Value) && CampNav.FaceOf(i) == face;
                 m.Root.style.display = show ? DisplayStyle.Flex : DisplayStyle.None;
                 if (show)
                 {

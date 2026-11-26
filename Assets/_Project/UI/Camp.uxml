@@ -24,11 +24,16 @@
             <ui:Label class="btn-text" picking-mode="Ignore" />
             <ui:Label class="key" text="B" picking-mode="Ignore" />
         </ui:VisualElement>
+        <ui:VisualElement name="face" class="btn normal face-btn map-only">
+            <ui:VisualElement class="btn-frame" picking-mode="Ignore" />
+            <ui:VisualElement class="icon" picking-mode="Ignore" />
+            <ui:Label class="btn-text" picking-mode="Ignore" />
+            <ui:Label class="key" text="Tab" picking-mode="Ignore" />
+        </ui:VisualElement>
 
         <ui:VisualElement name="info" class="panel info-panel">
             <ui:VisualElement class="panel-frame" picking-mode="Ignore" />
             <ui:VisualElement name="info-crest" class="info-crest decor" picking-mode="Ignore" />
-            <ui:VisualElement name="info-steps" class="steps" picking-mode="Ignore" />
             <ui:VisualElement name="info-badge" class="info-badge" picking-mode="Ignore">
                 <ui:VisualElement class="ring-fill" picking-mode="Ignore" />
                 <ui:VisualElement class="ring" picking-mode="Ignore" />

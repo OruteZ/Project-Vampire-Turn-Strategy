@@ -48,7 +48,9 @@ namespace VampireSpawn.Core
             Stage = stage; Info = info; Barracks = barracks; Tab = tab; Armed = armed; ArmedId = armedId; ArmedUntil = armedUntil;
         }
 
-        public CampFace Face => CampFace.Road;
+        public CampFace Face => FaceOf(Stage);
+
+        public static CampFace FaceOf(int stage) => stage >= CastleFrom ? CampFace.Castle : CampFace.Road;
 
         public CampLayer Layer => Barracks ? CampLayer.Barracks : Info ? CampLayer.Info : CampLayer.Map;
         public bool ResetArmed => Armed == CampConfirm.Reset;
@@ -76,6 +78,21 @@ namespace VampireSpawn.Core
         {
             for (var i = 0; i < Campaign.Stages.Length; i++) if (c.StageOpen(i) && !c.IsCleared(Campaign.Stages[i])) return i;
             return Last;
+        }
+
+        // 5-4: switching faces lands on that face's next stage, else its last open one, else its first.
+        public static int DefaultStage(Campaign c, CampFace face)
+        {
+            var from = face == CampFace.Castle ? CastleFrom : 0;
+            var to = face == CampFace.Castle ? Last : CastleFrom - 1;
+            var open = -1;
+            for (var i = from; i <= to; i++)
+            {
+                if (!c.StageOpen(i)) continue;
+                if (!c.IsCleared(Campaign.Stages[i])) return i;
+                open = i;
+            }
+            return open >= 0 ? open : from;
         }
 
         public static TabState TabOf(Campaign c, string kind)
@@ -132,6 +149,9 @@ namespace VampireSpawn.Core
                     if (!Barracks || input.Index < 0 || input.Index >= GameData.Types.Length || TabOf(c, GameData.Types[input.Index].Key) == TabState.Hidden)
                         return Unchanged(calm, wasArmed);
                     return (calm.With(tab: input.Index), CampDo.Redraw);
+                case CampKey.Face:
+                    if (Layer != CampLayer.Map) return Unchanged(calm, wasArmed);
+                    return (calm.With(stage: DefaultStage(c, Face == CampFace.Road ? CampFace.Castle : CampFace.Road)), CampDo.Redraw);
                 case CampKey.Enter:
                     if (Barracks) return Unchanged(calm, wasArmed);
                     if (!c.StageOpen(Stage)) return Unchanged(calm, wasArmed);

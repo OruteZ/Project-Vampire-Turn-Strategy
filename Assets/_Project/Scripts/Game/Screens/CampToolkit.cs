@@ -46,6 +46,7 @@ namespace VampireSpawn.Game.Screens
             ui.Wire(r.Q("reset"), BtnKind.Ghost, () => send(input(CampKey.Reset)));
             ui.Wire(r.Q("barracks"), BtnKind.Normal, () => send(input(CampKey.Barracks)));
             ToolkitKit.Picture(r.Q("barracks").Q(className: "icon"), art.Ui(Kit.Icon.Up));
+            ui.Wire(r.Q("face"), BtnKind.Normal, () => send(input(CampKey.Face)));
             foreach (var close in new[] { r.Q("info-close"), r.Q("bk-close") })
             {
                 ui.Wire(close, BtnKind.Ghost, () => send(input(CampKey.Close)));
@@ -94,6 +95,11 @@ namespace VampireSpawn.Game.Screens
             badge.EnableInClassList("shown", buyable > 0);
             badge.Q<Label>().text = buyable.ToString();
             SetTip(barracks, buyable > 0 ? Loc.T("camp.affordable", buyable) : null);
+
+            var face = root.Q("face");
+            var toCastle = nav.Face == CampFace.Road;
+            face.Q<Label>(className: "btn-text").text = Loc.T(toCastle ? "camp.toCastle" : "camp.toRoad");
+            ToolkitKit.Picture(face.Q(className: "icon"), art.Ui(toCastle ? Kit.Icon.Boss : Kit.Icon.Flag));
 
             if (nav.Layer == CampLayer.Info) Info(c, nav.Stage, input);
             if (nav.Layer == CampLayer.Barracks) Barracks(c, nav, input);
@@ -160,8 +166,6 @@ namespace VampireSpawn.Game.Screens
             badge.Q<Label>().text = (i + 1).ToString();
             badge.Q<Label>().style.color = ink;
 
-            Steps(c, i, panel);
-
             var name = panel.Q<Label>("info-name");
             name.text = Loc.Text(s.Title);
             name.style.color = last ? Ui.Blood : Ui.Bone;
@@ -218,43 +222,6 @@ namespace VampireSpawn.Game.Screens
             march.Clear();
             var btn = ToolkitKit.Btn(march, art, Loc.T(clear ? "camp.marchAgain" : "camp.march"), clear ? BtnKind.Normal : BtnKind.Primary, "Enter", () => send(input(CampKey.Enter)));
             if (clear) SetTip(btn, Loc.T(bonusGot ? "camp.allClaimed" : "camp.replayNote"));
-        }
-
-        // stage-select.md 3-4 (#150 E2): stages that share one map region (the castle) get a row of small badges on top of the panel.
-        void Steps(Campaign c, int i, VisualElement panel)
-        {
-            var group = Group(i);
-            panel.EnableInClassList("grouped", group.Length > 1);
-            var row = panel.Q("info-steps");
-            row.Clear();
-            if (group.Length < 2) return;
-            foreach (var k in group)
-            {
-                var open = c.StageOpen(k);
-                var (ring, fill, ink) = BadgeColors(c, k);
-                var b = ToolkitKit.RingBadge(row, art, open ? (k + 1).ToString() : null, 32, ring, fill, ink);
-                b.name = "Step " + (k + 1);
-                b.AddToClassList("step");
-                b.EnableInClassList("on", k == i);
-                if (!open) ToolkitKit.Pic(b, art, Kit.Icon.Lock, Ui.Dim, "step-lock");
-                if (c.IsCleared(Campaign.Stages[k])) ToolkitKit.L(b, "✓", "step-done");
-                SetTip(b, Loc.Text(Campaign.Stages[k].Title));
-                if (!open) continue;
-                var index = k;
-                b.pickingMode = PickingMode.Position;
-                UiSound.Add(b);
-                b.RegisterCallback<ClickEvent>(_ => send(CampInput.Pick(index, Time.unscaledTime)));
-            }
-        }
-
-        // The stages drawn on stage i's map region (CampaignMapView.RegionStage); just i when nothing is baked.
-        public Func<int, int> RegionStage;
-
-        public int[] Group(int i)
-        {
-            if (RegionStage == null || RegionStage(i) < 0) return new[] { i };
-            var region = RegionStage(i);
-            return Enumerable.Range(0, Campaign.Stages.Length).Where(k => RegionStage(k) == region).ToArray();
         }
 
         void Barracks(Campaign c, CampNav nav, Func<CampKey, CampInput> input)

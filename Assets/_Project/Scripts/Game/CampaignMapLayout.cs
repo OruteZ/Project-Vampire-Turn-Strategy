@@ -216,6 +216,17 @@ namespace VampireSpawn.Game
 
         public static MapRegion Region(string stageId) => System.Array.Find(Regions, r => r.Stage == stageId);
 
+        // 12: the castle face (11~20), the demo cathedral turned side-on so its long nave fills a wide screen, far enough north that
+        // neither face's shots see the other. Spots are on the castle's surface in Castle Map local units; the marker floats CastleMarkerLift above.
+        public static readonly Vector3 CastleOrigin = new Vector3(0f, 0f, 920f), CastleAt = new Vector3(-20f, 0f, 0f);
+        public const float CastleYaw = 270f, CastleMarkerLift = 2.5f, CastleViewDistance = 34f, CastleWideDistance = 70f, CastleFloor = 600f;
+        public static readonly (string Stage, Vector3 At)[] CastleSpots =
+        {
+            ("s11", new Vector3(-34, 0, -4)), ("s12", new Vector3(-9, 23, -9)), ("s13", new Vector3(-24, 0, 0)), ("s14", new Vector3(-3, 0, -17)),
+            ("s15", new Vector3(6, 29, -15)), ("s16", new Vector3(-3, 26, 0)), ("s17", new Vector3(9, 42, 0)), ("s18", new Vector3(15, 29, 0)),
+            ("s19", new Vector3(21, 23, -9)), ("s20", new Vector3(25, 31, 0)),
+        };
+
         // Every prefab name the map places; ArtCatalog.mapProps must hold exactly these (UnitLookTests-style guard in CampaignMapLayoutTests).
         public static IEnumerable<string> Names =>
             Regions.SelectMany(r => r.Props.Select(p => p.Prefab).Concat(r.Fill?.Names.Select(n => n.Name) ?? Enumerable.Empty<string>()))

@@ -32,7 +32,6 @@ namespace VampireSpawn.Game.Screens
             App.CampStart = null;
             map.Show(Campaign);
             ui = CampToolkit.Build(transform, map.art, In, Send);
-            ui.RegionStage = map.RegionStage;
             ToolkitKit.Shade(ui.Root.Q("shade"));
             detail = new UnitDetail(transform, map.art);
             ui.Detail = ShowDetail;
@@ -132,6 +131,7 @@ namespace VampireSpawn.Game.Screens
             if (keys.Pressed("enter", kb.enterKey.isPressed || kb.numpadEnterKey.isPressed)) Send(In(CampKey.Enter));
             if (keys.Pressed("esc", kb.escapeKey.isPressed)) Send(In(CampKey.Esc));
             if (keys.Pressed("b", kb.bKey.isPressed)) Send(In(CampKey.Barracks));
+            if (keys.Pressed("tab", kb.tabKey.isPressed)) Send(In(CampKey.Face));
         }
     }
 }
