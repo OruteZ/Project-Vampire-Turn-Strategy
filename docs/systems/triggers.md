@@ -37,6 +37,7 @@
    - **고정 적은 제 사거리 밖에서 맞으면 돌격으로 바뀐다 (2026-11-17, #113).** 바로 옆에서 맞는 동안은 그대로 자리를 지킨다. 근거: 움직이지 않는 적을 멀리서 손실 없이 쏴 잡는 것이 궁수 쌓기 편성의 승리 공식이었다. 코드 `Battle.Provoke`.
 3. 방어전의 "지킬 칸 먼저"(goals.md 4-1·4-2)는 돌격과 깬 경계에만 걸린다. 고정은 움직이지 않으므로 상관없다.
 4. 유닛 카드에 성향을 보인다: `unit.card.stance.guard` "경계 {0}: 아군이 {0}칸 안에 들거나 맞으면 움직인다" / "Guard {0}: moves once an ally comes within {0} or it is hit", `unit.card.stance.hold` "고정: 움직이지 않고 닿는 아군만 공격한다" / "Holds: never moves, attacks what it can reach". 깬 경계는 문장을 지운다. 돌격은 문장이 없다.
+5. **경계 묶음 (#150 보고서 D1).** 경계 배치 항목에 묶음 이름(`group`, 선택)을 적을 수 있다. 같은 묶음의 경계 하나가 깨면(거리 안 접근 또는 피해) 그 묶음에서 아직 안 깬 경계가 모두 그 순간 함께 깬다. 깬 뒤는 돌격. 묶음이 없으면 혼자 깬다(지금과 같다). 같은 적 페이즈에서 차례가 이미 지난 묶음 적은 다음 적 페이즈부터 움직인다. 묶음에는 경계 적만 둔다(검증기가 다른 성향을 문제로 낸다). 유닛 카드 경계 문장에 무리임을 덧붙인다: "경계 {0} · 무리: 하나가 깨면 함께 움직인다" / "Guard {0} · pack: they move together once one wakes". 근거: 경계 적이 하나씩 깨면 하나씩 낚아 잡는 것이 정답이 된다. Fire Emblem 맵의 묶음 AI(하나를 낚으면 무리가 온다)와 같다.
 
 ### 3. 문장 (Text 표 새 키)
 
@@ -61,4 +62,5 @@
 ## 구현
 
 - 이슈 #113. 규칙 `Battle.Fire`·`Battle.Arrive`(`Battle.Enemy.cs`)·`MeleeAct` 의 성향, 데이터 `StageData.triggers`·`doors`·`EnemySpot.wave/stance/alert`, 문 모습 `BoardView.OpenDoor`(굽지 않고 바위 소품 하나), 시험 `WavesTerrainTests`. 위 요구사항과 구현이 다르면 구현을 고친다.
-- 아직 안 함: 장마다 트리거 문장 키(`stage.<id>.trigger.<id>`, 지금은 늘 `trigger.fired`), 문 전용 모습.
+- 경계 묶음(2-5)은 `Battle.Wake`(`Battle.cs`, 피해 `Provoke` 와 거리 `MeleeAct` 둘 다 이리로), 데이터 `EnemySpot.group`, 시험 `WavesTerrainTests` 의 Group 셋.
+- 아직 안 함: 장마다 트리거 문장 키(`stage.<id>.trigger.<id>`, 지금은 늘 `trigger.fired`), 문 전용 모습, 유닛 카드의 무리 문장(2-5, 글 표를 다른 작업이 고치는 중이라 뒤로 미룸).

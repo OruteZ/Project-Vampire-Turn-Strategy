@@ -141,10 +141,13 @@ namespace VampireSpawn.Core
         public readonly string Wave;
         public readonly Stance Stance;
         public readonly int Alert;
+        // Guards sharing a group wake together (docs/systems/triggers.md 2-5); null = none.
+        public readonly string Group;
 
-        public Placement(string kind, int col, int row, int arrive = 0, string wave = null, Stance stance = Stance.Charge, int alert = 0)
+        public Placement(string kind, int col, int row, int arrive = 0, string wave = null, Stance stance = Stance.Charge, int alert = 0, string group = null)
         {
             Kind = kind; Col = col; Row = row; Arrive = arrive; Wave = string.IsNullOrEmpty(wave) ? null : wave; Stance = stance; Alert = alert;
+            Group = string.IsNullOrEmpty(group) ? null : group;
         }
 
         public bool Reinforcement => Arrive > 0 || Wave != null;

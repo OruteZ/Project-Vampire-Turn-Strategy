@@ -177,6 +177,44 @@ namespace VampireSpawn.Tests
             Assert.AreEqual(new Hex(0, 0), b.Enemies.Single(e => e.Stance == Stance.Hold).Pos);
         }
 
+        // docs/systems/triggers.md 2-5
+        [Test]
+        public void HittingOneGuardOfAGroupWakesTheWholeGroup()
+        {
+            var b = new Battle(Field(new[] { new Placement(EnemyType.Vampire, 6, 6), new Placement("skeleton", 3, 2, stance: Stance.Guard, alert: 1, group: "g"),
+                new Placement("skeleton", 0, 0, stance: Stance.Guard, alert: 1, group: "g"), new Placement("skeleton", 6, 0, stance: Stance.Guard, alert: 1, group: "h") }),
+                null, new[] { new Placement("archer", 3, 5) });
+            b.Start();
+            Assert.IsTrue(b.Attack(b.Allies.Single().Id, b.UnitAt(new Hex(3, 2)).Id).Ok);
+            Assert.AreEqual(Stance.Charge, b.UnitAt(new Hex(3, 2)).Stance);
+            Assert.AreEqual(Stance.Charge, b.UnitAt(new Hex(0, 0)).Stance, "same group, far from the shot: wakes too");
+            Assert.AreEqual(Stance.Guard, b.UnitAt(new Hex(6, 0)).Stance, "another group sleeps on");
+        }
+
+        [Test]
+        public void AnAllyNearOneGuardOfAGroupWakesTheWholeGroup()
+        {
+            var b = new Battle(Field(new[] { new Placement(EnemyType.Vampire, 6, 6), new Placement("skeleton", 0, 0, stance: Stance.Guard, alert: 1, group: "g"),
+                new Placement("skeleton", 3, 0, stance: Stance.Guard, alert: 3, group: "g") }), null, new[] { new Placement("pspear", 3, 4) });
+            b.Start();
+            b.EndTurn();
+            Assert.IsTrue(b.Enemies.Where(e => e.Kind == "skeleton").All(e => e.Stance == Stance.Guard), "ally 4 away: both wait");
+            b.Move(b.Allies.Single().Id, new Hex(3, 3));
+            b.EndTurn();
+            Assert.IsTrue(b.Enemies.Where(e => e.Kind == "skeleton").All(e => e.Stance == Stance.Charge), "one sees the ally: both wake");
+        }
+
+        [Test]
+        public void AGuardWithoutAGroupWakesAlone()
+        {
+            var b = new Battle(Field(new[] { new Placement(EnemyType.Vampire, 6, 6), new Placement("skeleton", 3, 2, stance: Stance.Guard, alert: 1),
+                new Placement("skeleton", 0, 0, stance: Stance.Guard, alert: 1) }), null, new[] { new Placement("archer", 3, 5) });
+            b.Start();
+            Assert.IsTrue(b.Attack(b.Allies.Single().Id, b.UnitAt(new Hex(3, 2)).Id).Ok);
+            Assert.AreEqual(Stance.Charge, b.UnitAt(new Hex(3, 2)).Stance);
+            Assert.AreEqual(Stance.Guard, b.UnitAt(new Hex(0, 0)).Stance);
+        }
+
         // docs/systems/hex-grid.md 4-1
         [Test]
         public void RockBlocksAShotButAGapDoesNot()

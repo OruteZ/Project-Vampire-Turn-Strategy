@@ -4,7 +4,7 @@
 
 ## 지도 검증기
 - 자리: `Core/DataSet.cs` `ValidateLayout` (`Validate` 가 부른다). `GameDataAssetTests.ShippedAssetsAreComplete` 가 출하 데이터에 돌린다. 데이터 편집기도 같은 목록을 보인다.
-- 보는 것: 문을 모두 연 상태에서 배치 구역과 안 이어진 칸, 배치 칸 < 인구, 예시 편성 인구 > 장 인구, 트리거 id 겹침·칸·값, 문 칸이 `#` 인지, 증원이 없는 트리거를 가리키는지, 증원 턴과 트리거를 같이 쓰는지, 경계의 깨는 거리.
+- 보는 것: 문을 모두 연 상태에서 배치 구역과 안 이어진 칸, 배치 칸 < 인구, 예시 편성 인구 > 장 인구, 트리거 id 겹침·칸·값, 문 칸이 `#` 인지, 증원이 없는 트리거를 가리키는지, 증원 턴과 트리거를 같이 쓰는지, 경계의 깨는 거리, 묶음(`group`)에 경계가 아닌 적이 있는지.
 - 손으로 돌리기: `unity command --project-path <트리> script eval --code 'return string.Join("\n", VampireSpawn.Core.GameData.Current.Validate());'`
 
 ## 봇 시뮬레이터

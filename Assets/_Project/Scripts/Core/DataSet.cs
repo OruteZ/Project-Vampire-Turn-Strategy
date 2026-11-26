@@ -129,6 +129,7 @@ namespace VampireSpawn.Core
                 if (e.Arrive > 0 && e.Wave != null) p.Add($"{at}: {e.Kind} {e.Col},{e.Row} 은(는) 증원 턴과 트리거 중 하나만");
                 if (e.Wave != null && s.Triggers.All(x => x.Id != e.Wave)) p.Add($"{at}: 없는 트리거 {e.Wave}");
                 if (e.Stance == Stance.Guard && e.Alert < 1) p.Add($"{at}: 경계 {e.Kind} {e.Col},{e.Row} 의 깨는 거리는 1 이상");
+                if (e.Group != null && e.Stance != Stance.Guard) p.Add($"{at}: 묶음 {e.Group} 의 {e.Kind} {e.Col},{e.Row} 은(는) 경계가 아니다");
             }
             foreach (var a in s.Sample)
             {

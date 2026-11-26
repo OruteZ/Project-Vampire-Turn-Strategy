@@ -221,7 +221,7 @@ namespace VampireSpawn.Core
             if (e.Stance == Stance.Guard)
             {
                 if (!Targets.Any(a => Hex.Distance(a.Pos, e.Pos) <= e.Alert)) return;
-                e.Stance = Stance.Charge;
+                Wake(e);
             }
             var adj = AlliesInReach(e, e.Pos);
             if (e.Stance == Stance.Hold)

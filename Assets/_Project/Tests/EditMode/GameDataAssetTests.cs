@@ -68,6 +68,7 @@ namespace VampireSpawn.Tests
             s.map[2] = s.map[2] + ".";
             s.enemies.Add(new EnemySpot { kind = EnemyType.Vampire, col = 0, row = 0 });
             s.enemies.Add(new EnemySpot { kind = "ghost", col = 1, row = 0 });
+            s.enemies.Add(new EnemySpot { kind = "skeleton", col = 2, row = 0, group = "g" });
             s.sample.Add(new UnitSpot { kind = "hunter", col = 0, row = 1 });
             s.units.Add("dragoon");
             root.units[0].upgrades[0].id = root.units[0].upgrades[1].id;
@@ -79,6 +80,7 @@ namespace VampireSpawn.Tests
             StringAssert.Contains("배치 구역 밖", problems);
             StringAssert.Contains("쓸 수 없는 병종", problems);
             StringAssert.Contains("강화 id", problems);
+            StringAssert.Contains("묶음 g 의 skeleton 2,0 은(는) 경계가 아니다", problems);
         }
 
         // docs/art/stage-dressing.md 8: a look belongs to a gap cell only, and the old water glyph is gone from the rule map.

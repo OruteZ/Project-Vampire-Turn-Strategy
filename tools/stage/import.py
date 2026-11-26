@@ -33,7 +33,7 @@ for i, s in enumerate(d['Stages']):
     b, k = s['Bonus'], s['Boss']
     L.append(f'  s.bonusType = (VampireSpawn.Core.BonusType){b["Type"]}; s.bonusValue = {b["Value"]}; s.bonusGold = {b["Gold"]}; s.bossHp = {k["Hp"]}; s.bossAtk = {k["Atk"]}; s.bossDef = {k["Def"]}; s.bossMov = {k["Mov"]}; s.bossHeal = {k["Heal"]};')
     L.append('  s.map = new System.Collections.Generic.List<string>{' + ','.join(q(x) for x in s['Map']) + '};')
-    L.append(f'  s.enemies = new System.Collections.Generic.List<EnemySpot>{{' + ','.join(f'new EnemySpot{{kind="{x["Kind"]}",col={x["Col"]},row={x["Row"]},arrive={x["Arrive"]},wave={q(x["Wave"])},stance=(VampireSpawn.Core.Stance){x["Stance"]},alert={x["Alert"]}}}' for x in s['Enemies']) + '};')
+    L.append(f'  s.enemies = new System.Collections.Generic.List<EnemySpot>{{' + ','.join(f'new EnemySpot{{kind="{x["Kind"]}",col={x["Col"]},row={x["Row"]},arrive={x["Arrive"]},wave={q(x["Wave"])},stance=(VampireSpawn.Core.Stance){x["Stance"]},alert={x["Alert"]},group={q(x.get("Group"))}}}' for x in s['Enemies']) + '};')
     L.append(f'  s.sample = new System.Collections.Generic.List<UnitSpot>{{' + ','.join(f'new UnitSpot{{kind="{x["Kind"]}",col={x["Col"]},row={x["Row"]}}}' for x in s['Sample']) + '};')
     L.append(f'  s.triggers = new System.Collections.Generic.List<TriggerSpot>{{' + ','.join(f'new TriggerSpot{{id="{x["Id"]}",kind=(VampireSpawn.Core.TriggerKind){x["Kind"]},value={x["Value"]},hexes={LV(x["Hexes"])}}}' for x in s['Triggers']) + '};')
     L.append(f'  s.doors = new System.Collections.Generic.List<DoorSpot>{{' + ','.join(f'new DoorSpot{{hexes={LV(x["Hexes"])},trigger="{x["Trigger"]}"}}' for x in s['Doors']) + '};')

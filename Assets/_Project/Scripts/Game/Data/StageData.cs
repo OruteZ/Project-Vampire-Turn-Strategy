@@ -8,7 +8,8 @@ namespace VampireSpawn.Game.Data
 {
     [Serializable] public struct EnemySpot { [Tooltip("하수인 key 또는 vampire")] public string kind; public int col, row; [Tooltip("증원 턴. 0 = 처음부터 (docs/systems/waves.md)")] public int arrive;
         [Tooltip("이 트리거 id 가 이루어지면 나타난다 (docs/systems/triggers.md)")] public string wave;
-        public Stance stance; [Tooltip("경계일 때 깨는 거리")] public int alert; }
+        public Stance stance; [Tooltip("경계일 때 깨는 거리")] public int alert;
+        [Tooltip("경계 묶음 이름. 같은 묶음의 경계 하나가 깨면 모두 깬다. 비우면 혼자 (docs/systems/triggers.md 2-5)")] public string group; }
     [Serializable] public struct TriggerSpot { public string id; public TriggerKind kind; [Tooltip("턴 수 또는 처치 수")] public int value; [Tooltip("칸 도달일 때 칸 (열, 행)")] public List<Vector2Int> hexes; }
     [Serializable] public struct ReinforceSpot { [Tooltip("이 트리거가 이루어진 뒤 아군 페이즈에 열린다 (docs/systems/reinforce.md)")] public string trigger; public int pop, silver; [Tooltip("증원 배치 칸 (열, 행)")] public List<Vector2Int> hexes; }
     [Serializable] public struct DoorSpot { [Tooltip("지도에서 # 인 칸 (열, 행)")] public List<Vector2Int> hexes; public string trigger; }
@@ -43,7 +44,7 @@ namespace VampireSpawn.Game.Data
 
         public Stage ToCore() => new Stage(id, units.ToArray(), pop, silver, reward, goal,
             new Bonus(bonusType, bonusValue, bonusGold), new Boss(bossHp, bossAtk, bossDef, bossMov, bossHeal), map.ToArray(),
-            enemies.Select(e => new Placement(e.kind, e.col, e.row, e.arrive, e.wave, e.stance, e.alert)).ToArray(),
+            enemies.Select(e => new Placement(e.kind, e.col, e.row, e.arrive, e.wave, e.stance, e.alert, e.group)).ToArray(),
             sample.Select(e => new Placement(e.kind, e.col, e.row)).ToArray(),
             spots.Select(p => new Hex(p.x, p.y)).ToArray(), hold,
             goal == Goal.Escort ? new EscortStats(escortHp, escortDef, escortMov, new Hex(escortAt.x, escortAt.y)) : null,

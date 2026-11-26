@@ -110,7 +110,7 @@ namespace VampireSpawn.Core
             sb.Append($"turn {B.Turn} phase {B.Phase}{(B.Reinforcing ? "(reinforce)" : "")} moon {B.Moon}/{Rules.MoonMax} eat={B.EatTarget} pop {B.Used(t => t.Pop)}/{B.PopCap} killed {B.MinionsKilled} lost {B.Stats.Lost} risen {B.Stats.Risen} end={B.Ending}\n");
             foreach (var u in B.Units.OrderBy(u => u.Side).ThenBy(u => u.Id))
                 sb.Append($"{(u.Side == Side.Ally ? "ALLY " : "ENEMY")} {u.Id,3} {u.Kind,-14} {u.Pos,-6} hp {u.Hp}/{u.MaxHp} atk {u.Atk} def {u.Def} mov {u.Mov} rng {u.Rng}" +
-                    $"{(u.Side == Side.Ally ? (u.Moved ? " moved" : "") + (u.Acted ? " acted" : "") + (B.Board.Lit(u.Pos) ? " lit" : "") : (u.Asleep ? " asleep" : "") + (u.Stance != Stance.Charge ? " " + u.Stance + (u.Stance == Stance.Guard ? u.Alert.ToString() : "") : "") + (u.JustArrived ? " arrived" : "") + (u.JustRisen ? " risen" : ""))}\n");
+                    $"{(u.Side == Side.Ally ? (u.Moved ? " moved" : "") + (u.Acted ? " acted" : "") + (B.Board.Lit(u.Pos) ? " lit" : "") : (u.Asleep ? " asleep" : "") + (u.Stance != Stance.Charge ? " " + u.Stance + (u.Stance == Stance.Guard ? u.Alert + (u.Group != null ? " " + u.Group : "") : "") : "") + (u.JustArrived ? " arrived" : "") + (u.JustRisen ? " risen" : ""))}\n");
             foreach (var c in B.Corpses) sb.Append($"CORPSE {c.Id} {c.Type} {c.Pos} hp {c.MaxHp} atk {c.Atk}\n");
             return sb.ToString();
         }

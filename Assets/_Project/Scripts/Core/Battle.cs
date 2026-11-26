@@ -41,6 +41,7 @@ namespace VampireSpawn.Core
         public bool Wolf { get; internal set; }
         public Stance Stance { get; internal set; }
         public int Alert { get; internal set; }
+        public string Group { get; internal set; }
         internal readonly List<Ability> abil = new List<Ability>();
         public IReadOnlyList<Ability> Abil => abil;
 
@@ -171,6 +172,7 @@ namespace VampireSpawn.Core
             var u = MakeEnemy(p.Kind, at);
             u.Stance = p.Stance;
             u.Alert = p.Alert;
+            u.Group = p.Group;
             return u;
         }
 
@@ -662,7 +664,14 @@ namespace VampireSpawn.Core
         // A guard charges once hit. A unit told to hold its ground does too when hit from where it cannot hit back (docs/systems/triggers.md 3).
         void Provoke(Unit att, Unit def)
         {
-            if (def.Stance == Stance.Guard || def.Stance == Stance.Hold && att.Side != def.Side && Hex.Distance(att.Pos, def.Pos) > def.Rng) def.Stance = Stance.Charge;
+            if (def.Stance == Stance.Guard) Wake(def);
+            else if (def.Stance == Stance.Hold && att.Side != def.Side && Hex.Distance(att.Pos, def.Pos) > def.Rng) def.Stance = Stance.Charge;
+        }
+
+        // docs/systems/triggers.md 2-5: a guard wakes with every guard of its group.
+        void Wake(Unit g)
+        {
+            foreach (var u in units.Where(u => u == g || g.Group != null && u.Group == g.Group && u.Stance == Stance.Guard)) u.Stance = Stance.Charge;
         }
 
         // Takes the damage and shows it. by: the attacker's id, 0 when nobody swings (trap, splash), null for no Hit event at all (a pike's jab).
