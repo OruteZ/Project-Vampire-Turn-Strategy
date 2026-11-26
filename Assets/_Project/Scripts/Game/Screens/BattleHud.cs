@@ -517,7 +517,6 @@ namespace VampireSpawn.Game.Screens
         void BarUnit(VisualElement root, Battle b, Unit o)
         {
             var p = E(root, "bar-unit col", true);
-            p.name = "Panel " + o.Id;
             var head = E(p, "unit-head row");
             if (art.Icon(o.Type) is string wi) Icon(head, wi, Ui.Steel, "icon unit-weapon");
             L(head, Loc.Text(o.Name), "unit-name display");
