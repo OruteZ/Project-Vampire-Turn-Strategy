@@ -659,6 +659,13 @@ namespace VampireSpawn.Game.Screens
                     if (i >= full - lost && i < full) blink.Add(c);
                 }
                 for (var i = 1; i < cells; i++) E(rt, "divider").style.left = HeadBarW * i / cells;
+                // ui-style.md 8-1 8 (#150 F): the side reads from the shape too, not only the colour.
+                if (u.Role == Role.Spawn) Icon(rt, Kit.Icon.Fang, Ui.Spawn, "icon head-fang");
+                else if (u.Side == Side.Enemy)
+                {
+                    E(rt, "head-spike left");
+                    E(rt, "head-spike right");
+                }
             }
             if (u.Def > 0)
             {

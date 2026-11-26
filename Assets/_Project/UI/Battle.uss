@@ -170,7 +170,7 @@
 .divider { position: absolute; top: 0; width: 1px; height: 12px; margin-left: -0.5px; background-color: rgba(18, 19, 26, 0.55); }
 .shields { position: absolute; left: -20px; top: -11px; width: 112px; height: 16px; flex-direction: row; justify-content: center; }
 .shield { width: 16px; height: 16px; margin: 0 -1.5px; }
-.damage { position: absolute; left: 76px; top: -8px; width: 60px; height: 28px; flex-direction: row; align-items: center; }
+.damage { position: absolute; left: 86px; top: -8px; width: 60px; height: 28px; flex-direction: row; align-items: center; }
 .damage > Label { font-size: 26px; -unity-font-style: bold; }
 .damage > .icon { width: 24px; height: 24px; }
 .head-name { position: absolute; left: -164px; width: 400px; white-space: nowrap; height: 18px; font-size: 26px; -unity-font-style: bold; color: var(--bone); -unity-text-align: lower-center; }
@@ -184,6 +184,11 @@
 .head.named > .head-back { height: 33px; }
 .head.named > .divider { height: 29px; }
 .head.named > .damage { top: 0; }
+/* ui-style.md 8-1 8 (#150 F): enemy bars end in small diamonds (11 across, 6 on screen), a spawn bar carries a fang at its left end (22, 12 on screen). */
+.head-spike { position: absolute; top: 50%; width: 8px; height: 8px; margin-top: -4px; rotate: 45deg; background-color: #c8304a; border-width: 1px; border-color: rgba(18, 19, 26, 0.85); }
+.head-spike.left { left: -10px; }
+.head-spike.right { left: 74px; }
+.head-fang { position: absolute; left: -26px; top: 50%; width: 22px; height: 22px; margin-top: -11px; }
 
 /* ui-style.md 8-5: the vampire's bar */
 .boss-head { width: 120px; height: 16px; margin-left: -60px; margin-top: -16px; }
