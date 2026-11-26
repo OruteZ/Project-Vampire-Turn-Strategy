@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using VampireSpawn.Core;
 
@@ -27,7 +28,7 @@ namespace VampireSpawn.Game
         // docs/art/ui-style.md 8-2. Widths are in R units; one unit is about 1 px at 1080p.
         static readonly Dictionary<Mark, Style> Styles = new Dictionary<Mark, Style>
         {
-            [Mark.Deploy] = S(Ally, 0.08f, Ally, 1f, R - 2.5f, 2f),
+            [Mark.Deploy] = S(Ally, 0.1f, Ally, 0f, R, 0f),
             [Mark.Move] = S(Ally, 0.08f, Ally, 1f, R - 2.5f, 2f),
             [Mark.Atk] = S(Enemy, 0f, Enemy, 1f, R - 3f, 2f),
             [Mark.Exec] = S(Enemy, 0f, Enemy, 1f, R - 3f, 2f, 4f, 4f),
@@ -41,7 +42,7 @@ namespace VampireSpawn.Game
             [Mark.Hold] = S(Screens.Ui.Candle, 0.12f, Screens.Ui.Candle, 1f, R - 1f, 2f),
             [Mark.Goal] = S(Ally, 0.12f, Ally, 1f, R - 1f, 2f),
             [Mark.Arrive] = S(Enemy, 0.1f, Enemy, 1f, R - 2f, 2f, 4f, 4f),
-            [Mark.Reinforce] = S(Ally, 0.06f, Ally, 1f, R - 2f, 2f, 4f, 4f),
+            [Mark.Reinforce] = S(Ally, 0.1f, Ally, 0f, R, 0f),
             [Mark.Trigger] = S(Screens.Ui.Candle, 0.08f, Screens.Ui.Candle, 1f, R - 2f, 2f, 4f, 4f),
         };
         // ui-style.md 8-2 role icons: colour alone did not tell these cells apart (#101).
@@ -56,6 +57,10 @@ namespace VampireSpawn.Game
             [Mark.Trigger] = (Screens.Kit.Icon.Star, Screens.Ui.Candle),
         };
         readonly List<SpriteRenderer> icons = new List<SpriteRenderer>();
+
+        // ui-style.md 8-2: ally zones are one outlined region; the role icon stays but lighter than the units on it (#150 A4).
+        static readonly Mark[] Zones = { Mark.Deploy, Mark.Reinforce };
+        readonly Dictionary<Mark, RegionOutline> zones = new Dictionary<Mark, RegionOutline>();
         static readonly Style HoverCell = S(Bone, 0f, Bone, 1f, R - 1f, 2f);
         static readonly Style DropIn = S(Ally, 0.25f, Ally, 1f, R - 2.5f, 2.5f);
         static readonly Style DropOut = S(Enemy, 0.25f, Enemy, 1f, R - 2.5f, 2.5f);
@@ -121,7 +126,15 @@ namespace VampireSpawn.Game
             foreach (var m in marks)
             {
                 Hexagon(Center(m.Hex), Styles[m.Mark]);
-                if (Icons.TryGetValue(m.Mark, out var ic) && iconed.Add(m.Hex)) Icon(shown++, m.Hex, ic.Icon, ic.Tint);
+                if (Icons.TryGetValue(m.Mark, out var ic) && iconed.Add(m.Hex)) Icon(shown++, m.Hex, ic.Icon, ic.Tint, System.Array.IndexOf(Zones, m.Mark) >= 0);
+            }
+            foreach (var z in Zones)
+            {
+                var cells = marks.Where(m => m.Mark == z).Select(m => m.Hex);
+                if (zones.TryGetValue(z, out var o) && o != null) { o.Show(board, cells); continue; }
+                o = zones[z] = RegionOutline.Create(board, z + "Zone", cells);
+                o.look = RegionOutline.Look.Solid;
+                o.color = Ally;
             }
             for (var i = shown; i < icons.Count; i++) icons[i].enabled = false;
             if (moon != null && moon.Target is Hex t) lines.Dashed(Center(moon.Vampire), Center(t), 2f * Scale, MoonBlood, 4f * Scale, 4f * Scale);
@@ -227,7 +240,7 @@ namespace VampireSpawn.Game
 
         Vector3 Center(Hex h) => transform.InverseTransformPoint(board.HexToWorld(h));
 
-        void Icon(int i, Hex h, string name, Color tint)
+        void Icon(int i, Hex h, string name, Color tint, bool zone)
         {
             if (i == icons.Count)
             {
@@ -237,10 +250,10 @@ namespace VampireSpawn.Game
             }
             var sr = icons[i];
             sr.sprite = board.art.Ui(name);
-            sr.color = Screens.Ui.Alpha(tint, 0.85f);
+            sr.color = Screens.Ui.Alpha(tint, zone ? 0.4f : 0.85f);
             sr.enabled = sr.sprite != null;
             if (!sr.enabled) return;
-            var size = 0.9f * board.art.hexSize;
+            var size = (zone ? 0.45f : 0.9f) * board.art.hexSize;
             var t = sr.transform;
             t.position = board.OnHologram(board.HexToWorld(h), Lift + 0.01f);
             t.rotation = Quaternion.Euler(90f, 0f, 0f);
