@@ -71,7 +71,7 @@ namespace StagePlay
                 case "builds":
                     {
                         // builds <stage> <n> [seed]: n random builds (a few unit kinds, random counts, at most one upgrade branch per kind), one lookahead-bot game each.
-                        // stage, formation, upgrades, end, won, lost, turns, buries, mends, traps, ally attacks, drained
+                        // stage, formation, upgrades, end, won, lost, turns, buries, mends, traps, ally attacks, drained, idle turns, first spawn turn (0 = none)
                         var s = GameData.Stages.First(x => x.Id == a[1]);
                         var n = int.Parse(a[2]);
                         var rng = new Random(a.Length > 3 ? int.Parse(a[3]) : 1);
@@ -89,7 +89,7 @@ namespace StagePlay
                                 .Select(k => { var br = GameData.Branches(k); return br.Length == 0 ? null : br[rng.Next(br.Length)].Id; }).Where(x => x != null).ToArray();
                             var r = Mc.Play(s, up, f, i + 1, samples);
                             int Count(string c) => r.Log.Count(l => l.StartsWith(c + " "));
-                            Console.WriteLine($"{s.Id}\t{string.Join("+", f.GroupBy(p => p.Kind).Select(g => g.Key + g.Count()))}\t{string.Join(",", up)}\t{(r.End?.ToString() ?? "cap")}\t{(r.Won ? 1 : 0)}\t{r.Lost}\t{r.Turns}\t{Count("b")}\t{Count("h")}\t{Count("t")}\t{Count("x")}\t{r.Drained}");
+                            Console.WriteLine($"{s.Id}\t{string.Join("+", f.GroupBy(p => p.Kind).Select(g => g.Key + g.Count()))}\t{string.Join(",", up)}\t{(r.End?.ToString() ?? "cap")}\t{(r.Won ? 1 : 0)}\t{r.Lost}\t{r.Turns}\t{Count("b")}\t{Count("h")}\t{Count("t")}\t{Count("x")}\t{r.Drained}	{r.Idle}	{r.FirstSpawn}");
                         }
                         return 0;
                     }
