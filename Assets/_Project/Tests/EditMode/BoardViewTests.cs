@@ -53,8 +53,11 @@ namespace VampireSpawn.Tests
                 var cells = Enumerable.Range(0, board.Rows).SelectMany(r => Enumerable.Range(0, board.Cols).Select(c => new Hex(c, r))).Where(board.Walkable).ToList();
                 var shared = cells.Sum(x => board.Neighbors(x).Count(board.Walkable)) / 2;
                 var grid = children.Single(c => c.name == "Grid").GetComponent<MeshFilter>().sharedMesh;
-                var fills = cells.Count(x => board.At(x) == Terrain.Rough);
-                Assert.AreEqual((cells.Count * 6 - shared) * 4 * 4 + fills * 6 * 4 * 3, grid.vertexCount, stage.Id + " grid vertices");
+                // Every walkable cell and every wall beside one is filled; a dry gap beside one gets 5 one-piece dashes per edge (#150 A2).
+                var edge = every.Where(x => !board.Walkable(x) && board.Neighbors(x).Any(board.Walkable)).ToList();
+                var fills = cells.Count + edge.Count(x => board.At(x) == Terrain.Rock);
+                var dashed = edge.Count(x => board.At(x) == Terrain.Gap && !Wet(x));
+                Assert.AreEqual((cells.Count * 6 - shared) * 4 * 4 + fills * 6 * 4 * 3 + dashed * 6 * 5 * 4, grid.vertexCount, stage.Id + " grid vertices");
                 Assert.GreaterOrEqual(grid.vertices.Min(v => v.y), BoardView.HologramRise + 0.04f - 0.001f, stage.Id + " grid never dips below the hologram floor (battle-terrain.md 3)");
             }
             finally
