@@ -192,6 +192,25 @@ namespace VampireSpawn.Core
             return best;
         }
 
+        void HitBest(Unit e, List<Unit> adj)
+        {
+            var t = PickTarget(e, adj);
+            ApplyHit(e, t, Why(e, adj, t));
+        }
+
+        // docs/systems/ai.md 6: why t was picked, for the log line only. It never feeds back into PickTarget.
+        Message Why(Unit att, List<Unit> list, Unit t)
+        {
+            if (list.Count < 2) return default;
+            var wall = list.Where(x => x.Has(Ability.Taunt)).ToList();
+            if (wall.Count > 0 && wall.Count < list.Count) return new Message("tag.taunt");
+            var others = list.Where(x => x != t).ToList();
+            if (Damage(att, t) >= t.Hp) return new Message("tag.lethal");
+            if (others.All(x => Pop(x) < Pop(t))) return new Message("tag.highValue");
+            if (others.All(x => x.Hp > t.Hp)) return new Message("tag.wounded");
+            return default;
+        }
+
         // docs/systems/ai.md 2: allies within range and in line of sight.
         List<Unit> AlliesInReach(Unit e, Hex h) => Targets.Where(a => InRange(e, h, a.Pos)).ToList();
 
@@ -207,7 +226,7 @@ namespace VampireSpawn.Core
             var adj = AlliesInReach(e, e.Pos);
             if (e.Stance == Stance.Hold)
             {
-                if (adj.Count > 0) ApplyHit(e, PickTarget(e, adj));
+                if (adj.Count > 0) HitBest(e, adj);
                 return;
             }
             var reach = Board.Reachable(e.Pos, e.Mov, e.Side, OccupantAt);
@@ -251,7 +270,7 @@ namespace VampireSpawn.Core
                 if (!units.Contains(e)) return;
                 adj = AlliesInReach(e, e.Pos);
             }
-            if (adj.Count > 0) ApplyHit(e, PickTarget(e, adj));
+            if (adj.Count > 0) HitBest(e, adj);
         }
 
         // True when a trap on the way stopped it (it then does not attack this phase).

@@ -2883,6 +2883,26 @@ MonoBehaviour:
     m_Metadata:
       m_Items:
       - rid: 7201578077006332005
+  - m_Id: 7524007754395648
+    m_Localized: Taunt
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 7524007808921600
+    m_Localized: Lethal
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 7524007808921601
+    m_Localized: High value
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
+  - m_Id: 7524007808921602
+    m_Localized: Wounded
+    m_Metadata:
+      m_Items:
+      - rid: 7201578077006332005
   references:
     version: 2
     RefIds:
@@ -3224,3 +3244,7 @@ MonoBehaviour:
         - id: 5253301477896210
         - id: 5253301477896212
         - id: 7521873818349568
+        - id: 7524007754395648
+        - id: 7524007808921600
+        - id: 7524007808921601
+        - id: 7524007808921602

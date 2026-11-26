@@ -637,9 +637,9 @@ namespace VampireSpawn.Core
 
         public int Damage(Unit att, Unit def) => DamageParts(att, def).damage;
 
-        void ApplyHit(Unit att, Unit def)
+        void ApplyHit(Unit att, Unit def, Message why = default)
         {
-            if (Strike(att, def, DeathCause.Blow))
+            if (Strike(att, def, DeathCause.Blow, why))
             {
                 var fed = Math.Min(FeastHeal, att.MaxHp - att.Hp);
                 if (att.Has(Ability.Feast) && fed > 0)
@@ -675,9 +675,10 @@ namespace VampireSpawn.Core
         }
 
         // The damage half of an attack, shared with attacking an ally (docs/systems/spawn.md 2). True when def died.
-        bool Strike(Unit att, Unit def, DeathCause cause)
+        bool Strike(Unit att, Unit def, DeathCause cause, Message why = default)
         {
             var (d, tags) = DamageParts(att, def);
+            if (!why.IsEmpty) tags.Add(why);
             Hurt(def, d, att.Id);
             Provoke(att, def);
             var line = tags.Count == 0
