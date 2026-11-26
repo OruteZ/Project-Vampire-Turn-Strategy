@@ -26,6 +26,7 @@ declare -A SCREENS=(
   [2b-camp-l2-s1]="$APP VampireSpawn.Game.Screens.App.GoCamp(camp(new[]{ $PICK(0, 0f) })); return 1;"
   [2c-camp-l2-s8]="$APP VampireSpawn.Game.Screens.App.GoCamp(camp(new[]{ $PICK(7, 0f) })); return 1;"
   [2d-camp-l2-s10]="$APP VampireSpawn.Game.Screens.App.GoCamp(camp(new[]{ $PICK(9, 0f) })); return 1;"
+  [2d2-camp-l2-s15]="$APP VampireSpawn.Game.Screens.App.GoCamp(camp(new[]{ $PICK(14, 0f) })); return 1;"
   [2e-camp-l3]="$APP VampireSpawn.Game.Screens.App.GoCamp(camp(new[]{ $PICK(0, 0f), VampireSpawn.Core.CampInput.Of(VampireSpawn.Core.CampKey.Barracks, 0f) })); return 1;"
   [2e2-detail-kind]="UnityEngine.Object.FindFirstObjectByType<VampireSpawn.Game.Screens.CampFlow>().ShowDetail(VampireSpawn.Core.GameData.Types[0].Key); return 1;"
   [2f-camp-l3-buy]="$APP VampireSpawn.Game.Screens.App.GoCamp(camp(new[]{ $PICK(0, 0f), VampireSpawn.Core.CampInput.Of(VampireSpawn.Core.CampKey.Barracks, 0f), VampireSpawn.Core.CampInput.Buy(VampireSpawn.Core.GameData.Upgrades[0].Id, 0f) })); return 1;"
