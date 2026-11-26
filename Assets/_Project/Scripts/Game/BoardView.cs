@@ -128,7 +128,7 @@ namespace VampireSpawn.Game
             foreach (var h in Board.Cells.Where(Board.Walkable))
             {
                 var c = Local(h, art.hexSize);
-                if (Board.At(h) == Terrain.Rough) lines.Fill(c, r, new Color(0.38f, 0.30f, 0.20f, 0.22f));
+                lines.Fill(c, r, Board.At(h) == Terrain.Rough ? new Color(0.38f, 0.30f, 0.20f, 0.22f) : Screens.Ui.Alpha(Screens.Ui.Steel, 0.07f));
                 for (var i = 0; i < 6; i++)
                 {
                     var a = HexLines.Corner(c, r, i);
@@ -138,6 +138,14 @@ namespace VampireSpawn.Game
                     if (drawn.Add(new Vector2Int(Mathf.RoundToInt(mid.x), Mathf.RoundToInt(mid.z))))
                         lines.Segment(a, b, 0.05f * art.hexSize, Screens.Ui.Alpha(Screens.Ui.Steel, 0.35f));
                 }
+            }
+            var theme = art.DressingTheme(Stage.Id);
+            foreach (var h in Board.Cells.Where(h => !Board.Walkable(h) && Board.Neighbors(h).Any(Board.Walkable)))
+            {
+                var c = Local(h, art.hexSize);
+                if (Board.At(h) == Terrain.Rock) lines.Fill(c, r, Screens.Ui.Alpha(Screens.Ui.Ink, 0.5f));
+                else if (Look(Stage, theme, h) != GapLook.Water)
+                    lines.Outline(c, r * 0.96f, 0.025f * art.hexSize, Screens.Ui.Alpha(Screens.Ui.Dim, 0.3f), 0.12f * art.hexSize, 0.1f * art.hexSize);
             }
             var mesh = new Mesh { name = "Grid" };
             lines.Apply(mesh);
