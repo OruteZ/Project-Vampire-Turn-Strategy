@@ -35,7 +35,7 @@
 .barracks-panel { height: 840px; }
 
 /* The crest prefab draws about 1.9x its box wide and 1.3x tall, so a 72 box fills the gap left of March. */
-.info-crest { position: absolute; left: 106px; top: 390px; width: 72px; height: 72px; }
+.info-crest { position: absolute; left: 106px; top: 420px; width: 72px; height: 72px; }
 .info-badge { position: absolute; left: 32px; top: 36px; width: 48px; height: 48px; justify-content: center; align-items: center; }
 .info-name { position: absolute; left: 96px; top: 32px; width: 400px; height: 56px; font-size: 29px; color: var(--bone); -unity-text-align: middle-left; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .close { left: 504px; top: 16px; width: 40px; height: 40px; }
@@ -50,10 +50,18 @@
 .line-text { font-size: 15px; color: var(--bone); width: 454px; padding: 0; margin: 0; }
 .line-text.wrap { white-space: normal; }
 
-.stats { position: absolute; left: 32px; top: 248px; width: 496px; height: 40px; flex-direction: row; align-items: center; }
-.stats > .value { margin-right: 28px; }
+/* stage-select.md 3-1 (#150 C1): two named groups (reward | battle), then the enemy kinds. */
+.stats { position: absolute; left: 32px; top: 240px; width: 496px; height: 60px; flex-direction: row; }
+.stat-group { margin-right: 40px; }
+.stat-group-name { height: 20px; font-size: 13px; color: var(--muted); -unity-text-align: middle-left; padding: 0; margin: 0; }
+.stat-group-values { height: 40px; flex-direction: row; align-items: center; }
+.stats .value { margin-right: 20px; }
 .stats .value-text { font-size: 18px; }
-.roster { position: absolute; left: 32px; top: 312px; width: 496px; height: 56px; flex-direction: row; }
+.foes { position: absolute; left: 32px; top: 306px; width: 496px; height: 36px; flex-direction: row; align-items: center; }
+.foes > .stat-group-name { margin-right: 14px; }
+.foes > .value { margin-right: 16px; }
+.foes .value-text { font-size: 18px; }
+.roster { position: absolute; left: 32px; top: 352px; width: 496px; height: 56px; flex-direction: row; }
 .march { position: absolute; left: 268px; top: 428px; width: 260px; height: 60px; }
 .march > .btn { left: 0; top: 0; width: 260px; height: 60px; }
 

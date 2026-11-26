@@ -201,7 +201,10 @@
 .emblem > .icon { position: absolute; left: 12px; top: 22px; right: 12px; bottom: 22px; }
 .over-title { font-size: 58px; -unity-font-style: bold; -unity-text-align: upper-center; }
 .tally, .reward, .unlocked, .over-acts { justify-content: center; }
-.tally > .value, .reward > .value { margin: 0 18px; }
+.reward > .value { margin: 0 18px; }
+/* battle-hud.md 5-2 (#150 C1): icon and count, the name under them. */
+.tally-cell { width: 220px; margin: 0 6px; align-items: center; }
+.tally-name { width: 220px; margin-top: 4px; font-size: 26px; -unity-text-align: upper-center; }
 .tally .value-icon { width: 30px; height: 30px; }
 .tally .value-text { font-size: 26px; }
 .reward .value-icon { width: 34px; height: 34px; }

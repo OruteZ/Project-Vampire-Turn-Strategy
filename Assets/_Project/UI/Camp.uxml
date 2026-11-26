@@ -48,6 +48,7 @@
                 <ui:Label class="line-text wrap" picking-mode="Ignore" />
             </ui:VisualElement>
             <ui:VisualElement name="info-stats" class="stats" picking-mode="Ignore" />
+            <ui:VisualElement name="info-foes" class="foes" picking-mode="Ignore" />
             <ui:VisualElement name="info-roster" class="roster" picking-mode="Ignore" />
             <ui:VisualElement name="info-march" class="march" picking-mode="Ignore" />
         </ui:VisualElement>

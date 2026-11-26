@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: SkeletonCaptain
   m_EditorClassIdentifier: VampireSpawn.Game::VampireSpawn.Game.UnitLook
   key: skeletonCaptain
-  icon: 
+  icon: ICON_SM_Wep_BrokenSword_01_Dungeon
   recipe: 
   model: {fileID: 4151270308924995188, guid: 607007fb0ae97c840881977fdf820cd5, type: 3}
   rig: 1

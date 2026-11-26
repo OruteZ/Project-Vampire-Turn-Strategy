@@ -2903,6 +2903,18 @@ MonoBehaviour:
     m_Metadata:
       m_Items:
       - rid: 7201578077006332005
+  - m_Id: 7533072597446656
+    m_Localized: Reward
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7533072647778304
+    m_Localized: Battle
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7533072647778305
+    m_Localized: Enemies
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds:

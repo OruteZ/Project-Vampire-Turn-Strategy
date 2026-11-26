@@ -2435,6 +2435,18 @@ MonoBehaviour:
     m_Key: tag.wounded
     m_Metadata:
       m_Items: []
+  - m_Id: 7533072597446656
+    m_Key: camp.groupReward
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7533072647778304
+    m_Key: camp.groupBattle
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7533072647778305
+    m_Key: camp.groupFoes
+    m_Metadata:
+      m_Items: []
   m_Metadata:
     m_Items: []
   m_KeyGenerator:

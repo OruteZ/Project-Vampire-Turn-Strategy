@@ -95,7 +95,7 @@ L3 병영: 오른쪽 칸이 병영 칸(560×680)으로 바뀌고 카메라가 �
 
 ### 3-1. 칸
 
-1. 틀 `frame.menu` (`ally`), 마지막 장은 틀 `enemy` + 문장 `Crest_DarkFantasyMenus_Large_01` (`enemy`, 상자 72×72, 칸 안 x 106, y 390 — 출정 버튼 왼쪽 빈 곳 가운데. 날개 그림이 상자의 약 1.9배 폭·1.3배 높이로 그려져 상자를 이만큼 줄인다). 다른 장은 문장 없음 (ui-style.md 5-3 의 "위 가운데" 는 이 칸에서 예외, 아래 "정한 세부").
+1. 틀 `frame.menu` (`ally`), 마지막 장은 틀 `enemy` + 문장 `Crest_DarkFantasyMenus_Large_01` (`enemy`, 상자 72×72, 칸 안 x 106, y 420 — 출정 버튼 왼쪽 빈 곳 가운데. 날개 그림이 상자의 약 1.9배 폭·1.3배 높이로 그려져 상자를 이만큼 줄인다). 다른 장은 문장 없음 (ui-style.md 5-3 의 "위 가운데" 는 이 칸에서 예외, 아래 "정한 세부").
 2. 안쪽 여백 32. 아래 표의 y 는 칸 위 끝에서, x 는 칸 왼쪽 끝에서 잰 px 다.
 
 | 줄 | x | y | 크기 | 내용 |
@@ -106,9 +106,10 @@ L3 병영: 오른쪽 칸이 병영 칸(560×680)으로 바뀌고 카메라가 �
 | 구분선 | 32 | 100 | 496×24 | `Component_DarkFantasyMenus_Section_Break_02`, `line` |
 | 목표 | 32 | 136 | 496×40 | 아이콘 `Kit.Icon.Boss` 30px `enemy` + `camp.objectiveBoss` (보스 이름) `body` `text.1`. 툴팁 `camp.objective` |
 | 추가 목표 | 32 | 184 | 496×48 | 아이콘 `Kit.Icon.Star` 30px (받았으면 `light`, 아니면 `text.2`) + 추가 목표 문장 `body` (받았으면 `light`, 아니면 `text.1`), 두 줄까지 줄바꿈(글 폭 454). 툴팁 `camp.bonusGoal` (+ 받았으면 " · " + `camp.got`) |
-| 수치 | 32 | 248 | 496×40 | 아이콘 수치(ui-style.md 14-3) 가로, 간격 28, 숫자 `num.2`: ① 금화 "+{클리어 보상}" ② 별 "+{추가 목표 보상}" ③ 인구 "{n}" ④ 은 "{n}" (은이 있는 장만) ⑤ 적 무리 "{하수인 수}" (스켈레톤·궁수·중갑병 모두, docs/content/enemies.md 1-3). 툴팁은 아래 3-2 |
-| 출전 병종 | 32 | 312 | 56×56 칩, 간격 6 (8개 폭 490, #99) | 그 장의 병종마다 칩: `frame.ally` 축소판 + 무기 아이콘 36px `ally`. 이 장에서 처음 해금되는 병종은 틀·아이콘 `light`. 툴팁: 병종 이름, 새 병종은 `camp.new` |
-| 문장 (마지막 장만) | 106 | 390 | 72×72 | 3-1 의 1 |
+| 수치 | 32 | 240 | 496×60 | 두 묶음, 묶음 사이 40 (#150 보고서 C1). 묶음마다 위에 이름표 `small` `text.2` (높이 20) "보상" `camp.groupReward` / "전투" `camp.groupBattle`, 그 아래 아이콘 수치(ui-style.md 14-3) 가로, 간격 20, 숫자 `num.2`. 보상: ① 금화 "+{클리어 보상}" ② 별 "+{추가 목표 보상}". 전투: ③ 인구 "{n}" ④ 은 "{n}" (은이 있는 장만) ⑤ 적 무리 "{하수인 수}" (스켈레톤·궁수·중갑병 모두, docs/content/enemies.md 1-3). 툴팁은 아래 3-2 |
+| 나오는 적 | 32 | 306 | 496×36 | 이름표 "나오는 적" `camp.groupFoes` `small` `text.2` + 그 장 적 목록(증원 포함, 놓인 시신 뺌)의 종류마다 아이콘 + "×{수}" `num.2`, 아이콘 `enemy`. 아이콘은 하수인 겉모습 `UnitLook.icon`(스켈레톤 해골, 나머지는 무기 그림. 이번에 처음 넣었다), 뱀파이어는 `Kit.Icon.Boss`. 이름은 툴팁 (#150 보고서 C1) |
+| 출전 병종 | 32 | 352 | 56×56 칩, 간격 6 (8개 폭 490, #99) | 그 장의 병종마다 칩: `frame.ally` 축소판 + 무기 아이콘 36px `ally`. 이 장에서 처음 해금되는 병종은 틀·아이콘 `light`. 툴팁: 병종 이름, 새 병종은 `camp.new` |
+| 문장 (마지막 장만) | 106 | 420 | 72×72 | 3-1 의 1 |
 | 출정 | 268 | 428 | 260×60 | 3-3 |
 
 - 칸 크기 560×520 은 고정이다. 영어 장 이름이 400 폭을 넘으면 번역을 줄인다 (localization.md 27·28).
@@ -247,6 +248,9 @@ L3 병영: 오른쪽 칸이 병영 칸(560×680)으로 바뀌고 카메라가 �
 | `camp.barracksName` | 병영 | Barracks |
 | `camp.affordable` | 갈래를 고를 수 있는 병종 {0} (#99 바꿈) | Units ready to choose a path: {0} |
 | `camp.toMap` | 지도로 | Back to Map |
+| `camp.groupReward` | 보상 | Reward |
+| `camp.groupBattle` | 전투 | Battle |
+| `camp.groupFoes` | 나오는 적 | Enemies |
 
 계속 쓰는 키: `camp.expedition`, `camp.menu`, `camp.reset`, `camp.resetConfirm`, `camp.objective`, `camp.objectiveBoss`, `camp.bonusGoal`, `camp.got`, `camp.rewardClear`, `camp.rewardBonus`, `camp.new`, `camp.march`, `camp.marchAgain`, `camp.replayNote`, `camp.allClaimed`, `camp.lockedBy`, `battle.pop`, `battle.silver`, `battle.enemyList`, `stage.<id>.title`, `stage.<id>.brief`. 병영 칸의 키는 upgrade.md.
 

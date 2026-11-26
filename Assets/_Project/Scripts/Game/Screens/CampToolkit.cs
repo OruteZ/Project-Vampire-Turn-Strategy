@@ -169,13 +169,33 @@ namespace VampireSpawn.Game.Screens
             Line(panel.Q("info-bonus"), Kit.Icon.Star, bonusGot ? Ui.Candle : Ui.Muted, Loc.Text(s.Bonus.Text), bonusGot ? Ui.Candle : Ui.Bone,
                 Loc.T("camp.bonusGoal") + (bonusGot ? " · " + Loc.T("camp.got") : ""));
 
+            // stage-select.md 3-1 (#150 C1): rewards and battle terms as two named groups, then each enemy kind with its count.
             var stats = panel.Q("info-stats");
             stats.Clear();
-            ToolkitKit.Value(stats, art, Kit.Icon.Gold, "+" + s.Reward, clear ? Ui.Dim : Ui.Candle, clear ? Ui.Dim : Ui.Bone, Loc.T("camp.rewardClear", s.Reward) + (clear ? " · " + Loc.T("camp.got") : ""), tip);
-            ToolkitKit.Value(stats, art, Kit.Icon.Star, "+" + s.Bonus.Gold, bonusGot ? Ui.Dim : Ui.Candle, bonusGot ? Ui.Dim : Ui.Bone, Loc.T("camp.rewardBonus", s.Bonus.Gold) + (bonusGot ? " · " + Loc.T("camp.got") : ""), tip);
-            ToolkitKit.Value(stats, art, Kit.Icon.Pop, s.Pop.ToString(), Ui.Candle, Ui.Candle, Loc.T("battle.pop"), tip);
-            if (s.Silver > 0) ToolkitKit.Value(stats, art, Kit.Icon.Silver, s.Silver.ToString(), Ui.Candle, Ui.Candle, Loc.T("battle.silver"), tip);
-            ToolkitKit.Value(stats, art, Kit.Icon.Skulls, s.Minions.Length.ToString(), Ui.Blood, Ui.Bone, Kit.EnemyList(s), tip);
+            VisualElement Group(string name)
+            {
+                var g = ToolkitKit.E(stats, "stat-group");
+                ToolkitKit.L(g, name, "stat-group-name");
+                return ToolkitKit.E(g, "stat-group-values");
+            }
+            var reward = Group(Loc.T("camp.groupReward"));
+            ToolkitKit.Value(reward, art, Kit.Icon.Gold, "+" + s.Reward, clear ? Ui.Dim : Ui.Candle, clear ? Ui.Dim : Ui.Bone, Loc.T("camp.rewardClear", s.Reward) + (clear ? " · " + Loc.T("camp.got") : ""), tip);
+            ToolkitKit.Value(reward, art, Kit.Icon.Star, "+" + s.Bonus.Gold, bonusGot ? Ui.Dim : Ui.Candle, bonusGot ? Ui.Dim : Ui.Bone, Loc.T("camp.rewardBonus", s.Bonus.Gold) + (bonusGot ? " · " + Loc.T("camp.got") : ""), tip);
+            var fight = Group(Loc.T("camp.groupBattle"));
+            ToolkitKit.Value(fight, art, Kit.Icon.Pop, s.Pop.ToString(), Ui.Candle, Ui.Candle, Loc.T("battle.pop"), tip);
+            if (s.Silver > 0) ToolkitKit.Value(fight, art, Kit.Icon.Silver, s.Silver.ToString(), Ui.Candle, Ui.Candle, Loc.T("battle.silver"), tip);
+            ToolkitKit.Value(fight, art, Kit.Icon.Skulls, s.Minions.Length.ToString(), Ui.Blood, Ui.Bone, Kit.EnemyList(s), tip);
+
+            var foes = panel.Q("info-foes");
+            foes.Clear();
+            ToolkitKit.L(foes, Loc.T("camp.groupFoes"), "stat-group-name");
+            foreach (var kind in s.Enemies.Where(e => e.Kind != EnemyType.Corpse).GroupBy(e => e.Kind))
+            {
+                var boss = kind.Key == EnemyType.Vampire;
+                var look = art.Icon(kind.Key);
+                var icon = boss ? Kit.Icon.Boss : string.IsNullOrEmpty(look) ? Kit.Icon.Skulls : look;
+                ToolkitKit.Value(foes, art, icon, "×" + kind.Count(), Ui.Blood, Ui.Bone, Loc.Text(boss ? s.BossName : GameData.Minion(kind.Key).Name), tip);
+            }
 
             var roster = panel.Q("info-roster");
             roster.Clear();

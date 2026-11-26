@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: DeathKnight
   m_EditorClassIdentifier: VampireSpawn.Game::VampireSpawn.Game.UnitLook
   key: deathKnight
-  icon: 
+  icon: ICON_SM_Wep_Crystal_Halberd_01_Dungeon
   recipe: 
   model: {fileID: 5669538231628601157, guid: c40f7c9d822c08b43a34200e6ec68ec3, type: 3}
   rig: 1

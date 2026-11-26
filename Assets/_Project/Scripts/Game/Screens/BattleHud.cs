@@ -716,11 +716,18 @@ namespace VampireSpawn.Game.Screens
             var title = L(box, Loc.T(o.Won ? "over.won" : "over.lost"), "over-title display", o.Won ? Ui.Sun : Ui.Blood);
             var titleTip = Loc.Text(o.Line);
 
+            // battle-hud.md 5-2 (#150 C1): a result is read once, so each count carries its name under it.
             var tally = E(box, "tally row");
-            Value(tally, Kit.Icon.Dead, st.Lost.ToString(), Ui.Muted, Ui.Bone, Loc.T("over.fallen"));
-            Value(tally, Kit.Icon.Skulls, st.Executed.ToString(), Ui.Blood, Ui.Bone, Loc.T("over.execs"));
-            Value(tally, Kit.Icon.Fang, st.Risen.ToString(), Ui.Spawn, Ui.Bone, Loc.T("over.risen"));
-            Value(tally, Kit.Icon.Target, st.Drained.ToString(), Ui.MoonBlood, Ui.Bone, Loc.T("over.drained"));
+            void Count(string icon, int n, Color c, string name)
+            {
+                var cell = E(tally, "tally-cell col");
+                Value(cell, icon, n.ToString(), c, Ui.Bone);
+                L(cell, name, "tally-name", Ui.Muted);
+            }
+            Count(Kit.Icon.Dead, st.Lost, Ui.Muted, Loc.T("over.fallen"));
+            Count(Kit.Icon.Skulls, st.Executed, Ui.Blood, Loc.T("over.execs"));
+            Count(Kit.Icon.Fang, st.Risen, Ui.Spawn, Loc.T("over.risen"));
+            Count(Kit.Icon.Target, st.Drained, Ui.MoonBlood, Loc.T("over.drained"));
 
             var ok = o.Won && o.BonusOk;
             if (o.Won)

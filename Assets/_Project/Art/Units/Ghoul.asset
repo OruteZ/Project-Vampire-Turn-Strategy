@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Ghoul
   m_EditorClassIdentifier: VampireSpawn.Game::VampireSpawn.Game.UnitLook
   key: ghoul
-  icon: 
+  icon: ICON_SM_Wep_Cleaver_01_DarkFantasy
   recipe: 
   model: {fileID: 213336293066786039, guid: 191ab4327a71e6e46aaea0d91fcc2102, type: 3}
   rig: 1
