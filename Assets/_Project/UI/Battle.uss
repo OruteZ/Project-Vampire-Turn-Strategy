@@ -57,13 +57,13 @@
 .rules-term-name { font-size: 26px; -unity-font-style: bold; padding: 0; margin: 0; }
 .rules-term-desc { font-size: 26px; color: var(--muted); white-space: normal; padding: 0; margin: 0; }
 /* docs/ui/rule-cards.md 3: one fixed card in the centre, the rules window's frame and veil. */
-.rule-card { width: 640px; height: 460px; padding: 0; }
+.rule-card { width: 640px; height: 496px; padding: 0; }
 .card-count { position: absolute; right: 36px; top: 28px; font-size: 26px; color: var(--dim); padding: 0; margin: 0; }
 .card-icon { position: absolute; left: 256px; top: 44px; width: 128px; height: 128px; }
 .card-icon > .icon { width: 128px; height: 128px; }
 .card-name { position: absolute; left: 48px; top: 188px; width: 544px; height: 52px; font-size: 36px; -unity-font-style: bold; color: var(--bone); -unity-text-align: middle-center; padding: 0; margin: 0; }
-.card-line { position: absolute; left: 48px; top: 248px; width: 544px; height: 108px; font-size: 26px; color: var(--muted); white-space: normal; -unity-text-align: upper-center; padding: 0; margin: 0; }
-.card-next { position: absolute; left: 200px; top: 372px; width: 240px; height: 56px; }
+.card-line { position: absolute; left: 48px; top: 248px; width: 544px; height: 144px; font-size: 26px; color: var(--muted); white-space: normal; -unity-text-align: upper-center; padding: 0; margin: 0; }
+.card-next { position: absolute; left: 200px; top: 408px; width: 240px; height: 56px; }
 .card-next > .btn { position: absolute; left: 0; top: 0; width: 240px; height: 56px; }
 .rules-close { flex-direction: row; justify-content: flex-end; }
 .rules-close > .btn { width: 100px; height: 44px; }
