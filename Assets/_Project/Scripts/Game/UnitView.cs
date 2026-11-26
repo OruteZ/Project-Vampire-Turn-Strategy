@@ -15,7 +15,7 @@ namespace VampireSpawn.Game
         Animator animator;
         UnitMotion motion;
         Transform model;
-        GameObject coffin;
+        GameObject coffin, ring;
         ArtCatalog art;
         UnitLook look, own;
         bool armed;
@@ -132,6 +132,37 @@ namespace VampireSpawn.Game
             return c;
         }
 
+        // docs/art/ui-style.md 8-1 8: a side-coloured ring on the ground under a standing unit.
+        public const float RingOuter = 0.42f, RingInner = 0.3f, RingAlpha = 0.8f, RingLift = 0.05f;
+
+        public void Ring(Color side)
+        {
+            if (art.overlay == null) return;
+            const int sides = 40;
+            var verts = new Vector3[sides * 2];
+            var colors = new Color[sides * 2];
+            var tris = new int[sides * 6];
+            var c = Screens.Ui.Alpha(side, RingAlpha).linear;
+            for (var i = 0; i < sides; i++)
+            {
+                var a = i * Mathf.PI * 2f / sides;
+                var d = new Vector3(Mathf.Cos(a), 0f, Mathf.Sin(a)) * art.hexSize;
+                verts[i * 2] = d * RingInner + Vector3.up * RingLift;
+                verts[i * 2 + 1] = d * RingOuter + Vector3.up * RingLift;
+                colors[i * 2] = colors[i * 2 + 1] = c;
+                int k = i * 2, n = (i + 1) % sides * 2;
+                System.Array.Copy(new[] { k, n, k + 1, k + 1, n, n + 1 }, 0, tris, i * 6, 6);
+            }
+            var mesh = new Mesh { name = "Unit Ring", vertices = verts, colors = colors, triangles = tris };
+            ring = new GameObject("Ring");
+            ring.transform.SetParent(transform, false);
+            ring.AddComponent<MeshFilter>().sharedMesh = mesh;
+            var mr = ring.AddComponent<MeshRenderer>();
+            mr.sharedMaterial = art.overlay;
+            mr.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
+            ring.SetActive(!Lying);
+        }
+
         static void FitHeight(Transform t, float height)
         {
             if (BoardView.Drawn(t, out var b) && b.size.y > 0.01f) t.localScale *= height / b.size.y;
@@ -164,6 +195,7 @@ namespace VampireSpawn.Game
         public void LieDown()
         {
             Lying = true;
+            if (ring != null) ring.SetActive(false);
             if (animator != null) animator.enabled = false;
             model.localRotation = Quaternion.Euler(-90f, model.localEulerAngles.y, 0f);
             model.localPosition = Vector3.up * 0.25f;
@@ -172,6 +204,7 @@ namespace VampireSpawn.Game
         public void StandUp()
         {
             Lying = false;
+            if (ring != null) ring.SetActive(true);
             if (coffin != null) { BoardView.Kill(coffin); coffin = null; }
             if (model == null) { BuildModel(); return; }
             model.localRotation = Quaternion.Euler(0f, model.localEulerAngles.y, 0f);

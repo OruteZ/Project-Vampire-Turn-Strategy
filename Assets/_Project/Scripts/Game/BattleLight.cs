@@ -21,8 +21,9 @@ namespace VampireSpawn.Game
         public void Attach(BattleView battleView)
         {
             view = battleView;
-            moon = RenderSettings.sun;
-            if (moon == null)
+            // Edit-mode tests run in whatever scene is open; leave its light alone.
+            moon = Application.isPlaying ? RenderSettings.sun : null;
+            if (moon == null && Application.isPlaying)
                 foreach (var l in FindObjectsByType<Light>(FindObjectsSortMode.None))
                     if (l.type == LightType.Directional) { moon = l; break; }
             if (moon != null)

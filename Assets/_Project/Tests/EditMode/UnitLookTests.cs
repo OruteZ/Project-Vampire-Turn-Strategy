@@ -151,7 +151,7 @@ namespace VampireSpawn.Tests
         }
 
         [Test]
-        public void AlliesFaceNorthAndEnemiesFaceSouthWhenPlaced()
+        public void AlliesFaceNorthAndEnemiesFaceSouthWhenPlacedOnASideRing()
         {
             var go = new GameObject("UnitLookTests");
             try
@@ -171,6 +171,13 @@ namespace VampireSpawn.Tests
                     var facing = Vector3.Dot(model.forward, north);
                     if (u.Side == Side.Ally) Assert.Greater(facing, 0.99f, u.Name.Key + " faces north");
                     else Assert.Less(facing, -0.99f, u.Name.Key + " faces south");
+                }
+                // ui-style.md 8-1 8: a side ring under every standing unit, none under a coffin.
+                foreach (var u in battle.Units)
+                {
+                    var ring = view.ViewOf(u.Id).transform.Find("Ring");
+                    Assert.IsNotNull(ring, u.Name.Key + " ring");
+                    Assert.AreEqual(!u.Asleep, ring.gameObject.activeSelf, u.Name.Key + " ring shown only when standing");
                 }
             }
             finally

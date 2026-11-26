@@ -254,6 +254,7 @@ namespace VampireSpawn.Game
             // docs/art/unit-visuals.md 4: allies face the enemy side (north, +Z), enemies face south.
             var yaw = u.Side == Side.Ally ? 0f : 180f;
             var view = UnitView.Create(Art, look, layer, u.Id, Ground(at ?? u.Pos), yaw, u.Role != Role.Spawn, u.Asleep);
+            view.Ring(u.Role == Role.Spawn ? Screens.Ui.Spawn : u.Side == Side.Ally ? Screens.Ui.Steel : Screens.Ui.Blood);
             if (u.Wolf) view.Shift(Art.wolfLook);
             view.SetHp(u.Hp, u.MaxHp);
             view.Sounds = u.Role == Role.Spawn ? Art.sound?.spawn : look.sounds;
