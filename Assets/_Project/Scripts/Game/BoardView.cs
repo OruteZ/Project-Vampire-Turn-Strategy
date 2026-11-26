@@ -416,9 +416,9 @@ namespace VampireSpawn.Game
             var a = HexToWorld(new Hex(0, 0));
             var b = HexToWorld(new Hex(Board.Cols - 1, Board.Rows - 1));
             var center = (a + b) * 0.5f + Vector3.back * art.hexSize * 0.6f;
-            var span = Mathf.Max(Mathf.Abs(b.x - a.x), Mathf.Abs(b.z - a.z) * 1.6f) + art.hexSize * 2f;
             var pitch = 55f;
-            var distance = span * 0.5f / Mathf.Tan(viewCamera.fieldOfView * 0.5f * Mathf.Deg2Rad) * 0.8f / Mathf.Max(0.1f, frame.height);
+            // Start too close and back off in small steps, so the fit ends where the first cell corner touches the frame (#150 A3: a guessed start left a third of the frame empty).
+            var distance = Vector3.Distance(a, b) * 0.3f;
             var rot = Quaternion.Euler(pitch, 0f, 0f);
             viewCamera.transform.rotation = rot;
             fittedAspect = viewCamera.aspect;
@@ -429,14 +429,22 @@ namespace VampireSpawn.Game
             p[0, 2] = -2f * (frame.center.x - 0.5f);
             p[1, 2] = -2f * (frame.center.y - 0.5f);
             viewCamera.projectionMatrix = p;
-            // A narrow frame (4:3, 5:4) crops the near rows sideways under perspective, so back off until every board corner is inside it.
-            var h = art.hexSize;
-            var corners = new[] { a + new Vector3(-h, 0f, h), new Vector3(b.x + h, 0f, a.z + h), new Vector3(a.x - h, 0f, b.z - h), b + new Vector3(h, 0f, -h) };
-            for (var i = 0; i < 60; i++)
+            var corners = Board.Cells.SelectMany(c => Enumerable.Range(0, 6).Select(i => HexLines.Corner(HexToWorld(c), art.hexSize, i))).ToArray();
+            var depth = Mathf.Abs(b.z - a.z) + art.hexSize * 2f;
+            for (var pass = 0; ; pass++)
             {
-                viewCamera.transform.position = center - rot * Vector3.forward * distance;
-                if (System.Array.TrueForAll(corners, c => frame.Contains(viewCamera.WorldToViewportPoint(c)))) break;
-                distance *= 1.04f;
+                distance = Vector3.Distance(a, b) * 0.3f;
+                for (var i = 0; i < 300; i++)
+                {
+                    viewCamera.transform.position = center - rot * Vector3.forward * distance;
+                    if (System.Array.TrueForAll(corners, c => frame.Contains(viewCamera.WorldToViewportPoint(c)))) break;
+                    distance *= 1.01f;
+                }
+                if (pass == 3) break;
+                // Perspective draws the near rows larger, so the fitted board sits off the frame's centre: slide the look point to even the gaps and fit again.
+                float lo = 1f, hi = 0f;
+                foreach (var c in corners) { var y = viewCamera.WorldToViewportPoint(c).y; lo = Mathf.Min(lo, y); hi = Mathf.Max(hi, y); }
+                center.z += ((lo + hi) * 0.5f - frame.center.y) / Mathf.Max(0.01f, hi - lo) * depth;
             }
             BasePosition = viewCamera.transform.position;
             BaseLook = center;
