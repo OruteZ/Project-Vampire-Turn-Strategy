@@ -222,10 +222,23 @@ namespace VampireSpawn.Game
         public const float CastleYaw = 270f, CastleMarkerLift = 2.5f, CastleViewDistance = 34f, CastleWideDistance = 70f, CastleFloor = 600f;
         public static readonly (string Stage, Vector3 At)[] CastleSpots =
         {
-            ("s11", new Vector3(-34, 0, -4)), ("s12", new Vector3(-9, 23, -9)), ("s13", new Vector3(-24, 0, 0)), ("s14", new Vector3(-3, 0, -17)),
-            ("s15", new Vector3(6, 29, -15)), ("s16", new Vector3(-3, 26, 0)), ("s17", new Vector3(9, 42, 0)), ("s18", new Vector3(15, 29, 0)),
-            ("s19", new Vector3(21, 23, -9)), ("s20", new Vector3(25, 31, 0)),
+            ("s11", new Vector3(-38.5f, 0.7f, 0)), ("s12", new Vector3(-9, 23, -9)), ("s13", new Vector3(-24, 0, 0)), ("s14", new Vector3(-3, 0, -19)),
+            ("s15", new Vector3(6, 29, -15)), ("s16", new Vector3(-3, 26, 0)), ("s17", new Vector3(9, 39.5f, 0)), ("s18", new Vector3(15, 29, 0)),
+            ("s19", new Vector3(21, 23, -9)), ("s20", new Vector3(25, 28.5f, 0)),
         };
+
+        // A region's shot looks at its View point; these move it off the region point where the region alone leaves the frame empty
+        // (11 sits on the outer bridge, 20 is a spire tip).
+        public static readonly (string Stage, Vector3 Offset)[] CastleViews = { ("s11", new Vector3(10, 0, 2)), ("s20", new Vector3(-4, -16, 0)) };
+
+        // 12: the island the castle stands on, ringed by a moat (both flattened ellipses, radii x/z), the bridge at 11, and a sparse ring
+        // of the road face's edge props outside the moat: low rocks on the camera side so they never hide the castle.
+        public static readonly Vector2 CastleIsland = new Vector2(36, 24), CastleMoat = new Vector2(41, 29);
+        public static readonly Color CastleGround = Screens.Ui.Rgb(0x707866);
+        public static readonly MapProp CastleBridge = new MapProp("SM_Bld_Bridge_Base_01", -36.8f, -3.4f, 90, 8);
+        public const int CastleRingCount = 30;
+        public static readonly Vector2 CastleRing = new Vector2(1.18f, 1.6f);
+        public static readonly string[] CastleTrees = Range("SM_Env_Tree_Dead_", 1, 4), CastleRocks = Range("SM_Env_Rock_", 1, 3), CastleHills = Range("SM_Gen_Env_Hill_", 1, 5);
 
         // Every prefab name the map places; ArtCatalog.mapProps must hold exactly these (UnitLookTests-style guard in CampaignMapLayoutTests).
         public static IEnumerable<string> Names =>
@@ -233,7 +246,7 @@ namespace VampireSpawn.Game
                 .Concat(Forest.SelectMany(b => b.Trees.Concat(b.Smalls)))
                 .Concat(Lines.SelectMany(l => l.Prefabs))
                 .Concat(CampProps.Select(p => p.Prefab))
-                .Concat(new[] { Brazier, Fire })
+                .Concat(new[] { Brazier, Fire, CastleBridge.Prefab }).Concat(CastleTrees).Concat(CastleRocks).Concat(CastleHills)
                 .Distinct().OrderBy(n => n);
     }
 }

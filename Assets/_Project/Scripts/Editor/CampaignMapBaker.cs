@@ -65,13 +65,16 @@ namespace VampireSpawn.Editor
                 floor.transform.localScale = new Vector3(CampaignMapLayout.CastleFloor, CampaignMapLayout.CastleFloor, 1f);
                 floor.GetComponent<MeshRenderer>().sharedMaterial = Material(map.art)(CampaignMapLayout.Floor, "Map Floor");
             }
+            if (root.Find("Island") == null) BuildIsland(root, map.art);
+            if (root.Find("Ring") == null) BuildRing(root, map.art);
             var cams = Point(root, "Cameras", Vector3.zero);
             foreach (var (stage, at) in CampaignMapLayout.CastleSpots)
             {
                 var region = Point(root, "Region " + stage, at);
                 Point(region, "Marker", Vector3.up * CampaignMapLayout.CastleMarkerLift);
                 Point(region, "Brazier", Vector3.zero);
-                if (cams.Find("Shot " + stage) == null) NewShot(cams, "Shot " + stage, region, CampaignMapLayout.CastleViewDistance);
+                var view = Point(region, "View", CampaignMapLayout.CastleViews.FirstOrDefault(v => v.Stage == stage).Offset);
+                if (cams.Find("Shot " + stage) == null) NewShot(cams, "Shot " + stage, view, CampaignMapLayout.CastleViewDistance);
             }
             if (cams.Find(CastleShot) == null)
             {
@@ -87,6 +90,61 @@ namespace VampireSpawn.Editor
             EditorSceneManager.MarkSceneDirty(scene);
             EditorSceneManager.SaveScene(scene);
             return "성 면: 지역 " + CampaignMapLayout.CastleSpots.Count(s => root.Find("Region " + s.Stage) != null) + ", 시점 " + cams.childCount;
+        }
+
+        // 12: island, moat and bridge; the ring of edge props is its own group. Flattened built-in cylinders, like the road face's region grounds.
+        static void BuildIsland(Transform root, ArtCatalog art)
+        {
+            var island = new GameObject("Island").transform;
+            island.SetParent(root, false);
+            // Below the courtyard paving (y 0) so the demo's own floor stays on top.
+            Disc(island, "Ground", CampaignMapLayout.CastleIsland, -0.01f, Material(art)(CampaignMapLayout.CastleGround, "Castle Island"));
+            var water = AssetDatabase.LoadAssetAtPath<Material>(MaterialFolder + "/Castle Moat.mat");
+            if (water == null)
+            {
+                water = new Material(art.water) { color = CampaignMapLayout.Water };
+                water.SetFloat("_Smoothness", 0.92f);
+                AssetDatabase.CreateAsset(water, MaterialFolder + "/Castle Moat.mat");
+            }
+            Disc(island, "Moat", CampaignMapLayout.CastleMoat, -0.015f, water);
+            var b = CampaignMapLayout.CastleBridge;
+            var bridge = Prefab(art, b.Prefab);
+            if (bridge != null) BoardView.Place(bridge, island, root.TransformPoint(new Vector3(b.Dx, 0f, b.Dz)), b.Width, b.Yaw);
+        }
+
+        static void BuildRing(Transform root, ArtCatalog art)
+        {
+            var ring = new GameObject("Ring").transform;
+            ring.SetParent(root, false);
+            var moat = CampaignMapLayout.CastleMoat;
+            for (var i = 0; i < CampaignMapLayout.CastleRingCount; i++)
+            {
+                var h = BoardView.Hash(i + 2000, 77);
+                var angle = (i + (h % 50) / 100f) * Mathf.PI * 2f / CampaignMapLayout.CastleRingCount;
+                var dir = new Vector2(Mathf.Cos(angle), Mathf.Sin(angle));
+                var reach = Mathf.Lerp(CampaignMapLayout.CastleRing.x, CampaignMapLayout.CastleRing.y, h / 100 % 100 / 99f);
+                var p = new Vector2(dir.x * moat.x, dir.y * moat.y) * reach;
+                if (Mathf.Abs(p.y) < 6f && p.x < 0f) continue;
+                var near = dir.y < -0.2f;
+                var hill = !near && h / 7 % 4 == 0;
+                var names = near ? CampaignMapLayout.CastleRocks : hill ? CampaignMapLayout.CastleHills : CampaignMapLayout.CastleTrees;
+                var prefab = Prefab(art, names[h / 13 % names.Length]);
+                if (prefab == null) continue;
+                if (hill) p *= 1.35f;
+                var width = near ? Mathf.Lerp(2f, 3f, h % 10 / 9f) : hill ? 24f : Mathf.Lerp(4f, 5f, h % 10 / 9f);
+                BoardView.Place(prefab, ring, root.TransformPoint(new Vector3(p.x, 0f, p.y)), width, h % 360, hill ? 12f : 99f);
+            }
+        }
+
+        static void Disc(Transform parent, string name, Vector2 radii, float y, Material material)
+        {
+            var disc = GameObject.CreatePrimitive(PrimitiveType.Cylinder);
+            BoardView.Kill(disc.GetComponent<Collider>());
+            disc.name = name;
+            disc.transform.SetParent(parent, false);
+            disc.transform.localPosition = Vector3.up * y;
+            disc.transform.localScale = new Vector3(radii.x * 2f, 0.005f, radii.y * 2f);
+            disc.GetComponent<MeshRenderer>().sharedMaterial = material;
         }
 
         // One saved material per tint, reused on the next bake so the scene keeps pointing at the same assets.
