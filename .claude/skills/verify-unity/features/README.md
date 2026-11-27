@@ -39,3 +39,5 @@ Each feature file starts with an H1 title and one paragraph describing the playe
 - [Undo move](./undo-move.md) covers taking back the latest ally move with Z or the action bar slot.
 - [Rule cards](./rule-cards.md) covers the deploy-start rule cards, the seen record in the save, and the rules window terms.
 - [Restart battle](./restart.md) covers the corner button that restarts a battle on a second press.
+- [Reinforcement badges](./wave-badges.md) covers the turns-left badges on waiting enemy cells, doors and ally zones, and the brief's wave chips.
+- [Barracks studio](./barracks-studio.md) covers the barracks unit shown large in its own lit set, the cut to it, and turning it by dragging.
