@@ -28,10 +28,10 @@ namespace VampireSpawn.Game
 
         // upgrade.md 9: the set stands far off the map. Places are from the stand's centre in hex sizes (x right, y up, z away from the camera).
         static readonly Vector3 StudioAt = new Vector3(2000f, 0f, 0f), KeyLightAt = new Vector3(-3.5f, 5f, -4f), RimLightAt = new Vector3(3f, 3.2f, 3.5f);
-        static readonly Color StudioFloor = Screens.Ui.Rgb(0x1b1f2b), StudioStand = Screens.Ui.Rgb(0x343c4e), KeyLight = Screens.Ui.Rgb(0xbfd4ee);
+        static readonly Color StudioFloor = Screens.Ui.Rgb(0x1b1f2b), StudioStand = Screens.Ui.Rgb(0x343c4e), StudioDark = Screens.Ui.Rgb(0x0b0d14), KeyLight = Screens.Ui.Rgb(0xbfd4ee);
         // The camera looks 6 degrees down at 55% of a standard unit's height through a 30 degree lens, far enough that such a unit is 59% of the screen's height.
         // The unit turns 20 degrees toward the barracks panel (screen right); ambient light drops to 40% of the map's.
-        const float StandRadius = 1.6f, StandHeight = 0.12f, StudioFov = 30f, StudioPitch = 6f, UnitOnScreen = 0.59f, LookHeight = 0.55f, UnitYaw = 160f, StudioAmbient = 0.4f;
+        const float StandRadius = 1.1f, StandHeight = 0.12f, BackdropAt = 14f, StudioFov = 30f, StudioPitch = 6f, UnitOnScreen = 0.59f, LookHeight = 0.55f, UnitYaw = 160f, StudioAmbient = 0.4f;
 
         Transform progress;
         Light spot;
@@ -90,12 +90,12 @@ namespace VampireSpawn.Game
             studio.SetParent(transform, false);
             studio.position = terrain.position + StudioAt;
             Slab("Floor", PrimitiveType.Cube, new Vector3(0f, -0.05f, 0f) * s, new Vector3(40f, 0.1f, 40f) * s, StudioFloor);
-            Slab("Backdrop", PrimitiveType.Cube, new Vector3(0f, 8f, 6f) * s, new Vector3(40f, 16f, 0.1f) * s, StudioFloor);
+            Slab("Backdrop", PrimitiveType.Cube, new Vector3(0f, 12f, BackdropAt) * s, new Vector3(60f, 24f, 0.1f) * s, StudioFloor);
             // Unity's cylinder is 2 high and 1 across.
             Slab("Stand", PrimitiveType.Cylinder, Vector3.up * StandHeight * 0.5f * s, new Vector3(StandRadius * 2f, StandHeight * 0.5f, StandRadius * 2f) * s, StudioStand);
             var chest = studio.position + Vector3.up * (StandHeight + LookHeight * art.unitHeight) * s;
-            StudioLight(KeyLightAt * s, KeyLight, 60f, 16f * s, 55f, chest);
-            StudioLight(RimLightAt * s, art.torchLight, 35f, 12f * s, 60f, chest);
+            StudioLight(KeyLightAt * s, KeyLight, 70f, 16f * s, 55f, chest);
+            StudioLight(RimLightAt * s, art.torchLight, 70f, 12f * s, 60f, chest);
             var shot = new GameObject("Shot Studio").transform;
             shot.SetParent(studio, false);
             shot.rotation = Quaternion.Euler(StudioPitch, 0f, 0f);
@@ -103,6 +103,25 @@ namespace VampireSpawn.Game
             studioShot = shot.gameObject.AddComponent<CinemachineCamera>();
             studioShot.Lens.FieldOfView = StudioFov;
             studioShot.enabled = false;
+            studioDistance = (chest - shot.position).magnitude;
+        }
+
+        float studioDistance;
+        Light[] suns;
+
+        // upgrade.md 9-7: in the studio only its two spots light the unit. The map's sun lights go off, and fog the colour of the dark
+        // swallows the far floor and the backdrop so no horizon shows behind the unit.
+        void Studio(bool on)
+        {
+            suns ??= FindObjectsByType<Light>(FindObjectsSortMode.None).Where(l => l.type == LightType.Directional && l.enabled).ToArray();
+            foreach (var l in suns) if (l != null) l.enabled = !on;
+            Ambient(on ? StudioAmbient : 1f);
+            RenderSettings.fogColor = on ? StudioDark : CampaignMapLayout.Fog;
+            if (viewCamera != null) viewCamera.backgroundColor = RenderSettings.fogColor;
+            RenderSettings.fogStartDistance = studioDistance + StandRadius * art.hexSize;
+            RenderSettings.fogEndDistance = studioDistance + (BackdropAt - 2f) * art.hexSize;
+            // Back on the map LateUpdate sets the fog from the camera's distance again.
+            fogDistance = 0f;
         }
 
         void Slab(string name, PrimitiveType shape, Vector3 at, Vector3 size, Color color)
@@ -145,9 +164,7 @@ namespace VampireSpawn.Game
                 : Shot(CampNav.FaceOf(stage) == CampFace.Castle ? CastleShot : "Shot Wide");
             foreach (var cam in Shots()) cam.enabled = cam == chosen;
             if (studioShot != null) studioShot.enabled = inStudio;
-            // upgrade.md 9-7: the set stays dark and unfogged so only the unit is lit.
-            RenderSettings.fog = !inStudio;
-            Ambient(inStudio ? StudioAmbient : 1f);
+            Studio(inStudio);
             this.empty = empty;
             // Each face pans on its own; switching faces starts the other one centred.
             if (layer == CampLayer.Map && chosen != mapShot) { pan = Vector2.zero; mapShot = chosen; }
@@ -202,6 +219,7 @@ namespace VampireSpawn.Game
             if (!Showing || viewCamera == null) return;
             foreach (var cam in Shots().Append(studioShot))
                 if (cam != null && cam.enabled && !Mathf.Approximately(cam.Lens.PhysicalProperties.SensorSize.x, 24f * viewCamera.aspect)) Shift(cam);
+            if (studioShot != null && studioShot.enabled) return;
             var distance = Mathf.Max(1f, (viewCamera.transform.position.y - terrain.position.y) / Mathf.Sin(Pitch * Mathf.Deg2Rad));
             if (Mathf.Approximately(distance, fogDistance)) return;
             fogDistance = distance;
