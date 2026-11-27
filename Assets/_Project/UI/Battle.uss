@@ -163,13 +163,14 @@
 .spike.right { right: -10px; }
 .corner-badge { position: absolute; left: -6px; top: -6px; width: 24px; height: 24px; }
 /* battle-hud.md 3-4 8 (#150 C4, #153): the picked ally in the bar's left part, clear of its pointed end: a weapon medal, then name and info button, hp and move, the small numbers with the passive skills, one warning line. */
-.bar-unit { position: absolute; left: 50%; margin-left: -1070px; bottom: 121px; width: 564px; height: 204px; align-items: center; }
+.bar-unit { position: absolute; left: 50%; margin-left: -1070px; bottom: 121px; width: 600px; height: 204px; align-items: center; }
 .bar-medal { width: 152px; height: 152px; margin-right: 24px; flex-shrink: 0; border-radius: 76px; border-width: 3px; border-color: var(--steel); background-color: rgb(15, 16, 22); justify-content: center; align-items: center; }
 .bar-medal > .icon { width: 84px; height: 84px; }
 .bar-info { flex-grow: 1; flex-shrink: 1; width: 0; justify-content: center; }
 .bar-info > * { flex-shrink: 0; }
 .bar-info > .unit-head { height: 52px; align-items: center; flex-wrap: nowrap; }
-.bar-info .unit-name { max-width: 300px; font-size: 40px; }
+/* The panels' 33 px name in 360: the longest English name ("Peasant Spearman 1") fits; a larger name was cut to "Peasant Sp…". */
+.bar-info .unit-name { max-width: 360px; }
 .bar-info .unit-head > .info-btn { right: 0; top: -6px; }
 .bar-info .unit-head > .unit-tag { flex-shrink: 0; margin-right: 64px; }
 .bar-info > .big { height: 62px; align-items: flex-end; }
