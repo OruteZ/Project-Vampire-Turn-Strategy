@@ -87,11 +87,12 @@ namespace VampireSpawn.Game
             aimMaterial = new Material(material);
             aimMaterial.SetFloat("_ZTest", (float)UnityEngine.Rendering.CompareFunction.Always);
             arc = AimLine("AimArc");
-            arc.numCapVertices = 2;
             head = AimLine("AimHead");
             head.widthCurve = AnimationCurve.Linear(0f, 1f, 1f, 0f);
             x1 = AimLine("AimX");
             x2 = AimLine("AimX");
+            // Same queue as the arc, so without this the camera distance decides which one is drawn last.
+            x1.sortingOrder = x2.sortingOrder = 1;
         }
 
         void OnDestroy() => Destroy(aimMaterial);
@@ -186,14 +187,14 @@ namespace VampireSpawn.Game
             flat.y = 0f;
             b -= flat.normalized * (0.35f * s);
             aimEnds = (a, b);
-            var color = clear ? Screens.Ui.Alpha(Enemy, 0.95f) : Screens.Ui.Alpha(Bone, 0.5f);
-            Set(arc, new[] { a, b }, 0.12f * s, color);
-            Set(head, new[] { a, b }, 0.45f * s, color);
+            var color = clear ? Screens.Ui.Alpha(Enemy, 0.95f) : Screens.Ui.Alpha(Screens.Ui.Muted, 0.65f);
+            Set(arc, new[] { a, b }, 0.2f * s, color);
+            Set(head, new[] { a, b }, 0.6f * s, color);
             if (!clear)
             {
                 crossed = true;
-                Set(x1, new[] { a, b }, 0.14f * s, Enemy);
-                Set(x2, new[] { a, b }, 0.14f * s, Enemy);
+                Set(x1, new[] { a, b }, 0.18f * s, Enemy);
+                Set(x2, new[] { a, b }, 0.18f * s, Enemy);
             }
             LateUpdate();
         }
@@ -210,8 +211,8 @@ namespace VampireSpawn.Game
             // Bulge across the chord as seen on screen, not along world up: under the 55° board camera a world-up arc falls almost along the view ray and the head folds into a hook.
             var bulge = Vector3.Cross(cam.transform.forward, b - a).normalized;
             if (Vector3.Dot(bulge, cam.transform.up) < 0f) bulge = -bulge;
-            var c = (a + b) * 0.5f + bulge * (2f * Mathf.Min(0.3f * Vector3.Distance(a, b), s));
-            var headLength = 0.5f * s;
+            var c = (a + b) * 0.5f + bulge * (2f * Mathf.Min(0.12f * Vector3.Distance(a, b), 0.5f * s));
+            var headLength = 0.6f * s;
             var neck = b - (b - c).normalized * headLength;
             var n = 0;
             for (var i = 0; i <= 24; i++)
@@ -226,8 +227,8 @@ namespace VampireSpawn.Game
             head.SetPosition(1, b);
             if (!crossed) return;
             var x = Bezier(a, c, b, 0.5f);
-            // Half of a 0.6-long stroke along the screen diagonal.
-            var k = 0.3f / Mathf.Sqrt(2f) * s;
+            // Half of a 0.7-long stroke along the screen diagonal.
+            var k = 0.35f / Mathf.Sqrt(2f) * s;
             var r = cam.transform.right * k;
             var u = cam.transform.up * k;
             x1.SetPosition(0, x - r - u);
