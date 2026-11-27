@@ -12,6 +12,7 @@ namespace VampireSpawn.Game
     // docs/art/campaign-map.md. The fixed terrain and its Cinemachine shots are baked into the Camp scene
     // (Tools > 지도 > Camp 씬에 지도 굽기) so people can move props, points and shots in Unity; the scene is the map's only truth at run time.
     // Show rebuilds only progress (lit road, braziers, camp) from the baked points; Look picks a shot and the brain blends to it.
+    // The barracks layer leaves the map for a small studio built here at run time (docs/ui/upgrade.md 9).
     public sealed class CampaignMapView : MonoBehaviour
     {
         public ArtCatalog art;
@@ -22,8 +23,15 @@ namespace VampireSpawn.Game
         [Tooltip("지도 레이어 WASD 이동 범위: 전경 시점에서 동서(x)·남북(y)으로 갈 수 있는 거리")] public Vector2 panRange = new Vector2(30f, 45f);
         [Tooltip("성 면 지도 레이어 WASD 이동 범위 (Shot Castle 에서 동서·남북)")] public Vector2 castlePanRange = new Vector2(20f, 20f);
 
-        // campaign-map.md 9: pitch 50, the scene's FOV 40, camp distance 28, 0.3 s between shots.
-        public const float Pitch = 50f, Fov = 40f, CampDistance = 28f, BlendSeconds = 0.3f, WideDistance = 80f;
+        // campaign-map.md 9: pitch 50, the scene's FOV 40, 0.3 s between shots.
+        public const float Pitch = 50f, Fov = 40f, BlendSeconds = 0.3f, WideDistance = 80f;
+
+        // upgrade.md 9: the set stands far off the map. Places are from the stand's centre in hex sizes (x right, y up, z away from the camera).
+        static readonly Vector3 StudioAt = new Vector3(2000f, 0f, 0f), KeyLightAt = new Vector3(-3.5f, 5f, -4f), RimLightAt = new Vector3(3f, 3.2f, 3.5f);
+        static readonly Color StudioFloor = Screens.Ui.Rgb(0x1b1f2b), StudioStand = Screens.Ui.Rgb(0x343c4e), KeyLight = Screens.Ui.Rgb(0xbfd4ee);
+        // The camera looks 6 degrees down at 55% of a standard unit's height through a 30 degree lens, far enough that such a unit is 59% of the screen's height.
+        // The unit turns 20 degrees toward the barracks panel (screen right); ambient light drops to 40% of the map's.
+        const float StandRadius = 1.6f, StandHeight = 0.12f, StudioFov = 30f, StudioPitch = 6f, UnitOnScreen = 0.59f, LookHeight = 0.55f, UnitYaw = 160f, StudioAmbient = 0.4f;
 
         Transform progress;
         Light spot;
@@ -50,10 +58,9 @@ namespace VampireSpawn.Game
             progress.SetParent(terrain, false);
             BuildProgress();
             if (terrain.Find("Water") == null) BuildWater();
+            if (studio == null) BuildStudio();
             RenderSettings.ambientMode = UnityEngine.Rendering.AmbientMode.Trilight;
-            RenderSettings.ambientSkyColor = CampaignMapLayout.AmbientSky;
-            RenderSettings.ambientEquatorColor = CampaignMapLayout.AmbientEquator;
-            RenderSettings.ambientGroundColor = CampaignMapLayout.AmbientGround;
+            Ambient(1f);
             RenderSettings.fog = true;
             RenderSettings.fogMode = FogMode.Linear;
             RenderSettings.fogColor = CampaignMapLayout.Fog;
@@ -64,8 +71,57 @@ namespace VampireSpawn.Game
                 viewCamera.rect = new Rect(0f, 0f, 1f, 1f);
                 UseBrain(viewCamera);
             }
-            var camp = Shot("Shot Camp");
-            if (camp != null) camp.Follow = camp.LookAt = CampSpot();
+        }
+
+        static void Ambient(float k)
+        {
+            RenderSettings.ambientSkyColor = CampaignMapLayout.AmbientSky * k;
+            RenderSettings.ambientEquatorColor = CampaignMapLayout.AmbientEquator * k;
+            RenderSettings.ambientGroundColor = CampaignMapLayout.AmbientGround * k;
+        }
+
+        Transform studio;
+        CinemachineCamera studioShot;
+
+        void BuildStudio()
+        {
+            var s = art.hexSize;
+            studio = new GameObject("Studio").transform;
+            studio.SetParent(transform, false);
+            studio.position = terrain.position + StudioAt;
+            Slab("Floor", PrimitiveType.Cube, new Vector3(0f, -0.05f, 0f) * s, new Vector3(40f, 0.1f, 40f) * s, StudioFloor);
+            Slab("Backdrop", PrimitiveType.Cube, new Vector3(0f, 8f, 6f) * s, new Vector3(40f, 16f, 0.1f) * s, StudioFloor);
+            // Unity's cylinder is 2 high and 1 across.
+            Slab("Stand", PrimitiveType.Cylinder, Vector3.up * StandHeight * 0.5f * s, new Vector3(StandRadius * 2f, StandHeight * 0.5f, StandRadius * 2f) * s, StudioStand);
+            var chest = studio.position + Vector3.up * (StandHeight + LookHeight * art.unitHeight) * s;
+            StudioLight(KeyLightAt * s, KeyLight, 60f, 16f * s, 55f, chest);
+            StudioLight(RimLightAt * s, art.torchLight, 35f, 12f * s, 60f, chest);
+            var shot = new GameObject("Shot Studio").transform;
+            shot.SetParent(studio, false);
+            shot.rotation = Quaternion.Euler(StudioPitch, 0f, 0f);
+            shot.position = chest - shot.forward * (art.unitHeight * s / UnitOnScreen / (2f * Mathf.Tan(StudioFov * 0.5f * Mathf.Deg2Rad)));
+            studioShot = shot.gameObject.AddComponent<CinemachineCamera>();
+            studioShot.Lens.FieldOfView = StudioFov;
+            studioShot.enabled = false;
+        }
+
+        void Slab(string name, PrimitiveType shape, Vector3 at, Vector3 size, Color color)
+        {
+            var go = GameObject.CreatePrimitive(shape);
+            go.name = name;
+            Destroy(go.GetComponent<Collider>());
+            go.transform.SetParent(studio, false);
+            go.transform.localPosition = at;
+            go.transform.localScale = size;
+            go.GetComponent<MeshRenderer>().sharedMaterial = Tinted(color, "Studio " + name);
+        }
+
+        void StudioLight(Vector3 at, Color color, float intensity, float range, float angle, Vector3 aim)
+        {
+            var l = BoardView.AddLight(studio, studio.position + at, LightType.Spot, color, intensity, range);
+            l.spotAngle = angle;
+            l.shadows = LightShadows.Soft;
+            l.transform.rotation = Quaternion.LookRotation(aim - l.transform.position);
         }
 
         public static CinemachineBrain UseBrain(Camera cam)
@@ -84,9 +140,14 @@ namespace VampireSpawn.Game
         public void Look(CampLayer layer, int stage, Rect empty, Vector2 margin, bool snap = false)
         {
             var r = RegionOf(stage);
-            var chosen = layer == CampLayer.Barracks ? Shot("Shot Camp") : layer == CampLayer.Info && r != null ? Shot("Shot " + Campaign.Stages[stage].Id)
+            var inStudio = layer == CampLayer.Barracks;
+            var chosen = inStudio ? studioShot : layer == CampLayer.Info && r != null ? Shot("Shot " + Campaign.Stages[stage].Id)
                 : Shot(CampNav.FaceOf(stage) == CampFace.Castle ? CastleShot : "Shot Wide");
             foreach (var cam in Shots()) cam.enabled = cam == chosen;
+            if (studioShot != null) studioShot.enabled = inStudio;
+            // upgrade.md 9-7: the set stays dark and unfogged so only the unit is lit.
+            RenderSettings.fog = !inStudio;
+            Ambient(inStudio ? StudioAmbient : 1f);
             this.empty = empty;
             // Each face pans on its own; switching faces starts the other one centred.
             if (layer == CampLayer.Map && chosen != mapShot) { pan = Vector2.zero; mapShot = chosen; }
@@ -139,8 +200,8 @@ namespace VampireSpawn.Game
         void LateUpdate()
         {
             if (!Showing || viewCamera == null) return;
-            foreach (var cam in Shots())
-                if (cam.enabled && !Mathf.Approximately(cam.Lens.PhysicalProperties.SensorSize.x, 24f * viewCamera.aspect)) Shift(cam);
+            foreach (var cam in Shots().Append(studioShot))
+                if (cam != null && cam.enabled && !Mathf.Approximately(cam.Lens.PhysicalProperties.SensorSize.x, 24f * viewCamera.aspect)) Shift(cam);
             var distance = Mathf.Max(1f, (viewCamera.transform.position.y - terrain.position.y) / Mathf.Sin(Pitch * Mathf.Deg2Rad));
             if (Mathf.Approximately(distance, fogDistance)) return;
             fogDistance = distance;
@@ -212,22 +273,25 @@ namespace VampireSpawn.Game
 
         CinemachineCamera Shot(string name) => Shots().FirstOrDefault(c => c.name == name);
 
-        Transform CampSpot() => progress != null ? progress.Find("Camp") : null;
-
         UnitView campUnit;
         int campType = -1;
 
-        // upgrade.md 후속: the barracks tab's unit (index into GameData.Types, -1 none) stands by the campfire, facing the camera (south).
+        // upgrade.md 9-3: the barracks tab's unit (index into GameData.Types, -1 none) stands on the studio's stand.
         public void ShowUnit(int type)
         {
             if (type == campType) return;
             if (campUnit != null) BoardView.Kill(campUnit.gameObject);
             campUnit = null;
             campType = type;
-            var camp = CampSpot();
-            if (type < 0 || camp == null) return;
+            if (type < 0 || studio == null) return;
             var t = GameData.Types[type];
-            campUnit = UnitView.Create(art, art.Look(t.Key), camp, -1, PointOr(camp, "Unit", camp.position), 180f - camp.eulerAngles.y, true);
+            campUnit = UnitView.Create(art, art.Look(t.Key), studio, -1, studio.position + Vector3.up * StandHeight * art.hexSize, UnitYaw, true);
+        }
+
+        // upgrade.md 9-6: dragging turns the unit where it stands; a new unit starts from UnitYaw again.
+        public void TurnUnit(float degrees)
+        {
+            if (campUnit != null) campUnit.transform.Rotate(0f, degrees, 0f);
         }
 
         void BuildProgress()

@@ -201,7 +201,6 @@ namespace VampireSpawn.Editor
                 var root = terrain.Find("Region " + r.Stage);
                 if (root != null) NewShot(cams, "Shot " + r.Stage, root, r.ViewDistance);
             }
-            NewShot(cams, "Shot Camp", null, CampDistance);
         }
 
         // Builds the fixed terrain under parent; material makes the tinted materials.

@@ -7,10 +7,11 @@ namespace VampireSpawn.Game.Screens
     // ui-style.md 12 motion on UI Toolkit: screen fade-in, panel appear, the 1.2 s pulse (brightness ±10%) and the 0.2 s flash (+30% then back).
     public static class Fx
     {
-        // A black cover that clears in 0.3 s (.fade-cover transition in Theme.uss).
-        public static void FadeIn(VisualElement root)
+        // A black cover that clears in 0.3 s (.fade-cover transition in Theme.uss), or in the seconds given.
+        public static void FadeIn(VisualElement root, float seconds = 0.3f)
         {
             var cover = ToolkitKit.E(root, "fade-cover");
+            if (seconds != 0.3f) cover.style.transitionDuration = new System.Collections.Generic.List<TimeValue> { new TimeValue(seconds) };
             cover.RegisterCallback<TransitionEndEvent>(_ => cover.RemoveFromHierarchy());
             Later(cover, () => cover.AddToClassList("gone"));
         }

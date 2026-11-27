@@ -66,8 +66,14 @@ namespace VampireSpawn.Game.Screens
             }
         }
 
+        CampLayer? drawn;
+
         void Redraw(bool snap)
         {
+            // upgrade.md 9-5: the barracks is another place, so the camera cuts and a black cover clears in 0.2 s.
+            var studio = drawn.HasValue && drawn != nav.Layer && (drawn == CampLayer.Barracks || nav.Layer == CampLayer.Barracks);
+            drawn = nav.Layer;
+            if (studio) { snap = true; Fx.FadeIn(ui.Root, 0.2f); }
             var empty = EmptyArea(nav.Layer);
             var size = ToolkitKit.PanelSize();
             ui.Fill(Campaign, nav, In);
@@ -106,6 +112,21 @@ namespace VampireSpawn.Game.Screens
             }
         }
 
+        bool held, turning;
+        float heldX;
+
+        // upgrade.md 9-6: in the barracks a drag that starts off the UI turns the unit, 0.4 degrees per 1920-wide screen px.
+        void Turn(UnityEngine.InputSystem.Mouse mouse)
+        {
+            var down = mouse != null && mouse.leftButton.isPressed && nav.Layer == CampLayer.Barracks && nav.BuyArmed == null;
+            var x = mouse != null ? mouse.position.ReadValue().x : 0f;
+            if (down && !held) turning = !PointerOverUi();
+            else if (down && turning) map.TurnUnit((heldX - x) * 0.4f * 1920f / Screen.width);
+            if (!down) turning = false;
+            held = down;
+            heldX = x;
+        }
+
         // stage-select.md 5-2 keys, the 2.5 s confirm expiry, and a click on bare map (5-1) all go through CampNav.
         void Update()
         {
@@ -122,6 +143,7 @@ namespace VampireSpawn.Game.Screens
             if (info) ShowDetail(nav.Layer == CampLayer.Barracks ? GameData.Types[Mathf.Clamp(nav.Tab, 0, GameData.Types.Length - 1)].Key : PointerOverUi() ? ui.HoverKind : null);
             if (nav.Armed != CampConfirm.None) Send(In(CampKey.Tick));
             var mouse = UnityEngine.InputSystem.Mouse.current;
+            Turn(mouse);
             if (mouse != null && keys.Pressed("click", mouse.leftButton.isPressed) && !PointerOverUi()) Send(In(CampKey.EmptyMap));
             if (kb == null) return;
             if (keys.Pressed("up", kb.upArrowKey.isPressed)) Send(In(CampKey.Up));
