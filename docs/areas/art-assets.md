@@ -39,6 +39,7 @@
 | 배치 때 아군은 북쪽, 적은 남쪽을 본다. 잠든 뱀파이어는 관만 보인다 | 시험 중 | 2026-11-07 | #42 요청 2 "적방향 (북쪽)", "관만 보여줄 것" |
 | 검사·기사·궁수·농민은 그대로, 특수 직업만 판타지로: 역병 의사 → 성녀, 사냥꾼 → 연금술사(약병 투척), 웨어울프는 새 병종. key 는 그대로 | 시험 중 | 2026-11-11 | #111 "검사기사궁수 빼고 특수직업군을 판타지로 해줘" |
 | 관은 석관 `SM_Prop_Tomb_01`, 색칠 없이 | 시험 중 | 2026-11-08 | #82 "A, 색칠없이" |
+| 원정 지도 풍경 `Assets/_Project/Scenes/World.unity` (Synty 데모 씬 `Demo_Cathedral_01` 복사본, 배치와 Synty 프리팹 참조만 담김)는 git 에 올린다. 원본 씬은 메인 메뉴가 그대로 쓴다 | 시험 중 | 2026-11-27 | #152 "그 씬을 그대로 쓰지말고 복사해서", "올리고 dev 반영" |
 
 ## 맡길 때
 - 유료 에셋(`Assets/Synty/`, `UPackage/`)은 git 에 올리지 않는다(공개 저장소, 라이선스, .gitignore). 새 클론은 docs/guides/asset-setup.md 대로 `bash tools/assets/setup.sh`. 팀원의 패키지 받기는 NestResources(회사 드라이브)가 맡고 `setup.sh` 가 부른다. 이 프로젝트에선 nestresources 스킬의 기본 폴더(`Assets/Synty`)가 아니라 `UPackage/` 로 받는다(`.unitypackage` 는 Assets 밖에). Synty 참조를 더하거나 빼면 `node tools/assets/scan.mjs` 로 목록을 다시 뽑아 같이 커밋한다
