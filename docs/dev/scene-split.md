@@ -8,7 +8,7 @@
 | 씬 | Build | 들어 있는 것 | 컨트롤러 |
 |---|---|---|---|
 | `Assets/_Project/Scenes/Menu.unity` | 0 (시작) | Main Camera, Directional Light, Board (흐린 바탕용), Menu | `MenuFlow` |
-| `Assets/_Project/Scenes/Camp.unity` | 1 | Main Camera, Directional Light, Campaign Map View (구운 지형 `Campaign Map`), Camp | `CampFlow` |
+| `Assets/_Project/Scenes/Camp.unity` | 1 | Main Camera, Campaign Map View (구운 지도 층 `World Map`), Camp. 실행 중 `World.unity`(풍경)를 겹쳐 부른다 | `CampFlow` |
 | `Assets/_Project/Scenes/Battle.unity` | 2 | Main Camera, Directional Light, Board, Game (BattleView·BoardInput), Overlay | `BattleFlow` |
 
 - `Battle.unity` 는 옛 `Main.unity` 를 옮긴 것이다(GUID 그대로).
@@ -23,14 +23,12 @@
 
 ## 3. 원정 지도
 
-- `CampaignMapLayout`(C# 배치 표)을 도구 모음 > 지도 > **Camp 씬에 지도 굽기** 로 `Camp.unity` 의 `Campaign Map` 아래 실제 오브젝트로 굽는다 (`Editor/CampaignMapBaker.cs`). 재질은 `Assets/_Project/Art/Map/*.mat`.
-- 구운 뒤에는 **씬이 지도다.** 소품·나무를 Unity 에서 옮기고 씬을 저장하면 그대로 남는다.
-- 지역은 이름(`Region s1` … `Region s10`)으로 찾는다. 지역 오브젝트를 옮기면 표식·화로·스폿광·카메라 시점이 따라간다.
-- 카메라 시점은 `Campaign Map` > `Cameras` 아래 Cinemachine 카메라다(전경 `Shot Wide`, 장마다 `Shot s1`…`s10`, 병영 `Shot Camp`). `CampaignMapView.Look` 은 쓸 시점 하나만 켜고 렌즈 시프트로 빈 곳 가운데에 맞춘다. 이동은 `Main Camera` 의 `CinemachineBrain` 블렌드다 (#57).
-- 실행 중에 짓는 것: 진행에 따라 바뀌는 원정 길(밝은 길/어두운 길)·클리어 화로·야영지(병영 시점 `Shot Camp` 이 따라간다), 그리고 만든 메시라 씬에 남지 않는 강·해자·곁길(`Water`).
-- 함정: 길은 아직 배치 표의 점을 따른다. 지역을 크게 옮기면 길이 그 자리를 지나지 않는다. 그때는 `CampaignMapLayout.Road` 의 점도 옮긴다.
-- 함정: 다시 굽기는 `Campaign Map` 전체를 새로 짓는다. 손으로 옮긴 것이 사라진다(버튼이 먼저 묻는다).
-- 함정: 구울 때 쓰는 메시·재질은 에셋이어야 한다. 실행 중에 만든 것은 씬을 저장하면 사라진다. 지역 원판은 그래서 기본 원기둥을 납작하게 쓴다.
+- 풍경은 `Scenes/World.unity` (Synty `Demo_Cathedral_01` 복사본)다. `CampaignMapView.Show` 가 겹쳐 불러 활성 씬으로 두고 그 씬의 카메라·AudioListener 를 끈다 (메인 메뉴의 `MenuFlow` 와 같은 방식). 기획서는 docs/art/campaign-map.md.
+- 지도 층은 `Camp.unity` 의 `World Map` 이다. `CampaignMapLayout`(C# 굽기 표)을 도구 모음 > 지도 > **지도 층 굽기** 로 굽는다 (`Editor/CampaignMapBaker.cs`). 없는 것만 더하므로 손으로 옮긴 점·시점이 남는다. 처음부터 다시 지으려면 `World Map` 을 지우고 누른다.
+- 장은 이름(`Region s1` … `Region s20`)으로 찾는다. 자식 점 `Marker`(표식)·`Brazier`(클리어 화로)·`View`(가까운 시점이 보는 점). 지역 오브젝트를 옮기면 모두 따라간다.
+- 카메라 시점은 `World Map` > `Cameras` 아래 Cinemachine 카메라다(전경 `Shot Road`·`Shot Castle`, 장마다 `Shot s1`…`s20`, 병영 `Shot Camp`). 각도는 시점마다 Follow 오프셋이 정한다. `CampaignMapView.Look` 은 쓸 시점 하나만 켜고 렌즈 시프트로 빈 곳 가운데에 맞춘다. 이동은 `Main Camera` 의 `CinemachineBrain` 블렌드다 (#57).
+- 성 안 면(11~20장)에서는 `CampaignMapView` 가 세계 씬 `Cathedral` 의 렌더러 가운데 높이 5 위의 것을 끈다 (campaign-map.md 3).
+- 실행 중에 짓는 것: 클리어한 장의 화로(`World Map/Progress`), 고른 장 스폿광, 병영 병종.
 
 ## 4. 검사
 

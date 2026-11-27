@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Unity.Cinemachine;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using VampireSpawn.Core;
 
 // The map baker (Editor) builds with BoardView.Place and friends.
@@ -9,63 +10,98 @@ using VampireSpawn.Core;
 
 namespace VampireSpawn.Game
 {
-    // docs/art/campaign-map.md. The fixed terrain and its Cinemachine shots are baked into the Camp scene
-    // (Tools > 지도 > Camp 씬에 지도 굽기) so people can move props, points and shots in Unity; the scene is the map's only truth at run time.
-    // Show rebuilds only progress (lit road, braziers, camp) from the baked points; Look picks a shot and the brain blends to it.
+    // docs/art/campaign-map.md: the landscape is the World scene loaded over Camp; regions, camp and shots are the Camp scene's World Map.
     public sealed class CampaignMapView : MonoBehaviour
     {
         public ArtCatalog art;
         public Camera viewCamera;
-        [Tooltip("씬에 구운 지형 (Campaign Map, 그 아래 Cameras 의 Cinemachine 시점들). 비면 지도가 뜨지 않는다")] public Transform terrain;
-        [Tooltip("성 면 (11~20장, docs/art/campaign-map.md 12). 다시 굽기는 이것을 건드리지 않는다")] public Transform castle;
+        [Tooltip("Camp 씬의 지도 층 (World Map: 지역·야영지·보조광·시점). 비면 지도가 뜨지 않는다")] public Transform worldMap;
         [Tooltip("지도 레이어 WASD 이동 속도 (초당 단위)")] public float panSpeed = 40f;
-        [Tooltip("지도 레이어 WASD 이동 범위: 전경 시점에서 동서(x)·남북(y)으로 갈 수 있는 거리")] public Vector2 panRange = new Vector2(30f, 45f);
-        [Tooltip("성 면 지도 레이어 WASD 이동 범위 (Shot Castle 에서 동서·남북)")] public Vector2 castlePanRange = new Vector2(20f, 20f);
+        [Tooltip("지도 레이어 WASD 이동 범위: 전경 시점에서 좌우(x)·앞뒤(y)로 갈 수 있는 거리")] public Vector2 panRange = new Vector2(25f, 25f);
 
-        // campaign-map.md 9: pitch 50, the scene's FOV 40, camp distance 28, 0.3 s between shots.
-        public const float Pitch = 50f, Fov = 40f, CampDistance = 28f, BlendSeconds = 0.3f, WideDistance = 80f;
+        public const float BlendSeconds = 0.3f;
 
         Transform progress;
         Light spot;
         Campaign campaign;
 
-        public bool Showing => terrain != null && terrain.gameObject.activeSelf;
+        public bool Showing => worldMap != null && worldMap.gameObject.activeSelf;
 
         public void Show(Campaign c)
         {
             campaign = c;
-            if (terrain == null) { Debug.LogError("Camp 씬에 구운 지도가 없다 (도구 모음 > 지도 > Camp 씬에 지도 굽기)"); return; }
+            if (worldMap == null) { Debug.LogError("Camp 씬에 지도 층이 없다 (도구 모음 > 지도 > 지도 층 굽기)"); return; }
             if (spot == null)
             {
                 spot = BoardView.AddLight(transform, Vector3.zero, LightType.Spot, CampaignMapLayout.Moon, 3f, 30f);
                 spot.spotAngle = 40f;
                 spot.enabled = false;
             }
-            terrain.gameObject.SetActive(true);
-            if (castle != null) castle.gameObject.SetActive(true);
-            fogDistance = 0f;
+            worldMap.gameObject.SetActive(true);
             pan = Vector2.zero;
+            var world = SceneManager.GetSceneByPath(CampaignMapLayout.WorldScene);
+            // After a progress reset the world is already set up; collecting again would miss the renderers the cut has off.
+            if (world.isLoaded) { if (cut == null) UseWorld(world); }
+            else
+            {
+                SceneManager.sceneLoaded -= OnLoaded;
+                SceneManager.sceneLoaded += OnLoaded;
+                SceneManager.LoadScene(CampaignMapLayout.WorldScene, LoadSceneMode.Additive);
+            }
+            if (viewCamera != null) UseBrain(viewCamera);
             if (progress != null) BoardView.Kill(progress.gameObject);
             progress = new GameObject("Progress").transform;
-            progress.SetParent(terrain, false);
-            BuildProgress();
-            if (terrain.Find("Water") == null) BuildWater();
-            RenderSettings.ambientMode = UnityEngine.Rendering.AmbientMode.Trilight;
-            RenderSettings.ambientSkyColor = CampaignMapLayout.AmbientSky;
-            RenderSettings.ambientEquatorColor = CampaignMapLayout.AmbientEquator;
-            RenderSettings.ambientGroundColor = CampaignMapLayout.AmbientGround;
-            RenderSettings.fog = true;
-            RenderSettings.fogMode = FogMode.Linear;
-            RenderSettings.fogColor = CampaignMapLayout.Fog;
-            if (viewCamera != null)
+            progress.SetParent(worldMap, false);
+            for (var i = 0; i < Campaign.Stages.Length; i++)
             {
-                viewCamera.backgroundColor = CampaignMapLayout.Fog;
-                viewCamera.targetTexture = null;
-                viewCamera.rect = new Rect(0f, 0f, 1f, 1f);
-                UseBrain(viewCamera);
+                var r = RegionOf(i);
+                if (r == null || !campaign.IsCleared(Campaign.Stages[i])) continue;
+                var at = PointOr(r, "Brazier", r.position);
+                if (art.brazier != null) BoardView.Place(art.brazier, progress, at, 0.9f, 0f);
+                if (art.fire != null) BoardView.Place(art.fire, progress, at + Vector3.up * 0.55f, 0f, 0f);
+                BoardView.AddLight(progress, at + Vector3.up * 3f, LightType.Point, art.torchLight, 60f, 20f);
             }
-            var camp = Shot("Shot Camp");
-            if (camp != null) camp.Follow = camp.LookAt = CampSpot();
+        }
+
+        void OnDestroy() => SceneManager.sceneLoaded -= OnLoaded;
+
+        void OnLoaded(Scene s, LoadSceneMode _)
+        {
+            if (s.path != CampaignMapLayout.WorldScene) return;
+            SceneManager.sceneLoaded -= OnLoaded;
+            UseWorld(s);
+        }
+
+        // Sky, fog and ambient light come from the active scene only; the Camp camera draws, so the world's own camera and listener go.
+        void UseWorld(Scene s)
+        {
+            SceneManager.SetActiveScene(s);
+            RenderSettings.fogEndDistance = CampaignMapLayout.FogEnd;
+            var roots = s.GetRootGameObjects();
+            foreach (var cam in roots.SelectMany(r => r.GetComponentsInChildren<Camera>())) cam.enabled = false;
+            foreach (var ear in roots.SelectMany(r => r.GetComponentsInChildren<AudioListener>())) ear.enabled = false;
+            cut = new List<Renderer>();
+            var cathedral = roots.FirstOrDefault(r => r.name == "Cathedral");
+            if (cathedral != null)
+                foreach (Transform group in cathedral.transform)
+                {
+                    var byLowest = CampaignMapLayout.CutByLowestPoint.Contains(group.name);
+                    cut.AddRange(group.GetComponentsInChildren<Renderer>().Where(r => r.enabled && (byLowest ? r.bounds.min.y : r.bounds.center.y) > CampaignMapLayout.CutHeight));
+                }
+            cutApplied = null;
+            ApplyCut();
+        }
+
+        List<Renderer> cut;
+        bool cutWanted;
+        bool? cutApplied;
+
+        // campaign-map.md 3: the castle face shows the cathedral's ground floor; renderers go off at once, so their shadows go too.
+        void ApplyCut()
+        {
+            if (cut == null || cutApplied == cutWanted) return;
+            cutApplied = cutWanted;
+            foreach (var r in cut) if (r != null) r.enabled = !cutWanted;
         }
 
         public static CinemachineBrain UseBrain(Camera cam)
@@ -78,17 +114,18 @@ namespace VampireSpawn.Game
             return brain;
         }
 
-        // empty and margin are normalized viewport units (stage-select.md 2-3, campaign-map.md 9: markers stay 48 px inside).
-        // Only the chosen shot is enabled; it aims at its subject and a lens shift slides the picture so the subject sits at the empty
-        // area's centre. The composer's screen offset is angular and lands about 35% short sideways, so it is not used for this.
+        // empty and margin are normalized viewport units (stage-select.md 2-3). Only the chosen shot is enabled; a lens shift slides
+        // its subject to the empty area's centre, because the composer's screen offset is angular and lands about 35% short sideways.
         public void Look(CampLayer layer, int stage, Rect empty, Vector2 margin, bool snap = false)
         {
             var r = RegionOf(stage);
+            var face = CampNav.FaceOf(stage);
+            cutWanted = layer != CampLayer.Barracks && face == CampFace.Castle;
+            ApplyCut();
             var chosen = layer == CampLayer.Barracks ? Shot("Shot Camp") : layer == CampLayer.Info && r != null ? Shot("Shot " + Campaign.Stages[stage].Id)
-                : Shot(CampNav.FaceOf(stage) == CampFace.Castle ? CastleShot : "Shot Wide");
+                : Shot(face == CampFace.Castle ? "Shot Castle" : "Shot Road");
             foreach (var cam in Shots()) cam.enabled = cam == chosen;
             this.empty = empty;
-            // Each face pans on its own; switching faces starts the other one centred.
             if (layer == CampLayer.Map && chosen != mapShot) { pan = Vector2.zero; mapShot = chosen; }
             panning = layer == CampLayer.Map ? chosen : null;
             if (chosen != null)
@@ -112,7 +149,7 @@ namespace VampireSpawn.Game
 
         Rect empty = new Rect(0f, 0f, 1f, 1f);
 
-        // Sensor at the screen's aspect with a vertical gate, so the vertical FOV stays 40 and a shift of 1 is one screen width.
+        // Sensor at the screen's aspect with a vertical gate, so the vertical FOV holds and a shift of 1 is one screen width.
         void Shift(CinemachineCamera cam)
         {
             var aspect = viewCamera != null ? viewCamera.aspect : 16f / 9f;
@@ -135,49 +172,38 @@ namespace VampireSpawn.Game
             return v.z <= 0f ? (Vector2?)null : new Vector2(v.x, v.y);
         }
 
-        // Fog follows the camera's distance (campaign-map.md 8: start x0.9, end x2.2), read off its height at the fixed pitch.
         void LateUpdate()
         {
             if (!Showing || viewCamera == null) return;
             foreach (var cam in Shots())
                 if (cam.enabled && !Mathf.Approximately(cam.Lens.PhysicalProperties.SensorSize.x, 24f * viewCamera.aspect)) Shift(cam);
-            var distance = Mathf.Max(1f, (viewCamera.transform.position.y - terrain.position.y) / Mathf.Sin(Pitch * Mathf.Deg2Rad));
-            if (Mathf.Approximately(distance, fogDistance)) return;
-            fogDistance = distance;
-            RenderSettings.fogStartDistance = distance * 0.9f;
-            RenderSettings.fogEndDistance = distance * 2.2f;
         }
-
-        float fogDistance;
 
         CinemachineCamera panning, mapShot;
         Vector2 pan;
 
-        // Arrows stay with marker focus (CampFlow). The offset is camera-local after Aim, so it slides the wide shot without re-aiming.
+        // 5-3: right is the camera's right, forward is the camera's forward laid flat; the offset is camera-local, tilted by the shot's own pitch.
         void Update()
         {
             var kb = UnityEngine.InputSystem.Keyboard.current;
             if (!Showing || panning == null || kb == null) return;
             var move = new Vector2((kb.dKey.isPressed ? 1f : 0f) - (kb.aKey.isPressed ? 1f : 0f), (kb.wKey.isPressed ? 1f : 0f) - (kb.sKey.isPressed ? 1f : 0f));
             pan += move.normalized * panSpeed * Time.unscaledDeltaTime;
-            var range = panning.name == CastleShot ? castlePanRange : panRange;
-            pan = new Vector2(Mathf.Clamp(pan.x, -range.x, range.x), Mathf.Clamp(pan.y, -range.y, range.y));
+            pan = new Vector2(Mathf.Clamp(pan.x, -panRange.x, panRange.x), Mathf.Clamp(pan.y, -panRange.y, panRange.y));
             if (!panning.TryGetComponent<CinemachineCameraOffset>(out var offset)) offset = panning.gameObject.AddComponent<CinemachineCameraOffset>();
-            var rad = Pitch * Mathf.Deg2Rad;
+            var rad = PitchOf(panning) * Mathf.Deg2Rad;
             offset.Offset = new Vector3(pan.x, pan.y * Mathf.Sin(rad), pan.y * Mathf.Cos(rad));
         }
 
-        // The running map reads only the scene: regions, their Marker/Brazier/Camp points, Paths and the Camp Template are baked
-        // objects people may move by hand. CampaignMapLayout only feeds the bake (campaign-map.md 10).
-        public const string PathsName = "Paths", StartName = "Start", CampTemplateName = "Camp Template", CastleShot = "Shot Castle";
-
-        // Every stage has its own region: 1~10 on the road (terrain), 11~20 on the castle face (campaign-map.md 12).
-        Transform RegionOf(int stageIndex)
+        static float PitchOf(CinemachineCamera cam)
         {
-            if (terrain == null || stageIndex < 0 || stageIndex >= Campaign.Stages.Length) return null;
-            var name = "Region " + Campaign.Stages[stageIndex].Id;
-            return terrain.Find(name) ?? (castle != null ? castle.Find(name) : null);
+            if (!cam.TryGetComponent<CinemachineFollow>(out var follow)) return cam.transform.eulerAngles.x;
+            var o = follow.FollowOffset;
+            return Mathf.Atan2(o.y, new Vector2(o.x, o.z).magnitude) * Mathf.Rad2Deg;
         }
+
+        Transform RegionOf(int stageIndex) =>
+            worldMap == null || stageIndex < 0 || stageIndex >= Campaign.Stages.Length ? null : worldMap.Find("Region " + Campaign.Stages[stageIndex].Id);
 
         static Vector3 PointOr(Transform parent, string name, Vector3 fallback)
         {
@@ -185,166 +211,33 @@ namespace VampireSpawn.Game
             return t != null ? t.position : fallback;
         }
 
-        Vector2 Local(Vector3 world)
-        {
-            var p = terrain.InverseTransformPoint(world);
-            return new Vector2(p.x, p.z);
-        }
-
-        Vector2[] PathPoints(Transform path) => path.Cast<Transform>().Select(t => Local(t.position)).ToArray();
-
-        IEnumerable<Transform> Paths(string prefix)
-        {
-            var paths = terrain.Find(PathsName);
-            return paths == null ? Enumerable.Empty<Transform>() : paths.Cast<Transform>().Where(t => t.name.StartsWith(prefix));
-        }
-
         CinemachineCamera[] shots;
-        Transform shotsOf;
 
         CinemachineCamera[] Shots()
         {
-            if (shots != null && shotsOf == terrain) return shots;
-            shotsOf = terrain;
-            return shots = new[] { terrain, castle }.Where(t => t != null).Select(t => t.Find("Cameras")).Where(t => t != null)
-                .SelectMany(t => t.GetComponentsInChildren<CinemachineCamera>(true)).ToArray();
+            if (shots != null) return shots;
+            var cams = worldMap != null ? worldMap.Find("Cameras") : null;
+            return shots = cams != null ? cams.GetComponentsInChildren<CinemachineCamera>(true) : System.Array.Empty<CinemachineCamera>();
         }
 
         CinemachineCamera Shot(string name) => Shots().FirstOrDefault(c => c.name == name);
 
-        Transform CampSpot() => progress != null ? progress.Find("Camp") : null;
-
         UnitView campUnit;
         int campType = -1;
 
-        // upgrade.md 후속: the barracks tab's unit (index into GameData.Types, -1 none) stands by the campfire, facing the camera (south).
+        // The barracks tab's unit (index into GameData.Types, -1 none) stands at Camp/Unit facing Shot Camp.
         public void ShowUnit(int type)
         {
             if (type == campType) return;
             if (campUnit != null) BoardView.Kill(campUnit.gameObject);
             campUnit = null;
             campType = type;
-            var camp = CampSpot();
+            var camp = worldMap != null ? worldMap.Find("Camp") : null;
             if (type < 0 || camp == null) return;
-            var t = GameData.Types[type];
-            campUnit = UnitView.Create(art, art.Look(t.Key), camp, -1, PointOr(camp, "Unit", camp.position), 180f - camp.eulerAngles.y, true);
+            var shot = Shot("Shot Camp");
+            var toCamera = shot != null && shot.TryGetComponent<CinemachineFollow>(out var follow) ? follow.FollowOffset : Vector3.back;
+            var yaw = Mathf.Atan2(toCamera.x, toCamera.z) * Mathf.Rad2Deg - camp.eulerAngles.y;
+            campUnit = UnitView.Create(art, art.Look(GameData.Types[type].Key), camp, -1, PointOr(camp, "Unit", camp.position), yaw, true);
         }
-
-        void BuildProgress()
-        {
-            var lastOpen = 0;
-            for (var i = 0; i < Campaign.Stages.Length; i++) if (campaign.StageOpen(i)) lastOpen = i;
-            var roadNode = Paths("Road").FirstOrDefault();
-            var road = roadNode != null ? PathPoints(roadNode) : System.Array.Empty<Vector2>();
-            var open = RegionOf(lastOpen);
-            var split = 0;
-            if (open != null && road.Length > 0)
-            {
-                var o = Local(open.position);
-                for (var i = 1; i < road.Length; i++) if ((road[i] - o).sqrMagnitude < (road[split] - o).sqrMagnitude) split = i;
-            }
-            var lit = road.Take(split + 1).ToArray();
-            var dark = road.Skip(split).ToArray();
-            if (lit.Length > 1) Ribbon(progress, "Road Lit", lit, CampaignMapLayout.RoadWidth, Tinted(CampaignMapLayout.RoadLit, "Road Lit"), 0.04f);
-            if (dark.Length > 1) Ribbon(progress, "Road Dark", dark, CampaignMapLayout.RoadWidth, Tinted(CampaignMapLayout.RoadDark, "Road Dark"), 0.039f);
-            for (var i = 0; i < Campaign.Stages.Length; i++)
-            {
-                var r = RegionOf(i);
-                if (!campaign.IsCleared(Campaign.Stages[i]) || r == null) continue;
-                var at = PointOr(r, "Brazier", r.position);
-                var brazier = art.MapProp(CampaignMapLayout.Brazier);
-                if (brazier != null) BoardView.Place(brazier, progress, at, 0.9f, 0f);
-                var fire = art.MapProp(CampaignMapLayout.Fire);
-                if (fire != null) BoardView.Place(fire, progress, at + Vector3.up * 0.55f, 0f, 0f);
-                BoardView.AddLight(progress, at + Vector3.up * 3f, LightType.Point, art.torchLight, 60f, 20f);
-            }
-            campUnit = null;
-            campType = -1;
-            BuildCamp();
-        }
-
-        // 3 water and 5-2 side roads are generated meshes, which a baked scene cannot keep, so they are built when the map shows.
-        void BuildWater()
-        {
-            var water = new GameObject("Water").transform;
-            water.SetParent(terrain, false);
-            // Battle's water, darker and glossier so the north moon light glints on it (campaign-map.md 8).
-            var mat = art.water != null ? new Material(art.water) { color = CampaignMapLayout.Water, name = "Map Water" } : Tinted(CampaignMapLayout.Water, "Water");
-            mat.SetFloat("_Smoothness", 0.92f);
-            foreach (var p in Paths("River")) Ribbon(water, "River", PathPoints(p), CampaignMapLayout.RiverWidth, mat, 0.02f);
-            foreach (var p in Paths("Moat")) Ribbon(water, "Moat", PathPoints(p), CampaignMapLayout.MoatWidth, mat, 0.02f);
-            var side = Tinted(CampaignMapLayout.SideRoad, "Side Road");
-            foreach (var p in Paths("Side Road")) Ribbon(water, "Side Road", PathPoints(p), CampaignMapLayout.SideRoadWidth, side, 0.035f);
-        }
-
-        // 7: the camp sits at the last cleared region's camp spot (the start if none), turned toward the next region.
-        // Castle regions have no camp spot, so past 10 it stays at 10's (campaign-map.md 12).
-        void BuildCamp()
-        {
-            var last = -1;
-            for (var i = 0; i < Campaign.Stages.Length; i++) if (campaign.IsCleared(Campaign.Stages[i])) last = i;
-            var done = Enumerable.Range(0, last + 1).Reverse().Select(RegionOf).FirstOrDefault(r => r != null && r.Find("Camp") != null);
-            var start = terrain.Find(StartName);
-            var at = done != null ? PointOr(done, "Camp", done.position) : start != null ? start.position : terrain.position;
-            var next = RegionOf(last + 1);
-            var face = next != null ? Local(next.position) - Local(at) : Vector2.up;
-            var template = terrain.Find(CampTemplateName);
-            var camp = template != null ? Instantiate(template, progress).transform : new GameObject().transform;
-            camp.name = "Camp";
-            camp.SetParent(progress, false);
-            camp.position = at;
-            camp.rotation = terrain.rotation * Quaternion.Euler(0f, Mathf.Atan2(face.x, face.y) * Mathf.Rad2Deg, 0f);
-            camp.gameObject.SetActive(true);
-        }
-
-        // Catmull-Rom through the control points, one sample per unit (5-1).
-        internal static Vector2[] Path(Vector2[] points)
-        {
-            var result = new List<Vector2>();
-            for (var i = 0; i < points.Length - 1; i++)
-            {
-                var p0 = points[Mathf.Max(0, i - 1)];
-                var p1 = points[i];
-                var p2 = points[i + 1];
-                var p3 = points[Mathf.Min(points.Length - 1, i + 2)];
-                var steps = Mathf.Max(1, Mathf.CeilToInt((p2 - p1).magnitude));
-                for (var s = 0; s < steps; s++)
-                {
-                    var t = s / (float)steps;
-                    var t2 = t * t;
-                    var t3 = t2 * t;
-                    result.Add(0.5f * (2f * p1 + (p2 - p0) * t + (2f * p0 - 5f * p1 + 4f * p2 - p3) * t2 + (3f * p1 - p0 - 3f * p2 + p3) * t3));
-                }
-            }
-            result.Add(points[points.Length - 1]);
-            return result.ToArray();
-        }
-
-        static void Ribbon(Transform parent, string name, Vector2[] controls, float width, Material material, float y)
-        {
-            if (controls.Length < 2) return;
-            var path = Path(controls);
-            var verts = new Vector3[path.Length * 2];
-            var tris = new List<int>();
-            var half = width * 0.5f;
-            for (var i = 0; i < path.Length; i++)
-            {
-                var dir = (path[Mathf.Min(path.Length - 1, i + 1)] - path[Mathf.Max(0, i - 1)]).normalized;
-                var side = new Vector2(-dir.y, dir.x) * half;
-                verts[i * 2] = new Vector3(path[i].x - side.x, y, path[i].y - side.y);
-                verts[i * 2 + 1] = new Vector3(path[i].x + side.x, y, path[i].y + side.y);
-                if (i == 0) continue;
-                var k = i * 2;
-                tris.AddRange(new[] { k - 2, k - 1, k, k - 1, k + 1, k });
-            }
-            var mesh = new Mesh { name = name, vertices = verts, triangles = tris.ToArray() };
-            mesh.RecalculateNormals();
-            var go = new GameObject(name);
-            go.transform.SetParent(parent, false);
-            go.AddComponent<MeshFilter>().sharedMesh = mesh;
-            go.AddComponent<MeshRenderer>().sharedMaterial = material;
-        }
-
-        Material Tinted(Color c, string name) => new Material(art.plain) { color = c, name = name };
     }
 }

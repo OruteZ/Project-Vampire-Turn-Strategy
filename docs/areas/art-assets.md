@@ -71,7 +71,7 @@
 | 햇빛 `S` | 위에서 비추는 스폿라이트 |
 | 물 `~` | 지형을 파낸 웅덩이 + `Hex_Water.mat` 수면 |
 
-장 선택 화면의 3D 원정 지도도 같은 두 팩(PolygonDarkFantasy, PolygonGeneric)만 쓴다. 지역별 프리팹·자리는 docs/art/campaign-map.md (#43, 구현 전).
+장 선택 화면의 3D 원정 지도는 `Assets/_Project/Scenes/World.unity` 다: 메인 메뉴 바탕 `Demo_Cathedral_01` 을 복사한 씬이고 지도 층(장 자리·시점)은 Camp 씬에 있다 (docs/art/campaign-map.md, #152).
 
 장마다 모습이 따로 있다 (#34, docs/art/stage-dressing.md): `Assets/_Project/Art/Themes/<테마>.asset` (`BoardTheme`: 장 id, 바닥색, 막힌 칸 소품, 둘레 높은/낮은 소품, 안개·주변광). `ArtCatalog.themes` 가 목록. 막힌 칸은 테마 소품이 바위를 대신하고, 평지 칸은 테마 바닥색이다. 둘레는 굽기 때 칸 좌표로 고르고, 구운 뒤엔 장별 꾸미기 프리팹이 기준이다 (stage-dressing.md 4)
 
