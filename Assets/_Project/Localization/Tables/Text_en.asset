@@ -429,8 +429,8 @@ MonoBehaviour:
       - rid: 7201578077006332005
   - m_Id: 5832187899912
     m_Localized: A villager with a hunting bow. Cheap, but the arrows are weak and
-      RNG is only 2. Cannot shoot through walls or at an enemy next to it. As a spawn
-      it fights only in melee.
+      RNG is only 2. Cannot shoot through walls, and deals half damage point-blank.
+      As a spawn it fights only in melee.
     m_Metadata:
       m_Items:
       - rid: 7201578077006332005
@@ -501,7 +501,8 @@ MonoBehaviour:
       - rid: 7201578077006332005
   - m_Id: 5832187899926
     m_Localized: Regular archer. Shoots from afar with RNG 3. Cannot shoot through
-      walls or at an enemy next to it, and is frail. As a spawn it loses its bow.
+      walls, deals half damage point-blank, and is frail. As a spawn it loses its
+      bow.
     m_Metadata:
       m_Items:
       - rid: 7201578077006332005
@@ -1252,13 +1253,6 @@ MonoBehaviour:
   - m_Id: 9846568841288
     m_Localized: "Spawn inherit the original's HP \xB7 ATK \xB7 MOV, with DEF 0 and
       melee attacks only. Skill upgrades are not inherited."
-    m_Metadata:
-      m_Items:
-      - rid: 7201578077006332005
-  - m_Id: 9846568841289
-    m_Localized: "Damage = ATK \u2212 DEF (minimum 1). No randomness. No counterattacks
-      or attacks of opportunity. Ranged attacks are blocked by walls (rock) and cannot
-      hit the hex next to the shooter; water and pits are not walls."
     m_Metadata:
       m_Items:
       - rid: 7201578077006332005
@@ -3017,7 +3011,7 @@ MonoBehaviour:
       m_Items: []
   - m_Id: 7556100538560516
     m_Localized: "ATK \u2212 DEF (min 1). No randomness, no counters. Ranged shots
-      are blocked by rock and cannot hit the adjacent hex."
+      are blocked by rock and deal half damage to an adjacent hex."
     m_Metadata:
       m_Items: []
   - m_Id: 7556100538560517
@@ -3029,8 +3023,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 7556609676734464
-    m_Localized: Cheap but weak-armed; cannot shoot through walls or at an adjacent
-      enemy.
+    m_Localized: Cheap but weak-armed; cannot shoot through walls, half damage point-blank.
     m_Metadata:
       m_Items: []
   - m_Id: 7556609676734465
@@ -3038,7 +3031,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 7556609676734466
-    m_Localized: Shoots from afar, but not through walls or at an adjacent enemy.
+    m_Localized: Shoots from afar, but not through walls, and at half damage point-blank.
     m_Metadata:
       m_Items: []
   - m_Id: 7556609676734467
@@ -3372,7 +3365,6 @@ MonoBehaviour:
         - id: 9846568841286
         - id: 9846568841287
         - id: 9846568841288
-        - id: 9846568841289
         - id: 9846568841290
         - id: 9846568841291
         - id: 9846568841292

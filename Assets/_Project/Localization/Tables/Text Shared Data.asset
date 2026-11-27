@@ -963,10 +963,6 @@ MonoBehaviour:
     m_Key: battle.rule.spawn
     m_Metadata:
       m_Items: []
-  - m_Id: 9846568841289
-    m_Key: battle.rule.damage
-    m_Metadata:
-      m_Items: []
   - m_Id: 9846568841290
     m_Key: battle.rules
     m_Metadata:
