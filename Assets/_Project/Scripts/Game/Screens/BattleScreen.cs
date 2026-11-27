@@ -68,8 +68,71 @@ namespace VampireSpawn.Game.Screens
         public bool Ready, On;
     }
 
+    public enum WaveWhen { Soon, Turn, Reach, Kills }
+
+    // docs/systems/waves.md 4, docs/art/ui-style.md 8-7: when one wave of reinforcements comes, as its cell badge and the brief's row show it.
+    public sealed class Wave
+    {
+        // What "the same wave" means: one arrival turn, or one trigger.
+        public string Key;
+        public WaveWhen When;
+        // Turn: ally turns left before it comes, this one included. Kills: Done of Need minions.
+        public int Left, Need, Done;
+        public readonly List<Placement> Who = new List<Placement>();
+
+        // Soon, then the fewest turns left, then conditions.
+        public int Order => When == WaveWhen.Turn ? 1000 + Left : (int)When * 100000;
+    }
+
     public static class BattleScreen
     {
+        public static Wave When(Battle b, string trigger, int arrive = 0)
+        {
+            if (trigger == null) return Turns(b, "turn " + arrive, arrive);
+            var key = "wave " + trigger;
+            if (b.Fired(trigger)) return new Wave { Key = key, When = WaveWhen.Soon, Left = 1 };
+            var t = b.Stage.Triggers.FirstOrDefault(x => x.Id == trigger);
+            if (t != null && t.Kind == TriggerKind.Turn) return Turns(b, key, t.Value);
+            if (t != null && t.Kind == TriggerKind.Kills) return new Wave { Key = key, When = WaveWhen.Kills, Need = t.Value, Done = Math.Min(b.MinionsKilled, t.Value) };
+            return new Wave { Key = key, When = WaveWhen.Reach };
+        }
+
+        // The enemy phase of turn n brings it, so on turn t the allies still move n - t + 1 times; a blocked arrival stays at 1.
+        static Wave Turns(Battle b, string key, int turn)
+        {
+            var left = Math.Max(1, turn - b.Turn + 1);
+            return new Wave { Key = key, When = left == 1 ? WaveWhen.Soon : WaveWhen.Turn, Left = left };
+        }
+
+        // Every enemy reinforcement not on the board yet, one entry per wave.
+        public static List<Wave> Waves(Battle b)
+        {
+            var list = new List<Wave>();
+            foreach (var p in b.Pending)
+            {
+                var w = When(b, p.Wave, p.Arrive);
+                var same = list.FirstOrDefault(x => x.Key == w.Key);
+                if (same == null) list.Add(same = w);
+                same.Who.Add(p);
+            }
+            return list.OrderBy(w => w.Order).ToList();
+        }
+
+        // docs/systems/triggers.md 1-5.
+        public static string WhenText(Wave w, bool ally = false)
+        {
+            switch (w.When)
+            {
+                case WaveWhen.Soon: return Loc.T(ally ? "trigger.soonAlly" : "trigger.soon");
+                case WaveWhen.Turn: return Loc.T("battle.turnsLeft", w.Left);
+                case WaveWhen.Kills: return Loc.T("trigger.kills", w.Need);
+            }
+            return Loc.T("trigger.reach");
+        }
+
+        public static string WaveTip(Wave w) => WhenText(w) + " · " + string.Join(" · ",
+            GameData.Minions.Select(m => (m, n: w.Who.Count(p => p.Kind == m.Key))).Where(x => x.n > 0).Select(x => Loc.Text(x.m.Name) + " " + x.n));
+
         public static List<ActionSlot> Slots(BattleSession s, BattleActions a)
         {
             var list = new List<ActionSlot>();
@@ -89,10 +152,12 @@ namespace VampireSpawn.Game.Screens
             else if (u.Has(Ability.Trap)) Add(5, Kit.Icon.Target, Ui.Steel, Loc.T(trap ? "hud.cancelTrap" : "hud.trap"), a.Trap, true, trap);
             else if (u.Has(Ability.Bury)) Add(5, Kit.Icon.Fang, Ui.Spawn, SkillName(Ability.Bury), a.Aim, marks.Any(m => m.Mark == Mark.Bury));
             list.Add(new ActionSlot { Key = -1, Hotkey = "Z", Icon = Kit.Icon.Undo, Color = Ui.Steel, Label = Loc.T("hud.act.undo"), Act = a.Undo, Ready = s.Battle.CanUndo });
-            foreach (var k in u.Abil.Where(k => k != Ability.Mend && k != Ability.Bury && k != Ability.Trap && k != Ability.None).Distinct())
-                Add(0, Kit.Icon.Up, Ui.Muted, SkillName(k), null, false);
             return list;
         }
+
+        // battle-hud.md 3-4 8: skills that work by themselves are not actions; the unit block shows them as small rounds.
+        public static IEnumerable<string> Passives(Unit u) =>
+            u.Abil.Where(k => k != Ability.Mend && k != Ability.Bury && k != Ability.Trap && k != Ability.None).Distinct().Select(SkillName);
 
         public static string Subtitle(Stage s, bool demo) => demo ? Loc.T("battle.demo") : Loc.T("battle.campaignSub", s.Label);
 

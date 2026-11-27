@@ -1,6 +1,8 @@
 using System.Linq;
 using NUnit.Framework;
 using VampireSpawn.Core;
+using VampireSpawn.Game;
+using VampireSpawn.Game.Screens;
 
 namespace VampireSpawn.Tests
 {
@@ -311,6 +313,36 @@ namespace VampireSpawn.Tests
             Assert.AreEqual(System.Math.Max(1, System.Math.Max(1, archer.Atk - s.Def) / 2), b.Damage(archer, s), "next to the archer: half, at least 1");
             Assert.IsTrue(b.Attack(archer.Id, s.Id).Ok, "the enemy next to the archer can be shot");
             Assert.AreEqual(Role.Spawn, b.UnitAt(new Hex(0, 0)).Role, "data key spawn makes a spawn, not a minion");
+        }
+
+        // docs/systems/waves.md 4, docs/art/ui-style.md 8-7 (#153)
+        [Test]
+        public void AWaveBadgeCountsTheAllyTurnsLeftAndAConditionShowsItsProgress()
+        {
+            var foes = new[] { new Placement(EnemyType.Vampire, 6, 0), new Placement("skeleton", 0, 0, arrive: 3), new Placement("skeleton", 1, 0, arrive: 3),
+                new Placement("skeleton", 6, 6, wave: "late"), new Placement("skeleton", 5, 0, wave: "kills") };
+            var stage = Staged(Open, foes, new[] { new Trigger("late", TriggerKind.Turn, 2), new Trigger("kills", TriggerKind.Kills, 2) });
+            var b = new Battle(stage, null, new[] { new Placement("pspear", 3, 6) });
+
+            var w = BattleScreen.Waves(b);
+            CollectionAssert.AreEqual(new[] { WaveWhen.Turn, WaveWhen.Turn, WaveWhen.Kills }, w.Select(x => x.When), "soonest first, conditions last");
+            Assert.AreEqual(2, w[0].Left, "deploying: the turn 2 wave lets the allies move twice");
+            Assert.AreEqual(3, w[1].Left);
+            Assert.AreEqual(2, w[1].Who.Count, "one wave per arrival turn");
+            Assert.AreEqual("0/2", w[2].Done + "/" + w[2].Need);
+            Assert.AreEqual(Loc.T("battle.turnsLeft", 3), BattleScreen.WhenText(w[1]));
+
+            b.Start();
+            Assert.AreEqual(3, BattleScreen.When(b, null, 3).Left, "turn 1 is the first of the three");
+            b.EndTurn();
+            w = BattleScreen.Waves(b);
+            Assert.AreEqual(WaveWhen.Soon, w[0].When, "turn 2: the turn 2 wave comes when this ally turn ends");
+            Assert.AreEqual(Loc.T("trigger.soon"), BattleScreen.WhenText(w[0]));
+            Assert.AreEqual(2, w[1].Left);
+            b.EndTurn();
+            w = BattleScreen.Waves(b);
+            Assert.AreEqual(2, w.Count, "the turn 2 wave is on the board");
+            Assert.AreEqual(WaveWhen.Soon, w[0].When, "turn 3 of 3");
         }
 
         // docs/content/enemies.md 5

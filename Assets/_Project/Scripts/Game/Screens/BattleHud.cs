@@ -43,6 +43,9 @@ namespace VampireSpawn.Game.Screens
         readonly ArtCatalog art;
         readonly Label tip;
         readonly Dictionary<int, HeadMark> heads = new Dictionary<int, HeadMark>();
+        // ui-style.md 8-7: badges that follow a cell, and the badges of each wave so a hovered chip can light its cells.
+        readonly List<(VisualElement Root, Hex At)> tiles = new List<(VisualElement, Hex)>();
+        readonly Dictionary<string, List<VisualElement>> waveMarks = new Dictionary<string, List<VisualElement>>();
         readonly HashSet<VisualElement> blink = new HashSet<VisualElement>();
         VisualElement headLayer, hoverLayer, moonDisk;
         bool moonPulse, infoOn;
@@ -132,6 +135,9 @@ namespace VampireSpawn.Game.Screens
             infoOn = !st.EnemyPlaying;
             (lastPanels, panels) = (panels, lastPanels);
             panels.Clear();
+            tiles.Clear();
+            waveMarks.Clear();
+            WaveBadges(headLayer, s.Battle, st);
             if (st.Deploying(s.Battle)) DeployHover(hoverLayer, s, st, a);
             else FightHover(hoverLayer, s, st, a);
         }
@@ -144,6 +150,16 @@ namespace VampireSpawn.Game.Screens
             var on = Time.unscaledTime % 0.5f < 0.25f;
             foreach (var c in blink) c.style.opacity = on ? 1f : 0.15f;
             if (cam == null || art == null || headLayer?.panel == null) return;
+            foreach (var (mark, at) in tiles)
+            {
+                var ground = view.board.Stand(at);
+                var seen = cam.WorldToScreenPoint(ground).z > 0f;
+                mark.style.display = seen ? DisplayStyle.Flex : DisplayStyle.None;
+                if (!seen) continue;
+                var p = RuntimePanelUtils.CameraTransformWorldToPanel(headLayer.panel, ground, cam);
+                mark.style.left = p.x;
+                mark.style.top = p.y;
+            }
             foreach (var kv in heads)
             {
                 var v = view.ViewOf(kv.Key);
@@ -263,7 +279,11 @@ namespace VampireSpawn.Game.Screens
             Click(btn, a.Primary, enabled);
             if (st.Deploying(b) && !enabled) Tip(btn, Loc.T("hud.needAlly"), 0);
             var left = b.Phase == Phase.Player && !st.EnemyPlaying ? b.Allies.Count(u => !u.Acted) : 0;
-            if (left > 0) Tip(RingBadge(btn, art, left.ToString(), 32, Ui.Steel, Ui.Ink, Ui.Bone), Loc.T("battle.allyPhase"), 300);
+            if (left <= 0) return;
+            var deploying = st.Deploying(b);
+            var badge = RingBadge(btn, art, left.ToString(), deploying ? 32 : 48, Ui.Steel, Ui.Ink, Ui.Bone);
+            if (!deploying) badge.Q<Label>().style.fontSize = 30f;
+            Tip(badge, Loc.T("battle.allyPhase"), 300);
         }
 
         void Corner(VisualElement root, Battle b, HudState st, BattleActions a)
@@ -366,6 +386,86 @@ namespace VampireSpawn.Game.Screens
             Def(brief, Kit.Icon.Boss, Ui.Blood, Loc.Text(stg.Objective), Loc.T("battle.objective"));
             Def(brief, Kit.Icon.Star, Ui.Candle, Loc.Text(stg.Bonus.Text), Loc.T("battle.bonus"));
             Def(brief, Kit.Icon.Skulls, Ui.Blood, Kit.EnemyList(stg), Loc.T("battle.enemy"));
+            WaveRow(brief, b);
+        }
+
+        // battle-hud.md 2-4: one chip per wave still to come, soonest first.
+        void WaveRow(VisualElement parent, Battle b)
+        {
+            var waves = BattleScreen.Waves(b);
+            if (waves.Count == 0) return;
+            var row = E(parent, "def row wave-row");
+            // The tooltip sits on the icon alone: on the whole row it would fight the chips' own.
+            var head = Icon(row, Kit.Icon.Turn, Ui.Blood, "icon def-icon");
+            head.pickingMode = PickingMode.Position;
+            Tip(head, Loc.T("banner.reinforce"), 300);
+            var chips = E(row, "wave-chips");
+            foreach (var w in waves)
+            {
+                var cond = w.When == WaveWhen.Reach || w.When == WaveWhen.Kills;
+                var chip = E(chips, "wave-chip" + (cond ? " cond" : "") + (w.When == WaveWhen.Soon ? " soon" : ""), true);
+                chip.name = "Wave " + w.Key;
+                if (w.When == WaveWhen.Reach) Icon(chip, Kit.Icon.Star, Ui.Candle);
+                else L(chip, w.When == WaveWhen.Kills ? w.Done + "/" + w.Need : w.Left.ToString(), cond ? "wave-chip-num cond" : "wave-chip-num");
+                L(chip, "×" + w.Who.Count, "wave-chip-count");
+                Tip(chip, BattleScreen.WaveTip(w), 200);
+                var key = w.Key;
+                chip.RegisterCallback<PointerEnterEvent>(_ => LightWave(key, true));
+                chip.RegisterCallback<PointerLeaveEvent>(_ => LightWave(key, false));
+            }
+        }
+
+        void LightWave(string key, bool on)
+        {
+            if (!waveMarks.TryGetValue(key, out var marks)) return;
+            foreach (var m in marks) m.EnableInClassList("hot", on);
+        }
+
+        // ui-style.md 8-7: when each reinforcement, shut door and unopened ally zone comes, on its cell. Under the unit heads.
+        void WaveBadges(VisualElement layer, Battle b, HudState st)
+        {
+            var hot = st.HoverArrival is Placement hp ? BattleScreen.When(b, hp.Wave, hp.Arrive).Key : null;
+            foreach (var cell in b.Pending.GroupBy(p => new Hex(p.Col, p.Row)))
+            {
+                var ws = cell.Select(p => BattleScreen.When(b, p.Wave, p.Arrive)).GroupBy(w => w.Key).Select(g => g.First()).OrderBy(w => w.Order).ToList();
+                var e = WaveBadge(layer, cell.Key, Kit.Icon.Skulls, ws[0], false, ws[0].Key == hot);
+                if (ws.Count < 2) continue;
+                if (ws[1].When == WaveWhen.Turn || ws[1].When == WaveWhen.Soon) L(e, "·" + ws[1].Left, "wave-next");
+                else Icon(e, ws[1].When == WaveWhen.Reach ? Kit.Icon.Star : Kit.Icon.Skulls, Ui.Candle, "icon wave-next-icon");
+            }
+            foreach (var d in b.Stage.Doors)
+            {
+                var shut = d.Hexes.Where(h => b.Board.At(h) == Core.Terrain.Rock).ToList();
+                if (shut.Count == 0 || string.IsNullOrEmpty(d.Trigger)) continue;
+                var w = BattleScreen.When(b, d.Trigger);
+                WaveBadge(layer, shut[0], Kit.Icon.Lock, w, false, w.Key == hot);
+            }
+            if (b.Reinforcing || b.Phase == Phase.Deploy) return;
+            foreach (var r in b.Upcoming)
+            {
+                if (r.Hexes.Length == 0 || string.IsNullOrEmpty(r.Trigger)) continue;
+                var mid = r.Hexes.Aggregate(Vector3.zero, (sum, h) => sum + BoardView.Local(h, 1f)) / r.Hexes.Length;
+                WaveBadge(layer, r.Hexes.OrderBy(h => (BoardView.Local(h, 1f) - mid).sqrMagnitude).First(), Kit.Icon.Up, BattleScreen.When(b, r.Trigger), true, false);
+            }
+        }
+
+        VisualElement WaveBadge(VisualElement layer, Hex at, string icon, Wave w, bool ally, bool hot)
+        {
+            var soon = w.When == WaveWhen.Soon;
+            var cond = w.When == WaveWhen.Reach || w.When == WaveWhen.Kills;
+            var e = E(layer, "wave" + (ally ? " ally" : cond ? " cond" : "") + (soon ? " soon" : "") + (hot ? " hot" : ""));
+            e.style.display = DisplayStyle.None;
+            var tint = soon ? Ui.Bone : ally ? Ui.Steel : cond ? Ui.Candle : Ui.Blood;
+            // A cell that only waits on a marked hex shows the star alone, the same picture as the trigger cells (8-7 3).
+            if (w.When != WaveWhen.Reach || icon != Kit.Icon.Skulls) Icon(e, icon, tint, "icon wave-icon");
+            if (w.When == WaveWhen.Reach) Icon(e, Kit.Icon.Star, Ui.Candle, "icon wave-star");
+            else if (w.When == WaveWhen.Kills) L(e, w.Done + "/" + w.Need, "wave-num frac");
+            else if (!ally || !soon) L(e, w.Left.ToString(), "wave-num");
+            if (soon && !ally) e.schedule.Execute(() => e.style.backgroundColor = Fx.Bright(Ui.Blood, Fx.PulseK())).Every(16);
+            tiles.Add((e, at));
+            if (!waveMarks.TryGetValue(w.Key, out var marks)) waveMarks[w.Key] = marks = new List<VisualElement>();
+            marks.Add(e);
+            return e;
         }
 
         void DeployHover(VisualElement root, BattleSession s, HudState st, BattleActions a)
@@ -557,19 +657,29 @@ namespace VampireSpawn.Game.Screens
         // battle-hud.md 3-4 8: the picked, else hovered, ally.
         void BarUnit(VisualElement root, Battle b, Unit o)
         {
-            var p = E(root, "bar-unit col", true);
-            var head = E(p, "unit-head row");
-            if (o.Type != null && art.Icon(o.Type) is string wi) Icon(head, wi, Ui.Steel, "icon unit-weapon");
+            var p = E(root, "bar-unit row", true);
+            var medal = E(p, "bar-medal");
+            if (o.Type != null && art.Icon(o.Type) is string wi) Icon(medal, wi, Ui.Steel);
+            var info = E(p, "bar-info col");
+            var head = E(info, "unit-head row");
             L(head, Loc.Text(o.Name), "unit-name display");
             if (o.Role == Role.Escort) L(head, Loc.T("unit.card.escort"), "unit-tag");
             var id = o.Id;
             InfoBtn(head, art, tip, () => acts?.Detail?.Invoke(id), infoOn);
-            StatRows(E(p, "bar-stats row"), Ui.Steel, o.Hp + "/" + o.MaxHp, o.Mov, BattleScreen.Atk(o), o.Def, o.Rng, o.Hp * 3 <= o.MaxHp ? Ui.Blood : Ui.Bone, o.Id.ToString());
+            StatRows(info, Ui.Steel, o.Hp + "/" + o.MaxHp, o.Mov, BattleScreen.Atk(o), o.Def, o.Rng, o.Hp * 3 <= o.MaxHp ? Ui.Blood : Ui.Bone, o.Id.ToString());
+            // Skills that work by themselves: small rounds at the end of the small numbers, their names in the tooltip.
+            var passives = E(info.Q(className: "small"), "passives row");
+            foreach (var name in BattleScreen.Passives(o))
+            {
+                var round = E(passives, "passive", true);
+                Icon(round, Kit.Icon.Up, Ui.Muted);
+                Tip(round, name, 200);
+            }
             var (warn, wc) = Warning(b, o);
             if (warn != null)
             {
                 // One line in the bar; a long warning ends in "…" and reads whole in its tooltip.
-                var w = L(p, warn, "warn", wc);
+                var w = L(info, warn, "warn", wc);
                 w.pickingMode = PickingMode.Position;
                 Tip(w, warn, 300);
             }
@@ -599,17 +709,7 @@ namespace VampireSpawn.Game.Screens
             var col = E(p, "unit-body col");
             var head = E(col, "unit-head row");
             L(head, Loc.T("unit.card.reinforce", r.Pop), "unit-name display");
-            var t = b.Stage.Triggers.FirstOrDefault(x => x.Id == r.Trigger);
-            L(col, b.Fired(r.Trigger) ? Loc.T("trigger.soonAlly") : t == null ? "" : Loc.Text(t.Condition), "warn", Ui.Steel);
-        }
-
-        // docs/systems/triggers.md 1-5.
-        static string ArrivalWhen(Battle b, Placement a)
-        {
-            if (a.Wave == null) return Loc.T("unit.card.arrive", a.Arrive);
-            if (b.Fired(a.Wave)) return Loc.T("trigger.soon");
-            var t = b.Stage.Triggers.FirstOrDefault(x => x.Id == a.Wave);
-            return t == null ? "" : Loc.Text(t.Condition);
+            L(col, BattleScreen.WhenText(BattleScreen.When(b, r.Trigger), true), "warn", Ui.Steel);
         }
 
         // docs/systems/waves.md 4: a reinforcement not on the board yet.
@@ -620,7 +720,7 @@ namespace VampireSpawn.Game.Screens
             var col = E(p, "unit-body col");
             var head = E(col, "unit-head row");
             L(head, Loc.Text(m.Name), "unit-name display");
-            L(head, ArrivalWhen(b, a), "unit-tag");
+            L(head, BattleScreen.WhenText(BattleScreen.When(b, a.Wave, a.Arrive)), "unit-tag");
             StatRows(col, Ui.Blood, m.Hp.ToString(), m.Mov, m.Atk.ToString(), m.Def, m.Rng);
             L(col, Loc.Text(m.Note), "warn", Ui.Blood);
         }
@@ -656,12 +756,13 @@ namespace VampireSpawn.Game.Screens
             var row = E(root, "action-row");
             foreach (var x in BattleScreen.Slots(s, a))
             {
-                var slot = E(row, x.Key == 0 ? "slot passive" : "slot", true);
+                // Undo (key -1) keeps one place past the five action cells, whatever the unit can do.
+                var slot = E(x.Key < 0 ? root : row, "slot" + (x.Key < 0 ? " undo" : "") + (x.On ? " on" : ""), true);
                 Picture(slot, S(SlotBack), Ui.Deep);
-                Picture(E(slot, "slot-frame"), S(SlotFrame), x.On ? x.Color : Color.white);
+                // Tinted inline only while its mode is on: an inline tint would beat the hover rule in Battle.uss.
+                Picture(E(slot, "slot-frame"), S(SlotFrame), x.On ? Ui.Candle : (Color?)null);
                 Icon(slot, x.Icon, x.Color);
                 Tip(slot, x.Label, 200);
-                if (x.Key == 0) continue;
                 L(slot, x.Hotkey ?? x.Key.ToString(), "key");
                 Click(slot, x.Act, x.Ready);
             }

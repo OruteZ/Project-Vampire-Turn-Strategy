@@ -49,7 +49,8 @@ namespace VampireSpawn.Tests
             s.Click(new Hex(3, 1));
             var hunter = BattleScreen.Slots(s, a);
             Assert.IsFalse(hunter.Any(x => x.Key == 5));
-            Assert.IsTrue(hunter.Any(x => x.Key == 0 && x.Label == BattleScreen.SkillName(Ability.Splash)), "splash shows as a passive slot");
+            Assert.IsFalse(hunter.Any(x => x.Key == 0), "skills that work by themselves are not action cells (#153)");
+            CollectionAssert.Contains(BattleScreen.Passives(s.SelectedUnit), BattleScreen.SkillName(Ability.Splash), "splash shows in the unit block");
 
             s.Click(new Hex(5, 1));
             var digger = BattleScreen.Slots(s, a).First(x => x.Key == 5);

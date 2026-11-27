@@ -51,7 +51,6 @@ namespace VampireSpawn.Game
             [Mark.Deploy] = (Screens.Kit.Icon.Pop, Ally),
             [Mark.Trap] = (Screens.Kit.Icon.Target, Ally),
             [Mark.Reinforce] = (Screens.Kit.Icon.Up, Ally),
-            [Mark.Arrive] = (Screens.Kit.Icon.Skulls, Enemy),
             [Mark.Hold] = (Screens.Kit.Icon.Home, Screens.Ui.Candle),
             [Mark.Goal] = (Screens.Kit.Icon.Flag, Ally),
             [Mark.Trigger] = (Screens.Kit.Icon.Star, Screens.Ui.Candle),

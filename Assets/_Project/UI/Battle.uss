@@ -26,17 +26,21 @@
 .moon-state.hot { -unity-font-style: bold; }
 
 /* ---------- corners ---------- */
-/* battle-hud.md 3-4, 3-6: the wide action bar along the bottom, the round primary button inside its right end.
-   Fixed 1640x236 (#150 C2·C4): a percentage shrank it with the larger HUD sizes, and the unit block needs three rows inside the frame's ~45 px rims. */
-.action-bar, .action-row { position: absolute; left: 50%; width: 1640px; margin-left: -820px; bottom: 12px; height: 236px; }
-.action-bar, .bar-frame { -unity-slice-scale: 0.4px; }
+/* battle-hud.md 3-4, 3-6 (#153): the wide action bar along the bottom, the round primary button inside its right end.
+   The Hotbar_03 picture stretches to the box's height and keeps clear margins: its plate is the middle 56% (22.9%..78.5% from the bottom),
+   its spikes reach 13.5%..86.1%. So the 440 box draws a 245 plate from 101 to 345, centred at 223, spikes up to 379: inside the 380 the camera keeps free (BattleFlow.FitCameraRect).
+   Fixed px, never a percentage: that shrank the bar with the larger HUD sizes (#150 C2·C4). */
+.action-bar { position: absolute; left: 50%; width: 2400px; margin-left: -1200px; bottom: 0; height: 440px; }
+.action-bar, .bar-frame { -unity-slice-scale: 0.75px; }
 .bar-frame, .slot-frame { position: absolute; left: 0; top: 0; right: 0; bottom: 0; }
-.action-row { padding: 0 300px 0 560px; flex-direction: row; justify-content: center; align-items: center; }
-.end-turn { position: absolute; left: 50%; bottom: 62px; width: 136px; height: 136px; margin-left: 534px; justify-content: center; align-items: center; }
+/* Cells run from 760 px into the bar; undo sits past the fifth (1796). */
+.action-row { position: absolute; left: 50%; margin-left: -440px; bottom: 132px; height: 182px; flex-direction: row; align-items: center; }
+.end-turn { position: absolute; left: 50%; bottom: 118px; width: 210px; height: 210px; margin-left: 859px; justify-content: center; align-items: center; }
 .end-turn.deploy { bottom: 40px; width: 176px; height: 176px; margin-left: -88px; }
 .end-turn.deploy > .end-turn-text { width: 144px; font-size: 26px; }
-.end-turn-text { width: 112px; font-size: 26px; -unity-font-style: bold; white-space: normal; -unity-text-align: middle-center; padding: 0; margin: 0; }
-.end-turn > .key { right: auto; left: 50%; bottom: 18px; translate: -50% 0; }
+.end-turn.deploy > .key { bottom: 18px; }
+.end-turn-text { width: 170px; font-size: 38px; -unity-font-style: bold; white-space: normal; -unity-text-align: middle-center; padding: 0; margin: 0; }
+.end-turn > .key { right: auto; left: 50%; bottom: 28px; translate: -50% 0; }
 .end-turn > .ring-badge { position: absolute; left: 2px; top: 2px; }
 .end-turn:hover { scale: 1.04 1.04; }
 .end-turn.disabled:hover { scale: 1 1; }
@@ -44,7 +48,7 @@
 .corner > * { margin-right: 4px; }
 .corner > .btn { width: 220px; height: 40px; }
 /* #150 C3: the hint sits on a bg.panelDeep pill so the grid lines do not strike through it. */
-.hint { position: absolute; left: 50%; bottom: 260px; max-width: 1400px; min-height: 34px; translate: -50% 0; padding: 10px 24px; border-radius: 27px; background-color: rgba(15, 16, 22, 0.75); font-size: 26px; color: var(--muted); -unity-text-align: middle-center; }
+.hint { position: absolute; left: 50%; bottom: 392px; max-width: 1400px; min-height: 34px; translate: -50% 0; padding: 10px 24px; border-radius: 27px; background-color: rgba(15, 16, 22, 0.75); font-size: 26px; color: var(--muted); -unity-text-align: middle-center; }
 
 /* ---------- rules window (battle-hud.md 6) ---------- */
 .veil { position: absolute; left: 0; top: 0; right: 0; bottom: 0; background-color: rgba(18, 19, 26, 0.85); }
@@ -125,8 +129,8 @@
 
 /* ---------- unit panels (ui-style.md 8-2) ---------- */
 .unit { position: absolute; width: 340px; min-height: 190px; -unity-slice-scale: 0.111px; }
-.unit.ally-side { left: 24px; bottom: 260px; }
-.unit.other-side { right: 24px; bottom: 260px; }
+.unit.ally-side { left: 24px; bottom: 392px; }
+.unit.other-side { right: 24px; bottom: 392px; }
 .unit.deploy-side { right: 24px; bottom: 228px; }
 .unit-body { flex-grow: 1; padding: 16px 20px 14px 20px; }
 .unit-body > * { flex-shrink: 0; }
@@ -158,24 +162,64 @@
 .spike.left { left: -10px; }
 .spike.right { right: -10px; }
 .corner-badge { position: absolute; left: -6px; top: -6px; width: 24px; height: 24px; }
-/* battle-hud.md 3-4 8 (#150 C4): the picked ally in the bar's left part, clear of its pointed end, 460 of its 1640 (28%): name and info button, the five numbers in one row, one warning line. */
-.bar-unit { position: absolute; left: 50%; margin-left: -760px; bottom: 60px; width: 460px; height: 140px; justify-content: center; }
-.bar-unit > * { flex-shrink: 0; }
-.bar-unit > .unit-head { height: 44px; align-items: center; flex-wrap: nowrap; }
-.bar-unit .unit-name { max-width: 360px; }
-.bar-unit .unit-head > .info-btn { right: 0; top: -12px; }
-.bar-unit .unit-head > .unit-tag { flex-shrink: 0; margin-right: 64px; }
-.bar-stats { height: 54px; align-items: flex-end; }
-.bar-stats > .big { margin-right: 4px; }
-.bar-unit > .warn { height: 34px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+/* battle-hud.md 3-4 8 (#150 C4, #153): the picked ally in the bar's left part, clear of its pointed end: a weapon medal, then name and info button, hp and move, the small numbers with the passive skills, one warning line. */
+.bar-unit { position: absolute; left: 50%; margin-left: -1070px; bottom: 121px; width: 564px; height: 204px; align-items: center; }
+.bar-medal { width: 152px; height: 152px; margin-right: 24px; flex-shrink: 0; border-radius: 76px; border-width: 3px; border-color: var(--steel); background-color: rgb(15, 16, 22); justify-content: center; align-items: center; }
+.bar-medal > .icon { width: 84px; height: 84px; }
+.bar-info { flex-grow: 1; flex-shrink: 1; width: 0; justify-content: center; }
+.bar-info > * { flex-shrink: 0; }
+.bar-info > .unit-head { height: 52px; align-items: center; flex-wrap: nowrap; }
+.bar-info .unit-name { max-width: 300px; font-size: 40px; }
+.bar-info .unit-head > .info-btn { right: 0; top: -6px; }
+.bar-info .unit-head > .unit-tag { flex-shrink: 0; margin-right: 64px; }
+.bar-info > .big { height: 62px; align-items: flex-end; }
+.bar-info > .big .stat-value { font-size: 54px; }
+.bar-info > .big .stat-icon { width: 40px; height: 40px; }
+.bar-info > .small { height: 46px; align-items: center; }
+.bar-info > .small .stat-value { font-size: 36px; }
+.bar-info > .small .stat-icon { width: 30px; height: 30px; }
+.passives { margin-left: auto; }
+.passive { width: 54px; height: 54px; margin-left: 8px; flex-shrink: 0; border-radius: 27px; border-width: 1px; border-color: var(--line); background-color: rgb(15, 16, 22); justify-content: center; align-items: center; }
+.passive > .icon { width: 30px; height: 30px; }
+.bar-info > .warn { height: 34px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .recall { position: absolute; right: 16px; bottom: 12px; width: 90px; height: 32px; }
 
-.slot, .slot-frame { -unity-slice-scale: 0.25px; }
-.slot { width: 112px; height: 112px; flex-shrink: 1; margin: 0 6px; justify-content: center; align-items: center; }
-.slot > .icon { width: 88px; height: 88px; }
-.slot > .key { right: auto; bottom: auto; left: 8px; top: 8px; height: 22px; font-size: 26px; }
+/* battle-hud.md 3-4 2 (#153): 182 cells with the icon at 60% of the cell, the key on a tag over the frame's corner instead of over the icon.
+   0.355 = 182/512 draws the octagon frame at its own proportions. */
+.slot, .slot-frame { -unity-slice-scale: 0.355px; }
+.slot { width: 182px; height: 182px; flex-shrink: 0; margin-right: 26px; justify-content: center; align-items: center; }
+.slot > .icon { width: 110px; height: 110px; }
+.slot > .key { right: auto; bottom: auto; left: -12px; top: -12px; width: 50px; height: 50px; padding: 0; font-size: 32px; -unity-font-style: bold; color: var(--bone); background-color: rgb(15, 16, 22); }
+.slot.undo { position: absolute; left: 50%; margin-left: 596px; margin-right: 0; bottom: 132px; }
+.slot.on { translate: 0 -14px; }
+.slot:hover > .slot-frame { -unity-background-image-tint-color: var(--steel); }
 .slot.disabled { opacity: 0.35; }
-.slot.passive > .icon { width: 60px; height: 60px; }
+.slot.disabled:hover > .slot-frame { -unity-background-image-tint-color: white; }
+
+/* ---------- reinforcement badges and the brief's wave row (ui-style.md 8-7, battle-hud.md 2-4, #153): the badge's centre sits on its cell ---------- */
+.wave { position: absolute; height: 64px; padding: 0 16px; translate: -50% -50%; flex-direction: row; align-items: center; border-radius: 32px; border-width: 3px; border-color: #c8304a; background-color: rgba(15, 16, 22, 0.92); }
+.wave > .icon { width: 34px; height: 34px; flex-shrink: 0; }
+.wave > .wave-star { width: 40px; height: 40px; }
+.wave > .wave-icon { margin-right: 8px; }
+.wave > .wave-icon:last-child { margin-right: 0; }
+.wave-num { font-size: 48px; -unity-font-style: bold; color: var(--bone); padding: 0; margin: 0; white-space: nowrap; }
+.wave-num.frac { font-size: 40px; }
+.wave-next { font-size: 30px; -unity-font-style: bold; color: var(--muted); padding: 0; margin: 0 0 0 6px; white-space: nowrap; }
+.wave > .wave-next-icon { width: 24px; height: 24px; margin-left: 8px; }
+.wave.cond { border-color: #e3a84b; }
+.wave.ally { border-color: #8fb0cc; }
+.wave.soon { background-color: #c8304a; }
+.wave.ally.soon { background-color: #4a5d6e; }
+.wave.hot { border-color: #ebe3d2; scale: 1.12 1.12; }
+.wave-chips { flex-direction: row; flex-wrap: wrap; flex-grow: 1; flex-shrink: 1; width: 0; }
+.wave-chip { height: 44px; padding: 0 10px; margin: 0 8px 8px 0; flex-direction: row; align-items: center; background-color: rgb(15, 16, 22); border-width: 1px; border-color: #c8304a; }
+.wave-chip.cond { border-color: #e3a84b; }
+.wave-chip.soon { background-color: #c8304a; }
+.wave-chip:hover { border-color: #ebe3d2; }
+.wave-chip > .icon { width: 24px; height: 24px; }
+.wave-chip-num { font-size: 30px; -unity-font-style: bold; color: var(--bone); padding: 0; margin: 0; white-space: nowrap; }
+.wave-chip-num.cond { color: #e3a84b; }
+.wave-chip-count { font-size: 26px; color: var(--muted); padding: 0; margin: 0 0 0 6px; white-space: nowrap; }
 
 /* ---------- heads (ui-style.md 8-1, 8-3, 8-4): the bar's bottom-centre sits on the unit's head point ---------- */
 .head { position: absolute; width: 72px; height: 12px; margin-left: -36px; margin-top: -12px; }
