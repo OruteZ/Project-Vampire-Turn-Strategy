@@ -833,8 +833,10 @@ MonoBehaviour:
       m_Items:
       - rid: 7201578077006332005
   - m_Id: 5832192094237
-    m_Localized: The outer gate of the castle. Its keeper waits in the inner room.
-      The further you push, the more enemies come through the gate behind you.
+    m_Localized: The outer gate of the castle. Past the yard, a pack waits behind
+      the gatehouse threshold. The inner door opens only when someone reaches it,
+      and the keeper's coffin lies beyond. The same company must carry all three
+      rooms.
     m_Metadata:
       m_Items:
       - rid: 7201578077006332005

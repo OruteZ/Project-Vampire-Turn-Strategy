@@ -23,8 +23,9 @@ namespace StagePlay
             return b;
         }
 
-        public static Result Play(Stage s, string[] up, Placement[] f, int seed, int samples, int cap = 30)
+        public static Result Play(Stage s, string[] up, Placement[] f, int seed, int samples, int cap = 0)
         {
+            if (cap == 0) cap = int.Parse(Environment.GetEnvironmentVariable("SP_CAP") ?? "30");
             var rng = new Random(seed);
             var log = new List<string> { "go" };
             var b = Rebuild(s, up, f, log);
@@ -140,6 +141,13 @@ namespace StagePlay
             foreach (var t in b.Stage.Triggers.Where(t => t.Kind == TriggerKind.Reach && !b.Fired(t.Id) && t.Hexes.Length > 0))
                 if (b.Allies.Any()) s -= 1.5 * b.Allies.Min(a => t.Hexes.Min(h => Hex.Distance(a.Pos, h)));
             s += 25 * b.Stage.Triggers.Count(t => t.Kind == TriggerKind.Reach && b.Fired(t.Id));
+            // A sleeping pack (guard group, triggers.md 2-5): lean toward it, or a one-turn lookahead never pays the price of waking it.
+            foreach (var g in b.Stage.Enemies.Where(e => e.Group != null).Select(e => e.Group).Distinct())
+            {
+                var asleep = b.Enemies.Where(e => e.Group == g && e.Stance == Stance.Guard).ToList();
+                if (asleep.Count == 0) s += 25;
+                else if (b.Allies.Any()) s -= 1.5 * b.Allies.Min(u => asleep.Min(e => Hex.Distance(u.Pos, e.Pos)));
+            }
             return s - b.Turn * 0.5;
         }
     }

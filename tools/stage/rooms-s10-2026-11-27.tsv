@@ -1,0 +1,40 @@
+s10	pspear1+doctor1+parcher12	parcher_ambush	Wiped	0	14	26	0	5	0	0	2	9	22
+s10	gravedigger1+sword3+scout1+archer2	sword_cleave	Slain	1	4	14	2	0	3	0	0	1	0
+s10	sword2+hunter2+parcher5	sword_def,parcher_mov	Slain	1	4	12	0	0	0	0	0	1	0
+s10	knight2+pspear3+hunter1+doctor1	knight_hp,pspear_pike,doctor_def	Slain	1	0	14	0	8	0	0	0	0	0
+s10	scout2+pspear3+sword2+archer2	scout_mov,sword_cleave,archer_atk	Slain	1	3	13	0	0	6	0	0	1	12
+s10	scout3+doctor2+archer1+parcher3	scout_satchel,doctor_def,archer_atk,parcher_mov	Slain	1	1	16	0	9	12	0	0	2	0
+s10	knight1+scout2+sword2+hunter1	sword_atk,hunter_mov	Slain	1	4	18	0	0	4	0	0	4	0
+s10	knight1+sword3+scout3	knight_def,sword_atk	Wiped	0	7	25	0	0	8	0	0	10	17
+s10	gravedigger1+sword3+pspear1+doctor3	gravedigger_twice,pspear_formation,doctor_heal	cap	0	0	41	0	7	0	0	0	34	0
+s10	pspear2+doctor3+archer3	doctor_mov	Wiped	0	8	21	0	6	0	0	0	4	15
+s10	knight2+sword4	sword_atk	Slain	1	5	17	0	0	0	0	0	1	13
+s10	knight2+pspear3+doctor2+archer1	knight_hp,pspear_pike,doctor_def	Slain	1	2	24	0	23	0	0	0	0	0
+s10	pspear2+scout3+doctor3	doctor_def	Wiped	0	8	23	0	15	9	0	1	4	14
+s10	sword1+pspear7+hunter2	pspear_hp,hunter_ward	Wiped	0	10	22	0	0	0	0	2	3	14
+s10	gravedigger2+scout1+pspear3+doctor3	gravedigger_mov	Wiped	0	9	28	0	18	3	0	0	8	20
+s10	knight2+gravedigger1+sword2+archer1	archer_bane	Wiped	0	6	18	0	0	0	0	0	1	15
+s10	knight1+pspear2+hunter2+doctor2	knight_hp,hunter_mov,doctor_mov	Slain	1	2	20	0	12	0	0	0	1	0
+s10	knight2+archer3+parcher3	knight_charge,parcher_mov	Slain	1	4	19	0	0	0	0	0	5	12
+s10	knight3+hunter2	knight_def,hunter_bane	Slain	1	0	10	0	0	0	0	0	1	0
+s10	hunter2+archer3+parcher3	hunter_mov,parcher_rng	Slain	1	3	15	0	0	0	0	0	3	14
+s10	scout3+hunter2+parcher1	scout_mov,parcher_rng	Wiped	0	6	20	0	0	9	0	0	4	15
+s10	knight3+pspear5+parcher1	knight_def,parcher_rng	Slain	1	5	20	0	0	0	0	0	2	18
+s10	sword5+doctor2		cap	0	1	41	0	5	0	0	0	34	0
+s10	sword7+parcher1	sword_atk,parcher_rng	cap	0	1	41	0	0	0	0	0	36	0
+s10	knight1+gravedigger2+sword2+doctor2	knight_hp,gravedigger_mov	Slain	1	2	17	0	13	0	0	0	0	0
+s10	gravedigger3+scout3+hunter1	gravedigger_twice	Slain	1	5	18	0	0	9	0	0	2	0
+s10	sword3+pspear1+hunter2+parcher2	sword_def,pspear_pike,hunter_bane	Slain	1	5	17	0	0	0	0	0	3	15
+s10	gravedigger2+pspear3+hunter2+parcher2		Slain	1	6	20	1	0	0	1	0	3	16
+s10	sword3+doctor4	sword_def,doctor_def	Slain	1	2	20	0	18	0	0	0	5	0
+s10	sword3+scout4	sword_def,scout_satchel	Slain	1	2	14	0	0	16	0	0	1	0
+s10	sword2+hunter2+archer2	sword_cleave,hunter_ward,archer_bane	Slain	1	3	12	0	0	0	0	0	3	0
+s10	hunter2+doctor3	hunter_mov,doctor_mov	Wiped	0	5	16	0	11	0	0	0	1	0
+s10	gravedigger4+doctor3		cap	0	0	41	0	17	0	0	0	31	0
+s10	pspear11+doctor2	pspear_pike,doctor_mov	Wiped	0	13	30	0	24	0	0	3	4	17
+s10	sword1+scout6	sword_cleave,scout_mov	Slain	1	3	13	0	0	18	0	0	2	0
+s10	pspear1+sword2+scout3+parcher4	pspear_hp,parcher_rng	Wiped	0	10	22	0	0	9	0	1	3	15
+s10	scout2+sword2+pspear3+doctor2	pspear_pike	Wiped	0	9	28	0	9	6	0	1	5	13
+s10	gravedigger2+pspear3+archer2+parcher3	pspear_formation	Slain	1	9	24	1	0	0	0	1	6	19
+s10	knight3+pspear2+sword2	knight_hp	Slain	1	5	20	0	0	0	1	0	1	14
+s10	pspear10+hunter1+archer1	archer_atk	Wiped	0	12	26	0	0	0	0	0	8	20
