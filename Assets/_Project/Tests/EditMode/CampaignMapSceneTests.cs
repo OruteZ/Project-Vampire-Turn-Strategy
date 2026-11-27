@@ -7,7 +7,7 @@ using VampireSpawn.Game;
 
 namespace VampireSpawn.Tests
 {
-    // campaign-map.md 10: the running map reads only the baked Camp scene, so every point it reads must be there.
+    // campaign-map.md 8-4: the running map reads only the Camp scene's World Map, so every point and shot it reads must be there.
     public class CampaignMapSceneTests
     {
         [Test]
@@ -18,28 +18,22 @@ namespace VampireSpawn.Tests
             {
                 var map = scene.GetRootGameObjects().SelectMany(g => g.GetComponentsInChildren<CampaignMapView>(true)).FirstOrDefault();
                 Assert.That(map, Is.Not.Null, "CampaignMapView in Camp.unity");
-                var terrain = map.terrain;
-                Assert.That(terrain, Is.Not.Null, "baked terrain");
-                Assert.That(map.castle, Is.Not.Null, "castle face");
-                // stage-select.md 5-4: every stage has its own region, marker and shot; none share.
-                var shots = map.GetComponentsInChildren<Transform>(true).Where(t => t.parent != null && t.parent.name == "Cameras").Select(t => t.name).ToList();
+                var root = map.worldMap;
+                Assert.That(root, Is.Not.Null, "World Map");
+                var shots = root.Find("Cameras").Cast<Transform>().Select(c => c.name).ToList();
                 foreach (var s in Campaign.Stages)
                 {
-                    var road = CampaignMapLayout.Region(s.Id) != null;
-                    var region = (road ? terrain : map.castle).Find("Region " + s.Id);
+                    var region = root.Find("Region " + s.Id);
                     Assert.That(region, Is.Not.Null, "Region " + s.Id);
-                    foreach (var point in road ? new[] { "Marker", "Brazier", "Camp" } : new[] { "Marker", "Brazier" })
+                    foreach (var point in new[] { "Marker", "Brazier", "View" })
                         Assert.That(region.Find(point), Is.Not.Null, s.Id + " " + point);
                     Assert.AreEqual(1, shots.Count(n => n == "Shot " + s.Id), "Shot " + s.Id);
                 }
-                Assert.AreEqual(1, shots.Count(n => n == "Shot Castle"), "Shot Castle");
-                Assert.That(terrain.Find(CampaignMapView.StartName), Is.Not.Null, "Start");
-                foreach (var path in new[] { "Road", "River", "Moat", "Side Road 0" })
-                    Assert.That(terrain.Find(CampaignMapView.PathsName + "/" + path)?.childCount ?? 0, Is.GreaterThanOrEqualTo(2), path + " points");
-                var camp = terrain.Find(CampaignMapView.CampTemplateName);
-                Assert.That(camp, Is.Not.Null, "Camp Template");
-                Assert.That(camp.gameObject.activeSelf, Is.False, "Camp Template stays hidden");
-                Assert.That(camp.Find("Unit"), Is.Not.Null, "Camp Template Unit");
+                foreach (var wide in new[] { "Shot Road", "Shot Castle", "Shot Camp" }) Assert.AreEqual(1, shots.Count(n => n == wide), wide);
+                Assert.That(root.Find("Camp/Unit"), Is.Not.Null, "Camp/Unit");
+                Assert.That(root.Find("Fill Light")?.GetComponent<Light>(), Is.Not.Null, "Fill Light");
+                var directional = scene.GetRootGameObjects().SelectMany(g => g.GetComponentsInChildren<Light>(true)).Where(l => l.type == LightType.Directional);
+                Assert.That(directional.Select(l => l.name), Is.EquivalentTo(new[] { "Fill Light" }), "the World scene lights the map; Camp keeps only the fill (7)");
             }
             finally
             {

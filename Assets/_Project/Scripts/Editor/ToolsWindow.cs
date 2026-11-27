@@ -33,13 +33,8 @@ namespace VampireSpawn.Editor
                     last.Contains("FAIL") || last.Contains("MISSING") ? MessageType.Warning : MessageType.Info);
 
             EditorGUILayout.LabelField("지도", EditorStyles.boldLabel);
-            if (GUILayout.Button(new GUIContent("프리팹 목록 채우기", "CampaignMapLayout 이 쓰는 프리팹을 이름으로 찾아 ArtCatalog.mapProps 에 넣는다 (docs/art/campaign-map.md 2-6)")))
-                Debug.Log("지도 프리팹: " + CampaignMapProps.Fill());
-            if (GUILayout.Button(new GUIContent("Camp 씬에 지도 굽기", "CampaignMapLayout 을 Camp 씬의 Campaign Map 으로 다시 짓는다. 손으로 옮긴 소품은 사라진다 (docs/dev/scene-split.md 3)"))
-                && EditorUtility.DisplayDialog("지도 굽기", "Camp 씬의 Campaign Map 을 배치 표로 다시 짓습니다. 손으로 옮긴 소품은 사라집니다.", "굽기", "취소"))
+            if (GUILayout.Button(new GUIContent("지도 층 굽기", "Camp 씬의 World Map 에 없는 것(지역·표식·화로·시점 점, 야영지, 보조광, 시점)만 더하고 예전 지도를 지운다. 손으로 옮긴 것은 그대로 (docs/art/campaign-map.md 8)")))
                 Debug.Log(CampaignMapBaker.Bake());
-            if (GUILayout.Button(new GUIContent("성 면 채우기", "Camp 씬의 Castle Map 에 없는 것(성 프리팹, 바닥, 11~20장 지역·표식·화로 점, 시점)만 더한다. 손으로 옮긴 것은 그대로 (docs/art/campaign-map.md 12)")))
-                Debug.Log(CampaignMapBaker.BakeCastle());
 
             EditorGUILayout.LabelField("전투 보드", EditorStyles.boldLabel);
             using (new EditorGUILayout.HorizontalScope())

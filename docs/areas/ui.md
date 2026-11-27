@@ -2,8 +2,8 @@
 
 ## 경로
 - 기획: docs/design/ui.md, docs/design/art.md
-- 기획서: docs/ui/ (화면별. 장 선택 3 레이어 docs/ui/stage-select.md, 병영 docs/ui/upgrade.md, 설정 창 docs/ui/settings.md, 유닛 상세 창 docs/ui/unit-detail.md, 장별 규칙 카드 docs/ui/rule-cards.md), docs/art/ui-style.md (UI 스타일: 색·글꼴·틀·버튼·배치 토큰, 15 고정 크기, 16 화면 배치 원칙), docs/art/ui-references.md (화면별 레이아웃 조사·요소별 레퍼런스), docs/art/campaign-map.md (장 선택 바탕 3D 원정 지도, 12절 성 면)
-- 코드: Assets/_Project/Scripts/Game/Screens/ (`ToolkitKit.cs` 문서 만들기·버튼·틀·칩·값·툴팁·Synty 프리팹 다시 쌓기·그늘, `Ui.cs` 색 토큰, `Kit.cs` 아이콘 이름, `BattleHud.cs` 전투 화면, `CampFlow.cs`·`CampToolkit.cs`·`CampMarkers.cs` 장 선택·병영, `MenuToolkit.cs`·`MenuFlow.cs` 메인 메뉴, `SettingsToolkit.cs` 설정 창(값은 `Game/GameSettings.cs`), `UnitDetail.cs`·`UnitDetailModel.cs` 유닛 상세 창, `Fx.cs` 나타남·맥박·번쩍임·검은 화면, `App.cs` 씬 전환). 배치·크기는 Assets/_Project/UI/ 의 UXML·USS (`Theme.uss` 공용, `Menu`·`Camp`·`Battle`·`Detail` 화면별, `Panel.asset` 패널 비율). 원정 지도는 `Game/CampaignMapView.cs` + 배치 표 `Game/CampaignMapLayout.cs`, Camp 씬에 구움 (campaign-map.md 10). 구현 기록 docs/dev/unity-port.md "전투 화면 달과 피"
+- 기획서: docs/ui/ (화면별. 장 선택 3 레이어 docs/ui/stage-select.md, 병영 docs/ui/upgrade.md, 설정 창 docs/ui/settings.md, 유닛 상세 창 docs/ui/unit-detail.md, 장별 규칙 카드 docs/ui/rule-cards.md), docs/art/ui-style.md (UI 스타일: 색·글꼴·틀·버튼·배치 토큰, 15 고정 크기, 16 화면 배치 원칙), docs/art/ui-references.md (화면별 레이아웃 조사·요소별 레퍼런스), docs/art/campaign-map.md (장 선택 바탕 3D 원정 지도: 세계 씬 위 지도 층, 두 면)
+- 코드: Assets/_Project/Scripts/Game/Screens/ (`ToolkitKit.cs` 문서 만들기·버튼·틀·칩·값·툴팁·Synty 프리팹 다시 쌓기·그늘, `Ui.cs` 색 토큰, `Kit.cs` 아이콘 이름, `BattleHud.cs` 전투 화면, `CampFlow.cs`·`CampToolkit.cs`·`CampMarkers.cs` 장 선택·병영, `MenuToolkit.cs`·`MenuFlow.cs` 메인 메뉴, `SettingsToolkit.cs` 설정 창(값은 `Game/GameSettings.cs`), `UnitDetail.cs`·`UnitDetailModel.cs` 유닛 상세 창, `Fx.cs` 나타남·맥박·번쩍임·검은 화면, `App.cs` 씬 전환). 배치·크기는 Assets/_Project/UI/ 의 UXML·USS (`Theme.uss` 공용, `Menu`·`Camp`·`Battle`·`Detail` 화면별, `Panel.asset` 패널 비율). 원정 지도는 `Game/CampaignMapView.cs` + 굽기 표 `Game/CampaignMapLayout.cs`, 풍경은 `Scenes/World.unity`(겹쳐 부름), 지도 층은 Camp 씬 `World Map` 에 구움 (campaign-map.md 2·8). 구현 기록 docs/dev/unity-port.md "전투 화면 달과 피"
 - UI 스프라이트: `ArtCatalog.ui`, 장식 프리팹: `ArtCatalog.uiPrefabs` (이름으로 찾는다). 새 스프라이트는 이 배열에 더하고 `node tools/assets/scan.mjs`
 - 아트: Assets/Synty/InterfaceDarkFantasyMenus, Assets/Synty/InterfaceDarkFantasyHUD, Assets/Synty/InterfaceCore (분류는 art-assets.md)
 - 화면 검사: `tools/ui-audit/sweep.sh`, `Scripts/Editor/UiAudit.cs`, 기록 docs/dev/ui-audit.md
@@ -42,14 +42,13 @@
 | 장 선택은 3 레이어: L1 지도(전경) → L2 장 정보(목표·출정) → L3 병영. 레이어가 바뀌면 오른쪽 칸과 카메라만 바뀌고 Esc 는 한 레이어 뒤로 (stage-select.md) | 시험 중 | 2026-11-07 | #43 요구 2 |
 | 정보는 그 레이어 결정에 필요할 때만: 가진 금화는 병영(L3)에서만, 지도·장 정보에는 병영 버튼의 "고를 수 있는 병종 수" 배지만 (#99 배타 선택으로 강화 수 → 병종 수) (stage-select.md 6) | 시험 중 | 2026-11-07 | #43 "각 자원이나 정보는 각 Scene에서 필요한 경우에만" |
 | UGUI 를 걷어내고 모든 게임 UI 를 UI Toolkit(UXML·USS)으로 짓는다. 3D 를 따라가는 표시(머리 위 체력, 지역 표식)도 UI Toolkit 패널 좌표로 옮긴다. Synty INTERFACE uGUI 프리팹은 그리지 않고 `ToolkitKit.Prefab` 이 그림 정보만 읽는다 | 시험 중 | 2026-11-09 | #106 "UGUI 폐기하고 UITOOLKIT으로 완전히 옮기고 싶어" |
-| 장 선택 바탕은 Synty 프리팹을 코드가 데이터 표대로 놓아 짓는 3D 원정 지도. 장마다 지역 하나, 지역 표식은 고정 크기 UI(3D 점을 따라감), 이름은 가리킨·고른 지역만. 진행은 빛(클리어한 지역의 화로)으로 보인다 (campaign-map.md) | 시험 중 | 2026-11-07 | #43 "Synty 에셋을 사용해 3D맵을 제작 … 그 지역을 클릭하면 스테이지 정보화면으로" |
 | 병영 강화 구매 확인은 두 번 누르기 대신 화면 가운데 작은 확인 창(이름·"구매하시겠습니까?"·가격·취소/구매). 산 뒤 번쩍임은 없다 (upgrade.md 6) | 시험 중 | 2026-11-08 | #87 "번쩍임 … 필요 없음. 정말 살까요 표기보다 --를 구매하시겠습니까? 하고 가운데 작은 레터박스" |
 | 장 선택 칸 나타남·사라짐은 감속(ease-out) | 시험 중 | 2026-11-08 | #87 "UI 등장에 이징이 없음" |
 | 전투 주 버튼(전투 개시·배치 완료·턴 종료)은 큰 원형 버튼, 고른 아군의 행동은 아래 가운데 넓은 행동 바 판(고정 2400×440, 보이는 몸통 약 2370×245, #153) 안 큰 칸(1 이동·2 공격·3 대기·4 처치·5 치료/수습, Z 무르기). 칸은 아이콘만(이름은 툴팁), 원형 턴 종료는 판 안 오른쪽 끝, 배치 중에는 판 없이 아래 가운데 큰 "전투 개시" 원(2026-11-12 사용자 피드백). 레퍼런스 Baldur's Gate 3·Desperados III (battle-hud.md 3-4·3-6) | 시험 중 | 2026-11-11 | #118 "턴 종료 + 배치완료 버튼이 중앙 하단 큰 원형 버튼으로 있고 유닛 행동 선택할때도 행동 바가 있으면 좋겠어" |
 | 메인 메뉴 바탕은 Synty 데모 씬 `Demo_Cathedral_01`(백작성) 실시간 장면, 메뉴는 왼쪽 세로 글자 목록 + 왼쪽 그늘. 레퍼런스 Desperados III·The Witcher 3 메인 메뉴 (main-menu.md 8~11) | 시험 중 | 2026-11-11 | #116 "싱티 데모씬 백작성 이쁘던데 그거쓰자", "UI도 바꿔" |
-| 원정 지도는 실행 중 씬만 읽는다. 배치 표(`CampaignMapLayout`)는 굽기 입력일 뿐이고, 길·물·야영지·표식·화로 자리도 씬의 점으로 구워 손으로 옮긴다 (campaign-map.md 10-2) | 시험 중 | 2026-11-09 | #104 "씬을 진실로" |
+| 원정 지도는 실행 중 씬만 읽는다. 굽기 표(`CampaignMapLayout`)는 굽기 입력일 뿐이고, 장 자리·표식·화로·야영지·시점은 Camp 씬 `World Map` 의 점으로 구워 손으로 옮긴다 (campaign-map.md 8) | 시험 중 | 2026-11-09 | #104 "씬을 진실로" |
 | 원정 지도 카메라 이동은 손 코드 보간이 아니라 Cinemachine(구운 시점 + 브레인 블렌드)으로 한다. 시점은 Camp 씬에서 손으로 고친다 (campaign-map.md 구현 메모) | 시험 중 | 2026-11-08 | #57 "그 코드 밀어버리고 Cinemachine 패키지 설치해서 처리해줘" |
-| 장 선택 지도(L1 전경)에서 WASD 로 카메라를 땅 위로 옮긴다. 속도·범위는 `CampaignMapView` 인스펙터 (campaign-map.md 9-5) | 시험 중 | 2026-11-14 | #137 "캠프씬에서 카메라 wasd이동 넣어주고 카메라 조정 범위를 인스펙터에서 조정 가능하게" |
+| 장 선택 지도(L1 전경)에서 WASD 로 카메라를 땅과 나란히 옮긴다. 속도·범위는 `CampaignMapView` 인스펙터 (campaign-map.md 5-3) | 시험 중 | 2026-11-14 | #137 "캠프씬에서 카메라 wasd이동 넣어주고 카메라 조정 범위를 인스펙터에서 조정 가능하게" |
 | 배치 단계의 인구·은·배치 수는 아래 가운데 "전투 개시" 원 바로 위에 큰 숫자(아이콘·숫자 64, 반투명 판)로. 편성 패널은 왼쪽 아래 그대로 (battle-hud.md 2-1) | 시험 중 | 2026-11-18 | #141 "인구와 자원이 좌측 상단에 너무 작게 … 중앙 하단으로 옮기고 훨씬 크게" |
 | 아군 증원 칸 화살표는 배치 단계에 숨기고 전투가 시작되면 보인다. 배치 구역과 겹치면 화살표가 배치 투구를 가려 놓을 수 없는 칸처럼 보였다 (ui-style.md 8-2) | 시험 중 | 2026-11-14 | 사용자: 배치 때 화살표가 뭔지 물음 → 숨기기 선택 |
 | 원거리 아군을 고른 채 적을 호버하면 쏘는 유닛에서 대상까지 굵고 조금 휜 붉은 화살표, 지금 자리에서 쏠 수 없으면(사거리 밖·벽·잠든 적) 반투명 회색 화살표 가운데에 X 를 화살표 위로 (ui-style.md 8-6, 코드 `OverlayView` 화살표, 규칙 `BattleSession.AimAt`) | 확정 후보 | 2026-11-27 | #147 "문명에서 원거리 유닛이 공격 위치를 가리킬때 화살표 이펙트 … 사격이 불가능하다면 화살표에 x쳐지는 방식", 확인 "화살표의 굵기를 키우고 곡률을 줄일 것 … X가 화살표 위에 … 반투명 회색", 2026-11-27 "확인했어" |
@@ -64,8 +63,7 @@
 | 안내 문구는 알약 바탕 위에, 턴 배너는 보름달 게이지 글 아래에, 병영 규칙 문장은 이름 툴팁에 둔다 (battle-hud.md 2-1·4-1, upgrade.md) | 시험 중 | 2026-11-27 | #150 "전원 반영" (보고서 C3) |
 | 장의 배치 시작에 그 장에서 처음 만나는 것(1장: 변이·빛·달, 그 뒤: 해금 병종·새 적 종류·새 목표)을 카드 한 장씩 보이고, 본 카드는 캠페인 저장에 남겨 다시 띄우지 않는다. 규칙 요약 창은 용어 10줄이다 (rule-cards.md, battle-hud.md 6-1) | 시험 중 | 2026-11-27 | #150 "전원 반영" (보고서 B2) |
 | 병영 강화 카드: 능력치는 "전 → 후" 숫자, 물려받는 강화는 `spawn` 띠 + "스폰도 강해짐" 꼬리표, 살 수 있으면 primary 버튼, 금화 부족은 붉은 가격 (upgrade.md 5) | 시험 중 | 2026-11-27 | #150 "전원 반영" (보고서 E3) |
-| 원정 지도는 전투와 같은 푸른 밤 톤이다: Trilight 주변광, 달빛 + 북쪽 림 빛, 클리어 화로 빛 60/20. 성 뒤 달·기는 접었다(기울기 50° 시점에 하늘이 없다) (campaign-map.md 8) | 시험 중 | 2026-11-27 | #150 "전원 반영" (보고서 E1) |
-| 원정 지도는 두 면이다: 원정 길 면(1~10장)과 성 면(11~20장, Synty 데모 성당을 뽑은 `Castle.prefab`). 장마다 표식이 하나씩 따로 있고 지역을 같이 쓰는 장은 없다. L1 에서 면 전환 버튼·`Tab` 으로 오가고, 면은 초점 장에서 정해진다(11장부터 성 면). 성은 타원 섬 위에 서고 해자가 두르며 서쪽 다리가 11장이다. 성 면은 `Campaign Map` 옆 `Castle Map` 이라 다시 굽기가 지우지 않는다 (campaign-map.md 12, stage-select.md 5-4) | 시험 중 | 2026-11-27 | #150 "사이드를 두개정도 나눠서 1~10, 11~20 맵 두가지를 왔다 갔다 … 11~20도 1~10처럼 버튼이 다 따로" |
+| 원정 지도는 메인 메뉴의 세계다: Synty `Demo_Cathedral_01` (다리·마을·묘지·안뜰·성당, 붉은 달)을 복사한 `Scenes/World.unity` 를 Camp 씬이 겹쳐 부르고, 장 20곳은 풍경 속 실제 장소에 붙는다. 원본 씬은 그대로 쓰지 않는다. 두 면: 원정 길(1~10장, 낮은 시점에 성 뒤로 달)과 성 안(11~20장, 성당 위쪽을 걷어 낸 1층 평면). 카메라 각도는 시점마다 다르다 (campaign-map.md) | 시험 중 | 2026-11-27 | #152 "A메뉴의 세계로 두되, 그 씬을 그대로 쓰지말고 복사해서", "11~20구간은 성 내부가 보이면 좋겠는데", "1층 평면으로 진행. 카메라 각도도 의도에 따라 변경해도 됨" |
 | 전투 중 "이 전투 처음부터 다시": 구석 버튼 줄 끝 아이콘(무르기와 같은 그림을 좌우로 뒤집음), 두 번 눌러 확정(2.5초), 나가기와 함께 무장되지 않는다. 배치·데모·끝난 뒤에는 없고 적 연출 중에는 비활성, 단축키 없음 (battle-hud.md 6-2) | 시험 중 | 2026-11-27 | #150 "전원 반영" (보고서 D3) |
 | 아직 나타나지 않은 적 증원 칸·닫힌 문·아군 증원 구역에는 호버 없이 늘 보이는 증원 패: 아이콘 + 남은 턴 숫자(이번 턴 포함, 턴마다 줄고 1 이면 붉게 채움), 조건으로 오면 별·"쓰러뜨린 수/n". 낱말은 쓰지 않는다. 배치 화면 작전 개요에 물결별 증원 줄 (ui-style.md 8-7, battle-hud.md 2-4, waves.md 4) | 시험 중 | 2026-11-27 | #153 "인원 배치창에서 적 증원 타일에 대한 정보 없음 : 몇턴후 증원인지는 아주 중요한 지표", 초안에 "추천대로 진행" (패 모양·남은 턴 셈법·증원 줄은 에이전트 초안) |
 | 행동 바: 판 2400×440(보이는 몸통 화면 약 1300×135, 폭 68%), 칸 182(화면 100)·아이콘은 칸의 60%, 단축키는 틀 모서리 밖 딱지, 원형 턴 종료 210. 저절로 듣는 기술은 행동 칸이 아니라 유닛 블록의 작은 원 (battle-hud.md 3-4·3-6) | 시험 중 | 2026-11-27 | #153 "행동 바의 크기가 너무 적음. 아이콘이 들어가고도 충분한 여백이 있어야 함 . 지금보다 훨씬 커도 됨", 초안에 "추천대로 진행" (치수와 기술 칸 옮기기는 에이전트 초안) |
@@ -94,11 +92,11 @@
 - 함정: 전투 유닛 패널은 호버 층(`Hover`)에 있어 포인터가 보드 칸을 떠나면 사라진다. 호버한 유닛의 패널에 둔 버튼은 마우스로 누를 수 없다(선택한 아군·배치 중 살펴본 유닛의 패널만 남는다). 호버 대상에 거는 기능은 키로도 열리게 한다 (유닛 상세 창의 `I`, #127)
 - 함정: 화면 위에 따로 뜨는 창(유닛 상세 창)은 자기 UIDocument·PanelSettings 사본을 쓴다. 전투 문서의 `PointerOverUi` 는 그 창을 모르므로, 뒤 화면 입력(보드 클릭, 단축키, `BattleCamera` 키)은 `UnitDetail.IsOpen` 을 따로 본다
 - 함정: `FX_*`, `SM_Bld_Base_*` 프리팹은 PolygonDarkFantasy 와 PolygonGeneric 에 같은 이름이 있다. 이름으로 찾을 때 PolygonDarkFantasy 쪽을 쓴다
-- 함정: `CampaignMapView.Show` 가 주변광·안개를 `CampaignMapLayout` 상수로 매번 덮어쓴다. Camp 씬의 RenderSettings 를 고쳐도 소용없다. 상수를 고친다 (#150)
 - 함정: 행동 바를 화면 퍼센트 폭으로 두면 전투 HUD 크기를 키울 때 판이 좁아져 칸이 안 들어간다. 고정 폭으로 둔다. 전투 HUD 크기 0.67 이상은 병종이 아홉인 장의 편성 패널이 장 제목을 덮는데 스윕은 이 겹침을 못 잡는다 (#150)
 - 함정: 행동 바 틀 `Hotbar_03` 은 좌우만 9-slice 이고 위아래는 요소 높이에 맞춰 통째로 늘어난다. 그림 안에 투명 여백이 있어 보이는 몸통은 요소 높이의 56%(아래에서 22.9%~78.5%), 가시는 13.5%~86.1% 다. 몸통을 키우려면 요소를 그만큼 더 키워야 하고, 요소가 화면 밖으로 나가면 스윕이 `off-screen` 으로 잡는다. 양 끝 뾰족한 부분의 폭은 `-unity-slice-scale` 이 정한다(요소 높이/512 가 원래 비율) (#153)
 - 함정: 전투를 여는 스윕 단계는 규칙 카드의 막이 보드 호버를 막으니 카드를 먼저 닫는다 (docs/dev/ui-audit.md, #150)
-- 화면 밝기는 `tools/ui-audit/luma.py` 로 잰다(평균·p90·R·G·B, `--box` 로 영역). 2026-11-27 값: 1장 아군 턴 평균 66, 원정 지도 L1 평균 60 (docs/dev/ui-audit.md)
-- 함정: 성 면은 `Campaign Map` 밖의 `Castle Map` 이라 원정 길 다시 굽기가 지우지 않는다. 도구 모음 > 지도 > "성 면 채우기" 는 없는 것만 더한다. 처음부터 다시 지으려면 `Castle Map` 을 지우고 누른다 (campaign-map.md 10-2, #150)
-- 함정: 성 면 섬 원판은 y −0.01 이어야 한다. 0.01 이면 데모 안뜰 포장(y 0)을 덮는다. `SM_Bld_Bridge_Base_01` 은 피벗이 한쪽 끝이라 자리는 경계 상자를 재서 맞춘다 (#150)
+- 화면 밝기는 `tools/ui-audit/luma.py` 로 잰다(평균·p90·R·G·B, `--box` 로 영역). 2026-11-27 값: 1장 아군 턴 평균 66 (docs/dev/ui-audit.md). 원정 지도는 #152 로 세계가 바뀌어 다시 재지 않았다
 - 함정: 단축키는 `KeyEdges.Pressed` 로 읽는다. 화면이 바뀔 때 이미 눌려 있던 키를 새 입력으로 치면, 원정 지도에서 Enter 로 출정한 그 누름이 전투 화면의 규칙 카드를 보이기도 전에 넘기고 본 카드로 저장한다. 처음 읽을 때 눌려 있던 키는 누름이 아니다 (#150)
+- 함정: 원정 지도의 하늘·안개·주변광·후처리는 겹쳐 부른 `World.unity` 것이다(활성 씬). `CampaignMapView` 는 안개 끝 거리만 바꾼다. 지도를 밝히려면 Camp 씬 `World Map/Fill Light` 를 고친다. Camp 씬 카메라는 Skybox 로 지워야 세계 씬 하늘이 보인다 (campaign-map.md 7, #152)
+- 함정: 성 안 면은 세계 씬 `Cathedral` 의 렌더러를 높이로 골라 끈다. 고르기는 세계 씬이 불린 때 한 번만 한다. 걷어 낸 채로 다시 고르면 꺼진 렌더러가 목록에서 빠져 길 면에서도 성당이 잘린 채 남는다 (진행 초기화가 이 길을 탄다, #152)
+- 함정: 장 자리의 y 는 그 자리 바닥 높이여야 화로가 뜨거나 묻히지 않는다. 세계 씬에는 콜라이더가 있어 위에서 아래로 광선을 쏴 잰다. 성당 날개 방은 바닥이 3 높고, 무너진 다리는 x 42~62 가 끊겨 있다 (#152)
