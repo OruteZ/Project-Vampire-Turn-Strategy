@@ -82,7 +82,8 @@ namespace VampireSpawn.Game.Screens
 
         public bool Pressed(string name, bool isDown)
         {
-            down.TryGetValue(name, out var was);
+            // A key still held from the screen before is not a press here (docs/areas/ui.md).
+            var was = down.TryGetValue(name, out var seen) ? seen : isDown;
             down[name] = isDown;
             return isDown && !was;
         }
