@@ -33,6 +33,6 @@ $V shot studio-turned 1920 1080
 
 ## Gotchas
 
-- The set is built at run time 2000 units east of the map (`CampaignMapView.BuildStudio`); nothing of it is in the Camp scene.
-- In the studio the scene's directional lights are off and the fog is the dark's colour. A screenshot with a visible horizon line or a blue floor means `CampaignMapView.Studio` did not run.
-- The scene still has a `Shot Camp` camera; nothing uses it.
+- The set is built at run time 2000 units under the map layer (`CampaignMapView.BuildStudio`); nothing of it is in the Camp scene.
+- In the studio the World scene's directional lights are off, the fog is the dark's colour and the ambient light is flat; leaving puts the World scene's values back. A studio screenshot with sky or a horizon line means `CampaignMapView.Studio` did not run; a map that stays dark after leaving means the restore did not.
+- The scene still has a `Shot Camp` camera and a `Camp/Unit` point; the barracks no longer uses them.
