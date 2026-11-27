@@ -4,7 +4,7 @@ using VampireSpawn.Core;
 
 namespace VampireSpawn.Tests
 {
-    // docs/systems/ai.md 6 (#150 B3): the enemy's hit line says why it picked that ally.
+    // docs/systems/ai.md 6: the enemy's hit line says why it picked that ally.
     public class TargetReasonTests
     {
         static readonly string[] Open = Enumerable.Repeat(".......", 7).ToArray();

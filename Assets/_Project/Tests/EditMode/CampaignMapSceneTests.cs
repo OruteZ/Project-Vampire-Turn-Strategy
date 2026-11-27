@@ -21,7 +21,7 @@ namespace VampireSpawn.Tests
                 var terrain = map.terrain;
                 Assert.That(terrain, Is.Not.Null, "baked terrain");
                 Assert.That(map.castle, Is.Not.Null, "castle face");
-                // stage-select.md 5-4 (#150): every stage has its own region, marker and shot; none share.
+                // stage-select.md 5-4: every stage has its own region, marker and shot; none share.
                 var shots = map.GetComponentsInChildren<Transform>(true).Where(t => t.parent != null && t.parent.name == "Cameras").Select(t => t.name).ToList();
                 foreach (var s in Campaign.Stages)
                 {

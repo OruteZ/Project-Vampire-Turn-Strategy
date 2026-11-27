@@ -188,7 +188,7 @@ namespace VampireSpawn.Tests
             Assert.AreEqual(kinds.Length - 1, CampNav.DefaultTab(c, kinds.Length - 1), "the tab picked last this run wins");
         }
 
-        // stage-select.md 5-4 (#150): the map has two faces, the road (1~10) and the castle (11~20).
+        // stage-select.md 5-4: the map has two faces, the road (1~10) and the castle (11~20).
         [Test]
         public void FaceSwitchesOnTheMapToTheOtherFacesNextStage()
         {

@@ -18,6 +18,8 @@ namespace VampireSpawn.Tests
             Assert.IsFalse(c.StageOpen(3));
             Assert.AreEqual(0, DebugCheats.With(c, gold: -5).Gold);
             Assert.AreEqual(c.ToJson(), Campaign.Parse(c.ToJson()).ToJson(), "survives a save round trip");
+            c.SeeRule("turn");
+            CollectionAssert.AreEqual(new[] { "turn" }, DebugCheats.With(c, gold: 1).SeenRules, "seen rule cards kept");
         }
 
         [Test]

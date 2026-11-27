@@ -5,7 +5,7 @@ using VampireSpawn.Game;
 
 namespace VampireSpawn.Tests
 {
-    // docs/ui/battle-hud.md 3-8 (#150 B1).
+    // docs/ui/battle-hud.md 3-8.
     public class UndoMoveTests
     {
         [TearDown] public void BackToShipped() => GameData.Use(null);
@@ -69,6 +69,37 @@ namespace VampireSpawn.Tests
             Assert.IsTrue(b.Attack(knight.Id, b.Enemies.First(e => e.Kind == "skeleton").Id).Ok);
             Assert.IsFalse(b.CanUndo);
             Assert.IsFalse(b.UndoMove().Ok);
+        }
+
+        [Test]
+        public void EveryOtherActionClearsTheUndo()
+        {
+            var b = new Battle(Field(new[] { P(EnemyType.Vampire, 6, 6), P(EnemyType.Corpse, 5, 1) }), null, new[] {
+                P("pspear", 0, 6), P("parcher", 6, 0), P("archer", 1, 4), P("knight", 3, 3), P("sword", 3, 4), P("doctor", 3, 2), P("gravedigger", 5, 3), P("scout", 1, 1) });
+            b.Start();
+            Unit Of(string kind) => b.Allies.First(u => u.Type == kind);
+            void Step(string kind)
+            {
+                var u = Of(kind);
+                Assert.IsTrue(b.Move(u.Id, b.Reach(u).Keys.First(h => !h.Equals(u.Pos))).Ok, kind);
+                Assert.IsTrue(b.CanUndo, kind + " moved");
+            }
+            void Clears(string what, CommandResult r)
+            {
+                Assert.IsTrue(r.Ok, what);
+                Assert.IsFalse(b.CanUndo, what);
+            }
+            Step("pspear");
+            Clears("ally attack", b.Execute(Of("sword").Id, Of("knight").Id));
+            Step("parcher");
+            Clears("mend", b.Mend(Of("doctor").Id, Of("knight").Id));
+            Step("knight");
+            Clears("bury", b.Bury(Of("gravedigger").Id, b.CorpseAt(new Hex(5, 1)).Id));
+            Step("scout");
+            var scout = Of("scout");
+            Clears("trap", b.SetTrap(scout.Id, b.Board.Neighbors(scout.Pos).First(h => b.CanTrap(scout, h))));
+            Step("archer");
+            Clears("wait", b.Wait(Of("archer").Id));
         }
 
         [Test]

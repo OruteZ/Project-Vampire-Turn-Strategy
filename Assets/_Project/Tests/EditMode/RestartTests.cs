@@ -5,7 +5,7 @@ using VampireSpawn.Game.Screens;
 
 namespace VampireSpawn.Tests
 {
-    // docs/ui/battle-hud.md 6-2 (#150 D3).
+    // docs/ui/battle-hud.md 6-2.
     public class RestartTests
     {
         [TearDown] public void BackToShipped() => GameData.Use(null);

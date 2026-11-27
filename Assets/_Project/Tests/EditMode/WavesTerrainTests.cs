@@ -205,6 +205,23 @@ namespace VampireSpawn.Tests
         }
 
         [Test]
+        public void AGuardWokenAfterItsTurnMovesFromTheNextEnemyPhase()
+        {
+            var b = new Battle(Field(new[] { new Placement(EnemyType.Vampire, 6, 6), new Placement("skeleton", 0, 0, stance: Stance.Guard, alert: 1, group: "g"),
+                new Placement("skeleton", 3, 0, stance: Stance.Guard, alert: 3, group: "g") }), null, new[] { new Placement("pspear", 3, 4) });
+            b.Start();
+            var early = b.UnitAt(new Hex(0, 0)).Id;
+            var late = b.UnitAt(new Hex(3, 0)).Id;
+            b.Move(b.Allies.Single().Id, new Hex(3, 3));
+            b.EndTurn();
+            Assert.AreEqual(Stance.Charge, b.Find(early).Stance);
+            Assert.AreEqual(new Hex(0, 0), b.Find(early).Pos, "its turn had passed when the group woke");
+            Assert.AreNotEqual(new Hex(3, 0), b.Find(late).Pos, "the one that saw the ally moves at once");
+            b.EndTurn();
+            Assert.AreNotEqual(new Hex(0, 0), b.Find(early).Pos, "moves from the next enemy phase");
+        }
+
+        [Test]
         public void AGuardWithoutAGroupWakesAlone()
         {
             var b = new Battle(Field(new[] { new Placement(EnemyType.Vampire, 6, 6), new Placement("skeleton", 3, 2, stance: Stance.Guard, alert: 1),
