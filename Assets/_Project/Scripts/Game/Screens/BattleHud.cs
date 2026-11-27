@@ -15,7 +15,8 @@ namespace VampireSpawn.Game.Screens
         public Placement? HoverArrival;
         public Reinforcement HoverReinforce;
         public float Speed = 1f;
-        public bool Alt, EnemyPlaying, LeaveArmed, RulesOpen, LogOpen, Demo, FullMoon, MoonFading;
+        public Arm Armed;
+        public bool Alt, EnemyPlaying, RulesOpen, LogOpen, Demo, FullMoon, MoonFading;
         // docs/ui/rule-cards.md: the card on show and "n/total", or null.
         public BattleScreen.RuleCard Card;
         public string CardCount;
@@ -103,7 +104,7 @@ namespace VampireSpawn.Game.Screens
             hoverLayer = E(root, "layer");
             Hover(s, st, a);
             EndTurn(root, b, st, a);
-            Corner(root, st, a);
+            Corner(root, b, st, a);
             if (BattleScreen.ShowsHint(s, st.EnemyPlaying)) L(root, BattleScreen.Hint(s, st.EnemyPlaying), st.Deploying(b) ? "hint deploy" : "hint");
             if (st.RulesOpen) RulesPopup(root, a);
             if (st.Card != null) CardPopup(root, st, a);
@@ -265,12 +266,21 @@ namespace VampireSpawn.Game.Screens
             if (left > 0) Tip(RingBadge(btn, art, left.ToString(), 32, Ui.Steel, Ui.Ink, Ui.Bone), Loc.T("battle.allyPhase"), 300);
         }
 
-        void Corner(VisualElement root, HudState st, BattleActions a)
+        void Corner(VisualElement root, Battle b, HudState st, BattleActions a)
         {
             var row = E(root, "corner");
             Tip(IconBtn(row, art, Kit.Icon.Rules, a.ToggleRules), Loc.T("battle.rules"), 300);
-            if (st.LeaveArmed) Btn(row, Loc.T("battle.leaveConfirm"), a.Leave, BtnKind.Danger, !st.EnemyPlaying);
+            if (st.Armed == Arm.Leave) Btn(row, Loc.T("battle.leaveConfirm"), a.Leave, BtnKind.Danger, !st.EnemyPlaying);
             else Tip(IconBtn(row, art, Kit.Icon.Leave, a.Leave, !st.EnemyPlaying), Loc.T("battle.leave"), 300);
+            if (st.Demo || b.Phase == Phase.Deploy || b.Phase == Phase.Over) return;
+            if (st.Armed == Arm.Restart) Btn(row, Loc.T("battle.restartConfirm"), a.Restart, BtnKind.Danger, !st.EnemyPlaying);
+            else
+            {
+                var restart = IconBtn(row, art, Kit.Icon.Undo, a.Restart, !st.EnemyPlaying);
+                // The kit has one circular arrow and undo (Z) uses it; restart turns it the other way.
+                restart.Q(className: "icon").style.scale = new Scale(new Vector3(-1f, 1f, 1f));
+                Tip(restart, Loc.T("battle.restart"), 300);
+            }
         }
 
         void RulesPopup(VisualElement root, BattleActions a)

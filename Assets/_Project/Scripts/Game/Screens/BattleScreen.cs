@@ -7,10 +7,34 @@ namespace VampireSpawn.Game.Screens
 {
     public sealed class BattleActions
     {
-        public Action Primary, Leave, Clear, Sample, Exec, Mend, Trap, Wait, Undo, Aim, Retry, Redeploy, ToCamp, CloseOver, ToggleRules, ToggleLog, NextCard;
+        public Action Primary, Leave, Restart, Clear, Sample, Exec, Mend, Trap, Wait, Undo, Aim, Retry, Redeploy, ToCamp, CloseOver, ToggleRules, ToggleLog, NextCard;
         public Action<string> Pick, RecallKind;
         public Action<int> Recall, Detail;
         public Action<string> DetailKind;
+    }
+
+    public enum Arm { None, Leave, Restart }
+
+    // battle-hud.md 6: leave and restart act on a second press inside the window; arming one disarms the other.
+    public sealed class TwoPress
+    {
+        float until;
+        public Arm Armed { get; private set; }
+
+        public bool Press(Arm which, float now, float seconds)
+        {
+            if (Armed == which && now <= until) { Armed = Arm.None; return true; }
+            Armed = which;
+            until = now + seconds;
+            return false;
+        }
+
+        public bool Expire(float now)
+        {
+            if (Armed == Arm.None || now <= until) return false;
+            Armed = Arm.None;
+            return true;
+        }
     }
 
     public sealed class OverInfo

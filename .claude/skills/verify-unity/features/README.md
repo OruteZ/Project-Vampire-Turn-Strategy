@@ -38,3 +38,4 @@ Each feature file starts with an H1 title and one paragraph describing the playe
 - [Battle HUD size](./battle-hud-size.md) covers the settings row that scales the battle HUD and checking each size.
 - [Undo move](./undo-move.md) covers taking back the latest ally move with Z or the action bar slot.
 - [Rule cards](./rule-cards.md) covers the deploy-start rule cards, the seen record in the save, and the rules window terms.
+- [Restart battle](./restart.md) covers the corner button that restarts a battle on a second press.

@@ -15,12 +15,13 @@ namespace VampireSpawn.Game.Screens
         public Camera viewCamera;
 
         // Prototype timers: leave confirmation 2500 ms, phase banner 1300 ms.
-        const float LeaveSeconds = 2.5f, BannerSeconds = 1.3f;
+        const float ConfirmSeconds = 2.5f, BannerSeconds = 1.3f;
 
         public bool OverShown => overRoot != null && overRoot.ClassListContains("shown");
 
-        bool demo, leaveArm, rulesOpen, logOpen, finished, enemyPlaying, fullMoon, moonFading, altDown;
-        float leaveUntil, bannerUntil;
+        bool demo, rulesOpen, logOpen, finished, enemyPlaying, fullMoon, moonFading, altDown;
+        float bannerUntil;
+        TwoPress arm = new TwoPress();
         int? eatBefore;
         Vector2Int fittedSize;
         Stage stage;
@@ -71,6 +72,7 @@ namespace VampireSpawn.Game.Screens
             {
                 Primary = Primary,
                 Leave = Leave,
+                Restart = Restart,
                 Clear = () => input.Run(s => s.ClearAllies()),
                 Sample = () => input.Run(s => s.UseSample()),
                 Pick = k => input.Act(s => s.Pick(k)),
@@ -103,7 +105,8 @@ namespace VampireSpawn.Game.Screens
             View.speed = GameSettings.Speed;
             Sound.Music(x => x.battleMusic);
             Sound.Ambience(x => x.battleAmbience);
-            finished = enemyPlaying = leaveArm = rulesOpen = logOpen = false;
+            finished = enemyPlaying = rulesOpen = logOpen = false;
+            arm = new TwoPress();
             hoverId = hoverCorpse = null;
             hoverArrival = null;
             over = null;
@@ -176,7 +179,7 @@ namespace VampireSpawn.Game.Screens
                     ? b.Pending.First(p => p.Col == ah.Col && p.Row == ah.Row) : (Placement?)null,
                 HoverReinforce = hoverArrival is Hex rh && !b.Reinforcing ? b.Upcoming.FirstOrDefault(r => r.Hexes.Contains(rh)) : null,
                 Speed = View.speed,
-                Alt = altDown, EnemyPlaying = enemyPlaying, LeaveArmed = leaveArm, RulesOpen = rulesOpen, LogOpen = logOpen, Demo = demo,
+                Alt = altDown, EnemyPlaying = enemyPlaying, Armed = arm.Armed, RulesOpen = rulesOpen, LogOpen = logOpen, Demo = demo,
                 FullMoon = fullMoon, MoonFading = moonFading,
                 EatTarget = enemyPlaying ? eatBefore : b.EatTarget,
                 Upgrades = Upgrades,
@@ -257,7 +260,7 @@ namespace VampireSpawn.Game.Screens
         void Update()
         {
             if (Session == null) return;
-            if (leaveArm && Time.unscaledTime > leaveUntil) { leaveArm = false; RenderBattle(); }
+            if (arm.Expire(Time.unscaledTime)) RenderBattle();
             if (banner != null && banner.ClassListContains("shown") && Time.unscaledTime > bannerUntil) banner.RemoveFromClassList("shown");
             if (Screen.width != fittedSize.x || Screen.height != fittedSize.y) FitCameraRect();
             TrackHover();
@@ -342,15 +345,17 @@ namespace VampireSpawn.Game.Screens
 
         void Leave()
         {
-            if (Session.Battle.Phase == Phase.Player && !leaveArm && !enemyPlaying)
-            {
-                leaveArm = true;
-                leaveUntil = Time.unscaledTime + LeaveSeconds;
-                RenderBattle();
-                return;
-            }
             if (enemyPlaying) return;
+            if (Session.Battle.Phase == Phase.Player && !arm.Press(Arm.Leave, Time.unscaledTime, ConfirmSeconds)) { RenderBattle(); return; }
             if (demo) App.GoMenu(); else App.GoCamp(Back());
+        }
+
+        // battle-hud.md 6-2: the same as the result window's retry, from the turn-one start.
+        void Restart()
+        {
+            if (enemyPlaying || View.IsBusy || demo) return;
+            if (!arm.Press(Arm.Restart, Time.unscaledTime, ConfirmSeconds)) { RenderBattle(); return; }
+            actions.Retry();
         }
 
         void Finish()

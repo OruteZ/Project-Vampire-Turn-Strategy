@@ -1256,6 +1256,10 @@ MonoBehaviour:
     m_Metadata:
       m_Items:
       - rid: 7201578077006332005
+  - m_Id: 7589887808958464
+    m_Localized: Restart this battle
+    m_Metadata:
+      m_Items: []
   - m_Id: 9846568841290
     m_Localized: Rules Summary
     m_Metadata:
@@ -3119,6 +3123,10 @@ MonoBehaviour:
       m_Items: []
   - m_Id: 7573754884190208
     m_Localized: The Road
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7589887846707200
+    m_Localized: Restart battle?
     m_Metadata:
       m_Items: []
   references:

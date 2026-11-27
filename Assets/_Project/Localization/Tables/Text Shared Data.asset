@@ -2643,6 +2643,14 @@ MonoBehaviour:
     m_Key: camp.toRoad
     m_Metadata:
       m_Items: []
+  - m_Id: 7589887808958464
+    m_Key: battle.restart
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7589887846707200
+    m_Key: battle.restartConfirm
+    m_Metadata:
+      m_Items: []
   m_Metadata:
     m_Items: []
   m_KeyGenerator:
