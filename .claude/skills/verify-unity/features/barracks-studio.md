@@ -26,13 +26,15 @@ Driven by hand (the camp reads `isPressed` edges, so hold keys and the button ab
 ```bash
 $V key B down; sleep 0.3; $V key B up
 $V shot studio 1920 1080
-$V click 500 500 down; sleep 0.2; $V click 800 500 move; sleep 0.2; $V click 800 500 up
-$V eval 'UnityEngine.Object.FindFirstObjectByType<VampireSpawn.Game.CampaignMapView>().transform.Find("Studio/Unit -1").eulerAngles.y + ""'   # no longer 0
+$V click 500 500 down; sleep 0.3; $V click 800 500 down; sleep 0.3; $V click 800 500 up     # 300 px = 120 degrees
+$V eval 'UnityEngine.Object.FindFirstObjectByType<VampireSpawn.Game.CampaignMapView>().transform.Find("Studio/Unit -1").eulerAngles.y + ""'   # 240
 $V shot studio-turned 1920 1080
 ```
 
 ## Gotchas
 
+- A simulated `move` lets the button go, so a drag is `down` at the start, `down` again at the end point, then `up`.
+- To reach the camp screen from the menu by eval: `App.GoCamp(CampNav.FromMenu(c, null))` with a `Campaign` object `c` (the sweep clears every stage on a fresh one); `App.Campaign` is null until a camp or battle scene has run.
 - The set is built at run time 2000 units under the map layer (`CampaignMapView.BuildStudio`); nothing of it is in the Camp scene.
 - In the studio the World scene's directional lights are off, the fog is the dark's colour and the ambient light is flat; leaving puts the World scene's values back. A studio screenshot with sky or a horizon line means `CampaignMapView.Studio` did not run; a map that stays dark after leaving means the restore did not.
 - The scene still has a `Shot Camp` camera and a `Camp/Unit` point; the barracks no longer uses them.
