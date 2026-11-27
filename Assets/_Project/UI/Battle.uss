@@ -164,6 +164,7 @@
 .bar-unit > .unit-head { height: 44px; align-items: center; flex-wrap: nowrap; }
 .bar-unit .unit-name { max-width: 360px; }
 .bar-unit .unit-head > .info-btn { right: 0; top: -12px; }
+.bar-unit .unit-head > .unit-tag { flex-shrink: 0; margin-right: 64px; }
 .bar-stats { height: 54px; align-items: flex-end; }
 .bar-stats > .big { margin-right: 4px; }
 .bar-unit > .warn { height: 34px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }

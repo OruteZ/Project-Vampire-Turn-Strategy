@@ -142,6 +142,7 @@ namespace VampireSpawn.Game
             {
                 case BattleEventKind.Walk:
                     if (!units.TryGetValue(e.UnitId, out var walker)) break;
+                    walker.WalkStarts();
                     walker.SetWalking(true);
                     foreach (var h in e.Path)
                     {

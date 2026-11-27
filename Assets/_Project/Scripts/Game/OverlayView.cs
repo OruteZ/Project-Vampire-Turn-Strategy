@@ -58,7 +58,7 @@ namespace VampireSpawn.Game
         };
         readonly List<SpriteRenderer> icons = new List<SpriteRenderer>();
 
-        // ui-style.md 8-2: ally zones are one outlined region; the role icon stays but lighter than the units on it (#150 A4).
+        // ui-style.md 8-2: ally zones are one outlined region; the role icon stays but lighter than the units on it.
         static readonly Mark[] Zones = { Mark.Deploy, Mark.Reinforce };
         readonly Dictionary<Mark, RegionOutline> zones = new Dictionary<Mark, RegionOutline>();
         static readonly Style HoverCell = S(Bone, 0f, Bone, 1f, R - 1f, 2f);
@@ -132,9 +132,7 @@ namespace VampireSpawn.Game
             {
                 var cells = marks.Where(m => m.Mark == z).Select(m => m.Hex);
                 if (zones.TryGetValue(z, out var o) && o != null) { o.Show(board, cells); continue; }
-                o = zones[z] = RegionOutline.Create(board, z + "Zone", cells);
-                o.look = RegionOutline.Look.Solid;
-                o.color = Ally;
+                zones[z] = RegionOutline.Create(board, z + "Zone", cells, RegionOutline.Look.Solid, Ally);
             }
             for (var i = shown; i < icons.Count; i++) icons[i].enabled = false;
             if (moon != null && moon.Target is Hex t) lines.Dashed(Center(moon.Vampire), Center(t), 2f * Scale, MoonBlood, 4f * Scale, 4f * Scale);

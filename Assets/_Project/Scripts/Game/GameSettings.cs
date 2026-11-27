@@ -7,7 +7,7 @@ namespace VampireSpawn.Game
     {
         public static readonly float[] Speeds = { 1f, 2f, 4f };
         public static readonly float[] Shakes = { 0f, 0.5f, 1f };
-        // docs/ui/settings.md: small, medium, large; 0.64 keeps the tallest deploy roster (nine kinds) clear of the stage title at 1080 (#150 C2). Read when a battle starts (BattleFlow.HudZoom).
+        // docs/ui/settings.md: small, medium, large; 0.64 keeps the tallest deploy roster (nine kinds) clear of the stage title at 1080. Read when a battle starts (BattleFlow.HudZoom).
         public static readonly float[] HudZooms = { 0.55f, 0.6f, 0.64f };
 
         static bool? cameraFx;

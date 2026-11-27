@@ -24,11 +24,13 @@ namespace VampireSpawn.Game
         Mesh mesh;
         readonly List<List<Vector3>> loops = new List<List<Vector3>>();
 
-        public static RegionOutline Create(BoardView board, string name, IEnumerable<Hex> cells)
+        public static RegionOutline Create(BoardView board, string name, IEnumerable<Hex> cells, Look look = Look.Flow, Color? color = null)
         {
             var go = new GameObject(name);
             go.transform.SetParent(board.transform, false);
             var o = go.AddComponent<RegionOutline>();
+            o.look = look;
+            if (color is Color c) o.color = c;
             o.Show(board, cells);
             return o;
         }

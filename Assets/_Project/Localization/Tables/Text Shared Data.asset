@@ -2651,6 +2651,10 @@ MonoBehaviour:
     m_Key: battle.restartConfirm
     m_Metadata:
       m_Items: []
+  - m_Id: 7592554962677760
+    m_Key: stage.s6.escort
+    m_Metadata:
+      m_Items: []
   m_Metadata:
     m_Items: []
   m_KeyGenerator:

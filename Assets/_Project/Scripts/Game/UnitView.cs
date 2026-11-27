@@ -16,6 +16,7 @@ namespace VampireSpawn.Game
         UnitMotion motion;
         Transform model;
         GameObject coffin, ring;
+        Mesh ringMesh;
         ArtCatalog art;
         UnitLook look, own;
         bool armed;
@@ -153,14 +154,21 @@ namespace VampireSpawn.Game
                 int k = i * 2, n = (i + 1) % sides * 2;
                 System.Array.Copy(new[] { k, n, k + 1, k + 1, n, n + 1 }, 0, tris, i * 6, 6);
             }
-            var mesh = new Mesh { name = "Unit Ring", vertices = verts, colors = colors, triangles = tris };
+            ringMesh = new Mesh { name = "Unit Ring", vertices = verts, colors = colors, triangles = tris };
             ring = new GameObject("Ring");
             ring.transform.SetParent(transform, false);
-            ring.AddComponent<MeshFilter>().sharedMesh = mesh;
+            ring.AddComponent<MeshFilter>().sharedMesh = ringMesh;
             var mr = ring.AddComponent<MeshRenderer>();
             mr.sharedMaterial = art.overlay;
             mr.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
             ring.SetActive(!Lying);
+        }
+
+        // Each ring carries its side's vertex colour, so the mesh is the unit's own.
+        void OnDestroy()
+        {
+            if (ringMesh == null) return;
+            if (Application.isPlaying) Destroy(ringMesh); else DestroyImmediate(ringMesh);
         }
 
         static void FitHeight(Transform t, float height)
@@ -183,6 +191,13 @@ namespace VampireSpawn.Game
         {
             if (animator != null && animator.runtimeAnimatorController != null) animator.SetTrigger(name);
         }
+
+        readonly System.Collections.Generic.Stack<Quaternion> facingBeforeWalk = new System.Collections.Generic.Stack<Quaternion>();
+
+        // battle-hud.md 3-8: an undone move puts the unit back facing the way it did before the walk.
+        public void WalkStarts() { if (model != null) facingBeforeWalk.Push(model.rotation); }
+
+        public void FaceBack() { if (model != null && facingBeforeWalk.Count > 0) model.rotation = facingBeforeWalk.Pop(); }
 
         public void Face(Vector3 worldTarget)
         {

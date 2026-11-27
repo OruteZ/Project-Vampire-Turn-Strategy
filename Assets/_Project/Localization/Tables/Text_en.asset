@@ -3129,6 +3129,10 @@ MonoBehaviour:
     m_Localized: Restart battle?
     m_Metadata:
       m_Items: []
+  - m_Id: 7592554962677760
+    m_Localized: the guide
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds:

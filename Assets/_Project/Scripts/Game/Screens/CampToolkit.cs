@@ -175,7 +175,7 @@ namespace VampireSpawn.Game.Screens
             Line(panel.Q("info-bonus"), Kit.Icon.Star, bonusGot ? Ui.Candle : Ui.Muted, Loc.Text(s.Bonus.Text), bonusGot ? Ui.Candle : Ui.Bone,
                 Loc.T("camp.bonusGoal") + (bonusGot ? " · " + Loc.T("camp.got") : ""));
 
-            // stage-select.md 3-1 (#150 C1): rewards and battle terms as two named groups, then each enemy kind with its count.
+            // stage-select.md 3-1: rewards and battle terms as two named groups, then each enemy kind with its count.
             var stats = panel.Q("info-stats");
             stats.Clear();
             VisualElement Group(string name)
@@ -282,7 +282,7 @@ namespace VampireSpawn.Game.Screens
                 ToolkitKit.Frame(row, art, Ui.Steel);
                 if (own) ToolkitKit.Picture(row.Q(className: "panel-frame"), art.Ui(ToolkitKit.FrameBox), Color.Lerp(Color.white, Ui.Candle, 0.6f));
                 SetTip(row, Loc.T(up.Inherit ? "camp.inherit" : "camp.noInherit"));
-                // upgrade.md 5-1 (#150 E3): an upgrade a spawn inherits carries a spawn strip and tag, not only the fang.
+                // upgrade.md 5-1: the fang alone was missed, so an inherited upgrade also gets a spawn strip and tag.
                 if (up.Inherit) ToolkitKit.E(row, "up-strip").style.backgroundColor = Ui.Spawn;
                 var head = ToolkitKit.E(row, "up-name");
                 if (up.Inherit) ToolkitKit.Pic(head, art, Kit.Icon.Fang, Ui.Spawn, "up-fang");
@@ -312,7 +312,7 @@ namespace VampireSpawn.Game.Screens
             if (ups.contentContainer.childCount > 0) ups.contentContainer[ups.contentContainer.childCount - 1].style.marginBottom = 0;
         }
 
-        // upgrade.md 5-2 (#150 E3): a stat upgrade reads as before → after; a skill upgrade (null here) keeps its sentence.
+        // upgrade.md 5-2: a stat upgrade reads as before → after; a skill upgrade (null here) keeps its sentence.
         public static string Effect(string kind, Upgrade up, System.Collections.Generic.IEnumerable<string> owned)
         {
             if (up.Ability != Ability.None) return null;

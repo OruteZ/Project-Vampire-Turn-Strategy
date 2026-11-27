@@ -216,8 +216,7 @@ namespace VampireSpawn.Game
 
         public static MapRegion Region(string stageId) => System.Array.Find(Regions, r => r.Stage == stageId);
 
-        // 12: the castle face (11~20), the demo cathedral turned side-on so its long nave fills a wide screen, far enough north that
-        // neither face's shots see the other. Spots are on the castle's surface in Castle Map local units; the marker floats CastleMarkerLift above.
+        // campaign-map.md 12: side-on so the long nave fills a wide screen, and far enough north that neither face's shots see the other.
         public static readonly Vector3 CastleOrigin = new Vector3(0f, 0f, 920f), CastleAt = new Vector3(-20f, 0f, 0f);
         public const float CastleYaw = 270f, CastleMarkerLift = 2.5f, CastleViewDistance = 34f, CastleWideDistance = 70f, CastleFloor = 600f;
         public static readonly (string Stage, Vector3 At)[] CastleSpots =
@@ -227,8 +226,7 @@ namespace VampireSpawn.Game
             ("s19", new Vector3(21, 23, -9)), ("s20", new Vector3(25, 28.5f, 0)),
         };
 
-        // A region's shot looks at its View point; these move it off the region point where the region alone leaves the frame empty
-        // (11 sits on the outer bridge, 20 is a spire tip).
+        // 11 sits on the outer bridge and 20 on a spire tip, so a shot at the spot alone leaves the frame half empty.
         public static readonly (string Stage, Vector3 Offset)[] CastleViews = { ("s11", new Vector3(10, 0, 2)), ("s20", new Vector3(-4, -16, 0)) };
 
         // 12: the island the castle stands on, ringed by a moat (both flattened ellipses, radii x/z), the bridge at 11, and a sparse ring

@@ -14,7 +14,7 @@ namespace VampireSpawn.Game.Screens
         [Tooltip("게임이 쓰는 데이터. 비었거나 문제가 있으면 콘솔에 오류가 뜬다")] public GameDataAsset data;
         public Camera viewCamera;
 
-        // Prototype timers: leave confirmation 2500 ms, phase banner 1300 ms.
+        // Prototype timers: confirm window 2500 ms, phase banner 1300 ms.
         const float ConfirmSeconds = 2.5f, BannerSeconds = 1.3f;
 
         public bool OverShown => overRoot != null && overRoot.ClassListContains("shown");
@@ -118,7 +118,7 @@ namespace VampireSpawn.Game.Screens
             var battle = demo ? new Battle(s, App.DemoUpgrades, formation) : Campaign.NewBattle(s, formation);
             input.Begin(new BattleSession(battle));
             playLog = new PlayLog(s.Id);
-            // rule-cards.md 2: a campaign stage opens its deploy with the cards not seen before; demo and quick retries never do.
+            // rule-cards.md 2: the demo saves nothing and a retry has just seen them.
             ShowCards(demo || startNow ? new string[0] : Campaign.UnseenRules(System.Array.FindIndex(Campaign.Stages, x => x.Id == s.Id)));
             if (startNow) { playLog.Started(); input.Run(x => x.Start()); }
         }
@@ -341,6 +341,7 @@ namespace VampireSpawn.Game.Screens
             if (View.IsBusy || !Session.Battle.CanUndo) return;
             input.Run(s => s.Undo());
             View.SyncDeploy();
+            if (Session.Selected is int id) View.ViewOf(id)?.FaceBack();
         }
 
         void Leave()

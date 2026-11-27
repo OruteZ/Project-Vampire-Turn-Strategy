@@ -417,7 +417,7 @@ namespace VampireSpawn.Game
             var b = HexToWorld(new Hex(Board.Cols - 1, Board.Rows - 1));
             var center = (a + b) * 0.5f + Vector3.back * art.hexSize * 0.6f;
             var pitch = 55f;
-            // Start too close and back off in small steps, so the fit ends where the first cell corner touches the frame (#150 A3: a guessed start left a third of the frame empty).
+            // Start too close and back off in small steps, so the fit ends where the first cell corner touches the frame.
             var distance = Vector3.Distance(a, b) * 0.3f;
             var rot = Quaternion.Euler(pitch, 0f, 0f);
             viewCamera.transform.rotation = rot;

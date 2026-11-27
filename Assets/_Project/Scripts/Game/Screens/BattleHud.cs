@@ -554,13 +554,14 @@ namespace VampireSpawn.Game.Screens
             return p;
         }
 
-        // battle-hud.md 3-4 8 (#150 C4): the picked (else hovered) ally in the left of the action bar, in place of the ally panel.
+        // battle-hud.md 3-4 8: the picked, else hovered, ally.
         void BarUnit(VisualElement root, Battle b, Unit o)
         {
             var p = E(root, "bar-unit col", true);
             var head = E(p, "unit-head row");
-            if (art.Icon(o.Type) is string wi) Icon(head, wi, Ui.Steel, "icon unit-weapon");
+            if (o.Type != null && art.Icon(o.Type) is string wi) Icon(head, wi, Ui.Steel, "icon unit-weapon");
             L(head, Loc.Text(o.Name), "unit-name display");
+            if (o.Role == Role.Escort) L(head, Loc.T("unit.card.escort"), "unit-tag");
             var id = o.Id;
             InfoBtn(head, art, tip, () => acts?.Detail?.Invoke(id), infoOn);
             StatRows(E(p, "bar-stats row"), Ui.Steel, o.Hp + "/" + o.MaxHp, o.Mov, BattleScreen.Atk(o), o.Def, o.Rng, o.Hp * 3 <= o.MaxHp ? Ui.Blood : Ui.Bone, o.Id.ToString());
@@ -699,7 +700,7 @@ namespace VampireSpawn.Game.Screens
                     if (i >= full - lost && i < full) blink.Add(c);
                 }
                 for (var i = 1; i < cells; i++) E(rt, "divider").style.left = HeadBarW * i / cells;
-                // ui-style.md 8-1 8 (#150 F): the side reads from the shape too, not only the colour.
+                // ui-style.md 8-1 8: the side reads from the shape too, not only the colour.
                 if (u.Role == Role.Spawn) Icon(rt, Kit.Icon.Fang, Ui.Spawn, "icon head-fang");
                 else if (u.Side == Side.Enemy)
                 {
@@ -785,7 +786,7 @@ namespace VampireSpawn.Game.Screens
             var title = L(box, Loc.T(o.Won ? "over.won" : "over.lost"), "over-title display", o.Won ? Ui.Sun : Ui.Blood);
             var titleTip = Loc.Text(o.Line);
 
-            // battle-hud.md 5-2 (#150 C1): a result is read once, so each count carries its name under it.
+            // battle-hud.md 5-2: a result is read once, so each count carries its name under it.
             var tally = E(box, "tally row");
             void Count(string icon, int n, Color c, string name)
             {

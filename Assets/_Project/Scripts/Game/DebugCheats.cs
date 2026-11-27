@@ -12,7 +12,7 @@ namespace VampireSpawn.Game
         public const int NoCap = 999;
 
         public static Campaign With(Campaign c, int? gold = null, IEnumerable<string> cleared = null, IEnumerable<string> bonus = null, IEnumerable<string> ups = null) =>
-            Campaign.Parse("{\"gold\":" + Math.Max(0, gold ?? c.Gold) + ",\"cleared\":" + Set(cleared ?? c.Cleared) + ",\"bonus\":" + Set(bonus ?? c.BonusDone) + ",\"ups\":" + Set(ups ?? c.Upgrades) + "}");
+            Campaign.Parse("{\"gold\":" + Math.Max(0, gold ?? c.Gold) + ",\"cleared\":" + Set(cleared ?? c.Cleared) + ",\"bonus\":" + Set(bonus ?? c.BonusDone) + ",\"ups\":" + Set(ups ?? c.Upgrades) + ",\"seen\":" + Set(c.SeenRules) + "}");
 
         static string Set(IEnumerable<string> ids) => "{" + string.Join(",", ids.Select(id => "\"" + id + "\":true")) + "}";
 
