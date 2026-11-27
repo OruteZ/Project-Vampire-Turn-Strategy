@@ -642,8 +642,10 @@ namespace VampireSpawn.Game.Screens
             if (spawn) CornerBadge(p, Kit.Icon.Fang, Ui.Spawn);
             var col = E(p, "unit-body col");
             var head = E(col, "unit-head row");
-            if (o.Type != null && art.Icon(o.Type) is string wi) Icon(head, wi, color, "icon unit-weapon");
-            L(head, spawn ? Loc.T("hud.spawnOf", o.Origin) : Loc.Text(o.Name), "unit-name display");
+            // In a wrapping row a long name would drop under the weapon instead of folding beside it.
+            var title = E(head, "unit-title row");
+            if (o.Type != null && art.Icon(o.Type) is string wi) Icon(title, wi, color, "icon unit-weapon");
+            L(title, spawn ? Loc.T("hud.spawnOf", o.Origin) : Loc.Text(o.Name), "unit-name display");
             if (o.Role == Role.Escort) L(head, Loc.T("unit.card.escort"), "unit-tag");
             var hp = StatRows(col, color, o.Hp + "/" + o.MaxHp, o.Mov, BattleScreen.Atk(o), o.Def, o.Rng, o.Side == Side.Ally && o.Hp * 3 <= o.MaxHp ? Ui.Blood : Ui.Bone, o.Id.ToString());
             if (heal > 0) L(hp, "+" + heal, "stat-value stat-heal");
@@ -667,8 +669,8 @@ namespace VampireSpawn.Game.Screens
             L(head, Loc.Text(o.Name), "unit-name display");
             if (o.Role == Role.Escort) L(head, Loc.T("unit.card.escort"), "unit-tag");
             var id = o.Id;
-            InfoBtn(head, art, tip, () => acts?.Detail?.Invoke(id), infoOn);
-            StatRows(info, Ui.Steel, o.Hp + "/" + o.MaxHp, o.Mov, BattleScreen.Atk(o), o.Def, o.Rng, o.Hp * 3 <= o.MaxHp ? Ui.Blood : Ui.Bone, o.Id.ToString());
+            var hp = StatRows(info, Ui.Steel, o.Hp + "/" + o.MaxHp, o.Mov, BattleScreen.Atk(o), o.Def, o.Rng, o.Hp * 3 <= o.MaxHp ? Ui.Blood : Ui.Bone, o.Id.ToString());
+            InfoBtn(hp.parent, art, tip, () => acts?.Detail?.Invoke(id), infoOn);
             // Skills that work by themselves: small rounds at the end of the small numbers, their names in the tooltip.
             var passives = E(info.Q(className: "small"), "passives row");
             foreach (var name in BattleScreen.Passives(o))

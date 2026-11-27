@@ -128,7 +128,8 @@
 .log-lines .log-text { white-space: normal; width: 270px; }
 
 /* ---------- unit panels (ui-style.md 8-2) ---------- */
-.unit { position: absolute; width: 340px; min-height: 190px; -unity-slice-scale: 0.111px; }
+/* 400 leaves a name 350: every Korean name (widest 318) and every English minion name (widest 342) is one line, and no word of a name (widest 298) breaks inside. Longer names fold. */
+.unit { position: absolute; width: 400px; min-height: 190px; -unity-slice-scale: 0.111px; }
 .unit.ally-side { left: 24px; bottom: 392px; }
 .unit.other-side { right: 24px; bottom: 392px; }
 .unit.deploy-side { right: 24px; bottom: 228px; }
@@ -137,6 +138,9 @@
 .unit.deploy-side > .unit-body { padding-bottom: 56px; }
 .unit-body > * { margin-bottom: 6px; }
 .unit-head { align-items: flex-end; flex-wrap: wrap; }
+/* The weapon sits at the foot of the name's first line (49 high at 33 px), also when the name folds to a second. */
+.unit-title { flex-shrink: 1; max-width: 100%; align-items: flex-start; }
+.unit-title > .unit-weapon { margin-top: 17px; }
 /* unit-detail.md 2-1: the HUD draws at 0.55, so the 40 px button is 64 here and its key keeps the 26 px floor. */
 .battle .info-btn { position: absolute; width: 64px; height: 64px; }
 .battle .info-btn > .icon { left: 14px; top: 6px; right: 14px; bottom: 22px; }
@@ -145,8 +149,8 @@
 .big > .info-btn { right: 0; top: -10px; }
 .roster-row > .info-btn { right: 8px; bottom: 8px; }
 .unit-weapon { width: 32px; height: 32px; margin-right: 10px; flex-shrink: 0; }
-/* #150 C2: on screen (x0.55) names and the small numbers reach 18 px, hp and move 24 px. */
-.unit-name { font-size: 33px; -unity-font-style: bold; color: var(--bone); flex-shrink: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; margin-right: 10px; }
+/* #150 C2: on screen (x0.55) names and the small numbers reach 18 px, hp and move 24 px. A name longer than its line folds; it is never cut or drawn smaller (#153). */
+.unit-name { font-size: 33px; -unity-font-style: bold; color: var(--bone); flex-shrink: 1; max-width: 100%; margin-right: 10px; }
 .unit-tag { font-size: 26px; color: #a650c4; }
 .stat { flex-direction: row; align-items: flex-end; }
 .stat-icon { width: 28px; height: 28px; margin-right: 6px; }
@@ -168,11 +172,8 @@
 .bar-medal > .icon { width: 84px; height: 84px; }
 .bar-info { flex-grow: 1; flex-shrink: 1; width: 0; justify-content: center; }
 .bar-info > * { flex-shrink: 0; }
-.bar-info > .unit-head { height: 52px; align-items: center; flex-wrap: nowrap; }
-/* The panels' 33 px name in 360: the longest English name ("Peasant Spearman 1") fits; a larger name was cut to "Peasant Sp…". */
-.bar-info .unit-name { max-width: 360px; }
-.bar-info .unit-head > .info-btn { right: 0; top: -6px; }
-.bar-info .unit-head > .unit-tag { flex-shrink: 0; margin-right: 64px; }
+/* The name has the whole line (the info button is at the end of the hp row, as in the panels); one longer than that folds and the block grows from its middle. */
+.bar-info > .unit-head { min-height: 52px; align-items: center; align-content: center; }
 .bar-info > .big { height: 62px; align-items: flex-end; }
 .bar-info > .big .stat-value { font-size: 54px; }
 .bar-info > .big .stat-icon { width: 40px; height: 40px; }
