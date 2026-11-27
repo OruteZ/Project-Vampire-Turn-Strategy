@@ -200,12 +200,11 @@
 .wave { position: absolute; height: 64px; padding: 0 16px; translate: -50% -50%; flex-direction: row; align-items: center; border-radius: 32px; border-width: 3px; border-color: #c8304a; background-color: rgba(15, 16, 22, 0.92); }
 .wave > .icon { width: 34px; height: 34px; flex-shrink: 0; }
 .wave > .wave-star { width: 40px; height: 40px; }
-.wave > .wave-icon { margin-right: 8px; }
-.wave > .wave-icon:last-child { margin-right: 0; }
 .wave-num { font-size: 48px; -unity-font-style: bold; color: var(--bone); padding: 0; margin: 0; white-space: nowrap; }
 .wave-num.frac { font-size: 40px; }
-.wave-next { font-size: 30px; -unity-font-style: bold; color: var(--muted); padding: 0; margin: 0 0 0 6px; white-space: nowrap; }
-.wave > .wave-next-icon { width: 24px; height: 24px; margin-left: 8px; }
+/* BattleHud.WaveBadge spaces the parts 8 apart. */
+.wave-next { font-size: 30px; -unity-font-style: bold; color: var(--muted); padding: 0; margin: 0; white-space: nowrap; }
+.wave > .wave-next-icon { width: 24px; height: 24px; }
 .wave.cond { border-color: #e3a84b; }
 .wave.ally { border-color: #8fb0cc; }
 .wave.soon { background-color: #c8304a; }

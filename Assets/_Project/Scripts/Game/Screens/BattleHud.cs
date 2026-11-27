@@ -430,8 +430,9 @@ namespace VampireSpawn.Game.Screens
                 var ws = cell.Select(p => BattleScreen.When(b, p.Wave, p.Arrive)).GroupBy(w => w.Key).Select(g => g.First()).OrderBy(w => w.Order).ToList();
                 var e = WaveBadge(layer, cell.Key, Kit.Icon.Skulls, ws[0], false, ws[0].Key == hot);
                 if (ws.Count < 2) continue;
-                if (ws[1].When == WaveWhen.Turn || ws[1].When == WaveWhen.Soon) L(e, "·" + ws[1].Left, "wave-next");
-                else Icon(e, ws[1].When == WaveWhen.Reach ? Kit.Icon.Star : Kit.Icon.Skulls, Ui.Candle, "icon wave-next-icon");
+                var next = ws[1].When == WaveWhen.Turn || ws[1].When == WaveWhen.Soon ? L(e, "·" + ws[1].Left, "wave-next")
+                    : Icon(e, ws[1].When == WaveWhen.Reach ? Kit.Icon.Star : Kit.Icon.Skulls, Ui.Candle, "icon wave-next-icon");
+                next.style.marginLeft = 8f;
             }
             foreach (var d in b.Stage.Doors)
             {
@@ -461,6 +462,7 @@ namespace VampireSpawn.Game.Screens
             if (w.When == WaveWhen.Reach) Icon(e, Kit.Icon.Star, Ui.Candle, "icon wave-star");
             else if (w.When == WaveWhen.Kills) L(e, w.Done + "/" + w.Need, "wave-num frac");
             else if (!ally || !soon) L(e, w.Left.ToString(), "wave-num");
+            for (var i = 1; i < e.childCount; i++) e[i].style.marginLeft = 8f;
             if (soon && !ally) e.schedule.Execute(() => e.style.backgroundColor = Fx.Bright(Ui.Blood, Fx.PulseK())).Every(16);
             tiles.Add((e, at));
             if (!waveMarks.TryGetValue(w.Key, out var marks)) waveMarks[w.Key] = marks = new List<VisualElement>();
