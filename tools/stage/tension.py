@@ -1,5 +1,6 @@
 # tension.py <tag>...: per stage from loop.sh output (tools/stage/<tag>.tsv or scratch/<tag>.tsv):
 # games, win rate, share of games with a spawn, win rate with / without a spawn, average turns in wins, idle turns and idle / all turns.
+# Second table: win rate of builds with / without a knight (#150 D1).
 import sys, os, collections
 T = os.path.dirname(os.path.abspath(__file__))
 rows = []
@@ -7,7 +8,7 @@ for tag in sys.argv[1:]:
     p = os.path.join(T, tag + '.tsv')
     for l in open(p if os.path.exists(p) else os.path.join(T, 'scratch', tag + '.tsv'), encoding='utf8'):
         c = l.rstrip('\r\n').split('\t')
-        if len(c) >= 14: rows.append((c[0], int(c[4]), int(c[6]), int(c[12]), int(c[13])))
+        if len(c) >= 14: rows.append((c[0], int(c[4]), int(c[6]), int(c[12]), int(c[13]), 'knight' in c[1]))
 def rate(rs): return f'{sum(r[1] for r in rs) / len(rs):.2f}' if rs else '-'
 def line(name, rs):
     sp = [r for r in rs if r[4]]; no = [r for r in rs if not r[4]]; w = [r for r in rs if r[1]]
@@ -21,3 +22,11 @@ print('| 장 | 판 | 승률 | 스폰 판 비율 | 스폰 판 승률 (판) | 스�
 print('|---|---|---|---|---|---|---|---|---|')
 for s in sorted(by, key=lambda x: int(x[1:])): print(line(s, by[s]))
 print(line('전체', rows))
+print()
+print('| 장 | 기사 든 판 승률 (판) | 기사 안 든 판 승률 (판) |')
+print('|---|---|---|')
+def kn(name, rs):
+    k = [r for r in rs if r[5]]; o = [r for r in rs if not r[5]]
+    print(f'| {name} | {rate(k) + f" ({len(k)})" if k else "-"} | {rate(o)} ({len(o)}) |')
+for s in sorted(by, key=lambda x: int(x[1:])): kn(s, by[s])
+kn('전체', rows)
