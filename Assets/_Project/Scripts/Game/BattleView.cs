@@ -15,6 +15,8 @@ namespace VampireSpawn.Game
 
         // Delays copied from the prototype's wait() calls (ms): one walk step 120, strike 380, rise batch 600, coffin opens 700, phase banner 500.
         const float StepSeconds = 0.12f, StrikeSeconds = 0.38f, RiseSeconds = 0.6f, WakeSeconds = 0.7f, BannerSeconds = 0.5f;
+        // The fall outlives the camera's longest hold after a death (BattleCamera.HoldFor, 1 s) so CorpseLeft still finds it; a slow clip plays out in full.
+        const float FallSeconds = 1.2f;
         // docs/art/battle-camera.md 1-2: every playback delay is twice the prototype's so the camera can be followed.
         const float Pace = 2f;
 
@@ -178,7 +180,7 @@ namespace VampireSpawn.Game
                     if (units.TryGetValue(e.UnitId, out var shown)) Popup.Spawn(shown.transform.position + Vector3.up * (shown.Height + 0.6f), Loc.Text(e.Text), e.Style, speed / Pace);
                     break;
                 case BattleEventKind.Died:
-                    if (units.TryGetValue(e.UnitId, out var dead)) { dead.Trigger("Death"); Sound.Play(dead.Sounds, s => s.death); falling[e.At] = dead; Remove(units, e.UnitId, dead.DeathSeconds); }
+                    if (units.TryGetValue(e.UnitId, out var dead)) { dead.Trigger("Death"); Sound.Play(dead.Sounds, s => s.death); falling[e.At] = dead; Remove(units, e.UnitId, Mathf.Max(dead.DeathSeconds, Wait(FallSeconds))); }
                     break;
                 case BattleEventKind.CorpseLeft:
                     var corpse = CorpseType(e.UnitId);
