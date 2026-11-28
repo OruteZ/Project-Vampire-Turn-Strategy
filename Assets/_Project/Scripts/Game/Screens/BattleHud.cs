@@ -768,6 +768,7 @@ namespace VampireSpawn.Game.Screens
                 Icon(slot, x.Icon, x.Color);
                 Tip(slot, x.Label, 200);
                 L(slot, x.Hotkey ?? x.Key.ToString(), "key");
+                if (x.Count != null) L(slot, x.Count, x.Ready ? "slot-count" : "slot-count empty");
                 Click(slot, x.Act, x.Ready);
             }
         }

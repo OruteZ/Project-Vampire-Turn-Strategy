@@ -11,11 +11,11 @@ namespace VampireSpawn.Tests
     {
         static readonly string[] Open = Enumerable.Repeat(".......", 7).ToArray();
 
-        static BattleSession Field()
+        static BattleSession Field(params Placement[] more)
         {
             var stage = new Stage("demo", GameData.Types.Select(t => t.Key).ToArray(), 99, 99, 0, Goal.Boss,
                 new Bonus(BonusType.NoEat, 0, 0), new Boss(30, 1, 0, 0, 0), Open, new[] { new Placement(EnemyType.Vampire, 6, 6) }, new Placement[0]);
-            var b = new Battle(stage, null, new[] { new Placement("doctor", 1, 1), new Placement("hunter", 3, 1), new Placement("gravedigger", 5, 1) });
+            var b = new Battle(stage, null, new[] { new Placement("doctor", 1, 1), new Placement("hunter", 3, 1), new Placement("gravedigger", 5, 1) }.Concat(more).ToArray());
             b.Start();
             return new BattleSession(b);
         }
@@ -56,6 +56,22 @@ namespace VampireSpawn.Tests
             var digger = BattleScreen.Slots(s, a).First(x => x.Key == 5);
             Assert.AreEqual(BattleScreen.SkillName(Ability.Bury), digger.Label);
             Assert.IsFalse(digger.Ready, "no corpse next to it");
+        }
+
+        [Test]
+        public void TrapSlotCountsTheScoutsTrapsLeft()
+        {
+            var s = Field(new Placement("scout", 1, 3));
+            var a = new BattleActions();
+            s.Click(new Hex(1, 3));
+            var scout = s.SelectedUnit;
+            Assert.AreEqual("3/3", BattleScreen.Slots(s, a).First(x => x.Key == 5).Count);
+            Assert.IsTrue(s.Battle.SetTrap(scout.Id, new Hex(1, 4)).Ok);
+            s.Battle.EndTurn();
+            s.Click(new Hex(1, 3));
+            var trap = BattleScreen.Slots(s, a).First(x => x.Key == 5);
+            Assert.AreEqual("2/3", trap.Count);
+            Assert.IsTrue(trap.Ready);
         }
     }
 }
