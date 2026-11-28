@@ -5,8 +5,10 @@
         <ui:VisualElement name="shade" class="shade" picking-mode="Ignore" />
         <ui:VisualElement name="markers" class="layer" picking-mode="Ignore" />
         <ui:VisualElement name="head" class="head" picking-mode="Ignore">
-            <ui:VisualElement name="menu" class="btn ghost square">
+            <ui:VisualElement name="menu" class="btn normal menu-btn">
+                <ui:VisualElement class="btn-frame" picking-mode="Ignore" />
                 <ui:VisualElement class="icon" picking-mode="Ignore" />
+                <ui:Label class="btn-text" picking-mode="Ignore" />
                 <ui:Label class="key map-only" text="Esc" picking-mode="Ignore" />
             </ui:VisualElement>
             <ui:Label name="title" class="title display" picking-mode="Ignore" />
@@ -45,6 +47,7 @@
                 <ui:Label class="key" text="Esc" picking-mode="Ignore" />
             </ui:VisualElement>
             <ui:VisualElement name="info-break" class="break" picking-mode="Ignore" />
+            <ui:Label name="info-goal-name" class="sec-name goal-name" picking-mode="Ignore" />
             <ui:VisualElement name="info-goal" class="line goal">
                 <ui:VisualElement class="line-icon" picking-mode="Ignore" />
                 <ui:Label class="line-text" picking-mode="Ignore" />
@@ -53,8 +56,11 @@
                 <ui:VisualElement class="line-icon" picking-mode="Ignore" />
                 <ui:Label class="line-text wrap" picking-mode="Ignore" />
             </ui:VisualElement>
+            <ui:VisualElement class="rule rule-1" picking-mode="Ignore" />
             <ui:VisualElement name="info-stats" class="stats" picking-mode="Ignore" />
+            <ui:VisualElement class="rule rule-2" picking-mode="Ignore" />
             <ui:VisualElement name="info-foes" class="foes" picking-mode="Ignore" />
+            <ui:VisualElement class="rule rule-3" picking-mode="Ignore" />
             <ui:VisualElement name="info-roster" class="roster" picking-mode="Ignore" />
             <ui:VisualElement name="info-march" class="march" picking-mode="Ignore" />
         </ui:VisualElement>
