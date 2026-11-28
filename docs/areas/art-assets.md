@@ -58,6 +58,7 @@
 - 함정: SIDEKICK 패키지의 에디터 스크립트가 Synty 서버에서 Sidekick 도구를 스스로 내려받아 `Assets/DownloadCache/` 에 둔다 (gitignore 됨). 도구 데이터는 `Failed to load tool data` 로 불러오지 못했다. 완성 프리팹만 쓰고 도구는 들이지 않았다.
 - 함정: Dark Fantasy 무기를 `prop_r` 에 회전 0 으로 붙이면 날이 몸 뒤로 간다(역수). 쥐는 법이 `AsIs` 인 칼·창이 그렇다. 새 무기는 쥐는 법을 꼭 고른다. `UnitLookTests` 가 몸 뒤로 뻗은 무기를 잡는다
 - 함정: `Animator.Update(0)` 로 에디터에서 자세를 잡을 때 화면 밖이면 컬링돼 T 자세로 남는다. `cullingMode = AlwaysAnimate` 를 먼저 준다
+- 함정: Sidekick 뼈대의 `ik_*` 보조 뼈(`ik_hand_gun` 등)는 클립이 움직이지 않아 기본 자세 자리에 남는다. 자세를 뼈 위치로 잴 때 뺀다 (#155 `UnitLookTests`)
 - 함정: 애니메이션 패키지끼리 같은 파일이 있어 `Overriding existing asset with new GUID from package` 경고가 3건 나왔다. 그 파일을 참조할 때 GUID 가 나중 패키지 것이다.
 
 ## 보드에서 쓰는 것 (P6, `Assets/_Project/Art/ArtCatalog.asset`)

@@ -159,8 +159,9 @@ namespace VampireSpawn.Tests
             finally { Object.DestroyImmediate(fell.gameObject); Object.DestroyImmediate(corpse.gameObject); }
         }
 
+        // Sidekick ik_* helper bones are not animated and stay where the bind pose put them.
         static Dictionary<string, Vector3> Bones(UnitView view) => view.GetComponentInChildren<SkinnedMeshRenderer>().bones
-            .Where(b => b != null).GroupBy(b => b.name).ToDictionary(g => g.Key, g => view.transform.InverseTransformPoint(g.First().position));
+            .Where(b => b != null && !b.name.StartsWith("ik_")).GroupBy(b => b.name).ToDictionary(g => g.Key, g => view.transform.InverseTransformPoint(g.First().position));
 
         [Test]
         public void SleepingVampireIsOnlyACoffinUntilItWakes()

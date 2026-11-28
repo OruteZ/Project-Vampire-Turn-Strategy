@@ -1,3 +1,5 @@
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace VampireSpawn.Game
@@ -10,7 +12,9 @@ namespace VampireSpawn.Game
         public float Height => art.unitHeight * art.hexSize * (look != null && look.scale > 0f ? look.scale : 1f);
         public UnitSounds Sounds { get; set; }
 
-        static readonly int WalkParam = Animator.StringToHash("Walk");
+        static readonly int WalkParam = Animator.StringToHash("Walk"), RiseState = Animator.StringToHash("Rise"), RiseTime = Animator.StringToHash("RiseTime"), IdleState = Animator.StringToHash("Idle");
+        // The Any State → Death blend in Unit.controller; rising blends back to Idle as fast.
+        const float Blend = 0.05f;
 
         Animator animator;
         UnitMotion motion;
@@ -66,7 +70,7 @@ namespace VampireSpawn.Game
             if (armed) Arm(model, look);
             animator = model.GetComponentInChildren<Animator>();
             if (animator == null) return;
-            animator.runtimeAnimatorController = !armed && look.rig == Rig.Sidekick && art.spawnAnimator != null ? art.spawnAnimator
+            animator.runtimeAnimatorController = !armed && look.rig == Rig.Sidekick && art.spawnAnimator != null ? Unarmed(art, look)
                 : look.animator != null ? look.animator : art.unitAnimator;
             animator.applyRootMotion = true;
             motion = animator.gameObject.AddComponent<UnitMotion>();
@@ -207,13 +211,72 @@ namespace VampireSpawn.Game
             if (d.sqrMagnitude > 0.0001f) model.rotation = Quaternion.LookRotation(d);
         }
 
+        // docs/art/unit-visuals.md 4-1: Rise plays the death clip at RiseTime (0..1); a corpse holds 1, rising runs it down to 0.
         public void LieDown()
         {
             Lying = true;
             if (ring != null) ring.SetActive(false);
-            if (animator != null) animator.enabled = false;
-            model.localRotation = Quaternion.Euler(-90f, model.localEulerAngles.y, 0f);
-            model.localPosition = Vector3.up * 0.25f;
+            if (animator == null) return;
+            animator.Play(RiseState, 0, 0f);
+            animator.SetFloat(RiseTime, 1f);
+        }
+
+        public void TakePose(UnitView from)
+        {
+            if (model == null || from == null || from.model == null) return;
+            model.localPosition = from.model.localPosition;
+            model.localRotation = from.model.localRotation;
+        }
+
+        public void Rise(float seconds)
+        {
+            if (animator != null && seconds > 0f) StartCoroutine(Rising(seconds));
+        }
+
+        IEnumerator Rising(float seconds)
+        {
+            var from = model.localRotation;
+            var to = Quaternion.Euler(0f, yaw, 0f);
+            animator.Play(RiseState, 0, 0f);
+            for (var t = 0f; t < seconds; t += Time.deltaTime)
+            {
+                animator.SetFloat(RiseTime, 1f - t / seconds);
+                model.localRotation = Quaternion.Slerp(from, to, t / seconds);
+                yield return null;
+            }
+            animator.SetFloat(RiseTime, 0f);
+            model.localRotation = to;
+            animator.CrossFade(IdleState, Blend);
+        }
+
+        public float DeathSeconds
+        {
+            get
+            {
+                var clip = animator != null ? DeathClip(animator.runtimeAnimatorController) : null;
+                return clip != null ? clip.length + Blend : 0f;
+            }
+        }
+
+        static AnimationClip DeathClip(RuntimeAnimatorController c) => c == null ? null : System.Array.Find(c.animationClips, IsDeath);
+
+        static bool IsDeath(AnimationClip c) => c != null && c.name.Contains("Death");
+
+        static readonly Dictionary<UnitLook, RuntimeAnimatorController> unarmed = new Dictionary<UnitLook, RuntimeAnimatorController>();
+
+        // docs/art/unit-visuals.md 4-1 4: an unarmed corpse or spawn falls and rises with the death clip of its armed look.
+        static RuntimeAnimatorController Unarmed(ArtCatalog art, UnitLook look)
+        {
+            var death = DeathClip(look.animator);
+            if (death == null || death == DeathClip(art.spawnAnimator) || !(art.spawnAnimator is AnimatorOverrideController spawn)) return art.spawnAnimator;
+            if (unarmed.TryGetValue(look, out var made) && made != null) return made;
+            var clips = new List<KeyValuePair<AnimationClip, AnimationClip>>();
+            spawn.GetOverrides(clips);
+            for (var i = 0; i < clips.Count; i++)
+                if (IsDeath(clips[i].Key)) clips[i] = new KeyValuePair<AnimationClip, AnimationClip>(clips[i].Key, death);
+            var o = new AnimatorOverrideController(spawn.runtimeAnimatorController) { name = spawn.name + " " + death.name };
+            o.ApplyOverrides(clips);
+            return unarmed[look] = o;
         }
 
         public void StandUp()

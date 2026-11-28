@@ -178,21 +178,30 @@ namespace VampireSpawn.Game
                     if (units.TryGetValue(e.UnitId, out var shown)) Popup.Spawn(shown.transform.position + Vector3.up * (shown.Height + 0.6f), Loc.Text(e.Text), e.Style, speed / Pace);
                     break;
                 case BattleEventKind.Died:
-                    if (units.TryGetValue(e.UnitId, out var dead)) { dead.Trigger("Death"); Sound.Play(dead.Sounds, s => s.death); falling[e.At] = dead; Remove(units, e.UnitId, Wait(1.2f)); }
+                    if (units.TryGetValue(e.UnitId, out var dead)) { dead.Trigger("Death"); Sound.Play(dead.Sounds, s => s.death); falling[e.At] = dead; Remove(units, e.UnitId, dead.DeathSeconds); }
                     break;
                 case BattleEventKind.CorpseLeft:
                     var corpse = CorpseType(e.UnitId);
                     if (corpse != null) AddCorpse(e.UnitId, corpse, e.At);
                     if (corpse != null && falling.TryGetValue(e.At, out var fell) && fell != null) StartCoroutine(ShowAfter(corpses[e.UnitId], fell));
-                    falling.Remove(e.At);
+                    if (corpse != null) falling.Remove(e.At);
                     break;
                 case BattleEventKind.Buried:
                     Remove(corpses, e.UnitId, 0f);
                     break;
                 case BattleEventKind.Rose:
-                    Remove(corpses, e.OtherId, 0f);
+                    var lain = corpses.TryGetValue(e.OtherId, out var lc) ? lc : falling.TryGetValue(e.At, out var lf) ? lf : null;
+                    falling.Remove(e.At);
                     var risen = Battle.Find(e.UnitId);
-                    if (risen != null) AddUnit(risen, e.At);
+                    if (risen != null)
+                    {
+                        AddUnit(risen, e.At);
+                        var spawn = units[risen.Id];
+                        if (lain != null && !corpses.ContainsKey(e.OtherId)) yield return Follow(spawn, lain);
+                        else spawn.TakePose(lain);
+                        spawn.Rise(Wait(RiseSeconds));
+                    }
+                    Remove(corpses, e.OtherId, 0f);
                     yield return Delay(RiseSeconds);
                     break;
                 case BattleEventKind.Opened:
@@ -218,12 +227,19 @@ namespace VampireSpawn.Game
             if (director != null) yield return Delay(director.HoldFor(e));
         }
 
-        // The falling model and the lying corpse are two views; the corpse shows only once the fall is destroyed (#119).
+        // The falling model and the lying corpse are two views; the corpse shows only once the fall is destroyed (#119), in the pose the fall ended in.
         static IEnumerator ShowAfter(UnitView corpse, UnitView fell)
         {
-            corpse.gameObject.SetActive(false);
-            while (fell != null) yield return null;
-            if (corpse != null) corpse.gameObject.SetActive(true);
+            yield return Follow(corpse, fell);
+            if (corpse != null) corpse.LieDown();
+        }
+
+        // A corpse that rises in the same command has no corpse view, so its spawn waits out the fall the same way.
+        static IEnumerator Follow(UnitView next, UnitView fell)
+        {
+            next.gameObject.SetActive(false);
+            while (fell != null && next != null) { next.TakePose(fell); yield return null; }
+            if (next != null) next.gameObject.SetActive(true);
         }
 
         static int MaxHpOf(UnitView v, int hp) => v.HpFraction > 0f ? Mathf.RoundToInt(hp / v.HpFraction) : hp;
