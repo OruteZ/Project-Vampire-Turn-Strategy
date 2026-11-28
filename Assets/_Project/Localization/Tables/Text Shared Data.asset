@@ -715,10 +715,6 @@ MonoBehaviour:
     m_Key: battle.deployed
     m_Metadata:
       m_Items: []
-  - m_Id: 9846568841227
-    m_Key: battle.coffinAt
-    m_Metadata:
-      m_Items: []
   - m_Id: 9846568841228
     m_Key: battle.moon
     m_Metadata:

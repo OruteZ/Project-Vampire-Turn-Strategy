@@ -115,7 +115,7 @@ namespace VampireSpawn.Game.Screens
                 m.States.Add(new State { Id = "guard", Name = Loc.T("state.guard", u.Alert), Desc = GuardText(u), Color = Ui.Candle });
             if (!ally && u.Stance == Stance.Hold)
                 m.States.Add(new State { Id = "hold", Name = Loc.T("state.hold"), Desc = Loc.T("unit.card.stance.hold"), Color = Ui.Muted });
-            if (u.Has(Ability.Trap)) Add("traps", Ui.Steel, b.TrapsLeft(u), u.Has(Ability.Satchel) ? Battle.SatchelHeld : Battle.TrapsHeld);
+            if (u.Has(Ability.Trap)) Add("traps", Ui.Steel, b.TrapsLeft(u), Battle.TrapsCarried(u));
         }
 
         static readonly Dictionary<Ability, (string icon, Color color)> Acts = new Dictionary<Ability, (string, Color)>
@@ -148,7 +148,7 @@ namespace VampireSpawn.Game.Screens
             {
                 case Ability.Bury: return new object[] { Battle.BuryRange };
                 case Ability.Mend: return new object[] { Rules.MendRange, u.Heal };
-                case Ability.Trap: return new object[] { Battle.TrapDamage + (u.Has(Ability.Barbs) ? Battle.BarbsDamage : 0), u.Has(Ability.Satchel) ? Battle.SatchelHeld : Battle.TrapsHeld };
+                case Ability.Trap: return new object[] { Battle.TrapDamage + (u.Has(Ability.Barbs) ? Battle.BarbsDamage : 0), Battle.TrapsCarried(u) };
                 case Ability.Barbs: return new object[] { Battle.BarbsDamage };
                 case Ability.Satchel: return new object[] { Battle.SatchelHeld };
             }

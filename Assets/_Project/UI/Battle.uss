@@ -115,10 +115,24 @@
 .acts { margin-top: 8px; }
 .acts > .btn { width: 150px; height: 40px; margin-right: 8px; }
 
-.brief { right: 24px; top: 24px; }
-.def { margin-top: 10px; align-items: flex-start; }
-.def-icon { width: 24px; height: 24px; margin-right: 10px; flex-shrink: 0; }
-.def-text { flex-grow: 1; flex-shrink: 1; width: 0; font-size: 26px; color: var(--bone); white-space: normal; }
+/* battle-hud.md 2-5 (#154) */
+.brief { right: 24px; top: 24px; width: 840px; padding: 10px 32px 32px 32px; }
+.brief .sec-name { font-size: 28px; color: var(--dim); padding: 0; margin: 22px 0 8px 0; }
+.def { align-items: flex-start; }
+.def-icon { width: 40px; height: 40px; margin-right: 16px; flex-shrink: 0; }
+.def-text { flex-grow: 1; flex-shrink: 1; width: 0; font-size: 38px; color: var(--muted); white-space: normal; padding: 0; }
+.def.goal .def-icon { width: 64px; height: 64px; }
+.def.goal .def-text { font-size: 60px; -unity-font-style: bold; color: var(--bone); }
+.def.bonus .def-icon { width: 44px; height: 44px; }
+.def.bonus .def-text { font-size: 44px; color: var(--bone); }
+/* battle-hud.md 3-9 (#154) */
+.goal-box { left: 24px; top: 96px; width: 640px; padding: 20px 24px; }
+.goal-box .def.goal .def-icon { width: 48px; height: 48px; }
+.goal-box .def.goal .def-text { font-size: 44px; }
+.goal-box .def.bonus { margin-top: 12px; }
+.goal-box .def.bonus .def-icon { width: 36px; height: 36px; }
+.goal-box .def.bonus .def-text { font-size: 34px; }
+.def.lost .def-text { color: var(--dim); }
 
 /* ---------- fight (battle-hud.md 3, 4) ---------- */
 .fight-stats { position: absolute; left: 24px; top: 24px; height: 48px; }
@@ -201,6 +215,8 @@
 .slot { width: 182px; height: 182px; flex-shrink: 0; margin-right: 26px; justify-content: center; align-items: center; }
 .slot > .icon { width: 110px; height: 110px; }
 .slot > .key { right: auto; bottom: auto; left: -12px; top: -12px; width: 50px; height: 50px; padding: 0; font-size: 32px; -unity-font-style: bold; color: var(--bone); background-color: rgb(15, 16, 22); }
+.slot-count { position: absolute; left: 50%; bottom: -12px; translate: -50% 0; height: 50px; padding: 0 10px; margin: 0; font-size: 32px; -unity-font-style: bold; color: var(--bone); background-color: rgb(15, 16, 22); border-width: 1px; border-color: var(--line); -unity-text-align: middle-center; white-space: nowrap; }
+.slot-count.empty { color: #c8304a; }
 .slot.undo { position: absolute; left: 50%; margin-left: 596px; margin-right: 0; bottom: 132px; }
 .slot.on { translate: 0 -14px; }
 .slot:hover > .slot-frame { -unity-background-image-tint-color: var(--steel); }
@@ -221,15 +237,15 @@
 .wave.soon { background-color: #c8304a; }
 .wave.ally.soon { background-color: #4a5d6e; }
 .wave.hot { border-color: #ebe3d2; scale: 1.12 1.12; }
-.wave-chips { flex-direction: row; flex-wrap: wrap; flex-grow: 1; flex-shrink: 1; width: 0; }
-.wave-chip { height: 44px; padding: 0 10px; margin: 0 8px 8px 0; flex-direction: row; align-items: center; background-color: rgb(15, 16, 22); border-width: 1px; border-color: #c8304a; }
+.wave-chips { flex-direction: row; flex-wrap: wrap; }
+.wave-chip { height: 64px; padding: 0 14px; margin: 0 8px 8px 0; flex-direction: row; align-items: center; background-color: rgb(15, 16, 22); border-width: 1px; border-color: #c8304a; }
 .wave-chip.cond { border-color: #e3a84b; }
 .wave-chip.soon { background-color: #c8304a; }
 .wave-chip:hover { border-color: #ebe3d2; }
-.wave-chip > .icon { width: 24px; height: 24px; }
-.wave-chip-num { font-size: 30px; -unity-font-style: bold; color: var(--bone); padding: 0; margin: 0; white-space: nowrap; }
+.wave-chip > .icon { width: 40px; height: 40px; }
+.wave-chip-num { font-size: 44px; -unity-font-style: bold; color: var(--bone); padding: 0; margin: 0; white-space: nowrap; }
 .wave-chip-num.cond { color: #e3a84b; }
-.wave-chip-count { font-size: 26px; color: var(--muted); padding: 0; margin: 0 0 0 6px; white-space: nowrap; }
+.wave-chip-count { font-size: 36px; color: var(--muted); padding: 0; margin: 0 0 0 6px; white-space: nowrap; }
 
 /* ---------- heads (ui-style.md 8-1, 8-3, 8-4): the bar's bottom-centre sits on the unit's head point ---------- */
 .head { position: absolute; width: 72px; height: 12px; margin-left: -36px; margin-top: -12px; }

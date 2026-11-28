@@ -226,7 +226,6 @@ namespace VampireSpawn.Game.Screens
                 drain.generateVisualContent += ctx => MoonPhase(ctx, 1f, Ui.MoonBlood);
                 Fx.FadeOut(drain, 0.4f);
             }
-            var v = b.Vampire;
             Picture(E(box, "moon-ring"), S(Ring), hot || full ? Ui.MoonBlood : Color.white);
             if (full)
                 for (var k = 0; k < 4; k++)
@@ -237,8 +236,7 @@ namespace VampireSpawn.Game.Screens
                 }
             var label = E(root, "moon-label col");
             Watch(L(label, moon + "/" + max, "moon-count"), "moon");
-            var state = hot ? Loc.T("moon.nextTurn") : v != null && v.Asleep ? Loc.T("battle.coffinAt", Rules.MoonWake) : "";
-            if (state.Length > 0) L(label, state, hot ? "moon-state hot" : "moon-state", hot ? Ui.MoonBlood : Ui.Muted);
+            if (hot) L(label, Loc.T("moon.nextTurn"), "moon-state hot", Ui.MoonBlood);
         }
 
         // ui-style.md 7: a waxing moon, lit from the right; the terminator is a half ellipse whose width runs r -> 0 -> -r as f goes 0 -> 0.5 -> 1.
@@ -406,9 +404,9 @@ namespace VampireSpawn.Game.Screens
             var brief = E(root, "box brief col", true);
             Frame(brief, art, Ui.SteelDim);
             Tip(brief, Loc.Text(stg.Brief), 600);
-            Def(brief, Kit.Icon.Boss, Ui.Blood, Loc.Text(stg.Objective), Loc.T("battle.objective"));
-            Def(brief, Kit.Icon.Star, Ui.Candle, Loc.Text(stg.Bonus.Text), Loc.T("battle.bonus"));
-            Def(brief, Kit.Icon.Skulls, Ui.Blood, Kit.EnemyList(stg), Loc.T("battle.enemy"));
+            Def(brief, "goal", Kit.Icon.Boss, Ui.Blood, Loc.Text(stg.Objective), Loc.T("battle.objective"));
+            Def(brief, "bonus", Kit.Icon.Star, Ui.Candle, Loc.Text(stg.Bonus.Text), Loc.T("battle.bonus"));
+            Def(brief, "foes", Kit.Icon.Skulls, Ui.Blood, Kit.EnemyList(stg), Loc.T("battle.enemy"));
             WaveRow(brief, b);
         }
 
@@ -417,12 +415,8 @@ namespace VampireSpawn.Game.Screens
         {
             var waves = BattleScreen.Waves(b);
             if (waves.Count == 0) return;
-            var row = E(parent, "def row wave-row");
-            // The tooltip sits on the icon alone: on the whole row it would fight the chips' own.
-            var head = Icon(row, Kit.Icon.Turn, Ui.Blood, "icon def-icon");
-            head.pickingMode = PickingMode.Position;
-            Tip(head, Loc.T("banner.reinforce"), 300);
-            var chips = E(row, "wave-chips");
+            L(parent, Loc.T("banner.reinforce"), "sec-name");
+            var chips = E(parent, "wave-chips");
             foreach (var w in waves)
             {
                 var cond = w.When == WaveWhen.Reach || w.When == WaveWhen.Kills;
@@ -536,12 +530,27 @@ namespace VampireSpawn.Game.Screens
             Value(row, Kit.Icon.Rng, u.Rng.ToString(), Ui.SteelDim, Ui.Muted, Loc.T("unit.card.rng"));
         }
 
-        void Def(VisualElement parent, string icon, Color iconColor, string value, string tipText)
+        // named: the deploy briefing shows the section name above the row; the fight goal box keeps it in a tooltip (ui-style.md 14-1 3).
+        VisualElement Def(VisualElement parent, string kind, string icon, Color iconColor, string value, string name, bool named = true)
         {
-            var row = E(parent, "def row", true);
+            if (named) L(parent, name, "sec-name");
+            var row = E(parent, "def row " + kind, !named);
             Icon(row, icon, iconColor, "icon def-icon");
             L(row, value, "def-text");
-            Tip(row, tipText, 300);
+            if (!named) Tip(row, name, 300);
+            return row;
+        }
+
+        // battle-hud.md 3-9 (#154). AllMinions can only be judged at the end, so it never shows as missed.
+        void GoalBox(VisualElement root, Battle b)
+        {
+            var box = E(root, "box goal-box col");
+            Frame(box, art, Ui.SteelDim);
+            Def(box, "goal", Kit.Icon.Boss, Ui.Blood, Loc.Text(b.Stage.Objective), Loc.T("battle.objective"), false);
+            var lost = !b.BonusMet && b.Stage.Bonus.Type != BonusType.AllMinions;
+            var text = Loc.Text(b.Stage.Bonus.Text);
+            var bonus = Def(box, "bonus", Kit.Icon.Star, lost ? Ui.Dim : Ui.Candle, lost ? "<s>" + text + "</s>" : text, Loc.T("battle.bonus"), false);
+            bonus.EnableInClassList("lost", lost);
         }
 
         // ---------- player / enemy turn (battle-hud.md 3, 4) ----------
@@ -562,6 +571,7 @@ namespace VampireSpawn.Game.Screens
             L(alt, "Alt", st.Alt ? "alt-key on" : "alt-key");
             Icon(alt, Kit.Icon.Mov, st.Alt ? Ui.Blood : Ui.Muted, "icon alt-icon");
             Tip(alt, Loc.T("hud.altTip"), 200);
+            GoalBox(root, b);
             Log(root, b, st, a);
         }
 
@@ -791,6 +801,7 @@ namespace VampireSpawn.Game.Screens
                 Icon(slot, x.Icon, x.Color);
                 Tip(slot, x.Label, 200);
                 L(slot, x.Hotkey ?? x.Key.ToString(), "key");
+                if (x.Count != null) L(slot, x.Count, x.Ready ? "slot-count" : "slot-count empty");
                 Click(slot, x.Act, x.Ready);
             }
         }

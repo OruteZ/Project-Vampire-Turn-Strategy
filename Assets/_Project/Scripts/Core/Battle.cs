@@ -568,7 +568,8 @@ namespace VampireSpawn.Core
         public const int TrapDamage = 3, BarbsDamage = 2, TrapsHeld = 3, SatchelHeld = 4;
 
         // A scout carries this many traps into a battle and gets none back.
-        public int TrapsLeft(Unit u) => (u.Has(Ability.Satchel) ? SatchelHeld : TrapsHeld) - u.TrapsLaid;
+        public static int TrapsCarried(Unit u) => u.Has(Ability.Satchel) ? SatchelHeld : TrapsHeld;
+        public int TrapsLeft(Unit u) => TrapsCarried(u) - u.TrapsLaid;
 
         public bool CanTrap(Unit u, Hex h) => u != null && u.Side == Side.Ally && !u.Acted && u.Has(Ability.Trap) && TrapsLeft(u) > 0 && Hex.Distance(u.Pos, h) == 1
             && Board.InBounds(h) && Board.Walkable(h) && UnitAt(h) == null && CorpseAt(h) == null && TrapAt(h) == null;

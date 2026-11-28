@@ -66,6 +66,8 @@ namespace VampireSpawn.Game.Screens
         public UnityEngine.Color Color;
         public Action Act;
         public bool Ready, On;
+        // Uses left in this battle ("2/3"), for slots with a per-battle allowance.
+        public string Count;
     }
 
     public enum WaveWhen { Soon, Turn, Reach, Kills }
@@ -149,7 +151,12 @@ namespace VampireSpawn.Game.Screens
             Add(3, Kit.Icon.Wait, Ui.Steel, Loc.T("unit.card.wait"), a.Wait, true);
             if (u.Role != Role.Escort) Add(4, Kit.Icon.Dead, Ui.Blood, Loc.T(exec ? "unit.card.cancelExec" : "unit.card.exec"), a.Exec, true, exec);
             if (u.Has(Ability.Mend)) Add(5, Kit.Icon.Heal, Ui.Steel, Loc.T(mend ? "hud.cancelMend" : "hud.mend"), a.Mend, true, mend);
-            else if (u.Has(Ability.Trap)) Add(5, Kit.Icon.Target, Ui.Steel, Loc.T(trap ? "hud.cancelTrap" : "hud.trap"), a.Trap, true, trap);
+            else if (u.Has(Ability.Trap))
+            {
+                var left = s.Battle.TrapsLeft(u);
+                Add(5, Kit.Icon.Target, Ui.Steel, Loc.T(trap ? "hud.cancelTrap" : "hud.trap"), a.Trap, left > 0, trap);
+                list[list.Count - 1].Count = left + "/" + Battle.TrapsCarried(u);
+            }
             else if (u.Has(Ability.Bury)) Add(5, Kit.Icon.Fang, Ui.Spawn, SkillName(Ability.Bury), a.Aim, marks.Any(m => m.Mark == Mark.Bury));
             list.Add(new ActionSlot { Key = -1, Hotkey = "Z", Icon = Kit.Icon.Undo, Color = Ui.Steel, Label = Loc.T("hud.act.undo"), Act = a.Undo, Ready = s.Battle.CanUndo });
             return list;
