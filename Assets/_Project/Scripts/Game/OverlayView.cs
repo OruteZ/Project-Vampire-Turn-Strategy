@@ -106,13 +106,44 @@ namespace VampireSpawn.Game
         List<MarkedHex> marks;
         MoonMark moon;
 
+        // battle-hud.md 3-7 1 (#154): when the target steps somewhere safe its line shrinks away and a ring spreads on it.
+        const float LineOff = 0.5f;
+        float lineOffAt = -1f;
+        Hex lineFrom, lineTo;
+        bool threatened;
+
         public void Show(BattleSession session, Hex? drop = null)
         {
             last = session;
             lastDrop = drop;
             marks = session.Overlay();
             moon = session.Moon();
+            var nowThreat = moon != null && moon.Target.HasValue && !moon.Safe;
+            if (threatened && moon != null && moon.Safe && moon.Target is Hex to)
+            {
+                lineOffAt = Time.unscaledTime;
+                lineFrom = moon.Vampire;
+                lineTo = to;
+            }
+            else if (nowThreat) lineOffAt = -1f;
+            threatened = nowThreat;
             Draw();
+        }
+
+        void Update()
+        {
+            if (lineOffAt >= 0f && last != null) Draw();
+        }
+
+        void LineOffFx()
+        {
+            if (lineOffAt < 0f) return;
+            var k = (Time.unscaledTime - lineOffAt) / LineOff;
+            if (k >= 1f) { lineOffAt = -1f; return; }
+            var e = 1f - (1f - k) * (1f - k);
+            var a = Center(lineFrom);
+            if (e < 0.98f) lines.Dashed(a, Vector3.Lerp(a, Center(lineTo), 1f - e), 2f * Scale, Screens.Ui.Alpha(MoonBlood, 1f - e), 4f * Scale, 4f * Scale);
+            Hexagon(Center(lineTo), S(Ally, 0f, Ally, 1f - e, R * (1f + 0.4f * e), 2f));
         }
 
         // Hover redraws the marks of the last Show: during playback the model is already at the turn's end (#125, #126).
@@ -135,7 +166,8 @@ namespace VampireSpawn.Game
                 zones[z] = RegionOutline.Create(board, z + "Zone", cells, RegionOutline.Look.Solid, Ally);
             }
             for (var i = shown; i < icons.Count; i++) icons[i].enabled = false;
-            if (moon != null && moon.Target is Hex t) lines.Dashed(Center(moon.Vampire), Center(t), 2f * Scale, MoonBlood, 4f * Scale, 4f * Scale);
+            if (moon != null && moon.Target is Hex t && !moon.Safe) lines.Dashed(Center(moon.Vampire), Center(t), 2f * Scale, MoonBlood, 4f * Scale, 4f * Scale);
+            LineOffFx();
             if (hover is Hex hv && session.Battle.Board.InBounds(hv)) Hexagon(Center(hv), HoverCell);
             if (drop is Hex d && session.Battle.Board.InBounds(d)) Hexagon(Center(d), session.Battle.InDeploy(d) ? DropIn : DropOut);
             lines.Apply(mesh);
