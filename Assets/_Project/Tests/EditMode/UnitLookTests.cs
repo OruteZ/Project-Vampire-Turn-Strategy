@@ -133,6 +133,35 @@ namespace VampireSpawn.Tests
             return w.TransformDirection(local).normalized;
         }
 
+        // docs/art/unit-visuals.md 4-1: an unarmed corpse lies in the last frame of the death its armed unit fell with, not in the bind (T) pose.
+        [TestCaseSource(nameof(Looks))]
+        public void CorpseLiesInTheLastFrameOfItsUnitsDeath(string name)
+        {
+            var look = Look(name);
+            var at = new Vector3(0f, -500f, 0f);
+            var fell = UnitView.Create(Art, look, null, 0, at, 0f, true);
+            var corpse = UnitView.Create(Art, look, null, 1, at, 0f, false);
+            try
+            {
+                var dying = fell.GetComponentInChildren<Animator>();
+                dying.cullingMode = AnimatorCullingMode.AlwaysAnimate;
+                dying.Play("Death", 0, 1f);
+                dying.Update(0f);
+                corpse.GetComponentInChildren<Animator>().cullingMode = AnimatorCullingMode.AlwaysAnimate;
+                corpse.LieDown();
+                corpse.GetComponentInChildren<Animator>().Update(0f);
+                var dead = Bones(fell);
+                var lying = Bones(corpse);
+                Assert.Less(lying.Values.Max(p => p.y), corpse.Height * 0.5f, name + " corpse lies on the ground");
+                foreach (var b in lying.Where(b => dead.ContainsKey(b.Key)))
+                    Assert.Less(Vector3.Distance(dead[b.Key], b.Value), 0.05f, name + " " + b.Key + " differs from the end of the fall");
+            }
+            finally { Object.DestroyImmediate(fell.gameObject); Object.DestroyImmediate(corpse.gameObject); }
+        }
+
+        static Dictionary<string, Vector3> Bones(UnitView view) => view.GetComponentInChildren<SkinnedMeshRenderer>().bones
+            .Where(b => b != null).GroupBy(b => b.name).ToDictionary(g => g.Key, g => view.transform.InverseTransformPoint(g.First().position));
+
         [Test]
         public void SleepingVampireIsOnlyACoffinUntilItWakes()
         {
