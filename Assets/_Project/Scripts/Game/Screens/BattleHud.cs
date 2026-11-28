@@ -16,7 +16,7 @@ namespace VampireSpawn.Game.Screens
         public Reinforcement HoverReinforce;
         public float Speed = 1f;
         public Arm Armed;
-        public bool Alt, EnemyPlaying, RulesOpen, LogOpen, Demo, FullMoon, MoonFading;
+        public bool Alt, EnemyPlaying, RulesOpen, LogOpen, MenuOpen, Demo, FullMoon, MoonFading;
         // docs/ui/rule-cards.md: the card on show and "n/total", or null.
         public BattleScreen.RuleCard Card;
         public string CardCount;
@@ -110,6 +110,7 @@ namespace VampireSpawn.Game.Screens
             Corner(root, b, st, a);
             if (BattleScreen.ShowsHint(s, st.EnemyPlaying)) L(root, BattleScreen.Hint(s, st.EnemyPlaying), st.Deploying(b) ? "hint deploy" : "hint");
             if (st.RulesOpen) RulesPopup(root, a);
+            if (st.MenuOpen) MenuPopup(root, b, st, a);
             if (st.Card != null) CardPopup(root, st, a);
             UseFonts(root);
         }
@@ -225,7 +226,6 @@ namespace VampireSpawn.Game.Screens
                 drain.generateVisualContent += ctx => MoonPhase(ctx, 1f, Ui.MoonBlood);
                 Fx.FadeOut(drain, 0.4f);
             }
-            var v = b.Vampire;
             Picture(E(box, "moon-ring"), S(Ring), hot || full ? Ui.MoonBlood : Color.white);
             if (full)
                 for (var k = 0; k < 4; k++)
@@ -236,8 +236,7 @@ namespace VampireSpawn.Game.Screens
                 }
             var label = E(root, "moon-label col");
             Watch(L(label, moon + "/" + max, "moon-count"), "moon");
-            var state = hot ? Loc.T("moon.nextTurn") : v != null && v.Asleep ? Loc.T("battle.coffinAt", Rules.MoonWake) : "";
-            if (state.Length > 0) L(label, state, hot ? "moon-state hot" : "moon-state", hot ? Ui.MoonBlood : Ui.Muted);
+            if (hot) L(label, Loc.T("moon.nextTurn"), "moon-state hot", Ui.MoonBlood);
         }
 
         // ui-style.md 7: a waxing moon, lit from the right; the terminator is a half ellipse whose width runs r -> 0 -> -r as f goes 0 -> 0.5 -> 1.
@@ -286,21 +285,43 @@ namespace VampireSpawn.Game.Screens
             Tip(badge, Loc.T("battle.allyPhase"), 300);
         }
 
+        // battle-hud.md 6-3 (#154): one menu button in the corner; rules, restart and leave sit in its window.
         void Corner(VisualElement root, Battle b, HudState st, BattleActions a)
         {
-            var row = E(root, "corner");
-            Tip(IconBtn(row, art, Kit.Icon.Rules, a.ToggleRules), Loc.T("battle.rules"), 300);
-            if (st.Armed == Arm.Leave) Btn(row, Loc.T("battle.leaveConfirm"), a.Leave, BtnKind.Danger, !st.EnemyPlaying);
-            else Tip(IconBtn(row, art, Kit.Icon.Leave, a.Leave, !st.EnemyPlaying), Loc.T("battle.leave"), 300);
-            if (st.Demo || b.Phase == Phase.Deploy || b.Phase == Phase.Over) return;
-            if (st.Armed == Arm.Restart) Btn(row, Loc.T("battle.restartConfirm"), a.Restart, BtnKind.Danger, !st.EnemyPlaying);
-            else
+            var menu = ToolkitKit.Btn(E(root, "corner"), art, Loc.T("battle.menu"), BtnKind.Normal, "Esc", a.ToggleMenu);
+            menu.AddToClassList("menu-btn");
+            menu.EnableInClassList("on", st.MenuOpen);
+            KeepClearOfKey(menu, "Esc");
+        }
+
+        void MenuPopup(VisualElement root, Battle b, HudState st, BattleActions a)
+        {
+            var veil = E(root, "veil", true);
+            Click(veil, null);
+            veil.RegisterCallback<ClickEvent>(e => { if (e.target == veil) a.ToggleMenu?.Invoke(); });
+            var p = E(veil, "window game-menu", true);
+            Frame(p, art, Ui.Steel);
+            L(p, Loc.T("battle.menu"), "menu-title display");
+            VisualElement Row(string icon, string text, Action click, bool armed, bool enabled = true)
             {
-                var restart = IconBtn(row, art, Kit.Icon.Undo, a.Restart, !st.EnemyPlaying);
-                // The kit has one circular arrow and undo (Z) uses it; restart turns it the other way.
-                restart.Q(className: "icon").style.scale = new Scale(new Vector3(-1f, 1f, 1f));
-                Tip(restart, Loc.T("battle.restart"), 300);
+                var r = Btn(p, text, click, armed ? BtnKind.Danger : BtnKind.Normal, enabled, null, "menu-row");
+                var i = E(null, "icon menu-icon");
+                r.Insert(1, i);
+                Picture(i, S(icon), armed ? Ui.Blood : Ui.Steel);
+                return i;
             }
+            Row(Kit.Icon.Rules, Loc.T("battle.rules"), () => { a.ToggleMenu(); a.ToggleRules(); }, false);
+            if (!st.Demo && b.Phase != Phase.Deploy && b.Phase != Phase.Over)
+            {
+                var armed = st.Armed == Arm.Restart;
+                var undo = Row(Kit.Icon.Undo, Loc.T(armed ? "battle.restartConfirm" : "battle.restart"), a.Restart, armed, !st.EnemyPlaying);
+                // The kit has one circular arrow and undo (Z) uses it; restart turns it the other way.
+                undo.style.scale = new Scale(new Vector3(-1f, 1f, 1f));
+            }
+            var leaveArmed = st.Armed == Arm.Leave;
+            Row(Kit.Icon.Home, Loc.T(leaveArmed ? "battle.leaveConfirm" : st.Demo ? "camp.menu" : "camp.toMap"), a.Leave, leaveArmed, !st.EnemyPlaying);
+            var close = ToolkitKit.Btn(E(p, "menu-close"), art, Loc.T("settings.close"), BtnKind.Ghost, "Esc", a.ToggleMenu);
+            KeepClearOfKey(close, "Esc");
         }
 
         void RulesPopup(VisualElement root, BattleActions a)
@@ -383,9 +404,9 @@ namespace VampireSpawn.Game.Screens
             var brief = E(root, "box brief col", true);
             Frame(brief, art, Ui.SteelDim);
             Tip(brief, Loc.Text(stg.Brief), 600);
-            Def(brief, Kit.Icon.Boss, Ui.Blood, Loc.Text(stg.Objective), Loc.T("battle.objective"));
-            Def(brief, Kit.Icon.Star, Ui.Candle, Loc.Text(stg.Bonus.Text), Loc.T("battle.bonus"));
-            Def(brief, Kit.Icon.Skulls, Ui.Blood, Kit.EnemyList(stg), Loc.T("battle.enemy"));
+            Def(brief, "goal", Kit.Icon.Boss, Ui.Blood, Loc.Text(stg.Objective), Loc.T("battle.objective"));
+            Def(brief, "bonus", Kit.Icon.Star, Ui.Candle, Loc.Text(stg.Bonus.Text), Loc.T("battle.bonus"));
+            Def(brief, "foes", Kit.Icon.Skulls, Ui.Blood, Kit.EnemyList(stg), Loc.T("battle.enemy"));
             WaveRow(brief, b);
         }
 
@@ -394,12 +415,8 @@ namespace VampireSpawn.Game.Screens
         {
             var waves = BattleScreen.Waves(b);
             if (waves.Count == 0) return;
-            var row = E(parent, "def row wave-row");
-            // The tooltip sits on the icon alone: on the whole row it would fight the chips' own.
-            var head = Icon(row, Kit.Icon.Turn, Ui.Blood, "icon def-icon");
-            head.pickingMode = PickingMode.Position;
-            Tip(head, Loc.T("banner.reinforce"), 300);
-            var chips = E(row, "wave-chips");
+            L(parent, Loc.T("banner.reinforce"), "sec-name");
+            var chips = E(parent, "wave-chips");
             foreach (var w in waves)
             {
                 var cond = w.When == WaveWhen.Reach || w.When == WaveWhen.Kills;
@@ -513,12 +530,27 @@ namespace VampireSpawn.Game.Screens
             Value(row, Kit.Icon.Rng, u.Rng.ToString(), Ui.SteelDim, Ui.Muted, Loc.T("unit.card.rng"));
         }
 
-        void Def(VisualElement parent, string icon, Color iconColor, string value, string tipText)
+        // named: the deploy briefing shows the section name above the row; the fight goal box keeps it in a tooltip (ui-style.md 14-1 3).
+        VisualElement Def(VisualElement parent, string kind, string icon, Color iconColor, string value, string name, bool named = true)
         {
-            var row = E(parent, "def row", true);
+            if (named) L(parent, name, "sec-name");
+            var row = E(parent, "def row " + kind, !named);
             Icon(row, icon, iconColor, "icon def-icon");
             L(row, value, "def-text");
-            Tip(row, tipText, 300);
+            if (!named) Tip(row, name, 300);
+            return row;
+        }
+
+        // battle-hud.md 3-9 (#154). AllMinions can only be judged at the end, so it never shows as missed.
+        void GoalBox(VisualElement root, Battle b)
+        {
+            var box = E(root, "box goal-box col");
+            Frame(box, art, Ui.SteelDim);
+            Def(box, "goal", Kit.Icon.Boss, Ui.Blood, Loc.Text(b.Stage.Objective), Loc.T("battle.objective"), false);
+            var lost = !b.BonusMet && b.Stage.Bonus.Type != BonusType.AllMinions;
+            var text = Loc.Text(b.Stage.Bonus.Text);
+            var bonus = Def(box, "bonus", Kit.Icon.Star, lost ? Ui.Dim : Ui.Candle, lost ? "<s>" + text + "</s>" : text, Loc.T("battle.bonus"), false);
+            bonus.EnableInClassList("lost", lost);
         }
 
         // ---------- player / enemy turn (battle-hud.md 3, 4) ----------
@@ -539,6 +571,7 @@ namespace VampireSpawn.Game.Screens
             L(alt, "Alt", st.Alt ? "alt-key on" : "alt-key");
             Icon(alt, Kit.Icon.Mov, st.Alt ? Ui.Blood : Ui.Muted, "icon alt-icon");
             Tip(alt, Loc.T("hud.altTip"), 200);
+            GoalBox(root, b);
             Log(root, b, st, a);
         }
 
@@ -777,8 +810,8 @@ namespace VampireSpawn.Game.Screens
 
         const float HeadBarW = 72f;
 
-        // .head.named in Battle.uss: a hovered or picked bar grows from 12 (boss 16) to 29, so the 26 px hp fits inside it (ui-style.md 8-1 3).
-        static float NamedGrow(bool boss) => boss ? 13f : 17f;
+        // ui-style.md 8-1 3 (#154): the bar keeps its height; the 22 px hp over it pokes about 6 above, so the name sits that much higher.
+        const float NamedLift = 6f;
 
         void Head(VisualElement layer, Battle b, Unit u, bool named, bool showMov, int damage, bool target)
         {
@@ -787,7 +820,7 @@ namespace VampireSpawn.Game.Screens
             var lost = damage > 0 ? full - Mathf.Max(0, u.Hp - damage) : 0;
             var color = u.Side == Side.Ally ? Ui.Steel : u.Role == Role.Spawn ? Ui.Spawn : Ui.Blood;
             var boss = u.Role == Role.Vampire;
-            var rt = E(layer, (boss ? "head boss-head" : "head") + (named ? " named" : ""));
+            var rt = E(layer, boss ? "head boss-head" : "head");
             rt.style.display = DisplayStyle.None;
             E(rt, "head-back");
             VisualElement[] imgs = null;
@@ -826,7 +859,7 @@ namespace VampireSpawn.Game.Screens
                 else L(at, "−" + damage, "outline", u.Side == Side.Ally ? Ui.Blood : Ui.Bone);
             }
             // Stacked above the bar: name, enemy move/range (Alt), the vampire's target mark.
-            var y = (boss ? (u.Def > 0 ? 36f : 20f) : u.Def > 0 ? 24f : 16f) + (named ? NamedGrow(boss) : 0f);
+            var y = (boss ? (u.Def > 0 ? 36f : 20f) : u.Def > 0 ? 24f : 16f) + (named ? NamedLift : 0f);
             if (named)
             {
                 L(rt, Loc.Text(u.Name), "head-name outline").style.bottom = y - 4f;

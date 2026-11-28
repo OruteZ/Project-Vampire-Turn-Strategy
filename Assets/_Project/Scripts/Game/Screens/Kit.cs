@@ -14,7 +14,7 @@ namespace VampireSpawn.Game.Screens
                 Gold = "ICON_DarkFantasyMenus_Currency_Coin_01_Clean", Silver = "ICON_DarkFantasy_Inventory_Currency_01_Clean", Pop = "ICON_DarkFantasy_Inventory_Helmets_01_Clean",
                 Boss = "ICON_DarkFantasy_Map_Monster_01_Clean", Star = "ICON_DarkFantasy_Map_Star_01_Clean", Skulls = "ICON_DarkFantasy_Map_Skull_01_Clean",
                 Turn = "ICON_DarkFantasy_Status_Time_01_Clean", Lock = "ICON_DarkFantasyMenus_Menu_Lock_Closed_01_Clean", Trophy = "ICON_DarkFantasyMenus_Menu_Trophy_01_Clean",
-                Leave = "ICON_DarkFantasyMenus_Menu_Quit_01_Clean", Rules = "ICON_DarkFantasy_Inventory_Notes_01_Clean",
+                Rules = "ICON_DarkFantasy_Inventory_Notes_01_Clean",
                 Up = "ICON_DarkFantasy_Status_Up_01_Clean", Wait = "ICON_DarkFantasy_Status_Down_01_Clean", Flag = "ICON_DarkFantasy_Map_Flag_01_Clean", Home = "ICON_DarkFantasy_Map_Home_01_Clean", Sword = "ICON_SM_Wep_Sword_01_DarkFantasy",
                 Heal = "ICON_DarkFantasy_Status_Health_01_Clean", Undo = "ICON_DarkFantasyMenus_Menu_Refresh_01_Clean";
         }

@@ -20,6 +20,7 @@ namespace VampireSpawn.Core
         public Message VampireLabel;
         public Hex? Target;
         public Message TargetLabel;
+        public bool Safe;
     }
 
     // Click and selection state of the battle screen. Threat cells are not drawn: docs/ui/battle-hud.md 1-4.
@@ -266,6 +267,7 @@ namespace VampireSpawn.Core
             {
                 var safe = Hex.Distance(v.Pos, t.Pos) > Rules.EatRange || b.Board.Lit(t.Pos);
                 m.Target = t.Pos;
+                m.Safe = safe;
                 m.TargetLabel = new Message(safe ? "moon.safe" : "moon.target");
             }
             return m;

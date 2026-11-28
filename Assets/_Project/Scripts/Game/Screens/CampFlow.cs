@@ -83,11 +83,11 @@ namespace VampireSpawn.Game.Screens
             map.ShowUnit(nav.Layer == CampLayer.Barracks && CampNav.TabOf(Campaign, GameData.Types[tab].Key) != TabState.Hidden ? tab : -1);
         }
 
-        // stage-select.md 2-3: the screen minus the corner UI and, in L2/L3, the 560 px side panel; normalized viewport units.
+        // stage-select.md 2-3: the screen minus the corner UI and the side panel (760 in L2, 560 in L3); normalized viewport units.
         Rect EmptyArea(CampLayer layer)
         {
             var size = ToolkitKit.PanelSize();
-            var right = layer == CampLayer.Map ? 24f : 608f;
+            var right = layer == CampLayer.Map ? 24f : layer == CampLayer.Info ? 808f : 608f;
             return new Rect(24f / size.x, 104f / size.y, (size.x - 24f - right) / size.x, (size.y - 112f - 104f) / size.y);
         }
 

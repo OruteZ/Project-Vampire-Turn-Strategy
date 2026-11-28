@@ -918,11 +918,6 @@ MonoBehaviour:
     m_Metadata:
       m_Items:
       - rid: 7201578077006332005
-  - m_Id: 9846568841227
-    m_Localized: Coffin at {0}
-    m_Metadata:
-      m_Items:
-      - rid: 7201578077006332005
   - m_Id: 9846568841228
     m_Localized: Moon
     m_Metadata:
@@ -3133,6 +3128,10 @@ MonoBehaviour:
     m_Localized: the guide
     m_Metadata:
       m_Items: []
+  - m_Id: 8020739298750464
+    m_Localized: Menu
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds:
@@ -3315,7 +3314,6 @@ MonoBehaviour:
         - id: 9846568841224
         - id: 9846568841225
         - id: 9846568841226
-        - id: 9846568841227
         - id: 9846568841228
         - id: 9846568841229
         - id: 9846568841230

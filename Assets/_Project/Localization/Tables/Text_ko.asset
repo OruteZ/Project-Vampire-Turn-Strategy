@@ -970,11 +970,6 @@ MonoBehaviour:
     m_Metadata:
       m_Items:
       - rid: 7201578077006332004
-  - m_Id: 9846568841227
-    m_Localized: "{0}\uC5D0 \uAD00\uC774 \uC5F4\uB9BC"
-    m_Metadata:
-      m_Items:
-      - rid: 7201578077006332004
   - m_Id: 9846568841228
     m_Localized: "\uB2EC"
     m_Metadata:
@@ -3351,6 +3346,10 @@ MonoBehaviour:
     m_Localized: "\uAE38\uC7A1\uC774"
     m_Metadata:
       m_Items: []
+  - m_Id: 8020739298750464
+    m_Localized: "\uBA54\uB274"
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds:
@@ -3533,7 +3532,6 @@ MonoBehaviour:
         - id: 9846568841224
         - id: 9846568841225
         - id: 9846568841226
-        - id: 9846568841227
         - id: 9846568841228
         - id: 9846568841229
         - id: 9846568841230

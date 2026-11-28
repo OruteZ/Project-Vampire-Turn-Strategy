@@ -19,7 +19,7 @@ namespace VampireSpawn.Game.Screens
 
         public bool OverShown => overRoot != null && overRoot.ClassListContains("shown");
 
-        bool demo, rulesOpen, logOpen, finished, enemyPlaying, fullMoon, moonFading, altDown;
+        bool demo, rulesOpen, logOpen, menuOpen, finished, enemyPlaying, fullMoon, moonFading, altDown;
         float bannerUntil;
         TwoPress arm = new TwoPress();
         int? eatBefore;
@@ -86,6 +86,7 @@ namespace VampireSpawn.Game.Screens
                 Aim = () => input.Act(s => s.ClearMode()),
                 ToggleRules = () => { rulesOpen = !rulesOpen; RenderBattle(); },
                 ToggleLog = () => { logOpen = !logOpen; RenderBattle(); },
+                ToggleMenu = () => { menuOpen = !menuOpen; RenderBattle(); },
                 Retry = () => StartBattle(stage, Session.Battle.StartFormation, true),
                 Redeploy = () => StartBattle(stage, Session.Battle.StartFormation, false),
                 ToCamp = () => App.GoCamp(Back()),
@@ -105,7 +106,7 @@ namespace VampireSpawn.Game.Screens
             View.speed = GameSettings.Speed;
             Sound.Music(x => x.battleMusic);
             Sound.Ambience(x => x.battleAmbience);
-            finished = enemyPlaying = rulesOpen = logOpen = false;
+            finished = enemyPlaying = rulesOpen = logOpen = menuOpen = false;
             arm = new TwoPress();
             hoverId = hoverCorpse = null;
             hoverArrival = null;
@@ -179,7 +180,7 @@ namespace VampireSpawn.Game.Screens
                     ? b.Pending.First(p => p.Col == ah.Col && p.Row == ah.Row) : (Placement?)null,
                 HoverReinforce = hoverArrival is Hex rh && !b.Reinforcing ? b.Upcoming.FirstOrDefault(r => r.Hexes.Contains(rh)) : null,
                 Speed = View.speed,
-                Alt = altDown, EnemyPlaying = enemyPlaying, Armed = arm.Armed, RulesOpen = rulesOpen, LogOpen = logOpen, Demo = demo,
+                Alt = altDown, EnemyPlaying = enemyPlaying, Armed = arm.Armed, RulesOpen = rulesOpen, LogOpen = logOpen, MenuOpen = menuOpen, Demo = demo,
                 FullMoon = fullMoon, MoonFading = moonFading,
                 EatTarget = enemyPlaying ? eatBefore : b.EatTarget,
                 Upgrades = Upgrades,
@@ -192,7 +193,7 @@ namespace VampireSpawn.Game.Screens
         IEnumerable<string> Upgrades => (demo ? App.DemoUpgrades : Campaign.Upgrades) ?? Enumerable.Empty<string>();
 
         // unit-detail.md 2-3: only while the player can act, and not over another window.
-        bool DetailAllowed => !View.IsBusy && !enemyPlaying && !OverShown && !rulesOpen && !CardOpen && (Session.Battle.Phase == Phase.Deploy || Session.Battle.Phase == Phase.Player);
+        bool DetailAllowed => !View.IsBusy && !enemyPlaying && !OverShown && !rulesOpen && !menuOpen && !CardOpen && (Session.Battle.Phase == Phase.Deploy || Session.Battle.Phase == Phase.Player);
 
         public void ShowDetail(int unitId)
         {
@@ -222,13 +223,15 @@ namespace VampireSpawn.Game.Screens
         {
             if (UnitDetail.IsOpen) { detail.Close(); return true; }
             if (CardOpen) { NextCard(true); return true; }
-            if (rulesOpen || logOpen)
+            if (rulesOpen || logOpen || menuOpen)
             {
-                rulesOpen = logOpen = false;
+                rulesOpen = logOpen = menuOpen = false;
                 RenderBattle();
                 return true;
             }
-            if (Session.Mode == SelectMode.Act) return false;
+            // battle-hud.md 6 Esc: with nothing left to close, cancel or deselect, Esc opens the menu.
+            if (Session.Mode == SelectMode.Act && (Session.Selected != null || Session.Battle.Phase == Phase.Over)) return false;
+            if (Session.Mode == SelectMode.Act) { menuOpen = true; RenderBattle(); return true; }
             input.Act(x => x.ClearMode());
             return true;
         }

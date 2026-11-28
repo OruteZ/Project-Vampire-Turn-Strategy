@@ -40,9 +40,9 @@ namespace VampireSpawn.Game.Screens
             var doc = ToolkitKit.Document(host, "Camp (UI Toolkit)", art.panel, art.campDocument);
             var ui = new CampToolkit(doc, art, send);
             var r = ui.root;
-            ui.Wire(r.Q("menu"), BtnKind.Ghost, () => send(input(CampKey.Esc)));
-            ToolkitKit.Picture(r.Q("menu").Q(className: "icon"), art.Ui(Kit.Icon.Leave));
-            ToolkitKit.Tip(r.Q("menu"), Loc.T("camp.menu"), ui.tip, 300);
+            ui.Wire(r.Q("menu"), BtnKind.Normal, () => send(input(CampKey.Esc)));
+            ToolkitKit.Picture(r.Q("menu").Q(className: "icon"), art.Ui(Kit.Icon.Home));
+            r.Q("menu").Q<Label>(className: "btn-text").text = Loc.T("camp.menu");
             ui.Wire(r.Q("reset"), BtnKind.Ghost, () => send(input(CampKey.Reset)));
             ui.Wire(r.Q("barracks"), BtnKind.Normal, () => send(input(CampKey.Barracks)));
             ToolkitKit.Picture(r.Q("barracks").Q(className: "icon"), art.Ui(Kit.Icon.Up));
@@ -154,6 +154,7 @@ namespace VampireSpawn.Game.Screens
             var bonusGot = c.BonusDone.Contains(s.Id);
             var panel = root.Q("info");
             ToolkitKit.Frame(panel, art, last ? Ui.Blood : Ui.Steel);
+            panel.EnableInClassList("last", last);
             var crest = panel.Q("info-crest");
             crest.Clear();
             crest.style.display = last ? DisplayStyle.Flex : DisplayStyle.None;
@@ -171,46 +172,59 @@ namespace VampireSpawn.Game.Screens
             name.style.color = last ? Ui.Blood : Ui.Bone;
             SetTip(name, Loc.Text(s.Brief));
 
+            panel.Q<Label>("info-goal-name").text = Loc.T("camp.objective");
             Line(panel.Q("info-goal"), Kit.Icon.Boss, Ui.Blood, Loc.Text(s.Objective), Ui.Bone, Loc.T("camp.objective"));
             Line(panel.Q("info-bonus"), Kit.Icon.Star, bonusGot ? Ui.Candle : Ui.Muted, Loc.Text(s.Bonus.Text), bonusGot ? Ui.Candle : Ui.Bone,
                 Loc.T("camp.bonusGoal") + (bonusGot ? " · " + Loc.T("camp.got") : ""));
 
-            // stage-select.md 3-1: rewards and battle terms as two named groups, then each enemy kind with its count.
+            // stage-select.md 3-1 (#154): rewards and battle terms as two named columns, then each enemy kind and each unit with its name written out.
             var stats = panel.Q("info-stats");
             stats.Clear();
             VisualElement Group(string name)
             {
                 var g = ToolkitKit.E(stats, "stat-group");
-                ToolkitKit.L(g, name, "stat-group-name");
+                ToolkitKit.L(g, name, "sec-name");
                 return ToolkitKit.E(g, "stat-group-values");
             }
+            void Stat(VisualElement g, string icon, string value, Color iconColor, Color textColor, string name, string tipText) =>
+                ToolkitKit.L(ToolkitKit.Value(g, art, icon, value, iconColor, textColor, tipText, tip), name, "value-name");
             var reward = Group(Loc.T("camp.groupReward"));
-            ToolkitKit.Value(reward, art, Kit.Icon.Gold, "+" + s.Reward, clear ? Ui.Dim : Ui.Candle, clear ? Ui.Dim : Ui.Bone, Loc.T("camp.rewardClear", s.Reward) + (clear ? " · " + Loc.T("camp.got") : ""), tip);
-            ToolkitKit.Value(reward, art, Kit.Icon.Star, "+" + s.Bonus.Gold, bonusGot ? Ui.Dim : Ui.Candle, bonusGot ? Ui.Dim : Ui.Bone, Loc.T("camp.rewardBonus", s.Bonus.Gold) + (bonusGot ? " · " + Loc.T("camp.got") : ""), tip);
+            Stat(reward, Kit.Icon.Gold, "+" + s.Reward, clear ? Ui.Dim : Ui.Candle, clear ? Ui.Dim : Ui.Bone, Loc.T("camp.cleared"), Loc.T("camp.rewardClear", s.Reward) + (clear ? " · " + Loc.T("camp.got") : ""));
+            Stat(reward, Kit.Icon.Star, "+" + s.Bonus.Gold, bonusGot ? Ui.Dim : Ui.Candle, bonusGot ? Ui.Dim : Ui.Bone, Loc.T("camp.bonusGoal"), Loc.T("camp.rewardBonus", s.Bonus.Gold) + (bonusGot ? " · " + Loc.T("camp.got") : ""));
             var fight = Group(Loc.T("camp.groupBattle"));
-            ToolkitKit.Value(fight, art, Kit.Icon.Pop, s.Pop.ToString(), Ui.Candle, Ui.Candle, Loc.T("battle.pop"), tip);
-            if (s.Silver > 0) ToolkitKit.Value(fight, art, Kit.Icon.Silver, s.Silver.ToString(), Ui.Candle, Ui.Candle, Loc.T("battle.silver"), tip);
-            ToolkitKit.Value(fight, art, Kit.Icon.Skulls, s.Minions.Length.ToString(), Ui.Blood, Ui.Bone, Kit.EnemyList(s), tip);
+            Stat(fight, Kit.Icon.Pop, s.Pop.ToString(), Ui.Candle, Ui.Candle, Loc.T("battle.pop"), Loc.T("battle.pop"));
+            if (s.Silver > 0) Stat(fight, Kit.Icon.Silver, s.Silver.ToString(), Ui.Candle, Ui.Candle, Loc.T("battle.silver"), Loc.T("battle.silver"));
+            Stat(fight, Kit.Icon.Skulls, s.Minions.Length.ToString(), Ui.Blood, Ui.Bone, Loc.T("camp.enemies"), Kit.EnemyList(s));
 
             var foes = panel.Q("info-foes");
             foes.Clear();
-            ToolkitKit.L(foes, Loc.T("camp.groupFoes"), "stat-group-name");
+            ToolkitKit.L(foes, Loc.T("camp.groupFoes"), "sec-name");
+            var foeGrid = ToolkitKit.E(foes, "foe-grid");
             foreach (var kind in s.Enemies.Where(e => e.Kind != EnemyType.Corpse).GroupBy(e => e.Kind))
             {
                 var boss = kind.Key == EnemyType.Vampire;
                 var look = art.Icon(kind.Key);
                 var icon = boss ? Kit.Icon.Boss : string.IsNullOrEmpty(look) ? Kit.Icon.Skulls : look;
-                ToolkitKit.Value(foes, art, icon, "×" + kind.Count(), Ui.Blood, Ui.Bone, Loc.Text(boss ? s.BossName : GameData.Minion(kind.Key).Name), tip);
+                var foe = Loc.Text(boss ? s.BossName : GameData.Minion(kind.Key).Name);
+                var row = ToolkitKit.E(foeGrid, "foe", true);
+                ToolkitKit.Picture(ToolkitKit.E(row, "foe-icon"), art.Ui(icon), Ui.Blood);
+                ToolkitKit.L(row, foe, "foe-name");
+                ToolkitKit.L(row, "×" + kind.Count(), "foe-count");
+                ToolkitKit.Tip(row, foe, tip, 300);
             }
 
             var roster = panel.Q("info-roster");
             roster.Clear();
+            ToolkitKit.L(roster, Loc.T("camp.roster"), "sec-name");
+            var unitGrid = ToolkitKit.E(roster, "unit-grid");
             HoverKind = null;
             foreach (var k in s.Units)
             {
                 var t = GameData.Type(k);
                 var isNew = t.UnlockAt == i + 1;
-                var chip = ToolkitKit.Chip(roster, art, isNew ? Ui.Candle : Ui.SteelDim, art.Ui(art.Icon(k)), isNew ? Ui.Candle : Ui.Steel);
+                var cell = ToolkitKit.E(unitGrid, "unit-cell");
+                var chip = ToolkitKit.Chip(cell, art, isNew ? Ui.Candle : Ui.SteelDim, art.Ui(art.Icon(k)), isNew ? Ui.Candle : Ui.Steel, 42f);
+                ToolkitKit.L(cell, Loc.Text(t.Name), "unit-name", isNew ? Ui.Candle : (Color?)null);
                 SetTip(chip, isNew ? Loc.T("camp.new", t.Name) : Loc.Text(t.Name));
                 UiSound.Add(chip);
                 chip.RegisterCallback<ClickEvent>(_ => Detail?.Invoke(k));
